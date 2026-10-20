@@ -1,0 +1,28 @@
+[
+  {
+    "username": "phuthanhpham2005",
+    "email": "phuthanhpham2005@gmail.com",
+    "passwordHash": "$2a$10$rjxBSZ8Ri4y9tgG6o.jsveZHtwIAG/C1VyZvOEXriUmQZ53HlOTM6",
+    "role": "student",
+    "fullName": "Phạm Phú Thành",
+    "studentId": "",
+    "avatarUrl": "",
+    "status": "active",
+    "questionsQuota": 100,
+    "questionsUsed": 0,
+    "quotaResetDate": "2026-11-19T13:39:25.646Z"
+  },
+  {
+    "username": "longvu",
+    "email": "longvu24112005@gmail.com",
+    "passwordHash": "$2a$10$SwSyZ8Y4MqvWof3VqGh0uOLewcpukl6CYoRonjf9FOIasZzzghQLe",
+    "role": "student",
+    "fullName": "longvu",
+    "studentId": "0987654322",
+    "avatarUrl": "",
+    "status": "active",
+    "questionsQuota": 30,
+    "questionsUsed": 0,
+    "quotaResetDate": "2026-11-19T13:50:55.687Z"
+  }
+]

@@ -1,0 +1,26 @@
+[
+  {
+    "type": "concept",
+    "question": "Pháp luật là gì? Hãy giải thích ngắn gọn cho sinh viên năm nhất."
+  },
+  {
+    "type": "concept",
+    "question": "Quy phạm pháp luật là gì? Cho một ví dụ đơn giản."
+  },
+  {
+    "type": "concept",
+    "question": "Phân biệt vi phạm hành chính và tội phạm ở mức khái quát."
+  },
+  {
+    "type": "scenario",
+    "question": "A mượn xe máy của B để đi học nhưng sau đó tự ý bán xe cho C. Hãy xác định vấn đề pháp lý và phân tích tình huống."
+  },
+  {
+    "type": "scenario",
+    "question": "Nam 17 tuổi vô ý làm hỏng tài sản của người khác. Chỉ với dữ kiện này có thể kết luận chính xác ai phải bồi thường hay chưa? Hãy giải thích."
+  },
+  {
+    "type": "insufficient",
+    "question": "A đánh B. Hãy cho biết chắc chắn A phạm tội gì."
+  }
+]

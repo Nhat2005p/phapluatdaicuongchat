@@ -1,0 +1,58 @@
+# Dependencies
+node_modules/
+backend/node_modules/
+frontend/node_modules/
+
+# Production builds
+dist/
+backend/dist/
+frontend/dist/
+build/
+
+# Environment variables (chứa mật khẩu Gmail và Secret Key nhạy cảm)
+.env
+.env.local
+.env.*.local
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Large Model weights (> 100MB không thể push lên GitHub)
+models/
+*.gguf
+*.bin
+*.safetensors
+*.pt
+*.pth
+
+# Large Dataset files (> 100MB)
+data/new/
+*.parquet
+
+# Temporary scratch test files
+backend/test_*.cjs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE & OS
+.vscode/*
+!.vscode/settings.json
+.idea/
+.DS_Store
+Thumbs.db
+
+# Tools & caches
+tools/llama/
+tools/llama-src/
+.cache/

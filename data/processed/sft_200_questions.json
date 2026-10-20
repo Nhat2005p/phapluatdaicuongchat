@@ -1,0 +1,1367 @@
+[
+  {
+    "sample_id": "SFT_200Q_001",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 1. [NGUYÊN VĂN GIÁO TRÌNH] Sự hình thành nhà nước trong lịch sử, các quan điểm khác nhau về sự hình thành của nhà nước? Quan điểm của chủ nghĩa Mác - Lênin về nguồn gốc nhà nước?",
+    "output": "Nguồn gốc nhà nước được trình bày theo các quan điểm khác nhau, trong đó\nquan điểm Mác – Lênin giải thích sự xuất hiện nhà nước từ sự phát triển của xã hội, sự xuất hiện tư hữu,\nphân hóa giai cấp và mâu thuẫn giai cấp ngày càng sâu sắc. Nhà nước là sản phẩm lịch sử của xã hội có\ngiai cấp, gắn với một quyền lực công cộng đặc biệt. Khi thi nên trình bày: các quan điểm → quan điểm Mác –\nLênin → cơ sở kinh tế – xã hội → kết luận về tính lịch sử của nhà nước.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_002",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 2. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích tính giai cấp, tính xã hội của nhà nước? Cho ví dụ minh họa.",
+    "output": "Tính giai cấp thể hiện ở quan hệ giữa nhà nước với quyền lực chính trị và lợi ích\ngiai cấp; tính xã hội thể hiện ở chức năng tổ chức, quản lý những công việc chung và duy trì trật tự xã hội.\nHai mặt tồn tại đồng thời. Ví dụ, nhà nước ban hành quy tắc giao thông vừa là biểu hiện quyền lực công\ncộng vừa nhằm bảo đảm an toàn, trật tự chung.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”,\nphải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_003",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 3. [NGUYÊN VĂN GIÁO TRÌNH] Hình thức chính thể: khái niệm, phân loại, so sánh các dạng hình thức chính thể nhà nước?",
+    "output": "Hình thức chính thể phản ánh cách tổ chức, trình tự hình thành cơ quan quyền\nlực trung ương và quan hệ giữa các cơ quan đó. Có thể phân biệt quân chủ và cộng hòa, sau đó phân tích\nbiến thể theo tiêu chí: nguyên thủ, cách hình thành chức vụ, trách nhiệm chính trị và quan hệ với cơ quan\nquyền lực khác. Khi so sánh phải nêu tiêu chí, không chỉ liệt kê tên.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_004",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 4. [NGUYÊN VĂN GIÁO TRÌNH] Hình thức cấu trúc nhà nước, chế độ chính trị? Liên hệ với nhà nước Việt Nam?",
+    "output": "Hình thức cấu trúc nhà nước phản ánh cách tổ chức quyền lực theo lãnh thổ và\nquan hệ trung ương – địa phương, thường phân biệt đơn nhất và liên bang. Chế độ chính trị phản ánh\nphương pháp, biện pháp thực hiện quyền lực nhà nước. Liên hệ Việt Nam cần trình bày đúng mô hình nhà\nnước đơn nhất và cách tổ chức quyền lực theo lãnh thổ mà giáo trình nêu.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_005",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 5. [NGUYÊN VĂN GIÁO TRÌNH] Chức năng nhà nước: khái niệm, phân loại, các yếu tố tác động đến việc thực hiện chức năng nhà nước?",
+    "output": "Chức năng nhà nước là những phương diện hoạt động chủ yếu của nhà nước\nnhằm thực hiện nhiệm vụ. Có thể phân loại đối nội/đối ngoại. Các yếu tố tác động gồm điều kiện kinh tế –\nxã hội, nhiệm vụ, tình hình trong nước và quốc tế, năng lực bộ máy và yêu cầu quản lý. Bài phân tích cần\nchỉ ra mối liên hệ giữa nhiệm vụ và chức năng.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”,\nphải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_006",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 6. [NGUYÊN VĂN GIÁO TRÌNH] Bộ máy nhà nước: khái niệm, phân loại các cơ quan trong bộ máy nhà nước, các mô hình tổ chức bộ máy nhà nước (trong các kiểu nhà nước)?",
+    "output": "Bộ máy nhà nước là hệ thống các cơ quan nhà nước được tổ chức từ trung ương\nđến địa phương để thực hiện quyền lực và chức năng nhà nước. Cần nêu khái niệm, phân loại cơ quan, mô\nhình tổ chức và quan hệ giữa các cơ quan. Tránh đồng nhất một cơ quan với toàn bộ bộ\nmáy.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_007",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 7. [NGUYÊN VĂN GIÁO TRÌNH] Bản chất, hình thức, đặc điểm cơ bản của Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam?",
+    "output": "Khi trình bày Nhà nước CHXHCN Việt Nam, cần lần lượt nêu bản chất, hình thức\nvà đặc điểm cơ bản theo giáo trình; sau mỗi đặc điểm nên giải thích ý nghĩa đối với việc tổ chức và thực\nhiện quyền lực nhà nước. Không chỉ học thuộc danh sách mà phải chứng minh được mối liên hệ giữa nhà\nnước, pháp luật và quản lý xã hội.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_008",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 8. [NGUYÊN VĂN GIÁO TRÌNH] Bộ máy nhà nước CHXHCN Việt Nam: khái niệm, phân loại các cơ quan trong bộ máy nhà nước, các nguyên tắc cơ bản về tổ chức và hoạt động của bộ máy nhà nước CHXHCN Việt Nam?",
+    "output": "Cần trình bày khái niệm bộ máy nhà nước, cách phân loại cơ quan, các nguyên\ntắc tổ chức và hoạt động, cùng quan hệ phối hợp giữa các cơ quan. Bài làm tốt nên lập sơ đồ/bảng, sau đó\ngiải thích vị trí, chức năng khái quát của từng nhóm cơ quan theo giáo trình.\nĐiểm cần nhớ:\nKhi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa.\nCHƯƠNG 2"
+  },
+  {
+    "sample_id": "SFT_200Q_009",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 9. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích đặc điểm, các hình thức thể hiện sự tồn tại của pháp luật?",
+    "output": "Pháp luật là hệ thống quy tắc xử sự chung do nhà nước ban hành hoặc thừa\nnhận và bảo đảm thực hiện. Đặc điểm cần phân tích: tính quy phạm phổ biến, tính xác định chặt chẽ về\nhình thức và cơ chế bảo đảm thực hiện bằng quyền lực nhà nước. Hình thức tồn tại của pháp luật cần phân\nbiệt với ngành luật.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý\ncấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_010",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 10. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày hệ thống các văn bản quy phạm pháp luật và nguyên tắc áp dụng các văn bản quy phạm pháp luật ở Việt Nam hiện nay?",
+    "output": "Khi trình bày hệ thống văn bản và nguyên tắc áp dụng, cần xác định thẩm\nquyền, thứ bậc hiệu lực, hiệu lực theo thời gian, không gian và đối tượng. Không được cho rằng văn bản ban\nhành sau luôn được ưu tiên; phải xem quy định về hiệu lực và xử lý xung đột.\nĐiểm cần nhớ:\nKhi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_011",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 11. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích cấu thành của hệ thống pháp luật và hệ thống pháp luật của Việt Nam?",
+    "output": "Hệ thống pháp luật gồm quy phạm pháp luật, chế định pháp luật và ngành luật\ncó quan hệ nội tại. Quy phạm là đơn vị cơ bản; nhiều quy phạm liên quan tạo thành chế định; nhiều chế\nđịnh cùng đối tượng và phương pháp điều chỉnh tạo thành ngành luật. Khi nêu hệ thống Việt Nam nên kèm\nphạm vi điều chỉnh của từng ngành cơ bản.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải\ncó định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_012",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 12. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày khái niệm và đặc điểm của pháp luật xã hội chủ nghĩa Việt Nam?",
+    "output": "Pháp luật xã hội chủ nghĩa Việt Nam được trình bày trong giáo trình gắn với bản\nchất nhà nước, chức năng quản lý xã hội, quyền và nghĩa vụ của chủ thể và cơ chế bảo đảm thực hiện. Khi\nphân tích cần làm rõ tính bắt buộc chung và vai trò của nhà nước, đồng thời phân biệt pháp luật với đạo\nđức, tập quán và quy tắc xã hội khác.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_013",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 13. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày khái niệm, đặc điểm của hệ thống pháp luật? Hệ thống pháp luật Việt Nam gồm có những ngành luật cơ bản nào?",
+    "output": "Hệ thống pháp luật là tổng thể các quy phạm, chế định và ngành luật có mối\nliên hệ. Muốn xác định ngành luật phải dựa vào đối tượng và phương pháp điều chỉnh. Khi liệt kê các ngành\nluật cơ bản, nên mô tả ngắn phạm vi điều chỉnh để thể hiện hiểu bản chất.\nĐiểm cần nhớ:\nKhi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa.\nCHƯƠNG 3"
+  },
+  {
+    "sample_id": "SFT_200Q_014",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 14. [NGUYÊN VĂN GIÁO TRÌNH] Quy phạm pháp luật là gì? Đặc điểm cơ bản của quy phạm pháp luật?",
+    "output": "Quy phạm pháp luật là quy tắc xử sự chung do nhà nước ban hành hoặc thừa\nnhận và bảo đảm thực hiện. Đặc điểm: tính bắt buộc chung, áp dụng nhiều lần cho trường hợp thuộc phạm\nvi điều chỉnh, hình thức pháp lý xác định và cơ chế bảo đảm bằng nhà nước.\nĐiểm cần nhớ:\nKhi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_015",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 15. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày cấu thành của quy phạm pháp luật? Cho ví dụ minh họa?",
+    "output": "Có thể phân tích cấu thành theo giả định, quy định, chế tài. Giả định nêu điều\nkiện/hoàn cảnh; quy định nêu cách xử sự; chế tài nêu hậu quả pháp lý khi không tuân thủ. Khi làm ví dụ\nphải chỉ rõ từng bộ phận.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_016",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 16. [NGUYÊN VĂN GIÁO TRÌNH] Hãy trình bày phương thức thể hiện của quy phạm pháp luật. Cho ví dụ minh họa?",
+    "output": "Các bộ phận của một quy phạm có thể được thể hiện trực tiếp hoặc nằm ở điều\nkhoản khác, được dẫn chiếu hoặc phân tán trong văn bản. Vì vậy không nên đồng nhất một điều luật với\nmột quy phạm hoàn chỉnh; phải đọc trong ngữ cảnh và các quy định liên quan.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_017",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 17. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích các hình thức thực hiện pháp luật. Cho ví dụ về từng hình thức thực hiện pháp luật?",
+    "output": "Bốn hình thức thực hiện: tuân thủ (không làm điều cấm), thi hành (thực hiện\nnghĩa vụ), sử dụng (thực hiện quyền), áp dụng (chủ thể có thẩm quyền ra quyết định cá biệt). Khi cho ví dụ\nphải khớp đúng bản chất từng hình thức.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_018",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 18. [NGUYÊN VĂN GIÁO TRÌNH] So sánh văn bản quy phạm pháp luật với văn bản áp dụng pháp luật. Cho ví dụ về từng loại văn bản?",
+    "output": "Văn bản quy phạm pháp luật chứa quy tắc xử sự chung, áp dụng nhiều lần cho\nnhóm đối tượng; văn bản áp dụng pháp luật giải quyết vụ việc cụ thể, cá biệt hóa quyền, nghĩa vụ hoặc\nbiện pháp cưỡng chế. So sánh theo chủ thể ban hành, nội dung, đối tượng, số lần áp dụng, hậu quả và trình\ntự.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 4"
+  },
+  {
+    "sample_id": "SFT_200Q_019",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 19. [NGUYÊN VĂN GIÁO TRÌNH] Anh chị hãy trình bày khái niệm về quan hệ pháp luật, qua đó phân biệt quan hệ pháp luật với các quan hệ xã hội thông thường khác?",
+    "output": "Quan hệ pháp luật là quan hệ xã hội được pháp luật điều chỉnh, trong đó các\nbên có quyền và nghĩa vụ pháp lý được nhà nước bảo đảm. Khác quan hệ xã hội thông thường ở căn cứ\npháp lý, chủ thể có năng lực, nội dung quyền – nghĩa vụ và cơ chế bảo đảm. Cấu trúc gồm chủ thể, nội\ndung, khách thể.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu\nthành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_020",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 20. [NGUYÊN VĂN GIÁO TRÌNH] Anh chị hãy trình bày các khái niệm về năng lực chủ thể, năng lực pháp luật, năng lực hành vi của chủ thể, qua đó hãy xác định năng lực chủ thể của cá nhân hoặc tổ chức trong các quan hệ pháp luật?",
+    "output": "Năng lực chủ thể là khả năng tham gia quan hệ pháp luật; năng lực pháp luật là\nkhả năng có quyền và nghĩa vụ; năng lực hành vi là khả năng bằng hành vi của mình xác lập, thực hiện\nquyền và nghĩa vụ. Khi xác định phải xét loại quan hệ và điều kiện pháp luật cụ thể.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_021",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 21. [NGUYÊN VĂN GIÁO TRÌNH] Anh chị hãy trình bày về nội dung của quan hệ pháp luật?",
+    "output": "Nội dung quan hệ pháp luật là tổng hợp quyền chủ thể và nghĩa vụ pháp lý của\ncác bên. Khi giải bài phải trả lời ai có quyền gì, ai có nghĩa vụ gì, hành vi nào phải thực hiện/không được\nthực hiện và căn cứ nào làm phát sinh quyền, nghĩa vụ.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_022",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 22. [NGUYÊN VĂN GIÁO TRÌNH] Anh chị hãy cho biết khách thể của quan hệ pháp luật là gì? Khách thể của quan hệ pháp luật có thể được hiểu là đối tượng của quan hệ pháp luật hay không?",
+    "output": "Khách thể là lợi ích vật chất, tinh thần hoặc lợi ích xã hội mà các chủ thể hướng\ntới và quyền, nghĩa vụ pháp lý tác động vào. Không phải mọi khách thể đều là một vật; tùy quan hệ có thể\nlà tài sản, lợi ích nhân thân, hành vi hoặc lợi ích xã hội.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_023",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 23. [NGUYÊN VĂN GIÁO TRÌNH] Sự kiện pháp lý là gì? Cho biết ý nghĩa pháp lý của sự kiện pháp lý và phân loại sự kiện pháp lý?",
+    "output": "Sự kiện pháp lý là sự kiện thực tế mà pháp luật gắn với sự phát sinh, thay đổi\nhoặc chấm dứt quan hệ pháp luật. Có thể phân loại theo ý chí thành sự biến và hành vi; hành vi có thể hợp\npháp hoặc trái pháp luật. Nó là cầu nối giữa quy phạm chung và quan hệ pháp luật cụ thể.\nĐiểm\ncần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 5"
+  },
+  {
+    "sample_id": "SFT_200Q_024",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 24. [NGUYÊN VĂN GIÁO TRÌNH] Nêu khái niệm và phân tích các dấu hiệu đặc trưng cơ bản của hành vi vi phạm pháp luật? Cho ví dụ minh họa?",
+    "output": "Vi phạm pháp luật là hành vi trái pháp luật, có lỗi, do chủ thể có năng lực trách\nnhiệm pháp lý thực hiện và xâm hại hoặc đe dọa xâm hại quan hệ xã hội được pháp luật bảo vệ. Phải kiểm\ntra đủ hành vi, trái pháp luật, lỗi, chủ thể và tính gây hại theo cấu thành.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_025",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 25. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích cấu thành của vi phạm pháp luật? Cho ví dụ minh họa?",
+    "output": "Cấu thành gồm khách thể, mặt khách quan, chủ thể và mặt chủ quan. Khách\nthể là quan hệ xã hội bị xâm hại; mặt khách quan gồm hành vi, hậu quả, quan hệ nhân quả và dấu hiệu\nkhác; chủ thể đáp ứng điều kiện chịu trách nhiệm; mặt chủ quan gồm lỗi, động cơ, mục đích khi luật yêu\ncầu.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_026",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 26. [NGUYÊN VĂN GIÁO TRÌNH] Phân loại vi phạm pháp luật? Phân tích ảnh hưởng của vi phạm pháp luật đối với đời sống xã hội?",
+    "output": "Có thể phân loại thành vi phạm hình sự, hành chính, dân sự và kỷ luật. Mỗi loại\nkhác nhau về quan hệ bị xâm hại, mức độ nguy hiểm, chủ thể áp dụng và hậu quả pháp lý. Vi phạm pháp\nluật làm tổn hại trật tự pháp luật và có thể gây thiệt hại trực tiếp hoặc đe dọa lợi ích xã hội.\nĐiểm\ncần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_027",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 27. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm và đặc điểm của trách nhiệm pháp lý? Cho ví dụ minh họa?",
+    "output": "Trách nhiệm pháp lý là hậu quả pháp lý bất lợi mà chủ thể vi phạm phải gánh\nchịu theo pháp luật. Đặc điểm: gắn với vi phạm; được quy định bằng pháp luật; do chủ thể có thẩm quyền\náp dụng theo trình tự; thể hiện sự cưỡng chế hoặc hậu quả bắt buộc.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_028",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 28. [NGUYÊN VĂN GIÁO TRÌNH] Phân biệt trách nhiệm pháp lý với các loại trách nhiệm xã hội khác? Các loại trách nhiệm pháp lý?",
+    "output": "Trách nhiệm pháp lý khác trách nhiệm đạo đức, nghề nghiệp hoặc xã hội ở căn\ncứ pháp luật, chủ thể áp dụng, trình tự và hậu quả pháp lý. Các loại cơ bản trong giáo trình: hình sự, hành\nchính, dân sự và kỷ luật. Một hành vi có thể kéo theo nhiều loại trách nhiệm nếu đáp ứng điều kiện của từng\nloại.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 6"
+  },
+  {
+    "sample_id": "SFT_200Q_029",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 29. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích đối tượng điều chỉnh và phương pháp điều chỉnh của luật dân sự?",
+    "output": "Luật dân sự điều chỉnh quan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc\nlập tài sản, tự do ý chí và tự chịu trách nhiệm. Phương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và\ntự định đoạt. Khi so với luật hành chính phải nhấn mạnh không phải quan hệ mệnh lệnh – phục\ntùng.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_030",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 30. [NGUYÊN VĂN GIÁO TRÌNH] Phân loại quan hệ nhân thân? Cho ví dụ minh họa?",
+    "output": "Quan hệ nhân thân gắn với giá trị tinh thần như danh dự, nhân phẩm, tên, hình\nảnh và các quyền nhân thân khác; một số quan hệ có thể gắn với tài sản. Khi phân loại cần dựa vào nội\ndung quyền và đưa ví dụ.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_031",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 31. [NGUYÊN VĂN GIÁO TRÌNH] Khái niệm, đặc điểm năng lực pháp luật dân sự của cá nhân?",
+    "output": "Năng lực pháp luật dân sự là khả năng của cá nhân có quyền và nghĩa vụ dân\nsự. Phải phân biệt khả năng có quyền với khả năng tự mình thực hiện giao dịch; năng lực hành vi và các hạn\nchế được xác định theo quy định pháp luật.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải\ncó định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_032",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 32. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày các mức độ năng lực hành vi dân sự của cá nhân?",
+    "output": "Các mức độ năng lực hành vi phải trình bày theo độ tuổi và tình trạng năng lực\nmà pháp luật dân sự quy định, gồm người chưa thành niên theo từng mức, người thành niên có đầy đủ năng\nlực, mất năng lực, khó khăn trong nhận thức/làm chủ hành vi và trường hợp bị hạn chế theo luật. Khi giải\nphải xét đúng loại giao dịch.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_033",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 33. [NGUYÊN VĂN GIÁO TRÌNH] Phân biệt năng lực chủ thể của cá nhân và năng lực chủ thể của pháp nhân?",
+    "output": "Cá nhân có năng lực pháp luật và năng lực hành vi theo quy định về con người;\npháp nhân là tổ chức đáp ứng điều kiện luật định, tham gia quan hệ thông qua cơ quan/người đại diện và\nchịu trách nhiệm bằng tài sản của mình. Hai loại chủ thể khác nhau về cơ chế hình thành và thực hiện\nquyền.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành +\ngiải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_034",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 34. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích các điều kiện công nhận một tổ chức là pháp nhân? Cho ví dụ minh họa?",
+    "output": "Tổ chức được công nhận là pháp nhân khi đáp ứng các điều kiện cơ bản: được\nthành lập hợp pháp; có cơ cấu tổ chức; có tài sản độc lập và tự chịu trách nhiệm bằng tài sản; nhân danh\nmình tham gia quan hệ pháp luật độc lập.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_035",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 35. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm và điều kiện có hiệu lực của giao dịch dân sự?",
+    "output": "Giao dịch dân sự là hợp đồng hoặc hành vi pháp lý đơn phương làm phát sinh,\nthay đổi hoặc chấm dứt quyền, nghĩa vụ dân sự. Hiệu lực cần xét năng lực chủ thể, tự nguyện, mục đích/nội\ndung hợp pháp và hình thức khi luật bắt buộc.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”,\nphải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_036",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 36. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm và hậu quả pháp lý của giao dịch dân sự vô hiệu?",
+    "output": "Giao dịch vô hiệu là giao dịch không làm phát sinh hiệu lực như mong muốn do\nkhông đáp ứng điều kiện hoặc thuộc trường hợp vô hiệu. Hậu quả cơ bản: các bên khôi phục tình trạng ban\nđầu, hoàn trả những gì đã nhận và xem xét bồi thường nếu có lỗi.\nĐiểm cần nhớ: Khi đề yêu\ncầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một\ncâu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_037",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 37. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm tài sản? Phân loại tài sản?",
+    "output": "Tài sản gồm vật, tiền, giấy tờ có giá và quyền tài sản. Có thể phân loại bất động\nsản/động sản, hiện có/hình thành trong tương lai, chia được/không chia được... Phân loại có ý nghĩa xác định\nchế độ pháp lý và giao dịch.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_038",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 38. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm, nội dung và các hình thức sở hữu?",
+    "output": "Quyền sở hữu gồm chiếm hữu, sử dụng và định đoạt trong phạm vi luật. Khi\ntrình bày hình thức sở hữu cần nêu căn cứ pháp luật và phân biệt quyền của chủ sở hữu với quyền của\nngười không phải chủ sở hữu.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa\n+ các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_039",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 39. [NGUYÊN VĂN GIÁO TRÌNH] Nêu chủ thể của quan hệ pháp luật thừa kế? Phân tích những trường hợp người thừa kế không được quyền hưởng di sản do người chết để lại?",
+    "output": "Chủ thể thừa kế được xác định theo pháp luật; người thừa kế có thể không được\nhưởng di sản trong những trường hợp luật định. Khi làm bài phải nêu căn cứ và ngoại lệ, không chỉ kết luận\ntheo quan hệ gia đình.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý\ncấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_040",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 40. [NGUYÊN VĂN GIÁO TRÌNH] Di sản thừa kế và cách xác định di sản?",
+    "output": "Di sản gồm tài sản riêng của người chết và phần tài sản của người chết trong tài\nsản chung. Phải xác định tài sản chung/riêng, nghĩa vụ tài sản và phần còn lại trước khi chia. Không được\ncoi toàn bộ tài sản gia đình là di sản.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_041",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 41. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích điều kiện có hiệu lực của di chúc? Nêu hiệu lực pháp luật của di chúc?",
+    "output": "Điều kiện có hiệu lực của di chúc cần xem năng lực, tự nguyện, nội dung không\ntrái luật/đạo đức và hình thức phù hợp. Hiệu lực còn liên quan thời điểm mở thừa kế và quy định bảo vệ\nngười thừa kế bắt buộc.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các\ný cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_042",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 42. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích trường hợp người được hưởng di sản không phụ thuộc vào nội dung của di chúc?",
+    "output": "Một số người được pháp luật bảo vệ bằng phần di sản nhất định không phụ\nthuộc hoàn toàn vào nội dung di chúc nếu đáp ứng điều kiện luật định. Khi tính phải xác định phần thừa kế\ntheo pháp luật làm cơ sở và kiểm tra ngoại lệ.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”,\nphải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_043",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 43. [NGUYÊN VĂN GIÁO TRÌNH] Nêu khái niệm thừa kế theo pháp luật và những trường hợp phát sinh thừa kế theo pháp luật?",
+    "output": "Thừa kế theo pháp luật là thừa kế theo hàng, điều kiện và trình tự do pháp luật\nquy định. Phát sinh khi không có di chúc hợp pháp, di chúc không định đoạt toàn bộ hoặc phần di chúc\nkhông có hiệu lực và các trường hợp luật định khác.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_044",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 44. [NGUYÊN VĂN GIÁO TRÌNH] Phân biệt diện và hàng thừa kế theo pháp luật? Phân tích các mối quan hệ trong hàng thừa kế thứ nhất?",
+    "output": "Diện thừa kế là phạm vi người có thể trở thành người thừa kế; hàng thừa kế là\nnhóm người được xếp theo mức độ quan hệ. Hàng trước được ưu tiên; hàng thứ nhất gồm vợ, chồng, cha\nmẹ, con của người chết theo quy định.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_045",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 45. [NGUYÊN VĂN GIÁO TRÌNH] So sánh giữa thừa kế theo di chúc với thừa kế theo pháp luật?",
+    "output": "Thừa kế theo di chúc dựa trên ý chí của người để lại di sản trong khuôn khổ luật;\nthừa kế theo pháp luật dựa trên hàng thừa kế và điều kiện luật định. So sánh theo căn cứ, chủ thể, cách\nchia và trường hợp phát sinh.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa\n+ các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 7"
+  },
+  {
+    "sample_id": "SFT_200Q_046",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 46. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày khái niệm về luật hình sự, các nguyên tắc pháp lý cơ bản của luật hình sự và nguồn pháp luật hình sự ở Việt Nam hiện nay?",
+    "output": "Luật hình sự quy định tội phạm, hình phạt và các vấn đề liên quan đến trách\nnhiệm hình sự. Khi trình bày nguyên tắc và nguồn phải bám giáo trình và Bộ luật Hình sự mà giáo trình sử\ndụng.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành +\ngiải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_047",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 47. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày khái niệm tội phạm, đặc điểm của tội phạm và phân loại tội phạm?",
+    "output": "Tội phạm là hành vi nguy hiểm cho xã hội được BLHS quy định, do chủ thể có\nnăng lực theo luật thực hiện, có lỗi và phải chịu trách nhiệm hình sự theo điều kiện luật định. Phân loại phải\ndựa vào tính chất và mức độ nguy hiểm theo BLHS.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_048",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 48. [NGUYÊN VĂN GIÁO TRÌNH] So sánh tội phạm với các loại vi phạm pháp luật khác?",
+    "output": "Tội phạm có mức độ nguy hiểm cao và chịu trách nhiệm hình sự; vi phạm hành\nchính, dân sự, kỷ luật có cơ sở và chế tài khác. So sánh theo khách thể, mức độ nguy hiểm, lỗi, chủ thể,\nthẩm quyền và hậu quả.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_049",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 49. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày khái niệm hình phạt, đặc điểm của hình phạt và các loại hình phạt trong hệ thống hình phạt ở Việt Nam?",
+    "output": "Hình phạt là biện pháp cưỡng chế nghiêm khắc của Nhà nước do Tòa án quyết\nđịnh áp dụng đối với người/pháp nhân thương mại phạm tội theo luật. Cần phân biệt hình phạt chính và bổ\nsung, đồng thời nêu đặc điểm và mục đích pháp lý.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_050",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 50. [NGUYÊN VĂN GIÁO TRÌNH] So sánh hình phạt với các loại chế tài pháp luật khác?",
+    "output": "Hình phạt thuộc luật hình sự, do Tòa án áp dụng khi có tội phạm. Chế tài hành\nchính, dân sự, kỷ luật có căn cứ, mục đích và chủ thể áp dụng khác.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_051",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 51. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày nội dung pháp lý về đồng phạm, phòng vệ chính đáng và tình thế cấp thiết?",
+    "output": "Đồng phạm đòi hỏi từ hai người trở lên cố ý cùng thực hiện một tội phạm; cần\nphân biệt vai trò. Phòng vệ chính đáng là chống trả hành vi xâm phạm trong giới hạn cần thiết; tình thế cấp\nthiết là gây thiệt hại nhỏ hơn để tránh thiệt hại lớn hơn theo điều kiện luật định.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_052",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 52. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày về các loại lỗi trong luật hình sự, qua đó phân biệt các loại lỗi?",
+    "output": "Lỗi là thái độ tâm lý của người thực hiện đối với hành vi và hậu quả. Cố ý gồm\ntrực tiếp/gián tiếp; vô ý gồm quá tự tin/cẩu thả. Phân biệt dựa vào nhận thức và ý chí, không chỉ dựa vào\nviệc có mong muốn hậu quả hay không.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 8"
+  },
+  {
+    "sample_id": "SFT_200Q_053",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 53. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm vi phạm hành chính?",
+    "output": "Vi phạm hành chính là hành vi có lỗi của cá nhân, tổ chức, vi phạm quy định\nquản lý nhà nước và theo pháp luật phải bị xử phạt hành chính, không phải tội phạm. Phải kiểm tra hành vi,\nlỗi, chủ thể và giới hạn chưa đến mức hình sự.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”,\nphải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_054",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 54. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích các dấu hiệu cấu thành của vi phạm hành chính?",
+    "output": "Cấu thành vi phạm hành chính gồm khách thể, mặt khách quan, chủ thể và mặt\nchủ quan. Khi giải phải xác định quy định bị vi phạm, hành vi, lỗi, chủ thể, hậu quả và thẩm quyền xử\nphạt.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_055",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 55. [NGUYÊN VĂN GIÁO TRÌNH] Phân biệt vi phạm hành chính và tội phạm?",
+    "output": "Phân biệt với tội phạm theo cơ sở pháp lý, mức độ nguy hiểm, cấu thành, chủ\nthể, thẩm quyền và hậu quả. Tội phạm phải được quy định trong BLHS; vi phạm hành chính thuộc phạm vi\nxử phạt hành chính khi đủ căn cứ.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_056",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 56. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích khái niệm trách nhiệm hành chính?",
+    "output": "Trách nhiệm hành chính là hậu quả pháp lý bất lợi mà cá nhân, tổ chức vi phạm\nhành chính phải chịu theo luật và quyết định của người có thẩm quyền. Cần xác định căn cứ, thẩm quyền,\nhình thức xử phạt và biện pháp khắc phục.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải\ncó định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_057",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 57. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày các hình thức xử phạt hành chính và các biện pháp xử lý hành chính?",
+    "output": "Cần phân biệt hình thức xử phạt, biện pháp khắc phục hậu quả và biện pháp xử\nlý hành chính. Mỗi loại có điều kiện, đối tượng, thẩm quyền và mục đích khác nhau; khi thi phải bám danh\nmục và điều kiện trong giáo trình/pháp luật áp dụng.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa.\nCHƯƠNG 9"
+  },
+  {
+    "sample_id": "SFT_200Q_058",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 58. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích các dấu hiệu đặc trưng của tham nhũng?",
+    "output": "Tham nhũng cần được nhận diện qua chủ thể có chức vụ, quyền hạn, việc lợi\ndụng chức vụ/quyền hạn và mục đích vụ lợi cùng hành vi thuộc phạm vi pháp luật xác định. Không phải mọi\nsai phạm của người có chức vụ đều tự động là tham nhũng.\nĐiểm cần nhớ: Khi đề yêu cầu\n“phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu\nđịnh nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_059",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 59. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích các hành vi tham nhũng theo quy định của pháp luật Việt Nam? Vai trò của pháp luật trong phòng, chống tham nhũng?",
+    "output": "Cần nhận diện các hành vi tham nhũng theo danh mục pháp luật mà giáo trình\nsử dụng; sau đó phân tích vai trò của pháp luật trong phòng ngừa, phát hiện và xử lý. Phải phân biệt hành\nvi tham nhũng với hành vi có nguy cơ tham nhũng.\nĐiểm cần nhớ: Khi đề yêu cầu “phân\ntích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định\nnghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_060",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 60. [NGUYÊN VĂN GIÁO TRÌNH] Phân tích trách nhiệm của nhà nước, các chủ thể xã hội và công dân đối với công tác phòng, chống tham nhũng? Mối quan hệ của các chủ thể này trong hoạt động phòng chống tham nhũng?",
+    "output": "Nhà nước xây dựng và tổ chức thực hiện pháp luật; cơ quan, tổ chức và xã hội\ntham gia giám sát, phản ánh, phát hiện; công dân chấp hành, đấu tranh, phản ánh/tố cáo và phối hợp xác\nminh theo luật. Giáo trình nhấn mạnh phản ánh phải khách quan, trung thực và cơ chế bảo vệ người tố\ncáo.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_061",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 61. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày các biện pháp phòng ngừa tham nhũng trong pháp luật về phòng chống tham nhũng ở nước ta hiện nay? Cho biết ý nghĩa của các biện pháp phòng ngừa tham nhũng đó?",
+    "output": "Các biện pháp phòng ngừa gồm công khai, minh bạch; chế độ, định mức, tiêu\nchuẩn; quy tắc ứng xử; kiểm soát các nguy cơ xung đột/lợi ích; cải cách hành chính và các cơ chế kiểm soát\nkhác theo pháp luật. Ý nghĩa là giảm cơ hội lợi dụng quyền lực, tăng minh bạch và giám sát.\nĐiểm\ncần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_062",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 62. [NGUYÊN VĂN GIÁO TRÌNH] Trình bày ý nghĩa của cải cách hành chính với công tác phòng, chống tham nhũng?",
+    "output": "Cải cách hành chính góp phần phòng chống tham nhũng bằng đơn giản hóa thủ\ntục, công khai quy trình, giảm tiếp xúc không cần thiết, ứng dụng công nghệ, xác định rõ trách nhiệm và\ntăng khả năng kiểm tra, truy vết.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 1"
+  },
+  {
+    "sample_id": "SFT_200Q_063",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 63. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Khái niệm nhà nước và các đặc điểm cơ bản.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Nguồn gốc nhà nước được\ntrình bày theo các quan điểm khác nhau, trong đó quan điểm Mác – Lênin giải thích sự xuất hiện nhà nước\ntừ sự phát triển của xã hội, sự xuất hiện tư hữu, phân hóa giai cấp và mâu thuẫn giai cấp ngày càng sâu\nsắc. Nhà nước là sản phẩm lịch sử của xã hội có giai cấp, gắn với một quyền lực công cộng đặc biệt. Khi thi\nnên trình bày: các quan điểm → quan điểm Mác – Lênin → cơ sở kinh tế – xã hội → kết luận về tính lịch sử\ncủa nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên\nhệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_064",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 64. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt nhà nước với tổ chức xã hội.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Nguồn gốc nhà nước được\ntrình bày theo các quan điểm khác nhau, trong đó quan điểm Mác – Lênin giải thích sự xuất hiện nhà nước\ntừ sự phát triển của xã hội, sự xuất hiện tư hữu, phân hóa giai cấp và mâu thuẫn giai cấp ngày càng sâu\nsắc. Nhà nước là sản phẩm lịch sử của xã hội có giai cấp, gắn với một quyền lực công cộng đặc biệt. Khi thi\nnên trình bày: các quan điểm → quan điểm Mác – Lênin → cơ sở kinh tế – xã hội → kết luận về tính lịch sử\ncủa nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên\nhệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_065",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 65. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Các kiểu nhà nước trong lịch sử.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Nguồn gốc nhà nước được\ntrình bày theo các quan điểm khác nhau, trong đó quan điểm Mác – Lênin giải thích sự xuất hiện nhà nước\ntừ sự phát triển của xã hội, sự xuất hiện tư hữu, phân hóa giai cấp và mâu thuẫn giai cấp ngày càng sâu\nsắc. Nhà nước là sản phẩm lịch sử của xã hội có giai cấp, gắn với một quyền lực công cộng đặc biệt. Khi thi\nnên trình bày: các quan điểm → quan điểm Mác – Lênin → cơ sở kinh tế – xã hội → kết luận về tính lịch sử\ncủa nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên\nhệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_066",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 66. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt chức năng đối nội và đối ngoại.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Nguồn gốc nhà nước được\ntrình bày theo các quan điểm khác nhau, trong đó quan điểm Mác – Lênin giải thích sự xuất hiện nhà nước\ntừ sự phát triển của xã hội, sự xuất hiện tư hữu, phân hóa giai cấp và mâu thuẫn giai cấp ngày càng sâu\nsắc. Nhà nước là sản phẩm lịch sử của xã hội có giai cấp, gắn với một quyền lực công cộng đặc biệt. Khi thi\nnên trình bày: các quan điểm → quan điểm Mác – Lênin → cơ sở kinh tế – xã hội → kết luận về tính lịch sử\ncủa nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên\nhệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa +\ncác ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 2"
+  },
+  {
+    "sample_id": "SFT_200Q_067",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 67. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Nguồn gốc và bản chất pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Pháp luật là hệ thống quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm cần phân tích: tính\nquy phạm phổ biến, tính xác định chặt chẽ về hình thức và cơ chế bảo đảm thực hiện bằng quyền lực nhà\nnước. Hình thức tồn tại của pháp luật cần phân biệt với ngành luật. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_068",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 68. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt pháp luật với đạo đức.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Pháp luật là hệ thống quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm cần phân tích: tính\nquy phạm phổ biến, tính xác định chặt chẽ về hình thức và cơ chế bảo đảm thực hiện bằng quyền lực nhà\nnước. Hình thức tồn tại của pháp luật cần phân biệt với ngành luật. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_069",
+    "intent_code": "QPPL_STRUCT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 69. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Quan hệ giữa quy phạm, chế định và ngành luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Pháp luật là hệ thống quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm cần phân tích: tính\nquy phạm phổ biến, tính xác định chặt chẽ về hình thức và cơ chế bảo đảm thực hiện bằng quyền lực nhà\nnước. Hình thức tồn tại của pháp luật cần phân biệt với ngành luật. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_070",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 70. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Hiệu lực pháp luật theo thời gian, không gian và đối tượng.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Pháp luật là hệ thống quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm cần phân tích: tính\nquy phạm phổ biến, tính xác định chặt chẽ về hình thức và cơ chế bảo đảm thực hiện bằng quyền lực nhà\nnước. Hình thức tồn tại của pháp luật cần phân biệt với ngành luật. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 3"
+  },
+  {
+    "sample_id": "SFT_200Q_071",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 71. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt bốn hình thức thực hiện pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quy phạm pháp luật là quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm: tính bắt buộc\nchung, áp dụng nhiều lần cho trường hợp thuộc phạm vi điều chỉnh, hình thức pháp lý xác định và cơ chế\nbảo đảm bằng nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ;\nkết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_072",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 72. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Các trường hợp cần áp dụng pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quy phạm pháp luật là quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm: tính bắt buộc\nchung, áp dụng nhiều lần cho trường hợp thuộc phạm vi điều chỉnh, hình thức pháp lý xác định và cơ chế\nbảo đảm bằng nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ;\nkết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_073",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 73. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Các giai đoạn áp dụng pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quy phạm pháp luật là quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm: tính bắt buộc\nchung, áp dụng nhiều lần cho trường hợp thuộc phạm vi điều chỉnh, hình thức pháp lý xác định và cơ chế\nbảo đảm bằng nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ;\nkết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_074",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 74. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Đặc điểm của áp dụng pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quy phạm pháp luật là quy\ntắc xử sự chung do nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Đặc điểm: tính bắt buộc\nchung, áp dụng nhiều lần cho trường hợp thuộc phạm vi điều chỉnh, hình thức pháp lý xác định và cơ chế\nbảo đảm bằng nhà nước. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ;\nkết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có\nđịnh nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 4"
+  },
+  {
+    "sample_id": "SFT_200Q_075",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 75. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân tích ba bộ phận của quan hệ pháp luật.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quan hệ pháp luật là quan\nhệ xã hội được pháp luật điều chỉnh, trong đó các bên có quyền và nghĩa vụ pháp lý được nhà nước bảo\nđảm. Khác quan hệ xã hội thông thường ở căn cứ pháp lý, chủ thể có năng lực, nội dung quyền – nghĩa vụ\nvà cơ chế bảo đảm. Cấu trúc gồm chủ thể, nội dung, khách thể. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_076",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 76. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt năng lực pháp luật và năng lực hành vi.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quan hệ pháp luật là quan\nhệ xã hội được pháp luật điều chỉnh, trong đó các bên có quyền và nghĩa vụ pháp lý được nhà nước bảo\nđảm. Khác quan hệ xã hội thông thường ở căn cứ pháp lý, chủ thể có năng lực, nội dung quyền – nghĩa vụ\nvà cơ chế bảo đảm. Cấu trúc gồm chủ thể, nội dung, khách thể. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_077",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 77. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân loại sự kiện pháp lý.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quan hệ pháp luật là quan\nhệ xã hội được pháp luật điều chỉnh, trong đó các bên có quyền và nghĩa vụ pháp lý được nhà nước bảo\nđảm. Khác quan hệ xã hội thông thường ở căn cứ pháp lý, chủ thể có năng lực, nội dung quyền – nghĩa vụ\nvà cơ chế bảo đảm. Cấu trúc gồm chủ thể, nội dung, khách thể. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_078",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 78. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Ý nghĩa của sự kiện pháp lý.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Quan hệ pháp luật là quan\nhệ xã hội được pháp luật điều chỉnh, trong đó các bên có quyền và nghĩa vụ pháp lý được nhà nước bảo\nđảm. Khác quan hệ xã hội thông thường ở căn cứ pháp lý, chủ thể có năng lực, nội dung quyền – nghĩa vụ\nvà cơ chế bảo đảm. Cấu trúc gồm chủ thể, nội dung, khách thể. Khi thi, triển khai theo 4 bước: nêu khái\nniệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần\nnhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ;\nkhông chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 5"
+  },
+  {
+    "sample_id": "SFT_200Q_079",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 79. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt lỗi cố ý và vô ý.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm pháp luật là hành\nvi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại hoặc đe dọa xâm\nhại quan hệ xã hội được pháp luật bảo vệ. Phải kiểm tra đủ hành vi, trái pháp luật, lỗi, chủ thể và tính gây\nhại theo cấu thành. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết\nluận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_080",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 80. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt khách thể và đối tượng tác động.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm pháp luật là hành\nvi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại hoặc đe dọa xâm\nhại quan hệ xã hội được pháp luật bảo vệ. Phải kiểm tra đủ hành vi, trái pháp luật, lỗi, chủ thể và tính gây\nhại theo cấu thành. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết\nluận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_081",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 81. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Ý nghĩa của việc xác định cấu thành vi phạm.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm pháp luật là hành\nvi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại hoặc đe dọa xâm\nhại quan hệ xã hội được pháp luật bảo vệ. Phải kiểm tra đủ hành vi, trái pháp luật, lỗi, chủ thể và tính gây\nhại theo cấu thành. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết\nluận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_082",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 82. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Khi nào có thể phát sinh nhiều loại trách nhiệm?",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm pháp luật là hành\nvi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại hoặc đe dọa xâm\nhại quan hệ xã hội được pháp luật bảo vệ. Phải kiểm tra đủ hành vi, trái pháp luật, lỗi, chủ thể và tính gây\nhại theo cấu thành. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết\nluận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định\nnghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 6"
+  },
+  {
+    "sample_id": "SFT_200Q_083",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 83. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt hợp đồng và hành vi pháp lý đơn phương.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật dân sự điều chỉnh\nquan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc lập tài sản, tự do ý chí và tự chịu trách nhiệm.\nPhương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và tự định đoạt. Khi so với luật hành chính phải\nnhấn mạnh không phải quan hệ mệnh lệnh – phục tùng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân\ntích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_084",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 84. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Tài sản hiện có và tài sản hình thành trong tương lai.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật dân sự điều chỉnh\nquan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc lập tài sản, tự do ý chí và tự chịu trách nhiệm.\nPhương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và tự định đoạt. Khi so với luật hành chính phải\nnhấn mạnh không phải quan hệ mệnh lệnh – phục tùng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân\ntích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_085",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 85. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Ý nghĩa phân loại bất động sản và động sản.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật dân sự điều chỉnh\nquan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc lập tài sản, tự do ý chí và tự chịu trách nhiệm.\nPhương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và tự định đoạt. Khi so với luật hành chính phải\nnhấn mạnh không phải quan hệ mệnh lệnh – phục tùng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân\ntích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_086",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 86. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt quyền sở hữu và quyền của người không phải chủ sở hữu.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật dân sự điều chỉnh\nquan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc lập tài sản, tự do ý chí và tự chịu trách nhiệm.\nPhương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và tự định đoạt. Khi so với luật hành chính phải\nnhấn mạnh không phải quan hệ mệnh lệnh – phục tùng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân\ntích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_087",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 87. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Thừa kế thế vị.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật dân sự điều chỉnh\nquan hệ tài sản và nhân thân trên cơ sở bình đẳng, độc lập tài sản, tự do ý chí và tự chịu trách nhiệm.\nPhương pháp điều chỉnh mang tính bình đẳng, thỏa thuận và tự định đoạt. Khi so với luật hành chính phải\nnhấn mạnh không phải quan hệ mệnh lệnh – phục tùng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân\ntích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề\nyêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc\nmột câu định nghĩa.\nCHƯƠNG 7"
+  },
+  {
+    "sample_id": "SFT_200Q_088",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 88. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt trách nhiệm hình sự và hình phạt.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật hình sự quy định tội\nphạm, hình phạt và các vấn đề liên quan đến trách nhiệm hình sự. Khi trình bày nguyên tắc và nguồn phải\nbám giáo trình và Bộ luật Hình sự mà giáo trình sử dụng. Khi thi, triển khai theo 4 bước: nêu khái niệm;\nphân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_089",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 89. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân tích mặt chủ quan của tội phạm.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật hình sự quy định tội\nphạm, hình phạt và các vấn đề liên quan đến trách nhiệm hình sự. Khi trình bày nguyên tắc và nguồn phải\nbám giáo trình và Bộ luật Hình sự mà giáo trình sử dụng. Khi thi, triển khai theo 4 bước: nêu khái niệm;\nphân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_090",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 90. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Ý nghĩa phòng vệ chính đáng và tình thế cấp thiết.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật hình sự quy định tội\nphạm, hình phạt và các vấn đề liên quan đến trách nhiệm hình sự. Khi trình bày nguyên tắc và nguồn phải\nbám giáo trình và Bộ luật Hình sự mà giáo trình sử dụng. Khi thi, triển khai theo 4 bước: nêu khái niệm;\nphân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_091",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 91. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Điều kiện nhận diện đồng phạm.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Luật hình sự quy định tội\nphạm, hình phạt và các vấn đề liên quan đến trách nhiệm hình sự. Khi trình bày nguyên tắc và nguồn phải\nbám giáo trình và Bộ luật Hình sự mà giáo trình sử dụng. Khi thi, triển khai theo 4 bước: nêu khái niệm;\nphân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi\nđề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải thích + ví dụ/liên hệ; không chỉ học\nthuộc một câu định nghĩa.\nCHƯƠNG 8"
+  },
+  {
+    "sample_id": "SFT_200Q_092",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 92. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt hình thức xử phạt và biện pháp khắc phục hậu quả.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm hành chính là hành\nvi có lỗi của cá nhân, tổ chức, vi phạm quy định quản lý nhà nước và theo pháp luật phải bị xử phạt hành\nchính, không phải tội phạm. Phải kiểm tra hành vi, lỗi, chủ thể và giới hạn chưa đến mức hình sự. Khi thi,\ntriển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu\nhỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_093",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 93. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Xác định chủ thể chịu trách nhiệm hành chính.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Vi phạm hành chính là hành\nvi có lỗi của cá nhân, tổ chức, vi phạm quy định quản lý nhà nước và theo pháp luật phải bị xử phạt hành\nchính, không phải tội phạm. Phải kiểm tra hành vi, lỗi, chủ thể và giới hạn chưa đến mức hình sự. Khi thi,\ntriển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ đúng yêu cầu câu\nhỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý cấu thành + giải\nthích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nCHƯƠNG 9"
+  },
+  {
+    "sample_id": "SFT_200Q_094",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 94. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Phân biệt phòng ngừa, phát hiện và xử lý tham nhũng.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Tham nhũng cần được nhận\ndiện qua chủ thể có chức vụ, quyền hạn, việc lợi dụng chức vụ/quyền hạn và mục đích vụ lợi cùng hành vi\nthuộc phạm vi pháp luật xác định. Không phải mọi sai phạm của người có chức vụ đều tự động là tham\nnhũng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ\nđúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý\ncấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa."
+  },
+  {
+    "sample_id": "SFT_200Q_095",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 95. [MỞ RỘNG BÁM SÁT GIÁO TRÌNH] Vai trò công khai, minh bạch trong phòng chống tham nhũng.",
+    "output": "Câu mở rộng được biên soạn bám nội dung chương. Tham nhũng cần được nhận\ndiện qua chủ thể có chức vụ, quyền hạn, việc lợi dụng chức vụ/quyền hạn và mục đích vụ lợi cùng hành vi\nthuộc phạm vi pháp luật xác định. Không phải mọi sai phạm của người có chức vụ đều tự động là tham\nnhũng. Khi thi, triển khai theo 4 bước: nêu khái niệm; phân tích từng tiêu chí; cho ví dụ; kết luận/ liên hệ\nđúng yêu cầu câu hỏi.\nĐiểm cần nhớ: Khi đề yêu cầu “phân tích”, phải có định nghĩa + các ý\ncấu thành + giải thích + ví dụ/liên hệ; không chỉ học thuộc một câu định nghĩa.\nPHẦN II — 100 CÂU TỰ LUẬN TÌNH HUỐNG\nCác câu 101–200 là tình huống luyện tập, không phải câu nguyên văn giáo trình. Mục tiêu là luyện\ncách áp dụng 9 chương vào dữ kiện thực tế."
+  },
+  {
+    "sample_id": "SFT_200Q_101",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 101. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_102",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 102. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_103",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 103. [Chương 3] A dừng xe khi có tín hiệu cấm; B nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_104",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 104. [Chương 4] A mua điện thoại của B. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_105",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 105. [Chương 5] A vượt đèn đỏ và làm hỏng xe B. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_106",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 106. [Chương 6] Ông A chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_107",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 107. [Chương 7] A chống trả B đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_108",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 108. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_109",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 109. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_110",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 110. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_111",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 111. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_112",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 112. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_113",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 113. [Chương 3] A6 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_114",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 114. [Chương 4] A7 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_115",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 115. [Chương 5] A1 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_116",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 116. [Chương 6] Ông A2 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_117",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 117. [Chương 7] A3 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_118",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 118. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_119",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 119. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_120",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 120. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_121",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 121. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_122",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 122. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_123",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 123. [Chương 3] A2 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_124",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 124. [Chương 4] A3 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_125",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 125. [Chương 5] A4 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_126",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 126. [Chương 6] Ông A5 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_127",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 127. [Chương 7] A6 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_128",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 128. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_129",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 129. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_130",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 130. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_131",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 131. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_132",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 132. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_133",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 133. [Chương 3] A5 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_134",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 134. [Chương 4] A6 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_135",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 135. [Chương 5] A7 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_136",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 136. [Chương 6] Ông A1 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_137",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 137. [Chương 7] A2 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_138",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 138. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_139",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 139. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_140",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 140. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_141",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 141. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_142",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 142. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_143",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 143. [Chương 3] A1 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_144",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 144. [Chương 4] A2 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_145",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 145. [Chương 5] A3 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_146",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 146. [Chương 6] Ông A4 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_147",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 147. [Chương 7] A5 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_148",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 148. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_149",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 149. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_150",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 150. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_151",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 151. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_152",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 152. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_153",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 153. [Chương 3] A4 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_154",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 154. [Chương 4] A5 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_155",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 155. [Chương 5] A6 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_156",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 156. [Chương 6] Ông A7 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_157",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 157. [Chương 7] A1 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_158",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 158. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_159",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 159. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_160",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 160. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_161",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 161. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_162",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 162. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_163",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 163. [Chương 3] A7 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_164",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 164. [Chương 4] A1 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_165",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 165. [Chương 5] A2 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_166",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 166. [Chương 6] Ông A3 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_167",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 167. [Chương 7] A4 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_168",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 168. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_169",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 169. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_170",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 170. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_171",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 171. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_172",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 172. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_173",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 173. [Chương 3] A3 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_174",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 174. [Chương 4] A4 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_175",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 175. [Chương 5] A5 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_176",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 176. [Chương 6] Ông A6 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_177",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 177. [Chương 7] A7 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_178",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 178. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_179",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 179. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_180",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 180. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_181",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 181. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_182",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 182. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_183",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 183. [Chương 3] A6 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_184",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 184. [Chương 4] A7 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_185",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 185. [Chương 5] A1 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_186",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 186. [Chương 6] Ông A2 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_187",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 187. [Chương 7] A3 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_188",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 188. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_189",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 189. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_190",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 190. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_191",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 191. [Chương 1] Một nhóm dân cư tự đặt nội quy và tổ chức giữ trật tự. Có thể coi nhóm này là nhà nước không?",
+    "output": "Không kết luận chỉ từ việc có nội quy. Đối chiếu quyền lực công cộng đặc biệt,\nlãnh thổ, chủ quyền, pháp luật và các đặc trưng nhà nước. Nếu chỉ là nhóm tự nguyện thì về nguyên tắc\nkhông phải nhà nước. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù\nhợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác\nđịnh đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ\nkiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_192",
+    "intent_code": "TRUE_FALSE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 192. [Chương 2] Hai văn bản quy định khác nhau về cùng vấn đề. Người giải chỉ chọn văn bản ban hành sau. Đúng không?",
+    "output": "Chưa đủ. Phải kiểm tra thứ bậc hiệu lực, thẩm quyền, thời điểm có hiệu lực,\nphạm vi áp dụng và quy định xử lý xung đột. Không được coi “ban hành sau” là tiêu chí duy nhất. Khi làm\nbài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện\nvà chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_193",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 193. [Chương 3] A2 dừng xe khi có tín hiệu cấm; B3 nộp khoản tiền phải nộp; C gửi đơn thực hiện quyền; D là Tòa án ra bản án. Xác định hình thức thực hiện pháp luật.",
+    "output": "A: tuân thủ; B: thi hành; C: sử dụng; D: áp dụng pháp luật. Cần giải thích ngắn\nlý do dựa vào bản chất hành vi và chủ thể. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy\nphạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã\ncho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ\nyếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_194",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 194. [Chương 4] A3 mua điện thoại của B4. Hãy xác định chủ thể, nội dung và khách thể.",
+    "output": "Chủ thể: A và B nếu có năng lực phù hợp. Nội dung: quyền và nghĩa vụ, như\ngiao tài sản và trả tiền. Khách thể: lợi ích/tài sản và việc thực hiện quyền, nghĩa vụ mà các bên hướng tới.\nKhi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng\nđiều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề\n→ viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_195",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 195. [Chương 5] A4 vượt đèn đỏ và làm hỏng xe B5. Những trách nhiệm nào cần xem xét?",
+    "output": "Tách từng quan hệ: có thể xem xét trách nhiệm hành chính về giao thông và\ntrách nhiệm dân sự về bồi thường nếu đủ điều kiện; nếu hậu quả/dấu hiệu đạt ngưỡng hình sự thì phải xem\nxét trách nhiệm hình sự. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định\nphù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_196",
+    "intent_code": "CIVIL_INHERIT",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 196. [Chương 6] Ông A5 chết, để lại căn nhà là tài sản chung vợ chồng. Có được chia toàn bộ căn nhà cho người thừa kế không?",
+    "output": "Không chia ngay toàn bộ. Phải xác định phần tài sản của A trong khối tài sản\nchung; phần của người còn sống không phải di sản của A. Sau đó mới xác định di sản và chia. Khi làm bài\nphải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và\nchỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn\nđúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_197",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 197. [Chương 7] A6 chống trả B2 đang dùng dao tấn công. Cần kiểm tra gì trước khi kết luận A phạm tội?",
+    "output": "Kiểm tra điều kiện phòng vệ chính đáng: có hành vi tấn công đang xảy ra, lợi\ních cần bảo vệ và mức độ chống trả có cần thiết/thuộc giới hạn luật định hay không. Nếu vượt giới hạn thì\nxem trách nhiệm theo quy định. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế\nđịnh phù hợp, đối chiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung\nchấm: xác định đúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có\nđiều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_198",
+    "intent_code": "VPPL_4_ELEMENTS",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 198. [Chương 8] Một người vi phạm giao thông nhưng hành vi chưa đến mức tội phạm. Có thể xử phạt hành chính ngay không?",
+    "output": "Chỉ khi hành vi được pháp luật quy định là vi phạm hành chính, chủ thể có điều\nkiện chịu trách nhiệm và người xử lý có thẩm quyền. Phải đối chiếu căn cứ và thẩm quyền, không kết luận\nchung chung. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_199",
+    "intent_code": "GENERAL_THEORY",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 199. [Chương 9] Cán bộ yêu cầu doanh nghiệp đưa tiền để giải quyết hồ sơ nhanh. Phân tích dấu hiệu cần kiểm tra.",
+    "output": "Kiểm tra chức vụ/quyền hạn, hành vi lợi dụng vị trí, mục đích vụ lợi, hành vi cụ\nthể và căn cứ pháp luật về tham nhũng/hình sự. Không chỉ dựa vào việc có nhận tiền. Khi làm bài phải tách\ndữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối chiếu từng điều kiện và chỉ kết luận\ntrong phạm vi dữ kiện đã cho.\nKhung chấm: xác định đúng vấn đề → viện dẫn đúng khái\nniệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện chưa đủ."
+  },
+  {
+    "sample_id": "SFT_200Q_200",
+    "intent_code": "CRIMINAL_AGE",
+    "instruction": "Hãy phân tích và trả lời câu hỏi tự luận Pháp luật Đại cương sau đây theo chuẩn Barem giáo trình 2021.",
+    "input": "Câu 200. [Tổng hợp] Một người không thực hiện nghĩa vụ hợp đồng nhưng bên kia muốn xử lý hình sự ngay. Cần làm gì?",
+    "output": "Xác định quan hệ dân sự và nghĩa vụ hợp đồng trước; kiểm tra có dấu hiệu tội\nphạm độc lập hay chỉ là vi phạm nghĩa vụ dân sự. Không hình sự hóa tranh chấp dân sự khi thiếu dấu hiệu\ntội phạm. Khi làm bài phải tách dữ kiện thực tế khỏi kết luận, xác định quy phạm/chế định phù hợp, đối\nchiếu từng điều kiện và chỉ kết luận trong phạm vi dữ kiện đã cho.\nKhung chấm: xác định\nđúng vấn đề → viện dẫn đúng khái niệm/quy tắc → đối chiếu đủ yếu tố → kết luận có điều kiện nếu dữ kiện\nchưa đủ.\nPHỤ LỤC — CÁC LỖI DỄ MẤT ĐIỂM\n1. Nhầm quy phạm pháp luật với điều luật. 2. Nhầm quyền với nghĩa vụ. 3. Nhầm khách thể với đối tượng. 4. Kết luận\ntội phạm chỉ vì có hậu quả. 5. Nhầm xử phạt hành chính với biện pháp khắc phục hậu quả. 6. Chia toàn bộ tài sản gia\nđình thành di sản mà chưa tách tài sản chung. 7. Chỉ nêu định nghĩa khi đề yêu cầu phân tích. 8. Dùng kết luận tuyệt\nđối khi dữ kiện chưa đủ. 9. Dùng luật hiện hành để thay thế âm thầm nội dung giáo trình 2021."
+  }
+]

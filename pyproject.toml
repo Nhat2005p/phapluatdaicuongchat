@@ -1,0 +1,14 @@
+[tool.pyrefly]
+python-interpreter-path = ".venv/Scripts/python.exe"
+search-path = [".", "src"]
+site-package-path = [".venv/Lib/site-packages"]
+project-includes = [
+    "*.py",
+    "src/**/*.py",
+    "tests/**/*.py"
+]
+project-excludes = [
+    "**/__pyrefly_virtual__/**",
+    "**/tools/**",
+    "**/.venv/**"
+]
