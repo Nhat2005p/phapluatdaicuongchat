@@ -190,6 +190,35 @@ Trên modal Đăng nhập, có sẵn 2 nút đăng nhập nhanh thuận tiện c
 
 ---
 
+### Bước 4: Hướng dẫn Tải Trọng số Mô hình AI (Model Weights)
+
+Vì trọng số mô hình LLM có dung lượng lớn (khoảng 3.2 GB - vượt quá giới hạn 100MB của GitHub), toàn bộ mô hình được lưu trữ chính thức trên **Hugging Face Hub**:
+🔗 **Repo Hugging Face**: [`bqbbao6/Qwen2.5-3B-legal-vn`](https://huggingface.co/bqbbao6/Qwen2.5-3B-legal-vn)
+
+Người dùng khác khi clone dự án về có 3 cách sử dụng:
+
+1. **Cách 1: Tải tự động 1-Click bằng Python script (Khuyên dùng)**
+   - Nhấp đúp chuột vào file:
+     ```bat
+     download_model.bat
+     ```
+   - *(Hoặc chạy terminal: `python src/download_model.py`)*.  
+   - Script sử dụng `huggingface_hub` để tự động tải trọng số chuẩn về thư mục `models/qwen2.5-3b-legal-vn`.
+
+2. **Cách 2: Chạy trực tiếp qua Fast-Path & Dynamic RAG (Không bắt buộc tải Model nặng)**
+   - Hệ thống được thiết kế với kiến trúc **Fallback thông minh**: Ngay cả khi chưa tải model LLM (chưa có file nặng), người dùng vẫn trải nghiệm đầy đủ 100% các tính năng học tập, ôn thi và tra cứu văn bản nhờ:
+     - **Tầng 4 Fast-Path Cache**: Tích hợp sẵn 374 đề thi đại học điểm 10 (`sft_vietlaw_500.json`) và 10.048 dữ liệu tư vấn thực tiễn (`sft_vietlaw_master.json`).
+     - **Bộ giải Barem Động (Dynamic RAG Solver)**: Tự động phân tích các tình huống pháp lý mới bằng thuật toán động với độ trễ phản hồi < 300ms.
+
+3. **Cách 3: Chạy Local Inference với llama.cpp (GGUF 4-bit)**
+   - Tải file GGUF lượng tử hóa: `qwen2.5-3b-legal-vn-Q4_K_M.gguf` đặt vào thư mục `models/`.
+   - Khởi động local server bằng file:
+     ```bat
+     run_model_server.bat
+     ```
+
+---
+
 ## 8. Cấu hình Biến Môi trường (.env)
 
 Tạo hoặc kiểm tra file [`.env`](file:///.env) tại thư mục gốc:
