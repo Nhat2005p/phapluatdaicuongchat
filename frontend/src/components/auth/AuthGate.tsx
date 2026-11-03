@@ -122,7 +122,7 @@ export const AuthGate: React.FC = () => {
               Chatbot Pháp Luật
             </span>
             <span className="text-[10px] text-slate-500 hidden sm:block leading-none mt-0.5">
-              Trợ lý AI Trực Tuyến • Môn Pháp luật đại cương
+              Trợ lý Trực Tuyến • Môn Pháp luật đại cương
             </span>
           </div>
         </div>
@@ -176,7 +176,7 @@ export const AuthGate: React.FC = () => {
               {tab === 'login' ? 'Đăng nhập vào hệ thống' : 'Tạo tài khoản mới'}
             </h1>
             <p className="text-xs text-slate-500 max-w-sm mx-auto">
-              Hệ thống yêu cầu xác thực để cấp hạn mức hỏi đáp AI và lưu lịch sử bài giải của bạn.
+              Hệ thống yêu cầu xác thực để cấp hạn mức hỏi đáp và lưu lịch sử bài giải của bạn.
             </p>
           </div>
 
@@ -406,7 +406,7 @@ export const AuthGate: React.FC = () => {
 
       {/* 3. Footer */}
       <footer className="border-t border-slate-200 bg-white py-4 text-center text-xs text-slate-500">
-        <span>© 2026 Chatbot Hỗ Trợ Pháp Luật Đại Cương — Trợ lý AI Pháp luật</span>
+        <span>© 2026 Chatbot Hỗ Trợ Pháp Luật Đại Cương — Trợ lý Pháp luật</span>
       </footer>
     </div>
   );

@@ -4,6 +4,7 @@ import { LlmService } from '../services/llmService.js';
 import { GuardrailService } from '../services/guardrailService.js';
 import { QueryHistory } from '../models/QueryHistory.js';
 import { User } from '../models/User.js';
+import { PersistenceService } from '../services/persistenceService.js';
 
 export class QueryController {
   /**
@@ -11,7 +12,7 @@ export class QueryController {
    */
   public static async solveQuery(req: Request, res: Response): Promise<void> {
     try {
-      const { query } = req.body;
+      const { query, categoryId } = req.body;
       if (!query || typeof query !== 'string' || !query.trim()) {
         res.status(400).json({ success: false, message: 'Nội dung câu hỏi không được để trống.' });
         return;
@@ -47,25 +48,25 @@ export class QueryController {
 
       const startTime = Date.now();
 
-      // Giai đoạn 1: Phân loại và Điều hướng (Intent Routing)
-      const intentCode = RagService.detectIntent(query);
+      // Giai đoạn 1: Phân loại và Điều hướng (Intent Routing) - ưu tiên categoryId nếu người dùng chọn
+      const intentCode = RagService.detectIntent(query, categoryId);
 
       // Giai đoạn 2: Truy xuất Ngữ cảnh Kép (Hybrid Retrieval)
       const ragContext = await RagService.retrieveContext(query, intentCode);
 
       // Giai đoạn 3: Hợp nhất Ngữ cảnh và Suy luận sinh lời giải (Context Fusion & Generation)
-      const llmResult = await LlmService.generate(query, intentCode, ragContext.promptContext, ragContext.articles);
+      const llmResult = await LlmService.generate(query, intentCode, ragContext.promptContext, ragContext.articles, categoryId);
 
       // Giai đoạn 4: Kiểm định và Chống Bịa luật (Citation Guardrail)
       const guardrailResult = await GuardrailService.scanAndVerify(llmResult.text);
 
       const totalLatency = Date.now() - startTime;
 
-      // Giai đoạn 5: Lưu trữ phiên hỏi đáp vào lịch sử
+      // Giai đoạn 5: Lưu trữ phiên hỏi đáp vào lịch sử (cả DB memory và file ổ cứng vĩnh viễn)
       if (req.user) {
-        await QueryHistory.create({
+        const historyItem = await QueryHistory.create({
           userId: req.user.id,
-          userEmail: req.user.email,
+          userEmail: req.user.email?.toLowerCase(),
           query,
           intentCode,
           response: llmResult.text,
@@ -75,6 +76,8 @@ export class QueryController {
           tier: 'Tier 4 - Fine-tuned LoRA',
           latencyMs: totalLatency
         });
+        // Lưu vĩnh viễn vào disk
+        PersistenceService.saveHistory(historyItem);
       }
 
       // Trả kết quả kèm văn bản luật thực định đầy đủ để đối chiếu
@@ -112,7 +115,16 @@ export class QueryController {
         return;
       }
 
-      const history = await QueryHistory.find({ userId: req.user.id }).sort({ createdAt: -1 }).limit(30);
+      const userEmail = req.user.email?.toLowerCase();
+      // Truy vấn toàn bộ lịch sử theo cả userId hoặc userEmail để bảo toàn sau mọi lần khởi động lại server
+      const history = await QueryHistory.find({
+        $or: [
+          { userId: req.user.id },
+          ...(userEmail ? [{ userEmail }] : [])
+        ]
+      })
+        .sort({ createdAt: -1 })
+        .limit(500);
 
       res.json({
         success: true,
@@ -130,7 +142,17 @@ export class QueryController {
         return;
       }
 
-      await QueryHistory.deleteMany({ userId: req.user.id });
+      const userEmail = req.user.email?.toLowerCase();
+      await QueryHistory.deleteMany({
+        $or: [
+          { userId: req.user.id },
+          ...(userEmail ? [{ userEmail }] : [])
+        ]
+      });
+
+      // Xóa trong file lưu trữ vĩnh viễn trên ổ cứng
+      PersistenceService.clearHistory(userEmail, req.user.id);
+
       res.json({ success: true, message: 'Đã xóa toàn bộ lịch sử truy vấn cá nhân.' });
     } catch (err: any) {
       res.status(500).json({ success: false, message: err.message });
@@ -284,9 +306,9 @@ export class QueryController {
       else if (finalScore < 85) riskLevel = 'medium';
 
       if (req.user) {
-        await QueryHistory.create({
+        const reviewItem = await QueryHistory.create({
           userId: req.user.id,
-          userEmail: req.user.email,
+          userEmail: req.user.email?.toLowerCase(),
           query: `[Rà soát ${documentType || 'Văn bản'}] ${content.trim().slice(0, 160)}${content.trim().length > 160 ? '...' : ''}`,
           intentCode: 'AI_REVIEW',
           response: `Điểm an toàn: ${finalScore}/100 | Mức độ rủi ro: ${riskLevel.toUpperCase()} | Phát hiện ${issues.length} lưu ý pháp lý.`,
@@ -308,6 +330,7 @@ export class QueryController {
           tier: 'Legal Auditor AI',
           latencyMs: 350
         });
+        PersistenceService.saveHistory(reviewItem);
       }
 
       res.json({
@@ -337,7 +360,14 @@ export class QueryController {
 
       const { id } = req.params;
       const { note } = req.body;
-      const historyItem = await QueryHistory.findOne({ _id: id, userId: req.user.id });
+      const userEmail = req.user.email?.toLowerCase();
+      const historyItem = await QueryHistory.findOne({
+        _id: id,
+        $or: [
+          { userId: req.user.id },
+          ...(userEmail ? [{ userEmail }] : [])
+        ]
+      });
       if (!historyItem) {
         res.status(404).json({ success: false, message: 'Không tìm thấy mục lịch sử tương ứng.' });
         return;
@@ -350,6 +380,9 @@ export class QueryController {
         historyItem.bookmarkNote = note;
       }
       await historyItem.save();
+
+      // Cập nhật lưu trữ vĩnh viễn trên ổ cứng
+      PersistenceService.updateBookmark(historyItem._id.toString(), nextStatus, note);
 
       res.json({
         success: true,
@@ -371,8 +404,12 @@ export class QueryController {
         return;
       }
 
+      const userEmail = req.user.email?.toLowerCase();
       const bookmarks = await QueryHistory.find({
-        userId: req.user.id,
+        $or: [
+          { userId: req.user.id },
+          ...(userEmail ? [{ userEmail }] : [])
+        ],
         isBookmarked: true
       }).sort({ bookmarkedAt: -1, createdAt: -1 });
 

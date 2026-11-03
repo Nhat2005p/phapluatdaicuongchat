@@ -49,16 +49,42 @@ interface HeaderProps {
   onTabChange: (tab: string) => void;
   onOpenAuth: (mode?: 'login' | 'register') => void;
   onSelectQuery?: (query: string) => void;
+  isDarkMode?: boolean;
+  onToggleDarkMode?: (dark: boolean) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenAuth, onSelectQuery }) => {
+export const Header: React.FC<HeaderProps> = ({
+  currentTab,
+  onTabChange,
+  onOpenAuth,
+  onSelectQuery,
+  isDarkMode: propIsDarkMode,
+  onToggleDarkMode: propOnToggleDarkMode
+}) => {
   const { user, isAuthenticated, role, logout, remainingQuestions, totalQuestions } = useAuth();
   const { toast } = useToast();
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isCommandOpen, setIsCommandOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(() => {
+  const [localDarkMode, setLocalDarkMode] = useState(() => {
     return localStorage.getItem('vlaw_theme') === 'dark';
   });
+
+  const isDarkMode = propIsDarkMode !== undefined ? propIsDarkMode : localDarkMode;
+
+  const handleToggleDarkMode = (dark: boolean) => {
+    if (propOnToggleDarkMode) {
+      propOnToggleDarkMode(dark);
+    } else {
+      setLocalDarkMode(dark);
+      if (dark) {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('vlaw_theme', 'dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('vlaw_theme', 'light');
+      }
+    }
+  };
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [showChangePasswordModal, setShowChangePasswordModal] = useState(false);
   const [showUsageModal, setShowUsageModal] = useState(false);
@@ -84,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
   const commandItems: CommandItem[] = [
     {
       id: 'ai-chat',
-      title: 'AI Hỏi đáp Pháp luật',
+      title: 'Hỏi đáp Pháp luật',
       description: 'Tương tác giải đề thi, tình huống tự luận theo Barem chuẩn',
       icon: <Sparkles className="w-4 h-4" />,
       category: 'Tính năng chính',
@@ -100,7 +126,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
     },
     {
       id: 'ai-review',
-      title: 'AI Rà soát Hợp đồng & Văn bản',
+      title: 'Rà soát Hợp đồng & Văn bản',
       description: 'Rà soát lỗi pháp lý, đối chiếu rủi ro và điều khoản',
       icon: <ShieldAlert className="w-4 h-4" />,
       category: 'Tính năng chính',
@@ -182,17 +208,6 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
     }
   ];
 
-  const handleToggleDarkMode = (dark: boolean) => {
-    setIsDarkMode(dark);
-    if (dark) {
-      document.documentElement.classList.add('dark');
-      localStorage.setItem('vlaw_theme', 'dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-      localStorage.setItem('vlaw_theme', 'light');
-    }
-  };
-
   useEffect(() => {
     if (isDarkMode) {
       document.documentElement.classList.add('dark');
@@ -232,40 +247,57 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
   const currentFullName = user?.fullName || currentEmail;
   const progressPercent = Math.max(0, Math.min(100, (remainingQuestions / totalQuestions) * 100));
 
+  const isDarkTheme = isDarkMode;
+
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-slate-200/90 bg-white/95 backdrop-blur-md shadow-xs transition-colors">
+    <header className={`sticky top-0 z-40 w-full transition-colors ${
+      isDarkTheme 
+        ? 'border-b border-[#272967] bg-[#181818]/95 backdrop-blur-md shadow-xs' 
+        : 'border-b border-[#d8d8d8] bg-white/95 backdrop-blur-md shadow-xs'
+    }`}>
       <div className="w-full max-w-[1440px] mx-auto px-2.5 sm:px-4 lg:px-6 h-16 flex items-center justify-between gap-1.5 sm:gap-3">
-        {/* Brand & Logo - Chatbot Hỗ Trợ Pháp Luật Đại Cương */}
+        {/* Brand & Logo - VLAW / Chatbot Hỗ Trợ Pháp Luật Đại Cương */}
         <div 
           className="flex items-center gap-2.5 cursor-pointer group select-none shrink-0" 
           onClick={() => onTabChange('home')}
         >
           <div className="relative">
-            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-rose-600 via-red-600 to-amber-500 flex items-center justify-center shadow-sm text-white transition-transform group-hover:scale-105 duration-200">
-              <Scale className="w-5 h-5 text-white" />
+            <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center shadow-xs text-white transition-transform group-hover:scale-105 duration-200 bg-slate-900 dark:bg-indigo-600 border border-slate-700/50">
+              <Scale className="w-5 h-5 text-white stroke-[2.2]" />
             </div>
-            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white"></div>
+            <div className="absolute -bottom-0.5 -right-0.5 w-2.5 h-2.5 bg-emerald-500 rounded-full border-2 border-white dark:border-slate-900 animate-pulse"></div>
           </div>
           <div className="min-w-0">
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="font-extrabold text-sm sm:text-base text-slate-900 tracking-tight whitespace-nowrap">
-                Chatbot Pháp Luật
+              <span className={`font-extrabold text-sm sm:text-base tracking-tight whitespace-nowrap ${
+                isDarkTheme ? 'text-white' : 'text-slate-900'
+              }`}>
+                VLAW
+              </span>
+              <span className="text-[10px] font-bold px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 hidden sm:inline-block">
+                GD&ĐT
               </span>
             </div>
-            <p className="text-[10px] text-slate-500 whitespace-nowrap hidden 2xl:block leading-none mt-0.5">
-              Trợ lý AI Trực Tuyến • Tra cứu & Giải Đề thi Chuẩn
+            <p className={`text-[10px] whitespace-nowrap hidden 2xl:block leading-none mt-0.5 ${
+              isDarkTheme ? 'text-slate-400' : 'text-slate-500'
+            }`}>
+              Trợ lý Trực Tuyến • Tra cứu & Giải Đề thi Chuẩn Barem
             </p>
           </div>
         </div>
 
         {/* Navigation Tabs - 4 Core AI Features */}
-        <nav className="hidden lg:flex items-center gap-1 bg-slate-100/90 p-1 rounded-xl border border-slate-200/80 shadow-inner shrink-0">
+        <nav className={`hidden lg:flex items-center gap-1 p-1 rounded-xl border shrink-0 ${
+          isDarkTheme 
+            ? 'bg-slate-900/90 border-slate-800' 
+            : 'bg-slate-100/90 border-slate-200 shadow-inner'
+        }`}>
           <button
             onClick={() => onTabChange('home')}
             className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none ${
               currentTab === 'home'
-                ? 'bg-white text-rose-600 shadow-xs border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200'
+                : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
             <span>Trang chủ</span>
@@ -275,23 +307,23 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
             onClick={() => onTabChange('study')}
             className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none ${
               currentTab === 'study'
-                ? 'bg-white text-rose-600 shadow-xs border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
+                : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <Sparkles className="w-3.5 h-3.5 text-rose-500" />
-            <span>AI Hỏi đáp</span>
+            <Sparkles className={`w-3.5 h-3.5 ${isDarkTheme ? 'text-indigo-400' : 'text-indigo-600'}`} />
+            <span>Hỏi đáp</span>
           </button>
 
           <button
             onClick={() => onTabChange('laws')}
             className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none ${
               currentTab === 'laws'
-                ? 'bg-white text-rose-600 shadow-xs border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
+                : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <BookOpen className="w-3.5 h-3.5 text-rose-500" />
+            <BookOpen className={`w-3.5 h-3.5 ${isDarkTheme ? 'text-indigo-400' : 'text-indigo-600'}`} />
             <span>Tra cứu</span>
           </button>
 
@@ -299,13 +331,13 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
             onClick={() => onTabChange('review')}
             className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none relative ${
               currentTab === 'review'
-                ? 'bg-white text-rose-600 shadow-xs border border-slate-200/80'
-                : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
+                : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
             }`}
           >
-            <ShieldAlert className="w-3.5 h-3.5 text-rose-500" />
-            <span>AI Rà soát</span>
-            <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full bg-[#ec2227] text-white tracking-wider ml-0.5">
+            <ShieldAlert className={`w-3.5 h-3.5 ${isDarkTheme ? 'text-indigo-400' : 'text-indigo-600'}`} />
+            <span>Rà soát</span>
+            <span className="text-[9px] font-black uppercase px-1.5 py-0.2 rounded-full text-white tracking-wider ml-0.5 bg-indigo-600 dark:bg-indigo-500">
               Mới
             </span>
           </button>
@@ -317,11 +349,11 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
                 onClick={() => onTabChange('council')}
                 className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none ${
                   currentTab === 'council'
-                    ? 'bg-purple-100 text-purple-700 border border-purple-200 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                    ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
+                    : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
-                <ShieldCheck className="w-3.5 h-3.5 text-purple-600" />
+                <ShieldCheck className="w-3.5 h-3.5 text-indigo-500" />
                 <span>Hội đồng</span>
               </button>
 
@@ -329,29 +361,62 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
                 onClick={() => onTabChange('admin')}
                 className={`whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all select-none ${
                   currentTab === 'admin'
-                    ? 'bg-emerald-100 text-emerald-700 border border-emerald-200 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
+                    ? isDarkTheme ? 'bg-slate-800 text-white border border-slate-700 shadow-xs' : 'bg-white text-slate-900 shadow-xs border border-slate-200 font-bold'
+                    : isDarkTheme ? 'text-slate-400 hover:text-white hover:bg-slate-800/60' : 'text-slate-600 hover:text-slate-900 hover:bg-slate-200/60'
                 }`}
               >
-                <Settings className="w-3.5 h-3.5 text-emerald-600" />
+                <Settings className="w-3.5 h-3.5 text-indigo-500" />
                 <span>Quản trị</span>
               </button>
             </>
           )}
         </nav>
 
-        {/* Quick Command Search Button (Ctrl + K) & USER AUTH SECTION */}
+        {/* Quick Command Search Button (Ctrl + K) & THEME TOGGLE & USER AUTH SECTION */}
         <div className="flex items-center gap-1.5 sm:gap-2 shrink-0" ref={profileRef}>
+          {/* Nút tìm kiếm nhanh Ctrl+K */}
           <QuickTooltip content="Mở tìm kiếm nhanh (Ctrl + K)">
             <button
               type="button"
               onClick={() => setIsCommandOpen(true)}
-              className="whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 border border-slate-200/90 text-xs font-medium transition-all shadow-xs cursor-pointer select-none shrink-0"
+              className={`whitespace-nowrap flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all shadow-xs cursor-pointer select-none shrink-0 ${
+                isDarkTheme
+                  ? 'bg-[#0a0b0f] hover:bg-[#151822] text-[#b2b8cd] hover:text-white border border-[#1f1e2a]'
+                  : 'bg-slate-100 hover:bg-slate-200/80 text-slate-600 hover:text-slate-900 border border-slate-200/90'
+              }`}
             >
-              <Search className="w-3.5 h-3.5 text-slate-400" />
-              <kbd className="px-1.5 py-0.5 rounded bg-white border border-slate-200 text-[10px] font-mono text-slate-500 shadow-2xs">
+              <Search className={`w-3.5 h-3.5 ${isDarkTheme ? 'text-[#8f94a6]' : 'text-slate-400'}`} />
+              <kbd className={`px-1.5 py-0.5 rounded text-[10px] font-mono shadow-2xs ${
+                isDarkTheme ? 'bg-[#151822] border border-[#1f1e2a] text-[#8f94a6]' : 'bg-white border border-slate-200 text-slate-500'
+              }`}>
                 Ctrl K
               </kbd>
+            </button>
+          </QuickTooltip>
+
+          {/* NÚT CHUYỂN ĐỔI CHẾ ĐỘ SÁNG / TỐI (LIGHT / DARK THEME TOGGLE) */}
+          <QuickTooltip content={isDarkMode ? "Chuyển sang Giao diện Sáng (Light Mode)" : "Chuyển sang Giao diện Tối (Dark Mode)"}>
+            <button
+              type="button"
+              onClick={() => handleToggleDarkMode(!isDarkMode)}
+              aria-label="Chuyển chế độ Sáng / Tối"
+              className={`px-2 sm:px-2.5 py-1.5 rounded-lg text-xs font-medium transition-all shadow-xs cursor-pointer select-none flex items-center gap-1.5 border ${
+                isDarkTheme
+                  ? 'bg-[#0a0b0f] hover:bg-[#151822] text-amber-300 border-[#1f1e2a] hover:border-amber-400/40 hover:shadow-[0_0_12px_rgba(251,191,36,0.2)]'
+                  : 'bg-slate-100 hover:bg-slate-200/80 text-slate-700 border-slate-200/90 hover:border-amber-500/40'
+              }`}
+            >
+              {isDarkMode ? (
+                <>
+                  <Sun className="w-3.5 h-3.5 text-amber-400 transition-transform hover:rotate-90 duration-300" />
+                  <span className="hidden xl:inline text-[11px] text-[#dee1ea]">Sáng</span>
+                </>
+              ) : (
+                <>
+                  <Moon className="w-3.5 h-3.5 text-slate-700 transition-transform hover:-rotate-12 duration-300" />
+                  <span className="hidden xl:inline text-[11px] text-slate-700">Tối</span>
+                </>
+              )}
             </button>
           </QuickTooltip>
 
@@ -363,7 +428,7 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
                   <button
                     type="button"
                     onClick={handleUpgradeClick}
-                    className="whitespace-nowrap flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full bg-[#2563eb] hover:bg-[#1d4ed8] text-white text-xs font-bold shadow-xs transition-all cursor-pointer shrink-0"
+                    className="whitespace-nowrap flex items-center gap-1.5 px-3 py-1.5 rounded-full text-white bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-xs font-bold shadow-sm transition-all cursor-pointer shrink-0"
                   >
                     <Crown className="w-3.5 h-3.5 fill-current shrink-0" />
                     <span>Nâng cấp</span>
@@ -384,24 +449,6 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
                 </button>
               </QuickTooltip>
 
-              {/* Role Pill Badge */}
-              <span className={`whitespace-nowrap px-2.5 py-1 rounded-full text-xs font-bold border hidden xl:inline-flex items-center gap-1 select-none shrink-0 ${
-                role === 'admin'
-                  ? 'bg-emerald-50 text-emerald-700 border-emerald-200'
-                  : 'bg-blue-50 text-blue-700 border-blue-200'
-              }`}>
-                {role === 'admin' ? (
-                  <>
-                    <Settings className="w-3 h-3 text-emerald-600" />
-                    <span>Quản trị viên</span>
-                  </>
-                ) : (
-                  <>
-                    <GraduationCap className="w-3 h-3 text-blue-600" />
-                    <span>Sinh viên</span>
-                  </>
-                )}
-              </span>
 
               {/* Avatar Icon (Hình người vòng tròn xanh lá) */}
               <div className="relative shrink-0">
@@ -664,30 +711,36 @@ export const Header: React.FC<HeaderProps> = ({ currentTab, onTabChange, onOpenA
           ) : (
             /* Khi CHƯA ĐĂNG NHẬP: Hiển thị lời kêu gọi và các nút Đăng nhập / Đăng ký */
             <div className="flex items-center gap-2 shrink-0">
-              <span className="whitespace-nowrap shrink-0 hidden 2xl:inline-flex items-center gap-1.5 text-xs font-semibold text-rose-600 bg-rose-50 px-2.5 py-1.5 rounded-full border border-rose-200">
-                <Sparkles className="w-3.5 h-3.5 text-rose-500 shrink-0" />
+              <span className={`whitespace-nowrap shrink-0 hidden 2xl:inline-flex items-center gap-1.5 text-xs font-medium px-2.5 py-1.5 rounded-full border ${
+                isDarkTheme
+                  ? 'text-[#9182f8] bg-[#7064f2]/10 border-[#7064f2]/20'
+                  : 'text-rose-600 bg-rose-50 border-rose-200'
+              }`}>
+                <Sparkles className={`w-3.5 h-3.5 shrink-0 ${isDarkTheme ? 'text-[#7064f2]' : 'text-rose-500'}`} />
                 <span>30 câu hỏi miễn phí</span>
               </span>
 
-              <Button
-                variant="outline"
-                size="sm"
+              <button
+                type="button"
                 onClick={() => onOpenAuth('login')}
-                className="whitespace-nowrap shrink-0 gap-1.5 text-xs font-semibold border-slate-200 bg-white hover:bg-slate-50 text-slate-700 hover:text-slate-900 shadow-xs h-8 px-3"
+                className={`whitespace-nowrap shrink-0 flex items-center gap-1.5 text-xs font-medium rounded-xl h-8 px-3 transition-all ${
+                  isDarkTheme
+                    ? 'border border-[#1f1e2a] bg-[#151822] hover:bg-[#1f1e2a] text-[#dee1ea]'
+                    : 'border border-slate-200 bg-white hover:bg-slate-50 text-slate-700'
+                }`}
               >
-                <LogIn className="w-3.5 h-3.5 text-slate-500 shrink-0" />
+                <LogIn className={`w-3.5 h-3.5 shrink-0 ${isDarkTheme ? 'text-[#8f94a6]' : 'text-slate-500'}`} />
                 <span>Đăng nhập</span>
-              </Button>
+              </button>
 
-              <Button
-                variant="default"
-                size="sm"
+              <button
+                type="button"
                 onClick={() => onOpenAuth('register')}
-                className="whitespace-nowrap shrink-0 gap-1.5 text-xs font-semibold bg-[#ec2227] hover:bg-[#d01c21] text-white shadow-xs h-8 px-3"
+                className="whitespace-nowrap shrink-0 flex items-center gap-1.5 text-xs font-bold rounded-xl h-8 px-3.5 bg-slate-900 hover:bg-slate-800 text-white dark:bg-indigo-600 dark:hover:bg-indigo-500 shadow-sm transition-all"
               >
-                <UserPlus className="w-3.5 h-3.5 text-white shrink-0" />
+                <UserPlus className="w-3.5 h-3.5 shrink-0 text-white" />
                 <span>Đăng ký</span>
-              </Button>
+              </button>
             </div>
           )}
         </div>

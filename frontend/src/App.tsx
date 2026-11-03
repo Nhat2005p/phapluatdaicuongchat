@@ -17,13 +17,39 @@ const MainContent: React.FC = () => {
   const [isAuthOpen, setIsAuthOpen] = useState(false);
   const [authInitialTab, setAuthInitialTab] = useState<'login' | 'register'>('login');
 
+  // Quản lý trạng thái giao diện Sáng / Tối toàn hệ thống
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(() => {
+    const saved = localStorage.getItem('vlaw_theme');
+    if (saved) return saved === 'dark';
+    return false;
+  });
+
+  const handleToggleDarkMode = (dark: boolean) => {
+    setIsDarkMode(dark);
+    if (dark) {
+      document.documentElement.classList.add('dark');
+      localStorage.setItem('vlaw_theme', 'dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+      localStorage.setItem('vlaw_theme', 'light');
+    }
+  };
+
+  React.useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
   const handleOpenAuth = (mode?: 'login' | 'register') => {
     setAuthInitialTab(mode || 'login');
     setIsAuthOpen(true);
   };
 
   const handleTabChange = (targetTab: string) => {
-    // Chức năng cần đăng nhập: AI Hỏi đáp, AI Rà soát, Hội đồng, Quản trị
+    // Chức năng cần đăng nhập: Hỏi đáp, Rà soát, Hội đồng, Quản trị
     if (!isAuthenticated && (targetTab === 'study' || targetTab === 'review' || targetTab === 'council' || targetTab === 'admin')) {
       handleOpenAuth('login');
       return;
@@ -91,27 +117,34 @@ const MainContent: React.FC = () => {
     safeTab = 'home';
   }
 
-  // Toàn bộ giao diện người dùng đồng nhất nền sáng Trắng & Xanh
-  const isLightTab = safeTab !== 'council' && safeTab !== 'admin';
+  // Tab chủ đề tối: Trang chủ (Featurebase Void Canvas), Hội đồng, Quản trị
+  const isDarkTab = isDarkMode || safeTab === 'council' || safeTab === 'admin';
 
   return (
     <div
       className={`min-h-screen flex flex-col ${
-        isLightTab ? 'bg-[#f8fafc] text-slate-900' : 'bg-slate-950 text-slate-100'
-      } selection:bg-blue-500/30 selection:text-blue-700 transition-colors`}
+        isDarkTab ? 'bg-[#0b0f19] text-[#f1f5f9]' : 'bg-[#f8fafc] text-[#0f172a]'
+      } selection:bg-indigo-500/30 selection:text-white transition-colors duration-200`}
     >
-      <Header
-        currentTab={safeTab}
-        onTabChange={handleTabChange}
-        onOpenAuth={handleOpenAuth}
-        onSelectQuery={handleStartChatFromHome}
-      />
+      {safeTab !== 'home' && (
+        <Header
+          currentTab={safeTab}
+          onTabChange={handleTabChange}
+          onOpenAuth={handleOpenAuth}
+          onSelectQuery={handleStartChatFromHome}
+          isDarkMode={isDarkMode}
+          onToggleDarkMode={handleToggleDarkMode}
+        />
+      )}
 
-      <main className={`flex-1 ${safeTab === 'study' ? 'pb-0' : 'pb-16'}`}>
+      <main className={`flex-1 ${safeTab === 'study' || safeTab === 'home' ? 'pb-0' : 'pb-16'}`}>
         {safeTab === 'home' && (
           <HomePage
             onStartChat={handleStartChatFromHome}
             onOpenAuth={handleOpenAuth}
+            onTabChange={handleTabChange}
+            isDarkMode={isDarkMode}
+            onToggleTheme={() => handleToggleDarkMode(!isDarkMode)}
           />
         )}
         {safeTab === 'study' && (
@@ -119,12 +152,14 @@ const MainContent: React.FC = () => {
             initialQuery={initialChatQuery}
             onClearInitialQuery={() => setInitialChatQuery('')}
             onOpenAuth={handleOpenAuth}
+            isDarkMode={isDarkMode}
           />
         )}
         {safeTab === 'laws' && (
           <LawSearchMode
             onAskAi={handleStartChatFromHome}
             onReviewAi={handleStartReviewWithContent}
+            isDarkMode={isDarkMode}
           />
         )}
         {safeTab === 'review' && (
@@ -132,22 +167,27 @@ const MainContent: React.FC = () => {
             initialContent={initialReviewContent}
             onAskAi={handleStartChatFromHome}
             onOpenAuth={handleOpenAuth}
+            isDarkMode={isDarkMode}
           />
         )}
         {safeTab === 'council' && <CouncilBenchmark />}
         {safeTab === 'admin' && <AdminHub />}
       </main>
 
-      {safeTab !== 'study' && (
-        <footer className="border-t border-slate-200 bg-white py-8 text-center text-xs text-slate-500 no-print transition-colors">
+      {safeTab !== 'study' && safeTab !== 'home' && (
+        <footer className={`border-t py-8 text-center text-xs no-print transition-colors ${
+          isDarkTab
+            ? 'border-slate-800 bg-[#0f172a] text-slate-400'
+            : 'border-slate-200 bg-white text-slate-500'
+        }`}>
           <div className="max-w-6xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold text-slate-800">Chatbot Hỗ Trợ Pháp Luật Đại Cương</span>
-              <span className="text-slate-400">•</span>
-              <span className="text-slate-600">Trợ lý AI Pháp Luật</span>
+              <span className={`font-bold ${isDarkTab ? 'text-white' : 'text-slate-800'}`}>Chatbot Hỗ TrỢ Pháp Luật Đại Cương</span>
+              <span className="text-indigo-500">•</span>
+              <span className={isDarkTab ? 'text-slate-300' : 'text-slate-600'}>Trợ lý Pháp Luật</span>
             </div>
-            <div className="text-[11px] text-slate-500">
-              Hệ thống Trợ lý Trí tuệ Nhân tạo hỗ trợ sinh viên tra cứu và giải đề thi môn Pháp luật đại cương chuẩn Giáo trình Bộ GD&ĐT
+            <div className={`text-[11px] ${isDarkTab ? 'text-slate-400' : 'text-slate-500'}`}>
+              Hệ thống hỗ trợ sinh viên tra cứu và giải đề thi môn Pháp luật đại cương chuẩn Giáo trình Bộ GD&ĐT
             </div>
           </div>
         </footer>
@@ -157,6 +197,7 @@ const MainContent: React.FC = () => {
         isOpen={isAuthOpen}
         onClose={() => setIsAuthOpen(false)}
         initialTab={authInitialTab}
+        isDarkMode={isDarkMode}
       />
     </div>
   );

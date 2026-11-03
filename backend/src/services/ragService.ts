@@ -1,5 +1,6 @@
 import { LawArticle, ILawArticle } from '../models/LawArticle.js';
 import { TextbookPrinciple, ITextbookPrinciple } from '../models/TextbookPrinciple.js';
+import { TextbookKnowledgeService } from './textbookKnowledgeService.js';
 
 export type ExamArchetype =
   | 'DEFINITION'
@@ -11,18 +12,56 @@ export type ExamArchetype =
   | 'CIVIL_CONTRACT'
   | 'GENERAL_THEORY'
   | 'FAMILY_LAW'
-  | 'CASE_ANALYSIS';
+  | 'CASE_ANALYSIS'
+  | 'COMPARISON';
 
 export class RagService {
   /**
-   * Giai đoạn 1: Phân loại và Điều hướng (Intent Routing)
+   * Giai đoạn 1: Phân loại và Điều hướng (Intent Routing / Archetype Detection)
    * Nhận diện chuẩn xác các dạng đề thi trọng tâm + tranh chấp hợp đồng/giao dịch dân sự
+   * @param forcedCategory Dạng bài người dùng chủ động chọn từ giao diện (nếu có)
    */
-  public static detectIntent(query: string): ExamArchetype {
+  public static detectIntent(query: string, forcedCategory?: string | null): ExamArchetype {
     const q = query.toLowerCase().trim();
 
-    // 0. Dạng Câu hỏi Khái niệm / Định nghĩa Lý thuyết (DEFINITION)
-    // Ưu tiên nhận diện trước khi quét từ khóa bộ phận hay tình huống
+    // 0. BẮT BUỘC ĐIỀU HƯỚNG NẾU NGƯỜI DÙNG CHỌN DANH MỤC CỤ THỂ
+    if (forcedCategory) {
+      const cat = forcedCategory.toUpperCase().trim();
+      if (cat === 'NHAN_DINH' || cat === 'TRUE_FALSE') {
+        return 'TRUE_FALSE';
+      }
+      if (cat === 'SO_SANH' || cat === 'COMPARISON') {
+        return 'COMPARISON';
+      }
+      if (cat === 'TINH_HUONG' || cat === 'CASE_ANALYSIS') {
+        if (q.includes('thừa kế') || q.includes('di sản') || q.includes('di chúc')) return 'CIVIL_INHERIT';
+        if (q.includes('vay') && (q.includes('tiền') || q.includes('triệu') || q.includes('hợp đồng'))) return 'CIVIL_CONTRACT';
+        return 'CASE_ANALYSIS';
+      }
+      if (cat === 'DINH_NGHIA' || cat === 'DEFINITION') {
+        return 'DEFINITION';
+      }
+      if (cat === 'PHAN_TICH' || cat === 'VPPL_4_ELEMENTS') {
+        if (q.includes('quy phạm pháp luật') || q.includes('giả định') || q.includes('chế tài') || q.includes('cơ cấu')) return 'QPPL_STRUCT';
+        return 'VPPL_4_ELEMENTS';
+      }
+    }
+
+    // NẾU Ở PHẦN CHUNG: TỰ ĐỘNG NHẬN DIỆN MỌI DẠNG ĐỀ TỪ CÂU HỎI
+    // 0. Dạng So sánh & Phân biệt (COMPARISON)
+    if (
+      q.includes('so sánh') ||
+      q.includes('phân biệt') ||
+      q.includes('đối chiếu') ||
+      q.includes('giống và khác nhau') ||
+      q.includes('điểm giống') ||
+      q.includes('điểm khác')
+    ) {
+      return 'COMPARISON';
+    }
+
+    // 1. Dạng Câu hỏi Khái niệm / Định nghĩa Lý thuyết (DEFINITION)
+    // Chỉ nhận diện là Định nghĩa khi câu hỏi thực sự hỏi định nghĩa/khái niệm
     const isDefQuery =
       q.includes('là gì') ||
       q.includes('là cái gì') ||
@@ -46,23 +85,40 @@ export class RagService {
       q.includes('chị a') ||
       q.includes('chia thừa kế') ||
       q.includes('vay tiền') ||
-      q.includes('đúng hay sai');
+      q.includes('đúng hay sai') ||
+      q.includes('nhận định');
 
     if (isDefQuery && !hasCaseSpecifics) {
       return 'DEFINITION';
     }
 
-    // 1. Dạng Câu hỏi Nhận định Đúng / Sai (TRUE_FALSE)
+    // 2. Dạng Câu hỏi Nhận định Đúng / Sai (TRUE_FALSE)
     if (
       q.includes('đúng hay sai') ||
       q.includes('đúng/sai') ||
       q.includes('nhận định') ||
+      q.includes('nhận địn') ||
       q.includes('khẳng định') ||
       q.includes('cho biết đúng hay sai') ||
+      q.includes('là dấu hiệu bắt buộc') ||
+      q.includes('dấu hiệu bắt buộc') ||
+      q.includes('là giống nhau') ||
+      q.includes('giống nhau hay khác nhau') ||
+      q.includes('chỉ ra đời trong') ||
+      q.includes('chỉ ra đời khi') ||
+      q.includes('chỉ xuất hiện') ||
       q.startsWith('mọi ') ||
       q.startsWith('tất cả ') ||
       q.startsWith('không chỉ ') ||
-      q.includes('đều là pháp luật') ||
+      q.includes('đều là') ||
+      q.includes('đều được') ||
+      q.includes('đều phải') ||
+      q.includes('luôn luôn') ||
+      q.includes('luôn là') ||
+      q.includes('không bao giờ') ||
+      q.includes('chỉ có') ||
+      (q.includes('tuân thủ') && q.includes('thi hành')) ||
+      (q.includes('thực hiện pháp luật') && (q.includes('hành động') || q.includes('không hành động'))) ||
       q.includes('chỉ thuộc về một giai cấp') ||
       q.includes('là một bộ máy cưỡng chế đặc biệt') ||
       q.includes('gắn liền với xã hội có giai cấp')
@@ -70,7 +126,7 @@ export class RagService {
       return 'TRUE_FALSE';
     }
 
-    // 2. Dạng Bài tập Chia Di sản Thừa kế (CIVIL_INHERIT - ưu tiên trước vì thường có thông tin kết hôn, con cái)
+    // 3. Dạng Bài tập Chia Di sản Thừa kế (CIVIL_INHERIT - ưu tiên trước vì thường có thông tin kết hôn, con cái)
     if (
       q.includes('thừa kế') ||
       q.includes('di sản') ||
@@ -146,21 +202,33 @@ export class RagService {
       (q.includes('vượt đèn đỏ') && q.includes('va chạm')) ||
       (q.includes('đuổi theo') && q.includes('đánh')) ||
       q.includes('dùng gậy') ||
-      q.includes('dùng ghế')
+      q.includes('dùng ghế') ||
+      q.includes('đập phá')
     ) {
       return 'CASE_ANALYSIS';
     }
 
     // 6. Dạng Phân tích Cấu thành Vi phạm pháp luật (VPPL_4_ELEMENTS)
+    const isVpplStatement =
+      q.includes('dấu hiệu bắt buộc') ||
+      q.includes('bắt buộc') ||
+      q.includes('đúng hay sai') ||
+      q.includes('đúng/sai') ||
+      q.includes('nhận định') ||
+      q.includes('nhận địn') ||
+      q.includes('so sánh') ||
+      q.includes('phân biệt');
+
     if (
-      q.includes('4 yếu tố') ||
-      q.includes('cấu thành vi phạm') ||
-      q.includes('yếu tố cấu thành') ||
-      q.includes('mặt khách quan') ||
-      q.includes('mặt chủ quan') ||
-      q.includes('khách thể') ||
-      q.includes('chủ thể') ||
-      (q.includes('vi phạm pháp luật') && !q.includes('đúng hay sai'))
+      !isVpplStatement &&
+      (q.includes('4 yếu tố') ||
+        q.includes('cấu thành vi phạm') ||
+        q.includes('yếu tố cấu thành') ||
+        q.includes('mặt khách quan') ||
+        q.includes('mặt chủ quan') ||
+        q.includes('khách thể') ||
+        q.includes('chủ thể') ||
+        q.includes('vi phạm pháp luật'))
     ) {
       return 'VPPL_4_ELEMENTS';
     }
@@ -179,6 +247,13 @@ export class RagService {
 
     // 8. Nhánh lý thuyết mở rộng (GENERAL_THEORY)
     return 'GENERAL_THEORY';
+  }
+
+  /**
+   * Alias cho detectIntent (Phát hiện Archetype dạng đề)
+   */
+  public static detectArchetype(query: string): ExamArchetype {
+    return RagService.detectIntent(query);
   }
 
   /**
@@ -205,15 +280,49 @@ export class RagService {
         }).limit(2);
         break;
 
-      case 'TRUE_FALSE':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'BLHS2015_D21' },
-            { articleId: 'BLHS2015_D22' },
-            { articleId: 'BLHS2015_D12' }
-          ]
-        }).limit(3);
+      case 'TRUE_FALSE': {
+        const qL = query.toLowerCase();
+        if (qL.includes('văn bản') || qL.includes('quy phạm pháp luật') || qL.includes('áp dụng pháp luật')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D1' },
+              { articleId: 'BLDS2015_D74' }
+            ]
+          }).limit(2);
+        } else if (qL.includes('thực hiện pháp luật') || qL.includes('tuân thủ') || qL.includes('thi hành')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D1' },
+              { articleId: 'BLHS2015_D8' }
+            ]
+          }).limit(2);
+        } else if (qL.includes('năng lực hành vi') || qL.includes('18 tuổi') || qL.includes('dân sự')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D16' },
+              { articleId: 'BLDS2015_D19' },
+              { articleId: 'BLDS2015_D20' }
+            ]
+          }).limit(3);
+        } else if (qL.includes('hình sự') || qL.includes('tội phạm') || qL.includes('vppl')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D8' },
+              { articleId: 'BLHS2015_D12' },
+              { articleId: 'BLHS2015_D21' }
+            ]
+          }).limit(3);
+        } else {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D21' },
+              { articleId: 'BLHS2015_D22' },
+              { articleId: 'BLHS2015_D12' }
+            ]
+          }).limit(3);
+        }
         break;
+      }
 
       case 'FAMILY_LAW':
         matchedArticles = await LawArticle.find({
@@ -228,26 +337,45 @@ export class RagService {
         }).limit(6);
         break;
 
-      case 'QPPL_STRUCT':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'BLDS2015_D1' },
-            { articleId: 'BLDS2015_D74' },
-            { articleId: 'BLHS2015_D134' },
-            { articleId: 'BLDS2015_D651' }
-          ]
-        }).limit(4);
+      case 'QPPL_STRUCT': {
+        const qL = query.toLowerCase();
+        if (qL.includes('hiến pháp') || qL.includes('lực lượng vũ trang')) {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' }]
+          }).limit(2);
+        } else if (qL.includes('lừa dối') || qL.includes('đe dọa') || qL.includes('giao dịch dân sự') || qL.includes('vô hiệu')) {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLDS2015_D117' }, { articleId: 'BLDS2015_D119' }, { articleId: 'BLDS2015_D1' }]
+          }).limit(3);
+        } else {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' }, { articleId: 'BLDS2015_D117' }]
+          }).limit(3);
+        }
         break;
+      }
 
-      case 'VPPL_4_ELEMENTS':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'BLHS2015_D134' },
-            { articleId: 'BLHS2015_D12' },
-            { articleId: 'BLHS2015_D21' }
-          ]
-        }).limit(3);
+      case 'VPPL_4_ELEMENTS': {
+        const qL = query.toLowerCase();
+        if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông')) {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLHS2015_D12' }]
+          }).limit(3);
+        } else if (qL.includes('xả thải') || qL.includes('nhà máy đường') || qL.includes('môi trường')) {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' }]
+          }).limit(3);
+        } else {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D134' },
+              { articleId: 'BLHS2015_D12' },
+              { articleId: 'BLHS2015_D21' }
+            ]
+          }).limit(3);
+        }
         break;
+      }
 
       case 'CIVIL_INHERIT':
         matchedArticles = await LawArticle.find({
@@ -285,17 +413,25 @@ export class RagService {
         }).limit(4);
         break;
 
-      case 'CASE_ANALYSIS':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'BLHS2015_D22' },
-            { articleId: 'BLHS2015_D23' },
-            { articleId: 'BLHS2015_D134' },
-            { articleId: 'BLDS2015_D584' },
-            { articleId: 'BLDS2015_D601' }
-          ]
-        }).limit(5);
+      case 'CASE_ANALYSIS': {
+        const qL = query.toLowerCase();
+        const articleOrList: Array<{ articleId: string }> = [];
+
+        if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông') || qL.includes('thương tích')) {
+          articleOrList.push({ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLHS2015_D12' });
+        } else if (qL.includes('xả thải') || qL.includes('nhà máy đường') || qL.includes('môi trường') || qL.includes('ô nhiễm')) {
+          articleOrList.push({ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' });
+        } else if (qL.includes('phòng vệ') || qL.includes('cấp thiết') || qL.includes('tự vệ')) {
+          articleOrList.push({ articleId: 'BLHS2015_D22' }, { articleId: 'BLHS2015_D23' }, { articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' });
+        } else if (qL.includes('trộm') || qL.includes('cướp')) {
+          articleOrList.push({ articleId: 'BLHS2015_D168' }, { articleId: 'BLHS2015_D173' }, { articleId: 'BLHS2015_D12' });
+        } else {
+          articleOrList.push({ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' });
+        }
+
+        matchedArticles = await LawArticle.find({ $or: articleOrList }).limit(4);
         break;
+      }
 
       default:
         matchedArticles = await LawArticle.find({
@@ -378,6 +514,13 @@ export class RagService {
     let contextStr = '--- BAREM GIÁO TRÌNH & CĂN CỨ LUẬT THỰC ĐỊNH ---\n';
     if (principle) {
       contextStr += `[KHUNG LÝ LUẬN BỘ GD&ĐT - ${principle.frameworkTitle}]:\n${principle.theoryContent}\n\n`;
+    }
+
+    // Tích hợp Textbook RAG từ Giáo trình Pháp luật Đại cương TMU 2021
+    const topTextbook = TextbookKnowledgeService.searchTopChunks(query, 1);
+    if (topTextbook.length > 0) {
+      const tb = topTextbook[0].chunk;
+      contextStr += `[GIÁO TRÌNH ĐH THƯƠNG MẠI 2021 - ${tb.chapterTitle} (${tb.sectionTitle})]:\n${tb.baremContent}\n\n`;
     }
 
     matchedArticles.forEach((art) => {

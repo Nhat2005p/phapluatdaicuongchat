@@ -67,7 +67,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
@@ -82,7 +82,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
             <div>
               <div className="flex items-center gap-2">
                 <h2 className="text-lg sm:text-xl font-bold text-slate-900">
-                  Gói dịch vụ & Bảng giá Trợ lý AI
+                  Gói dịch vụ & Bảng giá Trợ lý Pháp luật
                 </h2>
                 <span className="text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-red-100 text-[#ec2227]">
                   Ưu đãi sinh viên
@@ -94,9 +94,15 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-30 cursor-pointer"
             title="Đóng"
+            aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
@@ -173,7 +179,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
                   <ul className="mt-4 space-y-2 text-xs text-slate-700">
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-emerald-500" />
-                      <span>30 lượt hỏi đáp AI / tháng</span>
+                      <span>30 lượt hỏi đáp / tháng</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-emerald-500" />
@@ -246,7 +252,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
                     <span className="text-xs text-slate-500">/lần nạp</span>
                   </div>
                   <p className="text-xs text-slate-500 mt-2">
-                    Lựa chọn tối ưu cho cả học kỳ, hỗ trợ trọn bộ giải đề thi và AI rà soát tài liệu.
+                    Lựa chọn tối ưu cho cả học kỳ, hỗ trợ trọn bộ giải đề thi và rà soát tài liệu.
                   </p>
                   <ul className="mt-4 space-y-2 text-xs text-slate-700">
                     <li className="flex items-center gap-2">
@@ -255,7 +261,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-amber-600" />
-                      <span>AI Rà soát Hợp đồng & Tiểu luận pháp luật</span>
+                      <span>Rà soát Hợp đồng & Tiểu luận pháp luật</span>
                     </li>
                     <li className="flex items-center gap-2">
                       <Check className="w-3.5 h-3.5 text-amber-600" />

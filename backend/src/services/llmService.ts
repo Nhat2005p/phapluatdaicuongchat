@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import { config } from '../config/env.js';
 import { ExamArchetype } from './ragService.js';
 import { ILawArticle } from '../models/LawArticle.js';
+import { TextbookKnowledgeService } from './textbookKnowledgeService.js';
 
 interface SftSample {
   sample_id: string;
@@ -67,6 +68,9 @@ export class LlmService {
     if (this.isInitialized && this.examCorpus.length >= 340) return;
 
     const examPaths = [
+      path.resolve(process.cwd(), 'data/processed/sft_vietlaw_master.json'),
+      path.resolve(process.cwd(), '../data/processed/sft_vietlaw_master.json'),
+      path.resolve(__dirname, '../../../data/processed/sft_vietlaw_master.json'),
       path.resolve(process.cwd(), 'data/processed/sft_vietlaw_500.json'),
       path.resolve(process.cwd(), '../data/processed/sft_vietlaw_500.json'),
       path.resolve(__dirname, '../../../data/processed/sft_vietlaw_500.json')
@@ -85,7 +89,7 @@ export class LlmService {
             const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
             return this.getBigrams(this.normalize(textToUse));
           });
-          console.log(`📚 [SFT Cache] Đã nạp ${this.examCorpus.length} đề thi & Barem chuẩn điểm 10 từ: ${path.basename(p)}`);
+          console.log(`📚 [SFT Cache] Đã nạp ${this.examCorpus.length} đề thi & Barem chuẩn Bộ GD&ĐT từ: ${path.basename(p)}`);
           break;
         } catch (err) {
           console.warn('⚠️ [SFT Cache] Lỗi đọc exam dataset:', err);
@@ -187,6 +191,9 @@ export class LlmService {
       .replace(/Thang điểm:\s*[\d.]+\s*điểm/gi, '')
       .replace(/Barem điểm\s*10/gi, '')
       .replace(/Barem điểm/gi, '')
+      .replace(/barem điểm\s*10/gi, '')
+      .replace(/thang điểm\s*10/gi, '')
+      .replace(/điểm\s*10/gi, '')
       .replace(/\n{3,}/g, '\n\n')
       .trim();
 
@@ -235,7 +242,7 @@ export class LlmService {
    * Khi đề bài gốc trong SFT chứa nhiều câu (1, 2, 3...) nhưng người dùng chỉ hỏi 1 câu hoặc 1 ý,
    * hàm này sẽ bóc tách chỉ đúng phần giải của câu đó thay vì trả về cả bài thi dài.
    */
-  public static sliceSingleItemIfApplicable(query: string, item: SftSample): SftSample {
+  public static sliceSingleItemIfApplicable(query: string, item: SftSample): SftSample | null {
     const qNorm = query.toLowerCase().replace(/[.,;:?!"'“”()]/g, ' ').replace(/\s+/g, ' ').trim();
     const rawInput = (item.input || '') + '\n' + (item.instruction || '');
     const rawOutput = item.output || '';
@@ -259,36 +266,53 @@ export class LlmService {
     // Trường hợp 1: Dạng danh sách nhận định / câu hỏi có đánh số 1. 2. 3...
     if (rawInput.includes('1.') && rawInput.includes('2.')) {
       const rawLines = rawInput.split('\n');
+      const qWordsList = this.normalize(query).filter((w) => !this.STOP_WORDS.has(w));
+      const qBigrams = this.getBigrams(qWordsList.length >= 2 ? qWordsList : this.normalize(query));
+
+      let bestSubNum = '';
+      let bestSubScore = 0;
+
       for (const line of rawLines) {
         const sm = line.trim().match(/^(\d+)\.\s*(.+)$/);
         if (sm && sm[2].length > 8) {
           const subTextNorm = sm[2].toLowerCase().replace(/[.,;:?!"'“”()]/g, ' ').replace(/\s+/g, ' ').trim();
-          // Kiểm tra query có khớp với câu con này không
-          if (
-            qNorm.includes(subTextNorm.slice(0, 30)) ||
-            (subTextNorm.length >= 20 && subTextNorm.includes(qNorm.slice(0, 30))) ||
-            qNorm.includes(subTextNorm.slice(-25)) ||
-            (subTextNorm.length >= 20 && qNorm.length >= 20 && subTextNorm.slice(0, 25) === qNorm.slice(0, 25))
-          ) {
-            const subNum = sm[1];
-            let outRegex = new RegExp('(?:^|\\n)\\s*(' + subNum + '\\.[\\s\\S]*?)(?=\\n\\s*\\d+\\.|$)');
-            let outMatch = rawOutput.match(outRegex);
-            if (!outMatch || outMatch[1].trim().length < 15) {
-              const reqRegex = new RegExp('(?:^|\\n)###\\s*(?:[IVXLCDM]+\\.?\\s*)?(?:YÊU CẦU|CÂU|PHẦN)\\s*' + subNum + ':?([\\s\\S]*?)(?=\\n###\\s*(?:[IVXLCDM]+\\.?\\s*)?(?:YÊU CẦU|CÂU|PHẦN)\\s*\\d+|\\n---\\s*\\n###|$)', 'i');
-              outMatch = rawOutput.match(reqRegex);
-            }
-            if (outMatch && outMatch[1].trim().length > 15) {
-              let cleanSlice = this.cleanRubricText(outMatch[1].trim());
-              cleanSlice = cleanSlice.replace(/^\s*\d+\.\s*/, '');
-              return {
-                ...item,
-                sample_id: `${item.sample_id}_sub${subNum}`,
-                output: `### KẾT LUẬN VÀ GIẢI ĐÁP CHI TIẾT:\n\n${cleanSlice}`
-              };
-            }
+          const subWordsList = this.normalize(sm[2]).filter((w) => !this.STOP_WORDS.has(w));
+          const subBigrams = this.getBigrams(subWordsList.length >= 2 ? subWordsList : this.normalize(sm[2]));
+
+          const dice = this.calculateDiceCoefficient(qBigrams, subBigrams);
+          const hasLongSub =
+            (subTextNorm.length >= 20 && qNorm.includes(subTextNorm.slice(0, 25))) ||
+            (qNorm.length >= 20 && subTextNorm.includes(qNorm.slice(0, 25)));
+          const score = hasLongSub ? Math.max(dice, 0.8) : dice;
+
+          if (score >= 0.28 && score > bestSubScore) {
+            bestSubScore = score;
+            bestSubNum = sm[1];
           }
         }
       }
+
+      if (bestSubNum) {
+        const subNum = bestSubNum;
+        let outRegex = new RegExp('(?:^|\\n)\\s*(' + subNum + '\\.[\\s\\S]*?)(?=\\n\\s*\\d+\\.|$)');
+        let outMatch = rawOutput.match(outRegex);
+        if (!outMatch || outMatch[1].trim().length < 15) {
+          const reqRegex = new RegExp('(?:^|\\n)###\\s*(?:[IVXLCDM]+\\.?\\s*)?(?:YÊU CẦU|CÂU|PHẦN)\\s*' + subNum + ':?([\\s\\S]*?)(?=\\n###\\s*(?:[IVXLCDM]+\\.?\\s*)?(?:YÊU CẦU|CÂU|PHẦN)\\s*\\d+|\\n---\\s*\\n###|$)', 'i');
+          outMatch = rawOutput.match(reqRegex);
+        }
+        if (outMatch && outMatch[1].trim().length > 15) {
+          let cleanSlice = this.cleanRubricText(outMatch[1].trim());
+          cleanSlice = cleanSlice.replace(/^\s*\d+\.\s*/, '');
+          return {
+            ...item,
+            sample_id: `${item.sample_id}_sub${subNum}`,
+            output: `### KẾT LUẬN VÀ GIẢI ĐÁP CHI TIẾT:\n\n${cleanSlice}`
+          };
+        }
+      }
+
+      // TUYỆT ĐỐI KHÔNG TRẢ VỀ CẢ BÀI THI NHIỀU CÂU KHI NGƯỜI DÙNG CHỈ HỎI CÂU ĐƠN
+      return null;
     }
 
     // Trường hợp 2: Dạng câu hỏi lý thuyết chỉ hỏi "Định nghĩa" / "Khái niệm" / "là gì"
@@ -345,7 +369,7 @@ export class LlmService {
   }
 
   /**
-   * Bộ giải chuyên sâu: So sánh / Phân biệt Phòng vệ chính đáng và Tình thế cấp thiết chuẩn Barem điểm 10
+   * Bộ giải chuyên sâu: So sánh / Phân biệt Phòng vệ chính đáng và Tình thế cấp thiết chuẩn Barem Bộ GD&ĐT
    */
   public static getDefenseVsEmergencyComparison(query: string): string {
     return `### PHÂN BIỆT PHÒNG VỆ CHÍNH ĐÁNG VÀ TÌNH THẾ CẤP THIẾT
@@ -366,7 +390,7 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
 
 ---
 
-#### II. BẢNG TIÊU CHÍ SO SÁNH (5 TIÊU CHÍ CHUẨN BAREM ĐIỂM 10)
+#### II. BẢNG TIÊU CHÍ SO SÁNH (5 TIÊU CHÍ CHUẨN BAREM BỘ GD&ĐT)
 
 | Tiêu chí phân biệt | Phòng vệ chính đáng (Điều 22 BLHS 2015) | Tình thế cấp thiết (Điều 23 BLHS 2015) |
 | :--- | :--- | :--- |
@@ -396,10 +420,144 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
   }
 
   /**
+   * Bộ giải chuyên sâu: So sánh Lỗi cố ý trực tiếp và Lỗi cố ý gián tiếp chuẩn Barem Bộ GD&ĐT
+   */
+  public static getIntentionalFaultComparison(query: string): string {
+    return `### SO SÁNH LỖI CỐ Ý TRỰC TIẾP VÀ LỖI CỐ Ý GIÁN TIẾP
+*(Theo quy định tại **Điều 10 Bộ luật Hình sự 2015** và Giáo trình Pháp luật Đại cương - Bộ GD&ĐT)*
+
+---
+
+#### I. CĂN CỨ PHÁP LÝ VÀ ĐỊNH NGHĨA (ĐIỀU 10 BLHS 2015)
+1. **Lỗi cố ý trực tiếp (Khoản 1 Điều 10)**:
+   Người phạm tội nhận thức rõ hành vi của mình là nguy hiểm cho xã hội, thấy trước hậu quả của hành vi đó và **mong muốn hậu quả xảy ra**.
+2. **Lỗi cố ý gián tiếp (Khoản 2 Điều 10)**:
+   Người phạm tội nhận thức rõ hành vi của mình là nguy hiểm cho xã hội, thấy trước hậu quả của hành vi đó có thể xảy ra, tuy **không mong muốn nhưng vẫn có ý thức để mặc** cho hậu quả xảy ra.
+
+---
+
+#### II. BẢNG TIÊU CHÍ SO SÁNH (4 TIÊU CHÍ CHUẨN BAREM BỘ GD&ĐT)
+
+| Tiêu chí so sánh | Lỗi Cố ý trực tiếp (Khoản 1 Điều 10 BLHS) | Lỗi Cố ý gián tiếp (Khoản 2 Điều 10 BLHS) |
+| :--- | :--- | :--- |
+| **1. Điểm giống nhau** | - Về **lý trí**: Người thực hiện hành vi đều **nhận thức rõ** tính chất nguy hiểm cho xã hội của hành vi.<br>- Người thực hiện hành vi đều **thấy trước hậu quả** nguy hại cho xã hội do hành vi của mình gây ra. |
+| **2. Về lý trí (Mức độ thấy trước hậu quả)** | Thấy trước hậu quả là **tất yếu xảy ra** hoặc **chắc chắn sẽ xảy ra** từ hành vi của mình. | Thấy trước hậu quả **có thể xảy ra** (hậu quả có thể xảy ra hoặc không xảy ra). |
+| **3. Về ý chí (Thái độ tâm lý đối với hậu quả)** | **Mong muốn hậu quả xảy ra**:<br>- Hậu quả phù hợp với mục đích ban đầu của người phạm tội.<br>- Người phạm tội hành động để đạt được hậu quả đó bằng mọi giá. | **Không mong muốn nhưng để mặc cho hậu quả xảy ra**:<br>- Hậu quả xảy ra hay không không phải là mục đích mong đợi.<br>- Người phạm tội chấp nhận hậu quả, buông xuôi, thờ ơ trước hậu quả xấu có thể xảy đến. |
+| **4. Giai đoạn thực hiện tội phạm** | Có thể xảy ra ở mọi giai đoạn: **Chuẩn bị phạm tội, Phạm tội chưa đạt, và Tội phạm hoàn thành**. | Chỉ phát sinh trách nhiệm hình sự khi **hậu quả nguy hại thực tế đã xảy ra** (không có giai đoạn chuẩn bị phạm tội hay phạm tội chưa đạt). |
+
+---
+
+#### III. VÍ DỤ MINH HỌA THỰC TIỄN CỤ THỂ
+
+1. **Ví dụ về Lỗi cố ý trực tiếp**:
+   - **Tình huống**: Do mâu thuẫn tranh chấp đất đai gay gắt kéo dài, đối tượng A mua một khẩu súng quân dụng rồi mai phục trước cửa nhà B. Khi B vừa bước ra khỏi cửa, A cầm súng ngắm thẳng vào ngực B và bóp cò ở cự ly 2 mét khiến B tử vong ngay tại chỗ.
+   - **Phân tích pháp lý**:
+     - *Về lý trí*: A nhận thức rõ bắn súng vào ngực người khác là hành vi nguy hiểm chết người và thấy trước chắc chắn B sẽ chết.
+     - *Về ý chí*: A hoàn toàn mong muốn B phải chết để giải quyết mâu thuẫn tranh chấp.
+     ➔ Hành vi của A cấu thành Tội giết người (Điều 123 BLHS 2015) với **lỗi cố ý trực tiếp**.
+
+2. **Ví dụ về Lỗi cố ý gián tiếp**:
+   - **Tình huống**: Ông X trồng một vườn cây ăn trái thường xuyên bị kẻ trộm lẻn vào hái quả. Để ngăn trộm, ông X đã tự ý kéo dây điện trần 220V từ trong nhà ra quấn quanh hàng rào thép gai bao quanh vườn nhưng không dựng bất kỳ biển cảnh báo nguy hiểm nào. Đêm đó, một người hàng xóm đi tìm bò lạc vô tình chạm vào hàng rào bị điện giật tử vong.
+   - **Phân tích pháp lý**:
+     - *Về lý trí*: Ông X nhận thức rõ dòng điện trần 220V là nguồn nguy hiểm cao độ và thấy trước việc giăng điện trần có thể làm chết bất kỳ ai chạm phải.
+     - *Về ý chí*: Mục đích của ông X chỉ là giữ vườn, ông X không mong muốn ai bị điện giật chết, nhưng ông X cũng không lắp đặt biển báo hay biện pháp an toàn nào mà **chấp nhận, để mặc** hậu quả chết người xảy ra.
+     ➔ Hành vi của ông X cấu thành Tội giết người (Điều 123 BLHS 2015) với **lỗi cố ý gián tiếp**.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt: Mối quan hệ biện chứng giữa Nhà nước và Pháp luật
+   * & Tại sao Nhà nước không thể tồn tại và phát huy chức năng nếu thiếu Pháp luật
+   */
+  public static solveDynamicStateAndLawRelation(query?: string): string {
+    return `### MỐI QUAN HỆ BIỆN CHỨNG GIỮA NHÀ NƯỚC VÀ PHÁP LUẬT
+### TẠI SAO NHÀ NƯỚC KHÔNG THỂ TỒN TẠI VÀ PHÁT HUY CHỨC NĂNG NẾU THIẾU PHÁP LUẬT?
+*(Căn cứ Giáo trình Lý luận Nhà nước và Pháp luật & Pháp luật Đại cương - Bộ Giáo dục và Đào tạo)*
+
+---
+
+#### I. MỐI QUAN HỆ BIỆN CHỨNG GIỮA NHÀ NƯỚC VÀ PHÁP LUẬT
+Theo học thuyết Mác - Lênin và khoa học pháp lý, Nhà nước và Pháp luật là hai hiện tượng lịch sử thuộc **kiến trúc thượng tầng** của xã hội có giai cấp:
+1. **Có cùng nguồn gốc kinh tế - xã hội**: Cùng ra đời từ sự tan rã của chế độ thị tộc nguyên thủy khi xuất hiện chế độ tư hữu và sự phân hóa giai cấp đối kháng; cùng tồn tại, phát triển và tiêu vong gắn liền với các điều kiện khách quan của xã hội có giai cấp.
+2. **Có sự thống nhất về bản chất và mục tiêu**: Cả Nhà nước và Pháp luật đều mang bản chất giai cấp (bảo vệ lợi ích của giai cấp thống trị) kết hợp với bản chất xã hội (duy trì trật tự chung); cùng hướng tới mục tiêu quản lý xã hội, bảo vệ trật tự và lợi ích của giai cấp cầm quyền.
+3. **Mối quan hệ tác động qua lại biện chứng, không thể tách rời**:
+   - **Nhà nước tác động đến Pháp luật**: Nhà nước là chủ thể duy nhất ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật; bảo đảm cho pháp luật được tôn trọng và thực hiện bằng sức mạnh quyền lực và bộ máy cưỡng chế đặc biệt (quân đội, cảnh sát, tòa án, nhà tù). Không có Nhà nước thì pháp luật không thể hình thành và không có giá trị bắt buộc chung.
+   - **Pháp luật tác động trở lại đối với Nhà nước**: Pháp luật là phương tiện chủ yếu, sắc bén nhất để thể chế hóa ý chí của giai cấp thống trị và thực thi quyền lực nhà nước; đồng thời là cơ sở pháp lý tổ chức và giới hạn bộ máy nhà nước.
+
+---
+
+#### II. 3 LUẬN ĐIỂM CHỨNG MINH: TẠI SAO NHÀ NƯỚC KHÔNG THỂ TỒN TẠI VÀ PHÁT HUY CHỨC NĂNG NẾU THIẾU PHÁP LUẬT?
+
+1. **Pháp luật là công cụ chủ yếu, sắc bén nhất để Nhà nước quản lý xã hội và thực thi quyền lực**:
+   - Để quản lý xã hội rộng lớn và phức tạp, Nhà nước không thể chỉ dùng bạo lực đơn thuần hay các biện pháp cá biệt, manh mún. Nhà nước bắt buộc phải sử dụng pháp luật vì pháp luật có tính **quy phạm phổ biến, tính bắt buộc chung** và được bảo đảm thực thi trên toàn bộ lãnh thổ.
+   - Mọi chủ trương, đường lối, chính sách quản lý kinh tế, an ninh quốc phòng, đối nội và đối ngoại của Nhà nước chỉ trở thành mệnh lệnh bắt buộc đối với mọi công dân, cơ quan, tổ chức khi được thể chế hóa thành pháp luật.
+   - Nếu thiếu pháp luật, Nhà nước hoàn toàn mất đi công cụ điều hành xã hội, trật tự xã hội sẽ rơi vào tình trạng vô chính phủ, hỗn loạn và Nhà nước lập tức mất khả năng kiểm soát.
+
+2. **Pháp luật là cơ sở pháp lý duy nhất cho sự hình thành, tổ chức và vận hành của bộ máy Nhà nước**:
+   - Bộ máy nhà nước bao gồm nhiều cơ quan khác nhau (cơ quan lập pháp, hành pháp, tư pháp). Để bộ máy này hoạt động đồng bộ, nhịp nhàng và hiệu quả, bắt buộc phải có pháp luật quy định rõ ràng về: cơ cấu tổ chức, chức năng, nhiệm vụ, thẩm quyền và trình tự thủ tục hoạt động của từng cơ quan, từng cán bộ công chức.
+   - Nếu không có pháp luật, bộ máy nhà nước sẽ rơi vào tình trạng chồng chéo chức năng, tranh chấp thẩm quyền hoặc đùn đẩy trách nhiệm, dẫn tới sự tê liệt hoàn toàn của cả hệ thống quyền lực.
+
+3. **Pháp luật là công cụ kiểm soát, giới hạn quyền lực Nhà nước, ngăn ngừa sự tùy tiện, lạm quyền**:
+   - Quyền lực nhà nước nếu không được kiểm soát chặt chẽ sẽ có xu hướng tha hóa, độc đoán, lạm quyền và xâm hại quyền tự do dân chủ của nhân dân.
+   - Pháp luật đặt ra hành lang pháp lý, giới hạn quyền lực để các cơ quan nhà nước và người có thẩm quyền **chỉ được làm những gì pháp luật cho phép** (nguyên tắc pháp quyền - Điều 8 Hiến pháp 2013).
+   - Một Nhà nước không có pháp luật để tự giới hạn và kiểm soát quyền lực của chính mình sẽ đánh mất tính chính danh, mất đi sự ủng hộ của nhân dân và sớm muộn sẽ bị đào thải.
+
+---
+
+#### III. KẾT LUẬN
+Nhà nước và Pháp luật là hai yếu tố gắn bó hữu cơ, tồn tại tiền đề cho nhau. **Không có pháp luật, Nhà nước không thể tồn tại, không thể vận hành bộ máy và không thể phát huy bất kỳ chức năng quản lý nào**. Nhận định phủ nhận vai trò của pháp luật đối với Nhà nước là hoàn toàn sai lầm cả về mặt lý luận Mác - Lênin lẫn thực tiễn xây dựng Nhà nước pháp quyền.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt: Tình huống xích mích hàng xóm đập phá đồ đạc (Bà A, Bà B, Anh C)
+   */
+  public static solveDynamicPropertyDestructionCase(query: string): string {
+    return `### I. XÁC ĐỊNH CÓ HAY KHÔNG VI PHẠM PHÁP LUẬT CỦA CÁC CHỦ THỂ
+Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi của 3 chủ thể:
+
+1. **Đối với Bà A**:
+   - **Hành vi**: Bà A chỉ nghe chuyện bà B nói xấu mình với người khác và kể lại sự việc cho con trai là anh C nghe trong lần anh C về thăm nhà.
+   - **Đánh giá pháp lý**: Bà A không có lời nói hay hành động xúi giục, kích động, ép buộc hay thuê mướn anh C đi trả thù hoặc đập phá tài sản của bà B. Việc chia sẻ tâm sự trong gia đình không vi phạm điều cấm của pháp luật.
+   - **Kết luận**: **Bà A KHÔNG vi phạm pháp luật**.
+
+2. **Đối với Bà B**:
+   - **Hành vi**: Bà B thỉnh thoảng nói không hay (nói xấu) về bà A với những người khác do mâu thuẫn xích mích hàng xóm.
+   - **Đánh giá pháp lý**: Hành vi nói xấu, bàn tán sau lưng là hành vi vi phạm quy tắc đạo đức xóm giềng. Xét về mặt pháp lý thực định, nếu lời nói xấu chưa đến mức bịa đặt nghiêm trọng nhằm xúc phạm danh dự, nhân phẩm ở mức độ nặng nề (chưa đủ yếu tố cấu thành tội Làm nhục người khác hay Vu khống theo BLHS 2015) hoặc chưa đủ yếu tố xử phạt vi phạm hành chính, thì chủ yếu bị điều chỉnh bởi quy tắc đạo đức xã hội.
+   - **Kết luận**: **Bà B chưa đủ căn cứ cấu thành vi phạm pháp luật** (chỉ vi phạm chuẩn mực đạo đức, ứng xử cộng đồng).
+
+3. **Đối với Anh C**:
+   - **Hành vi**: Nghe mẹ kể chuyện, anh C tức giận, tự ý tìm đến tận nhà bà B và thực hiện hành vi **đập phá đồ đạc**.
+   - **Đánh giá pháp lý**: Hành vi dùng vũ lực đập phá tài sản của người khác là hành vi trái pháp luật nguy hiểm, xâm phạm trực tiếp đến quyền sở hữu tài sản hợp pháp của công dân được pháp luật bảo vệ.
+   - **Kết luận**: **Anh C CÓ VI PHẠM PHÁP LUẬT** (vi phạm pháp luật hành chính hoặc vi phạm pháp luật hình sự về hành vi hủy hoại hoặc cố ý làm hư hỏng tài sản tùy thuộc giá trị thiệt hại tài sản, đồng thời phát sinh trách nhiệm bồi thường thiệt hại dân sự).
+
+---
+
+### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT CỦA ANH C
+*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ Giáo dục và Đào tạo)*
+
+| Yếu tố cấu thành | Nội dung phân tích cụ thể đối với hành vi của Anh C | Ý nghĩa pháp lý |
+| :--- | :--- | :--- |
+| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: Hành vi dùng sức mạnh cơ học hoặc công cụ đập phá, làm hư hỏng các đồ đạc, tài sản tại nhà bà B.<br>• **Hậu quả thiệt hại**: Gây thiệt hại về tài sản của bà B (làm đồ đạc bị vỡ nát, hư hại, suy giảm hoặc mất hoàn toàn giá trị sử dụng và giá trị thẩm mỹ).<br>• **Mối quan hệ nhân quả**: Hành vi đập phá của anh C là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả tài sản của bà B bị hư hại.<br>• **Địa điểm, thời gian**: Xảy ra tại nhà bà B ở huyện Hòa Vang, TP. Đà Nẵng khi anh C về thăm nhà. | Thể hiện biểu hiện nguy hiểm ra ngoài thế giới khách quan, xâm hại trật tự pháp luật. |
+| **2. Mặt chủ quan** | • **Hình thức lỗi: Lỗi CỐ Ý TRỰC TIẾP** (Điều 10 BLHS 2015):<br>- *Về lý trí*: Anh C nhận thức rõ hành vi xông vào nhà người khác đập phá tài sản là trái pháp luật và thấy trước hậu quả đồ đạc sẽ bị vỡ hỏng.<br>- *Về ý chí*: Anh C mong muốn thực hiện hành vi và mong muốn hậu quả tài sản bị hư hỏng xảy ra để bõ tức.<br>• **Động cơ, mục đích**: Tức giận vì nghe tin bà B nói xấu mẹ mình; mục đích nhằm trả thù, dằn mặt và phá hoại tài sản của bà B. | Phản ánh thái độ tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |
+| **3. Khách thể** | Xâm phạm trực tiếp đến **quyền sở hữu tài sản hợp pháp của công dân** (bà B) được Hiến pháp 2013 và pháp luật (BLDS 2015, BLHS 2015) bảo vệ tuyệt đối; đồng thời xâm phạm đến an ninh, trật tự an toàn công cộng tại địa phương. | Xác định quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |
+| **4. Chủ thể** | **Anh C**: Là công nhân đang làm việc cho xí nghiệp X ở Đồng Nai ➔ Đã thành niên (từ đủ 18 tuổi trở lên), có đầy đủ năng lực trách nhiệm pháp lý (có khả năng nhận thức và làm chủ hành vi, không mắc bệnh tâm thần hoặc bệnh làm mất năng lực hành vi). | Đạt độ tuổi luật định và có năng lực trách nhiệm pháp lý. |
+
+---
+
+### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG ĐỐI VỚI ANH C
+
+1. **Trách nhiệm Hành chính hoặc Hình sự**:
+   - *Trường hợp 1 (Vi phạm hành chính)*: Nếu tổng giá trị tài sản bị đập phá dưới 2.000.000 đồng và anh C chưa từng bị xử phạt vi phạm hành chính về hành vi này, anh C sẽ bị xử phạt vi phạm hành chính theo **Điểm a Khoản 2 Điều 15 Nghị định 144/2021/NĐ-CP** (phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng về hành vi *hủy hoại hoặc cố ý làm hư hỏng tài sản của cá nhân khác*).
+   - *Trường hợp 2 (Trách nhiệm hình sự)*: Nếu tổng giá trị tài sản bị hủy hoại từ **2.000.000 đồng trở lên** (hoặc dưới 2.000.000 đồng nhưng gây ảnh hưởng xấu đến an ninh trật tự hoặc đã bị xử phạt hành chính về hành vi này mà còn vi phạm), anh C sẽ bị truy cứu trách nhiệm hình sự về **Tội hủy hoại hoặc cố ý làm hư hỏng tài sản** theo **Điều 178 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 2017).
+2. **Trách nhiệm Dân sự**:
+   - Căn cứ **Điều 584, Điều 585 và Điều 589 Bộ luật Dân sự 2015** (về bồi thường thiệt hại do tài sản bị xâm phạm), anh C có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** (bao gồm giá trị tài sản bị mất, bị hủy hoại hoặc chi phí sửa chữa, khôi phục lại tình trạng ban đầu của đồ đạc) cho bà B.`;
+  }
+
+  /**
    * Đối sánh độ tương đồng từ khóa trên tập SFT Barem chuẩn
    */
   private static matchSftSample(query: string, intentCode?: ExamArchetype): SftSample | null {
     this.initCorpuses();
+    const icStr = (intentCode as string) || '';
 
     // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Định nghĩa / Khái niệm lý thuyết)
     if (intentCode === 'DEFINITION') {
@@ -447,6 +605,230 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
       };
     }
 
+    // 0.2. Nhánh chuyên biệt: Phân biệt / So sánh Lỗi cố ý trực tiếp và Lỗi cố ý gián tiếp
+    const hasCoyTt = qLower.includes('cố ý trực tiếp');
+    const hasCoyGt = qLower.includes('cố ý gián tiếp');
+    const hasLoiCoY =
+      (hasCoyTt || hasCoyGt) &&
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('khác nhau') || (hasCoyTt && hasCoyGt));
+    if (hasLoiCoY) {
+      return {
+        sample_id: 'SFT_THEORY_INTENT_FAULT_COMPARE',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'So sánh / phân biệt lỗi cố ý trực tiếp và lỗi cố ý gián tiếp theo Bộ luật Hình sự 2015. Lập bảng tiêu chí so sánh và cho ví dụ minh họa cụ thể.',
+        input: query,
+        output: this.getIntentionalFaultComparison(query)
+      };
+    }
+
+    // 0.3. Nhánh chuyên biệt: Mối quan hệ giữa Nhà nước và Pháp luật / Tại sao Nhà nước không thể tồn tại nếu thiếu Pháp luật
+    const isStateAndLawWhy =
+      qLower.includes('nhà nước') &&
+      qLower.includes('pháp luật') &&
+      (qLower.includes('thiếu pháp luật') ||
+       qLower.includes('không thể tồn tại') ||
+       qLower.includes('phát huy chức năng') ||
+       qLower.includes('không có pháp luật') ||
+       qLower.includes('quan hệ biện chứng') ||
+       qLower.includes('kiến trúc thượng tầng') ||
+       qLower.includes('tại sao nhà nước'));
+    if (isStateAndLawWhy && !qLower.includes('chỉ ra đời trong')) {
+      return {
+        sample_id: 'SFT_THEORY_STATE_AND_LAW_RELATION',
+        intent_code: 'DEFINITION',
+        instruction: 'Phân tích mối quan hệ biện chứng giữa Nhà nước và Pháp luật. Tại sao Nhà nước không thể tồn tại và phát huy chức năng nếu thiếu Pháp luật?',
+        input: query,
+        output: this.solveDynamicStateAndLawRelation(query)
+      };
+    }
+
+    // 0.4. Nhánh chuyên biệt: Nhà máy đường Hòa Bình xả thải sông Bưởi
+    if (
+      qLower.includes('nhà máy đường') &&
+      (qLower.includes('hòa bình') || qLower.includes('sông bưởi') || qLower.includes('xả thải') || qLower.includes('thanh hóa'))
+    ) {
+      const matchXathai = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_CASE_XATHAI');
+      if (matchXathai) return matchXathai;
+    }
+
+    // 0.5. Nhánh chuyên biệt: So sánh Quy phạm pháp luật và Quy phạm xã hội
+    if (
+      (qLower.includes('quy phạm pháp luật') || qLower.includes('quy phạm pl')) &&
+      qLower.includes('quy phạm xã hội') &&
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('ví dụ') || qLower.includes('giống và khác'))
+    ) {
+      const matchQpxh = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_SS_QPPL_QPXH');
+      if (matchQpxh) return matchQpxh;
+    }
+
+    // 0.6. Nhánh chuyên biệt: Phân biệt Quy phạm đạo đức và Quy phạm pháp luật
+    if (
+      (qLower.includes('quy phạm đạo đức') || qLower.includes('đạo đức')) &&
+      (qLower.includes('quy phạm pháp luật') || qLower.includes('quy phạm pl') || qLower.includes('pháp luật')) &&
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('khác nhau') || qLower.includes('giống nhau'))
+    ) {
+      const matchQpdd = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_SS_QPPL_QPDD');
+      if (matchQpdd) return matchQpdd;
+    }
+
+    // 0.7. Nhánh chuyên biệt: So sánh các hình thức thực hiện pháp luật
+    if (
+      (qLower.includes('thực hiện pháp luật') || qLower.includes('hình thức thực hiện')) &&
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('ví dụ') || qLower.includes('các hình thức'))
+    ) {
+      const matchThpl = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_SS_4_THPL');
+      if (matchThpl) return matchThpl;
+    }
+
+    // 0.8. Nhánh chuyên biệt: Ném đá cảnh sát giao thông (Ngày 15/6/2016, A và B, xe máy đánh võng)
+    if (
+      (qLower.includes('15/6/2016') || qLower.includes('ném đá') || qLower.includes('gạch đá') || qLower.includes('ném gạch')) &&
+      (qLower.includes('cảnh sát') || qLower.includes('giao thông') || qLower.includes('csgt') || qLower.includes('đánh võng') || qLower.includes('11%'))
+    ) {
+      const matchNemda = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_CASE_NEMDA');
+      if (matchNemda) return matchNemda;
+    }
+
+    // 0.9. Nhánh chuyên biệt: Phân tích cấu trúc QPPL cho điều luật cụ thể
+    if (qLower.includes('lực lượng vũ trang nhân dân') && (qLower.includes('trung thành') || qLower.includes('nhiệm vụ') || qLower.includes('điều 65'))) {
+      const matchQppl1 = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL1_QPPL_001');
+      if (matchQppl1) return matchQppl1;
+    }
+
+    if (qLower.includes('lừa dối') && qLower.includes('đe dọa') && (qLower.includes('giao dịch dân sự') || qLower.includes('vô hiệu') || qLower.includes('132'))) {
+      const matchQppl2 = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL1_QPPL_002');
+      if (matchQppl2) return matchQppl2;
+    }
+
+    // 0.10. Nếu người dùng chỉ gõ lệnh chung ": Phân tích cấu trúc quy phạm pháp luật" mà không có điều luật cụ thể
+    const bareClean = qLower.replace(/[:.,;?!]/g, '').trim();
+    if (
+      bareClean === 'phân tích cấu trúc quy phạm pháp luật' ||
+      bareClean === 'cơ cấu quy phạm pháp luật' ||
+      bareClean === 'phân tích cơ cấu quy phạm pháp luật' ||
+      bareClean === 'cấu trúc quy phạm pháp luật'
+    ) {
+      return {
+        sample_id: 'SFT_THEORY_QPPL_METHOD',
+        intent_code: 'QPPL_STRUCT',
+        instruction: 'Phương pháp phân tích cơ cấu 3 bộ phận của Quy phạm pháp luật (Giả định - Quy định - Chế tài) kèm ví dụ:',
+        input: query,
+        output: `### PHƯƠNG PHÁP PHÂN TÍCH CẤU TRÚC QUY PHẠM PHÁP LUẬT
+*(Theo Barem chuẩn Giáo trình Pháp luật Đại cương — Bộ Giáo dục và Đào tạo)*
+
+Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận cấu thành**:
+
+---
+
+#### 1. BỘ PHẬN GIẢ ĐỊNH (Trả lời câu hỏi: Ai? Khi nào? Trong điều kiện, hoàn cảnh nào?)
+- **Khái niệm**: Là bộ phận chỉ rõ chủ thể (cá nhân, cơ quan, tổ chức nào) và hoàn cảnh, điều kiện, tình huống thực tế mà khi gặp phải thì chủ thể phải chịu sự tác động của quy phạm.
+- **Dấu hiệu nhận biết**: Thường mở đầu bằng các từ *"Khi...", "Nếu...", "Trong trường hợp...", "Cá nhân, tổ chức nào...", "Người nào..."*.
+
+#### 2. BỘ PHẬN QUY ĐỊNH (Trả lời câu hỏi: Được làm gì? Phải làm gì? Không được làm gì?)
+- **Khái niệm**: Là bộ phận trung tâm của quy phạm pháp luật, chỉ ra cách thức xử sự của chủ thể khi rơi vào điều kiện đã nêu ở phần giả định.
+- **Dấu hiệu nhận biết**:
+  + *Quy phạm bắt buộc*: Chứa từ *"phải", "có nghĩa vụ", "bắt buộc"*.
+  + *Quy phạm cấm đoán*: Chứa từ *"không được", "nghiêm cấm", "bị cấm"*.
+  + *Quy phạm cho phép (trao quyền)*: Chứa từ *"có quyền", "được phép", "có thể"*.
+
+#### 3. BỘ PHẬN CHẾ TÀI (Trả lời câu hỏi: Phải gánh chịu hậu quả bất lợi gì?)
+- **Khái niệm**: Là bộ phận chỉ ra các biện pháp tác động bất lợi (hậu quả pháp lý) mà Nhà nước dự kiến áp dụng đối với chủ thể không thực hiện đúng bộ phận quy định.
+- **Phân loại chế tài**: Chế tài hình sự (phạt tù, tử hình), chế tài hành chính (phạt tiền, tước giấy phép), chế tài dân sự (bồi thường thiệt hại), chế tài kỷ luật (khiển trách, buộc thôi việc).
+
+---
+
+💡 *Gợi ý: Để hệ thống phân tích chi tiết cho một điều luật cụ thể, bạn vui lòng nhập nguyên văn điều luật đó kèm câu hỏi (Ví dụ: "Phân tích cấu trúc quy phạm pháp luật: [dán điều luật vào đây]").*`
+      };
+    }
+
+    // 0.11. Nhánh chuyên biệt: Mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động
+    if (
+      qLower.includes('thực hiện pháp luật') &&
+      (qLower.includes('dưới dạng hành động') || qLower.includes('hành vi hành động') || qLower.includes('dạng hành động'))
+    ) {
+      return {
+        sample_id: 'SFT_THPL_HANHDONG_KHONGHANHDONG',
+        intent_code: 'TRUE_FALSE',
+        instruction: 'Nhận định sau đúng hay sai: Mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động.',
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+
+- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
+  Thực hiện pháp luật là quá trình hoạt động có mục đích, làm cho những quy định của pháp luật đi vào cuộc sống, trở thành những hành vi thực tế hợp pháp của các chủ thể pháp luật.
+  Khoa học pháp lý phân chia thực hiện pháp luật thành **4 hình thức cơ bản** với dạng thức biểu hiện hành vi hoàn toàn khác nhau:
+  1. **Tuân thủ pháp luật (Tuân theo pháp luật)**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể tự giác kiềm chế không tiến hành những hành vi mà pháp luật nghiêm cấm.
+     - *Dạng thức biểu hiện*: Bắt buộc thực hiện dưới dạng **KHÔNG HÀNH ĐỘNG** (Hành vi thụ động).
+     - *Ví dụ thực tế*: Không vượt đèn đỏ; không nhận hối lộ; không buôn bán ma túy; không gây rối trật tự công cộng.
+  2. **Chấp hành pháp luật (Thi hành pháp luật)**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể chủ động thực hiện các nghĩa vụ pháp lý mà pháp luật bắt buộc phải làm.
+     - *Dạng thức biểu hiện*: Bắt buộc thực hiện dưới dạng **HÀNH ĐỘNG** (Hành vi tích cực).
+     - *Ví dụ thực tế*: Kê khai và nộp thuế đầy đủ đúng hạn; tham gia nghĩa vụ quân sự; đội mũ bảo hiểm đạt chuẩn khi tham gia giao thông.
+  3. **Sử dụng pháp luật**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể chủ động thực hiện các quyền và quyền tự do dân chủ của mình theo luật định (làm những gì pháp luật cho phép).
+     - *Dạng thức biểu hiện*: Có thể dưới dạng **HÀNH ĐỘNG** (đăng ký kết hôn, thành lập doanh nghiệp, làm đơn khiếu nại) hoặc **KHÔNG HÀNH ĐỘNG** (có quyền khiếu nại nhưng lựa chọn không khiếu nại, có quyền lập di chúc nhưng không lập di chúc).
+  4. **Áp dụng pháp luật**:
+     - *Bản chất*: Là hình thức thực hiện pháp luật mang tính quyền lực nhà nước, chỉ do cơ quan nhà nước, người có thẩm quyền tiến hành theo trình tự luật định nhằm ban hành văn bản áp dụng pháp luật cá biệt.
+     - *Dạng thức biểu hiện*: Luôn thể hiện dưới dạng **HÀNH ĐỘNG** (Tòa án ra bản án, CSGT lập biên bản ra quyết định xử phạt).
+- **Tổng kết đánh giá**: Nhận định cho rằng *mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động* là **HOÀN TOÀN SAI**, bởi vì hình thức **Tuân thủ pháp luật** bắt buộc phải được thực hiện dưới dạng **KHÔNG HÀNH ĐỘNG** (chủ thể kiềm chế không vi phạm điều cấm).`
+      };
+    }
+
+    // 0.12. Nhánh chuyên biệt: Tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản QPPL
+    if (
+      (qLower.includes('văn bản do') || qLower.includes('các văn bản') || qLower.includes('văn bản của')) &&
+      (qLower.includes('cơ quan nhà nước') || qLower.includes('cơ quan có thẩm quyền')) &&
+      (qLower.includes('đều là') || qLower.includes('chỉ là') || qLower.includes('tất cả')) &&
+      (qLower.includes('văn bản quy phạm pháp luật') || qLower.includes('vbqppl') || qLower.includes('quy phạm pháp luật'))
+    ) {
+      return {
+        sample_id: 'SFT_PBL6_SHORT_08_EXPANDED',
+        intent_code: 'TRUE_FALSE',
+        instruction: 'Nhận định sau Đúng hay Sai? Giải thích cơ sở lý luận theo giáo trình môn Pháp luật Đại cương: "Tất cả các văn bản do các cơ quan nhà nước có thẩm quyền ban hành đều là văn bản quy phạm pháp luật"',
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+
+- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
+  Trong hoạt động quản lý nhà nước, các cơ quan nhà nước có thẩm quyền ban hành nhiều loại văn bản khác nhau để thực hiện chức năng, nhiệm vụ của mình. Hệ thống văn bản do cơ quan nhà nước ban hành được phân chia thành **ba loại văn bản cơ bản**:
+  1. **Văn bản quy phạm pháp luật (VBQPPL)**:
+     - Là văn bản có chứa **quy tắc xử sự chung**, có hiệu lực bắt buộc chung, được áp dụng lặp đi lặp lại nhiều lần đối với cơ quan, tổ chức, cá nhân trong phạm vi cả nước hoặc đơn vị hành chính nhất định (căn cứ **Điều 2 Luật Ban hành văn bản quy phạm pháp luật 2015, sửa đổi 2020**).
+     - *Ví dụ*: Luật, Bộ luật của Quốc hội; Nghị định của Chính phủ; Thông tư của Bộ trưởng; Quyết định quy phạm của UBND cấp tỉnh.
+  2. **Văn bản áp dụng pháp luật (Văn bản cá biệt)**:
+     - Là văn bản do cơ quan, người có thẩm quyền ban hành nhằm giải quyết một vụ việc cụ thể đối với một hoặc một số đối tượng xác định, chỉ được **áp dụng một lần** (cá biệt hóa quy phạm pháp luật vào trường hợp cụ thể).
+     - *Ví dụ*: Quyết định xử phạt vi phạm hành chính của Cảnh sát giao thông; Quyết định bổ nhiệm cán bộ của Chủ tịch UBND; Bản án của Tòa án nhân dân; Giấy chứng nhận quyền sử dụng đất.
+  3. **Văn bản hành chính thông thường**:
+     - Là văn bản mang tính thông tin, điều hành nội bộ, trao đổi công việc hành chính hàng ngày giữa các cơ quan, tổ chức hoặc với công dân.
+     - *Ví dụ*: Công văn, Thông báo, Tờ trình, Biên bản, Báo cáo, Kế hoạch công tác.
+- **Tổng kết đánh giá**: Nhận định cho rằng *tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản quy phạm pháp luật* là **HOÀN TOÀN SAI**, bởi vì cơ quan nhà nước còn ban hành rất nhiều văn bản áp dụng pháp luật cá biệt và văn bản hành chính thông thường.`
+      };
+    }
+
+    // 0.13. Nhánh chuyên biệt: Một hành vi có thể đồng thời vừa là vi phạm hình sự vừa là vi phạm hành chính
+    if (
+      (qLower.includes('một hành vi') || qLower.includes('cùng một hành vi') || qLower.includes('hành vi')) &&
+      (qLower.includes('đồng thời') || qLower.includes('vừa là') || qLower.includes('cùng là')) &&
+      (qLower.includes('vi phạm hình sự') || qLower.includes('tội phạm') || qLower.includes('hình sự')) &&
+      (qLower.includes('vi phạm hành chính') || qLower.includes('hành chính'))
+    ) {
+      return {
+        sample_id: 'SFT_PBL6_SHORT_06_EXPANDED',
+        intent_code: 'TRUE_FALSE',
+        instruction: 'Nhận định sau Đúng hay Sai? Giải thích cơ sở lý luận theo giáo trình môn Pháp luật Đại cương: "Một hành vi có thể đồng thời vừa là vi phạm hình sự vừa là vi phạm hành chính"',
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG (DƯỚI GÓC ĐỘ HÀNH VI PHỨC HỢP THEO BAREM ĐỀ THI MÔN PHÁP LUẬT ĐẠI CƯƠNG).**
+
+- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
+  Trong thực tiễn đời sống pháp lý và các đề thi lý luận pháp luật đại cương, một chuỗi hành vi thực tế (hoặc một hành vi phức hợp) của chủ thể có thể đồng thời xâm phạm nhiều khách thể được các ngành luật khác nhau bảo vệ:
+  1. **Ví dụ điển hình theo đề thi môn Pháp luật đại cương**:
+     - Hành vi điều khiển xe máy chạy quá tốc độ quy định, lạng lách đánh võng rồi đâm chết người đi bộ:
+       + *Vi phạm hành chính*: Hành vi điều khiển phương tiện vi phạm quy tắc an toàn giao thông đường bộ (chạy quá tốc độ, lạng lách) cấu thành vi phạm hành chính trong lĩnh vực giao thông đường bộ.
+       + *Vi phạm hình sự (Tội phạm)*: Hậu quả làm chết người đã thỏa mãn đầy đủ 4 yếu tố cấu thành Tội vi phạm quy định về tham gia giao thông đường bộ theo **Điều 260 Bộ luật Hình sự 2015 (sửa đổi 2017)**.
+  2. **Lưu ý chuyên sâu về nguyên tắc xử lý theo pháp luật thực định**:
+     - Căn cứ **Điều 62 và Điều 63 Luật Xử lý vi phạm hành chính 2012 (sửa đổi, bổ sung 2020)**: Đối với cùng một hành vi vi phạm cụ thể, nếu hành vi đó đã có dấu hiệu cấu thành tội phạm thì cơ quan có thẩm quyền bắt buộc phải chuyển hồ sơ sang cơ quan tiến hành tố tụng hình sự để truy cứu trách nhiệm hình sự; **nghiêm cấm việc vừa xử phạt hành chính vừa truy cứu trách nhiệm hình sự đối với cùng một hành vi đơn nhất** (nguyên tắc không xử lý trùng lặp).
+     - Tuy nhiên, xét về bản chất cấu thành hành vi trong câu hỏi lý luận, nhận định trên là **ĐÚNG** đối với các hành vi phức hợp đa khách thể.`
+      };
+    }
+
     // Dạng TRUE_FALSE: Đối sánh câu nhận định trên tập SFT Barem chuẩn
     const isTfIntent =
       intentCode === 'TRUE_FALSE' ||
@@ -458,23 +840,41 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
       query.toLowerCase().startsWith('không chỉ ');
 
     if (isTfIntent) {
-      const qNorm = query.toLowerCase().replace(/[.,;:?!"'“”()]/g, ' ').replace(/\s+/g, ' ').trim();
+      const cleanStatement = (text: string) => {
+        return text
+          .toLowerCase()
+          .replace(/nhận định sau đúng hay sai[?:.]*/g, '')
+          .replace(/nhận định này đúng hay sai[?:.]*/g, '')
+          .replace(/đúng hay sai[?:.]*/g, '')
+          .replace(/giải thích cơ sở lý luận[^\n:"]*[:"]*/g, '')
+          .replace(/giải thích rõ cơ sở lý luận[^\n:"]*[:"]*/g, '')
+          .replace(/giải thích vì sao[?:.]*/g, '')
+          .replace(/chủ đề:[^\n.]*[.]*/g, '')
+          .replace(/câu hỏi thi:[^\n.]*[.]*/g, '')
+          .replace(/nhận định ôn thi:[^\n.]*[.]*/g, '')
+          .replace(/nhận định:[^\n.]*[.]*/g, '')
+          .replace(/[.,;:?!"'“”()\-–—_/\\]/g, ' ')
+          .replace(/\s+/g, ' ')
+          .trim();
+      };
+
+      const qCleanStmt = cleanStatement(query);
+
       for (let i = 0; i < this.examCorpus.length; i++) {
         const item = this.examCorpus[i];
         if (item.intent_code !== 'TRUE_FALSE') continue;
-        const itemNorm = (item.input || item.instruction || '')
-          .toLowerCase()
-          .replace(/[.,;:?!"'“”()]/g, ' ')
-          .replace(/\s+/g, ' ')
-          .trim();
+        const rawCombined = `${item.instruction} ${item.input}`;
+        const itemCleanStmt = cleanStatement(rawCombined);
 
         // Nếu mẫu SFT là khối gồm nhiều câu hỏi con (1. 2. 3...)
         const rawInput = item.input || item.instruction || '';
         if (rawInput.includes('1.') && rawInput.includes('2.')) {
           const sliced = this.sliceSingleItemIfApplicable(query, item);
-          if (sliced.sample_id !== item.sample_id) {
+          if (sliced && sliced.sample_id !== item.sample_id) {
             return sliced;
           }
+          // Bỏ qua nếu đây là bài thi nhiều câu mà không khớp câu con nào
+          continue;
         }
 
         // BẢO VỆ CÂU HỎI ĐA Ý: Không cho phép câu đơn ý khớp đè lên câu hỏi chứa nhiều ý (1. và 2.)
@@ -482,18 +882,29 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
           (query.includes('1.') && query.includes('2.')) ||
           query.toLowerCase().includes('các nhận định') ||
           query.toLowerCase().includes('những nhận định');
-        const hasMultipleInItem = (rawInput.includes('1.') && rawInput.includes('2.')) || itemNorm.includes('2.');
+        const hasMultipleInItem = (rawInput.includes('1.') && rawInput.includes('2.')) || itemCleanStmt.includes('2.');
         if (hasMultipleInQuery && !hasMultipleInItem) {
           continue;
         }
 
-        // Kiểm tra chứa câu nhận định đơn lẻ hoặc tương đồng cao
-        if (qNorm.length > 15 && (itemNorm.includes(qNorm) || qNorm.includes(itemNorm))) {
+        // 1. Khớp nguyên văn câu nhận định cốt lõi (sau khi loại bỏ tiền tố thừa)
+        if (
+          qCleanStmt.length >= 15 &&
+          itemCleanStmt.length >= 15 &&
+          (qCleanStmt.includes(itemCleanStmt) || itemCleanStmt.includes(qCleanStmt))
+        ) {
+          const sliced = this.sliceSingleItemIfApplicable(query, item);
+          if (sliced) return sliced;
           return item;
         }
-        const quoted = itemNorm.match(/"([^"]+)"/) || itemNorm.match(/nhận định\s*:\s*([^.]+)/);
-        if (quoted && quoted[1] && quoted[1].length > 12 && qNorm.includes(quoted[1].trim())) {
-          return item;
+
+        // 2. Khớp theo ngoặc kép hoặc tiền tố trích dẫn trong văn bản gốc
+        const quoted = rawCombined.match(/"([^"]+)"/) || rawCombined.match(/“([^”]+)”/) || rawCombined.match(/nhận định\s*:\s*([^.\n]+)/i);
+        if (quoted && quoted[1] && quoted[1].length > 12) {
+          const qCleanTarget = cleanStatement(quoted[1]);
+          if (qCleanTarget.length >= 12 && (qCleanStmt.includes(qCleanTarget) || qCleanTarget.includes(qCleanStmt))) {
+            return item;
+          }
         }
       }
     }
@@ -506,7 +917,7 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
     const qBigrams = this.getBigrams(activeWords.length >= 3 ? activeWords : qWords);
     const qRawNorm = query.toLowerCase().replace(/[.,;:?!"'“”()]/g, ' ').replace(/\s+/g, ' ').trim();
 
-    // 1. Quét trên tập Exam Barem điểm 10 (340+ đề thi Bộ GD&ĐT)
+    // 1. Quét trên tập Exam Barem chuẩn Bộ GD&ĐT (340+ đề thi Bộ GD&ĐT)
     if (this.examCorpus.length > 0) {
       let bestExam: SftSample | null = null;
       let bestExamScore = 0;
@@ -516,13 +927,13 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
         if (!this.matchFactGuard(query, item)) continue;
 
         // BẢO VỆ CHẶT CHẼ THEO INTENT CODE (Archetype Isolation)
-        if (intentCode === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
+        if (icStr === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
           continue;
         }
-        if (intentCode === 'TRUE_FALSE' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'DEFINITION')) {
+        if (icStr === 'TRUE_FALSE' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'DEFINITION')) {
           continue;
         }
-        if (intentCode === 'CASE_ANALYSIS' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'DEFINITION')) {
+        if (icStr === 'CASE_ANALYSIS' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'DEFINITION')) {
           continue;
         }
 
@@ -558,11 +969,15 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
               }
             }
           }
+          // Bỏ qua bài thi nhiều câu nếu câu đơn không khớp câu con nào
+          continue;
         }
 
         // Khớp chuỗi trực tiếp nếu chứa nhau >= 25 ký tự
         if (qRawNorm.length >= 25 && (itemRawNorm.includes(qRawNorm) || qRawNorm.includes(itemRawNorm))) {
-          return this.sliceSingleItemIfApplicable(query, item);
+          const sliced = this.sliceSingleItemIfApplicable(query, item);
+          if (sliced) return sliced;
+          continue;
         }
 
         const tokenSet = this.examTokenSets[i];
@@ -591,11 +1006,23 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
       }
 
       if (bestExam) {
-        return this.sliceSingleItemIfApplicable(query, bestExam);
+        const sliced = this.sliceSingleItemIfApplicable(query, bestExam);
+        if (sliced) return sliced;
       }
     }
 
     // 2. Quét tài liệu pháp lý chuyên sâu trong Master Corpus (Số hiệu, Tiêu đề văn bản, Địa phương ban hành)
+    // TUYỆT ĐỐI KHÔNG quét Master Corpus khi là câu hỏi thi lý thuyết / nhận định / so sánh / phân tích cấu trúc
+    if (
+      icStr === 'TRUE_FALSE' ||
+      isTfIntent ||
+      icStr === 'COMPARISON' ||
+      icStr === 'DEFINITION' ||
+      icStr === 'QPPL_STRUCT'
+    ) {
+      return null;
+    }
+
     if (this.masterCorpus.length > 0) {
       const qClean = query
         .toLowerCase()
@@ -670,13 +1097,13 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
         if (!this.matchFactGuard(query, item)) continue;
 
         // BẢO VỆ CHẶT CHẼ THEO INTENT CODE (Archetype Isolation)
-        if (intentCode === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
+        if (icStr === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
           continue;
         }
-        if (intentCode === 'TRUE_FALSE' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'DEFINITION')) {
+        if (icStr === 'TRUE_FALSE' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'DEFINITION')) {
           continue;
         }
-        if (intentCode === 'CASE_ANALYSIS' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'DEFINITION')) {
+        if (icStr === 'CASE_ANALYSIS' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'DEFINITION')) {
           continue;
         }
 
@@ -724,25 +1151,95 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
     query: string,
     intentCode: ExamArchetype,
     promptContext: string,
-    retrievedArticles: ILawArticle[] = []
+    retrievedArticles: ILawArticle[] = [],
+    forcedCategory?: string | null
   ): Promise<{ text: string; latencyMs: number }> {
     const startTime = Date.now();
 
-    // 0. Kiểm tra Fast-Path Tầng 4 (Bộ đề & Barem chuẩn có kiểm định dữ kiện)
-    const matchedSft = this.matchSftSample(query, intentCode);
-    if (matchedSft) {
-      const finalSft = this.sliceSingleItemIfApplicable(query, matchedSft);
-      await new Promise((r) => setTimeout(r, 200));
-      console.log(
-        `⚡ [Tier-4 SFT Engine] Khớp đúng bài tập ${finalSft.sample_id} (${finalSft.intent_code}) trong ${Date.now() - startTime}ms.`
-      );
+    // =========================================================================
+    // QUY TRÌNH KẾT HỢP: SFT DATASET (MẪU ĐÃ TRAIN) + RAG GIÁO TRÌNH (TRÍCH DẪN)
+    // =========================================================================
+
+    // BƯỚC 0: ƯU TIÊN SỐ 1: BỘ DỮ LIỆU ĐÃ TRAIN (SFT MASTER CORPUS) KẾT HỢP RAG GIÁO TRÌNH
+    const sftMatch = this.matchSftSample(query, intentCode);
+    if (sftMatch) {
+      const topTb = TextbookKnowledgeService.searchTopChunks(query + ' ' + (sftMatch.instruction || ''), 1);
+      const tbCitation =
+        topTb.length > 0 && topTb[0].score >= 8
+          ? TextbookKnowledgeService.buildDetailedCitation(topTb[0].chunk, retrievedArticles)
+          : '';
+
+      console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
       return {
-        text: finalSft.output,
+        text: sftMatch.output + tbCitation,
         latencyMs: Date.now() - startTime
       };
     }
 
-    // 1. Thử gọi mô hình cục bộ với timeout siêu ngắn (800ms) để ưu tiên phản hồi tức thì
+    // BƯỚC 1: Đảm bảo Ngữ cảnh Giáo trình (Textbook Retrieval) và Điều luật đầy đủ nhất
+    let fullRagContext = promptContext || '';
+    const topTextbooks = TextbookKnowledgeService.searchTopChunks(query, 2);
+    if (topTextbooks.length > 0) {
+      topTextbooks.forEach((t) => {
+        const tb = t.chunk;
+        const chunkHeader = `[GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG ĐH THƯƠNG MẠI 2021 - ${tb.chapterTitle} (${tb.sectionTitle})]:\n`;
+        if (!fullRagContext.includes(tb.sectionTitle)) {
+          fullRagContext += `\n\n${chunkHeader}${tb.baremContent}\nCăn cứ pháp lý: ${tb.legalBasis.join(', ')}`;
+        }
+      });
+    }
+
+    if (retrievedArticles.length > 0) {
+      retrievedArticles.forEach((art) => {
+        const artHeader = `[ĐIỀU LUẬT THỰC ĐỊNH: ${art.lawName} - Điều ${art.articleNumber}: ${art.title}]:\n`;
+        if (!fullRagContext.includes(art.title)) {
+          fullRagContext += `\n\n${artHeader}${art.contentRaw}`;
+        }
+      });
+    }
+
+    // BƯỚC 2: Xác định quy tắc định dạng bắt buộc theo Dạng bài người dùng chọn
+    let modeRule = '';
+    const activeCategory = (forcedCategory || intentCode).toUpperCase();
+    if (activeCategory.includes('NHAN_DINH') || activeCategory === 'TRUE_FALSE') {
+      modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ NHẬN ĐỊNH ĐÚNG / SAI):
+- Bắt buộc dòng đầu tiên phải mở đầu bằng: '- KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.' hoặc '- KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.'
+- Trình bày cơ sở lý luận theo Giáo trình Pháp luật Đại cương và Căn cứ điều luật thực định.
+- Phân tích cặn kẽ từng vế câu, giải thích rõ ràng nguyên nhân Đúng hoặc Sai.
+- TUYỆT ĐỐI không trả lời dưới dạng định nghĩa hay bài tập tình huống.`;
+    } else if (activeCategory.includes('SO_SANH') || activeCategory === 'COMPARISON') {
+      modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ SO SÁNH & PHÂN BIỆT):
+- Phân tích Điểm giống nhau giữa các đối tượng.
+- Lập bảng hoặc phân tích Điểm khác nhau theo các tiêu chí: Khái niệm, Căn cứ pháp lý, Đặc điểm bản chất, Hệ quả pháp lý.
+- Lấy ví dụ minh họa thực tiễn.
+- TUYỆT ĐỐI không trả lời lệch sang dạng khác.`;
+    } else if (
+      activeCategory.includes('TINH_HUONG') ||
+      activeCategory === 'CASE_ANALYSIS' ||
+      activeCategory === 'CIVIL_INHERIT' ||
+      activeCategory === 'CIVIL_CONTRACT'
+    ) {
+      modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ BÀI TẬP TÌNH HUỐNG):
+- Tóm tắt sự việc & Xác định quan hệ pháp luật phát sinh.
+- Căn cứ pháp lý áp dụng (Điều luật cụ thể).
+- Giải quyết chi tiết từng yêu cầu đề bài: phân tích lỗi, quyền, nghĩa vụ và trách nhiệm pháp lý của từng chủ thể.
+- Kết luận hướng xử lý.`;
+    } else if (activeCategory.includes('DINH_NGHIA') || activeCategory === 'DEFINITION') {
+      modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ KHÁI NIỆM & ĐỊNH NGHĨA):
+- Định nghĩa chuẩn xác theo Giáo trình Pháp luật Đại cương (Bộ GD&ĐT).
+- Các đặc trưng/dấu hiệu bản chất pháp lý.
+- Ý nghĩa thực tiễn và căn cứ pháp luật.`;
+    } else if (
+      activeCategory.includes('PHAN_TICH') ||
+      activeCategory === 'VPPL_4_ELEMENTS' ||
+      activeCategory === 'QPPL_STRUCT'
+    ) {
+      modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ PHÂN TÍCH CẤU TRÚC / TÁC HẠI):
+- Phân tích chi tiết từng bộ phận / yếu tố cấu thành (ví dụ 4 yếu tố cấu thành VPPL hoặc 3 bộ phận QPPL).
+- Trích dẫn điều luật hoặc bài học thực tiễn minh họa.`;
+    }
+
+    // BƯỚC 3: Gọi mô hình Fine-tuned LLM (Qwen2.5-3B-Legal-VN) với Ngữ cảnh Giáo trình đã RAG
     try {
       const response = await fetch(`${config.llamaServerUrl}/chat/completions`, {
         method: 'POST',
@@ -753,35 +1250,44 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
             {
               role: 'system',
               content:
-                'Bạn là Giảng viên Pháp lý VietLawAssist môn Pháp luật Đại cương. Hãy giải bài tập ngắn gọn, rõ ràng theo barem chuẩn Bộ GD&ĐT.'
+                `Bạn là Giảng viên Pháp lý VietLawAssist môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy dựa vào Ngữ cảnh giáo trình và các điều luật được cung cấp dưới đây để giải đáp chi tiết, lập luận chặt chẽ và đưa ra kết luận chuẩn Barem.`
             },
             {
               role: 'user',
-              content: `Ngữ cảnh pháp lý:\n${promptContext.slice(0, 300)}\n\nĐề bài:\n${query}`
+              content: `--- NGỮ CẢNH GIÁO TRÌNH & ĐIỀU LUẬT TRUY XUẤT TỪ RAG ---\n${fullRagContext.slice(0, 2500)}\n\n--- CÂU HỎI / ĐỀ BÀI ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Hãy vận dụng đúng nội dung giáo trình và quy định pháp luật ở trên để trả lời đầy đủ, chính xác:`
             }
           ],
-          temperature: 0.15,
-          max_tokens: 280
+          temperature: 0.2,
+          max_tokens: 1024
         }),
-        signal: AbortSignal.timeout(800)
+        signal: AbortSignal.timeout(2500)
       });
 
       if (response.ok) {
         const data: any = await response.json();
         const text = data.choices?.[0]?.message?.content;
         if (text && text.trim().length > 60) {
-          console.log(`✅ [LLM] Mô hình Qwen2.5-3B Local phản hồi trong ${Date.now() - startTime}ms.`);
-          return { text, latencyMs: Date.now() - startTime };
+          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải từ ngữ cảnh Giáo trình trong ${Date.now() - startTime}ms.`);
+          const extraCitation =
+            !text.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
+              ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
+              : '';
+          return { text: text.trim() + extraCitation, latencyMs: Date.now() - startTime };
         }
       }
-    } catch {
-      // Timeout hoặc bận -> Chuyển ngay sang Bộ giải Dynamic RAG
+    } catch (err: any) {
+      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Kích hoạt Bộ giải Barem Động trên ngữ cảnh Giáo trình.`);
     }
 
-    // 2. Bộ giải Barem ĐỘNG (Dynamic RAG Solver) - Phân tích chính xác từng thực thể và số liệu của đề bài
-    const generatedText = this.generateDynamicRagSolution(query, intentCode, promptContext, retrievedArticles);
+    // BƯỚC 4: HYBRID FALLBACK: Sử dụng Bộ giải Barem ĐỘNG (Dynamic RAG Solver)
+    // Tự động phân tích các thực thể, tình tiết, điều luật và giáo trình đã RAG
+    const generatedText = this.generateDynamicRagSolution(query, intentCode, fullRagContext, retrievedArticles, forcedCategory);
+    const extraCitation =
+      !generatedText.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
+        ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
+        : '';
     return {
-      text: generatedText,
+      text: generatedText + extraCitation,
       latencyMs: Date.now() - startTime
     };
   }
@@ -802,7 +1308,11 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
       'khi', 'sau', 'trước', 'tại', 'trong', 'đến', 'do', 'vì', 'bộ', 'luật', 'pháp',
       'nhà', 'nước', 'hình', 'sự', 'dân', 'điều', 'khoản', 'điểm', 'đúng', 'sai', 'hành', 'vi',
       'phân', 'tích', 'yếu', 'tố', 'cấu', 'thành', 'thực', 'hiện', 'tội', 'phạm', 'trách', 'nhiệm',
-      'đèn', 'đỏ', 'xe', 'máy', 'ô', 'tô', 'va', 'chạm', 'giao', 'thông'
+      'đèn', 'đỏ', 'xe', 'máy', 'ô', 'tô', 'va', 'chạm', 'giao', 'thông',
+      'thiệt', 'hại', 'tế', 'mặt', 'khách', 'chủ', 'thể', 'quan', 'nhận', 'định', 'quyền', 'lực', 'xã', 'hội',
+      'các', 'những', 'mọi', 'tất', 'cả', 'theo', 'việc', 'người', 'cơ', 'cấu', 'so', 'sánh', 'hãy', 'xác',
+      'nêu', 'cho', 'biết', 'sao', 'bản', 'chất', 'nguyên', 'nhân', 'hậu', 'quả', 'tình', 'huống', 'tội',
+      'danh', 'mức', 'án', 'hình', 'phạt', 'biện', 'pháp', 'áp', 'dụng'
     ]);
 
     const VN_CAP = /^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;
@@ -815,9 +1325,18 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
         const lower = w.toLowerCase();
         // Chữ cái đơn như A, B, C, X, Y
         if (w.length === 1 && 'ABCDEFGHIKLMNPQRSTUVXYZ'.includes(w)) {
-          if (!actors.includes(w)) actors.push(w);
+          const prev = i > 0 ? words[i - 1].toLowerCase() : '';
+          let actorName = w;
+          if (['ông', 'bà', 'anh', 'chị', 'cháu', 'bác', 'cô', 'chú'].includes(prev)) {
+            actorName = prev.charAt(0).toUpperCase() + prev.slice(1) + ' ' + w;
+          }
+          if (!actors.includes(actorName)) actors.push(actorName);
         } else if (!commonWords.has(lower)) {
           const prev = i > 0 ? words[i - 1].toLowerCase() : '';
+          // Nếu từ viết hoa đứng đầu câu và không có danh xưng đi kèm thì chỉ là viết hoa đầu câu, không phải tên người
+          if (i === 0 && !['ông', 'bà', 'anh', 'chị', 'cháu', 'bác', 'cô', 'chú'].includes(prev)) {
+            continue;
+          }
           let fullName = w;
           if (['ông', 'bà', 'anh', 'chị', 'cháu', 'bác', 'cô', 'chú'].includes(prev)) {
             fullName = prev.charAt(0).toUpperCase() + prev.slice(1) + ' ' + w;
@@ -858,8 +1377,35 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
     query: string,
     intentCode: ExamArchetype,
     promptContext: string,
-    retrievedArticles: ILawArticle[] = []
+    retrievedArticles: ILawArticle[] = [],
+    forcedCategory?: string | null
   ): string {
+    const activeCat = (forcedCategory || '').toUpperCase().trim();
+    if (activeCat === 'NHAN_DINH' || activeCat === 'TRUE_FALSE') {
+      return this.solveDynamicTrueFalse(query, retrievedArticles);
+    }
+    if (activeCat === 'SO_SANH' || activeCat === 'COMPARISON') {
+      return this.solveDynamicComparison(query, retrievedArticles);
+    }
+    if (activeCat === 'DINH_NGHIA' || activeCat === 'DEFINITION') {
+      return this.solveDynamicDefinition(query, this.extractLegalConcept(query));
+    }
+    if (activeCat === 'PHAN_TICH' || activeCat === 'VPPL_4_ELEMENTS') {
+      const qLower = query.toLowerCase();
+      if (qLower.includes('quy phạm') || qLower.includes('giả định') || qLower.includes('chế tài') || qLower.includes('cơ cấu')) {
+        return this.solveDynamicQppl(query, retrievedArticles);
+      }
+      return this.solveDynamicVppl(query, this.extractActors(query), this.extractMoney(query), this.extractInjury(query), this.extractAge(query), retrievedArticles);
+    }
+    if (activeCat === 'TINH_HUONG' || activeCat === 'CASE_ANALYSIS') {
+      const qLower = query.toLowerCase();
+      const actors = this.extractActors(query);
+      const money = this.extractMoney(query);
+      if (qLower.includes('thừa kế') || qLower.includes('di sản') || qLower.includes('di chúc')) return this.solveDynamicCivilInherit(query, actors, money);
+      if (qLower.includes('vay') && (qLower.includes('tiền') || qLower.includes('triệu') || qLower.includes('hợp đồng'))) return this.solveDynamicCivilContract(query, actors, money, retrievedArticles);
+      return this.solveDynamicCaseAnalysis(query, actors, money, this.extractInjury(query), retrievedArticles);
+    }
+
     const actors = this.extractActors(query);
     const money = this.extractMoney(query);
     const ageInfo = this.extractAge(query);
@@ -868,6 +1414,8 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
     switch (intentCode) {
       case 'DEFINITION':
         return this.solveDynamicDefinition(query, this.extractLegalConcept(query));
+      case 'COMPARISON':
+        return this.solveDynamicComparison(query, retrievedArticles);
       case 'CIVIL_CONTRACT':
         return this.solveDynamicCivilContract(query, actors, money, retrievedArticles);
       case 'CASE_ANALYSIS':
@@ -898,9 +1446,37 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
     ageInfo: { age?: number; dob?: string },
     articles: ILawArticle[]
   ): string {
-    const actorA = actors[0] || 'Chủ thể thực hiện hành vi';
-    const actorB = actors[1] || 'Bên bị thiệt hại';
     const qLower = query.toLowerCase();
+
+    // Tình huống điển hình: Đập phá đồ đạc do xích mích hàng xóm / nói xấu (Bà A, bà B, anh C)
+    if (
+      (qLower.includes('đập phá') || qLower.includes('hủy hoại')) &&
+      (qLower.includes('đồ đạc') || qLower.includes('nói xấu') || qLower.includes('xích mích') || qLower.includes('hàng xóm'))
+    ) {
+      return this.solveDynamicPropertyDestructionCase(query);
+    }
+
+    // Tự động phát hiện chủ thể thực hiện hành vi vi phạm dựa trên vị trí gần từ khóa hành vi
+    const actionVerbs = ['đập phá', 'hủy hoại', 'trộm', 'cướp', 'chiếm đoạt', 'đánh', 'gây thương tích', 'chém', 'giết', 'vượt đèn', 'gây tai nạn', 'lừa đảo'];
+    let bestActor = '';
+    let minDistance = 9999;
+    for (const verb of actionVerbs) {
+      const vIdx = qLower.indexOf(verb);
+      if (vIdx !== -1) {
+        for (const act of actors) {
+          const actLower = act.toLowerCase();
+          const aIdx = qLower.lastIndexOf(actLower, vIdx);
+          if (aIdx !== -1 && (vIdx - aIdx) < minDistance) {
+            minDistance = vIdx - aIdx;
+            bestActor = act;
+          }
+        }
+      }
+    }
+
+    const actorA = bestActor || actors[0] || 'Chủ thể thực hiện hành vi';
+    const otherActors = actors.filter((a) => a !== actorA);
+    const actorB = otherActors[0] || 'Bên bị thiệt hại';
 
     let actionDesc = 'Hành vi vi phạm pháp luật được nêu trong tình huống';
     let objectDesc = 'Trật tự an toàn xã hội và các quan hệ xã hội được pháp luật bảo vệ';
@@ -927,6 +1503,11 @@ Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình s�
       objectDesc = 'Quyền bất khả xâm phạm về tính mạng, sức khỏe của con người (được Hiến pháp và pháp luật hình sự bảo vệ tuyệt đối)';
       lawClause = 'Điều 134 Bộ luật Hình sự 2015 về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác';
       faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ hành vi nguy hiểm và mong muốn hậu quả thương tích xảy ra)';
+    } else if (qLower.includes('đập phá') || qLower.includes('hủy hoại')) {
+      actionDesc = `Hành vi dùng sức mạnh cơ học hoặc công cụ đập phá, làm hư hỏng đồ đạc, tài sản của ${actorB}${money ? ` có giá trị ${money}` : ''}`;
+      objectDesc = 'Quyền sở hữu tài sản hợp pháp của công dân (được Điều 178 BLHS 2015 và Điều 584, Điều 589 BLDS 2015 bảo vệ)';
+      lawClause = 'Điều 178 Bộ luật Hình sự 2015 hoặc Điểm a Khoản 2 Điều 15 Nghị định 144/2021/NĐ-CP và Điều 584, Điều 589 BLDS 2015';
+      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ hành vi đập phá là trái pháp luật và mong muốn làm hư hại tài sản)';
     }
 
     const citedLaw = articles.length > 0 ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}` : lawClause;
@@ -937,7 +1518,7 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
 ---
 
 ### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT
-*(Theo đúng khung Barem điểm chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*
+*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*
 
 | Yếu tố cấu thành | Nội dung phân tích cụ thể trong tình huống | Ý nghĩa & Căn cứ pháp lý |
 | :--- | :--- | :--- |
@@ -1001,15 +1582,16 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
 
     // Nếu không tách được theo dòng, thử tách inline theo số thứ tự (1. ... 2. ...)
     if (statements.length < 2) {
-      const inlineRegex = new RegExp(
-        '(?:(?:^|\\s)(?:\\d+[./)]|nhận định\\s*\\d+:?|câu\\s*\\d+:?))\\s*([^0-9\\n][^\\n]+?)(?=(?:(?:\\s+\\d+[./)]|\\s+nhận định\\s*\\d+:?|\\s+câu\\s*\\d+:?)|$)',
-        'gi'
-      );
-      const inlineMatches = query.match(inlineRegex);
-      if (inlineMatches && inlineMatches.length >= 2) {
-        return inlineMatches
-          .map((s) => s.replace(/^(?:\s*\d+[./)]|\s*nhận định\s*\d+:?|\s*câu\s*\d+:?)\s*/i, '').trim())
-          .filter((s) => s.length > 5);
+      try {
+        const inlineRegex = /(?:(?:^|\s)(?:\d+[./)]|nhận định\s*\d+:?|câu\s*\d+:?))\s*([^0-9\n][^\n]+?)(?=(?:\s+\d+[./)]|\s+nhận định\s*\d+:?|\s+câu\s*\d+:?|$))/gi;
+        const inlineMatches = query.match(inlineRegex);
+        if (inlineMatches && inlineMatches.length >= 2) {
+          return inlineMatches
+            .map((s) => s.replace(/^(?:\s*\d+[./)]|\s*nhận định\s*\d+:?|\s*câu\s*\d+:?)\s*/i, '').trim())
+            .filter((s) => s.length > 5);
+        }
+      } catch (err) {
+        console.warn('⚠️ [extractMultiStatements] Lỗi tách inline:', err);
       }
     }
 
@@ -1021,6 +1603,238 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
    */
   private static evaluateSingleStatement(stmt: string, articles: ILawArticle[]): string {
     const sLower = stmt.toLowerCase().trim();
+
+    // 0.0. Nhận định: Nhà nước và pháp luật chỉ ra đời trong xã hội có phân chia giai cấp
+    if (
+      sLower.includes('nhà nước') &&
+      sLower.includes('pháp luật') &&
+      sLower.includes('giai cấp') &&
+      (sLower.includes('chỉ ra đời') || sLower.includes('ra đời trong') || sLower.includes('chỉ xuất hiện') || sLower.includes('phân chia giai cấp'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận theo Chủ nghĩa Mác - Lênin & Giáo trình Pháp luật Đại cương (Bộ GD&ĐT)**:
+  1. *Nhà nước và Pháp luật không phải là hiện tượng vĩnh cửu*:
+     Trong xã hội Cộng sản nguyên thủy (thời kỳ thị tộc, bộ lạc), do lực lượng sản xuất chưa phát triển, tư liệu sản xuất thuộc sở hữu chung của toàn thị tộc (công hữu), xã hội chưa có người bóc lột người, chưa có sự phân chia giai cấp đối kháng nên **hoàn toàn chưa có Nhà nước và Pháp luật**.
+  2. *Điều kiện kinh tế và xã hội dẫn đến sự ra đời*:
+     Qua ba lần phân công lao động xã hội lớn, năng suất lao động tăng dẫn đến của cải dư thừa, chế độ tư hữu về tư liệu sản xuất xuất hiện (tiền đề kinh tế). Xã hội phân hóa thành các giai cấp đối kháng có lợi ích mâu thuẫn gay gắt không thể điều hòa được (tiền đề xã hội).
+  3. *Sự xuất hiện tất yếu khách quan*:
+     Để xã hội không tự tiêu diệt trong cuộc đấu tranh giai cấp khốc liệt đó, giai cấp thống trị đã thiết lập nên **Nhà nước** (bộ máy quyền lực công cộng đặc biệt) và ban hành **Pháp luật** (hệ thống quy tắc xử sự có tính bắt buộc chung) để duy trì trật tự và bảo vệ quyền lợi của giai cấp mình.
+  ➔ **Như vậy**: Nhà nước và pháp luật là hai hiện tượng thuộc kiến trúc thượng tầng, chỉ ra đời, tồn tại và sẽ tiêu vong cùng với những điều kiện khách quan của xã hội có phân chia giai cấp. Nhận định trên là hoàn toàn ĐÚNG.`;
+    }
+
+    // 0.0.0.1. Nhận định: Mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động
+    if (
+      sLower.includes('thực hiện pháp luật') &&
+      (sLower.includes('dạng hành động') || sLower.includes('dưới dạng hành động') || (sLower.includes('hành động') && sLower.includes('không hành động')) || sLower.includes('đều được thực hiện dưới dạng') || sLower.includes('đều là hành vi hành động'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận môn Pháp luật Đại cương (Chương 3, Mục 3.2.1 - Bộ GD&ĐT)**:
+  Thực hiện pháp luật là quá trình hoạt động có mục đích làm cho những quy định của pháp luật đi vào đời sống thực tế, bao gồm **4 hình thức cơ bản** với phương thức thể hiện hành vi khác nhau:
+  1. *Tuân thủ pháp luật (Tuân theo pháp luật)*:
+     - Các chủ thể kiềm chế không thực hiện những hành vi mà pháp luật cấm.
+     - Hình thức này **LUÔN ĐƯỢC THỰC HIỆN DƯỚI DẠNG KHÔNG HÀNH ĐỘNG** (ví dụ: không vượt đèn đỏ, không nhận hối lộ, không buôn bán chất ma túy).
+  2. *Thi hành pháp luật (Chấp hành pháp luật)*:
+     - Các chủ thể thực hiện nghĩa vụ pháp lý bằng những hành vi tích cực mà pháp luật bắt buộc phải làm.
+     - Hình thức này **ĐƯỢC THỰC HIỆN DƯỚI DẠNG HÀNH ĐỘNG TÍCH CỰC** (ví dụ: nộp thuế đầy đủ, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm).
+  3. *Sử dụng pháp luật*:
+     - Các chủ thể tự mình quyết định thực hiện quyền chủ thể (làm những gì pháp luật cho phép).
+     - Có thể thực hiện dưới dạng **HÀNH ĐỘNG** (đăng ký kinh doanh, lập di chúc) hoặc **KHÔNG HÀNH ĐỘNG** (từ chối nhận di sản, không khiếu nại).
+  4. *Áp dụng pháp luật*:
+     - Do cơ quan nhà nước hoặc người có thẩm quyền tiến hành nhân danh quyền lực nhà nước ban hành văn bản áp dụng pháp luật cá biệt.
+  ➔ **KẾT LUẬN**: Khẳng định "mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động" là hoàn toàn SAI, vì hình thức Tuân thủ pháp luật luôn ở dạng không hành động.`;
+    }
+
+    // 0.0.0.2. Nhận định: Nhà nước phong kiến là nhà nước đã từng tồn tại trong lịch sử
+    if (
+      (sLower.includes('nhà nước phong kiến') || sLower.includes('kiểu nhà nước phong kiến')) &&
+      (sLower.includes('tồn tại') || sLower.includes('lịch sử') || sLower.includes('từng tồn tại') || sLower.includes('trong lịch sử'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận theo Học thuyết Mác - Lênin & Giáo trình Pháp luật Đại cương (Chương 1, Mục 1.1.6 - Bộ GD&ĐT)**:
+  1. *Khái niệm kiểu Nhà nước*:
+     Kiểu nhà nước là tổng thể các đặc điểm cơ bản của nhà nước thể hiện bản chất giai cấp, vai trò xã hội và những điều kiện kinh tế - xã hội của nhà nước trong một hình thái kinh tế - xã hội nhất định.
+  2. *Bốn kiểu Nhà nước trong lịch sử nhân loại*:
+     Lịch sử xã hội loài người có giai cấp đã và đang trải qua 4 kiểu nhà nước:
+     - **Kiểu Nhà nước Chủ nô**: Nhà nước đầu tiên trong lịch sử, đại diện cho giai cấp chủ nô để bóc lột giai cấp nô lệ.
+     - **Kiểu Nhà nước Phong kiến**: Thay thế nhà nước chủ nô, xác lập trên quan hệ sở hữu phong kiến về ruộng đất và phương thức bóc lột địa tô của giai cấp địa chủ, phong kiến đối với nông dân. Nhà nước này đã từng tồn tại trong lịch sử nhiều thế kỷ ở cả phương Đông và phương Tây (tại Việt Nam tồn tại qua các triều đại Ngô, Đinh, Tiền Lê, Lý, Trần, Lê đến hết triều Nguyễn năm 1945).
+     - **Kiểu Nhà nước Tư sản**: Ra đời sau các cuộc cách mạng tư sản, dựa trên chế độ tư hữu tư bản chủ nghĩa.
+     - **Kiểu Nhà nước Xã hội chủ nghĩa**: Ra đời từ sau Cách mạng Tháng Mười Nga 1917, là kiểu nhà nước tiến bộ nhất của Nhân dân lao động.
+  ➔ **KẾT LUẬN**: Nhà nước phong kiến là một kiểu nhà nước cụ thể, khách quan và đã từng tồn tại lâu dài trong lịch sử phát triển của nhân loại. Nhận định trên là hoàn toàn ĐÚNG.`;
+    }
+
+    // 0.0.0.3. Nhận định: Thủ tướng là người đứng đầu cơ quan quyền lực của nhà nước CHXHCN Việt Nam
+    if (
+      (sLower.includes('thủ tướng') || sLower.includes('thủ tướng chính phủ')) &&
+      (sLower.includes('cơ quan quyền lực') || sLower.includes('đứng đầu cơ quan quyền lực'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Căn cứ Hiến pháp 2013 (Điều 69, Điều 94, Điều 95) & Giáo trình Pháp luật Đại cương (Chương 1, Mục 1.2.3 - Bộ máy Nhà nước)**:
+  1. *Về Cơ quan quyền lực nhà nước theo Hiến pháp 2013*:
+     - Cơ quan quyền lực nhà nước cao nhất của nước CHXHCN Việt Nam là **QUỐC HỘI** (Điều 69 Hiến pháp 2013: Quốc hội là cơ quan đại biểu cao nhất của Nhân dân, cơ quan quyền lực nhà nước cao nhất). Người đứng đầu Quốc hội là **Chủ tịch Quốc hội**.
+     - Ở địa phương, cơ quan quyền lực nhà nước là **Hội đồng nhân dân** (HĐND các cấp tỉnh, huyện, xã), do Chủ tịch HĐND đứng đầu.
+  2. *Về Vị trí pháp lý của Thủ tướng Chính phủ*:
+     - Theo Điều 94 và Điều 95 Hiến pháp 2013: **Chính phủ** là cơ quan **HÀNH CHÍNH NHÀ NƯỚC CAO NHẤT**, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội.
+     - **Thủ tướng Chính phủ** là người đứng đầu Chính phủ (cơ quan hành chính), chịu trách nhiệm trước Quốc hội về hoạt động của Chính phủ.
+  ➔ **KẾT LUẬN**: Thủ tướng Chính phủ là người đứng đầu **cơ quan hành chính nhà nước cao nhất** (Chính phủ), KHÔNG PHẢI là người đứng đầu cơ quan quyền lực nhà nước (Quốc hội). Nhận định đã đồng nhất sai lệch giữa nhánh quyền lực lập pháp (quyền lực nhà nước) và nhánh hành pháp (hành chính). Nhận định trên là HOÀN TOÀN SAI.`;
+    }
+
+    // 0.0.0.4. Nhận định: Người đủ 18 tuổi trở lên thì có hành vi năng lực đầy đủ (năng lực hành vi đầy đủ)
+    if (
+      (sLower.includes('18 tuổi') || sLower.includes('đủ 18 tuổi')) &&
+      (sLower.includes('năng lực hành vi') || sLower.includes('hành vi năng lực') || sLower.includes('năng lực đầy đủ'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI (CHƯA CHÍNH XÁC NẾU KHẲNG ĐỊNH TUYỆT ĐỐI).**
+- **Căn cứ pháp lý theo Bộ luật Dân sự 2015 (Điều 19, 20, 22, 23, 24) & Giáo trình Pháp luật Đại cương (Chương 4, Mục 4.2.1)**:
+  1. *Nguyên tắc chung (Điều 19, Điều 20 BLDS 2015)*:
+     Người từ đủ 18 tuổi trở lên là người thành niên và theo nguyên tắc chung có năng lực hành vi dân sự đầy đủ, tự mình xác lập, thực hiện quyền và nghĩa vụ dân sự.
+  2. *Các trường hợp luật định loại trừ / hạn chế (Ngoại lệ)*:
+     Khẳng định mang tính tuyệt đối hóa "người đủ 18 tuổi trở lên thì có năng lực hành vi đầy đủ" là SAI vì pháp luật quy định các trường hợp ngoại lệ người đã đủ 18 tuổi nhưng **KHÔNG CÓ** năng lực hành vi đầy đủ:
+     - **Mất năng lực hành vi dân sự (Điều 22 BLDS 2015)**: Người từ đủ 18 tuổi trở lên do bị bệnh tâm thần hoặc bệnh khác mà không thể nhận thức, làm chủ hành vi của mình thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án ra quyết định tuyên bố mất năng lực hành vi dân sự. Giao dịch của người này phải do người đại diện theo pháp luật xác lập, thực hiện.
+     - **Người có khó khăn trong nhận thức, làm chủ hành vi (Điều 23 BLDS 2015)**: Người thành niên do tình trạng thể chất hoặc tinh thần mà không đủ khả năng nhận thức, làm chủ hành vi nhưng chưa đến mức mất năng lực hành vi dân sự thì được Tòa án tuyên bố có khó khăn trong nhận thức, làm chủ hành vi và chỉ định người giám hộ.
+     - **Hạn chế năng lực hành vi dân sự (Điều 24 BLDS 2015)**: Người nghiện ma túy, nghiện các chất kích thích khác dẫn đến phá tán tài sản của gia đình thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án ra quyết định tuyên bố bị hạn chế năng lực hành vi dân sự.
+  ➔ **KẾT LUẬN**: Vì tồn tại các trường hợp ngoại lệ (bị Tòa án tuyên bố mất NLHV, hạn chế NLHV hoặc có khó khăn trong nhận thức), một cá nhân dù từ đủ 18 tuổi trở lên không đương nhiên luôn có năng lực hành vi đầy đủ. Nhận định mang tính khẳng định tuyệt đối là SAI.`;
+    }
+
+    // 0.0.1. Nhận định: Quyền lực nhà nước và quyền lực xã hội là giống nhau
+    if (
+      sLower.includes('quyền lực nhà nước') &&
+      sLower.includes('quyền lực xã hội') &&
+      (sLower.includes('giống nhau') || sLower.includes('đồng nhất') || sLower.includes('như nhau') || sLower.includes('là một'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận phân biệt theo Giáo trình Pháp luật Đại cương (Mục 1.1.7 - Bộ GD&ĐT)**:
+  Quyền lực nhà nước và quyền lực xã hội (trong thị tộc nguyên thủy hoặc của các tổ chức đoàn thể xã hội) là hai loại quyền lực có bản chất, nguồn gốc và đặc trưng hoàn toàn khác nhau:
+
+  | Tiêu chí so sánh | Quyền lực Nhà nước | Quyền lực Xã hội (thị tộc / tổ chức xã hội) |
+  | :--- | :--- | :--- |
+  | **1. Cơ sở kinh tế & xã hội** | Ra đời trên cơ sở **chế độ tư hữu** và xã hội **phân hóa giai cấp đối kháng**. | Tồn tại trên cơ sở **chế độ công hữu** về tư liệu sản xuất, không có áp bức giai cấp. |
+  | **2. Bản chất quyền lực** | Đứng trên xã hội, tách rời khỏi xã hội; mang bản chất giai cấp sâu sắc (phục vụ lợi ích giai cấp thống trị) kết hợp với tính xã hội. | Hòa nhập vào toàn bộ cộng đồng; phục vụ lợi ích chung của tất cả thành viên trong thị tộc, bộ lạc. |
+  | **3. Bộ máy thực thi** | Có **bộ máy chuyên nghiệp cưỡng chế đặc biệt** tách rời khỏi sản xuất (quân đội, cảnh sát, tòa án, nhà tù). | Không có bộ máy cưỡng chế riêng; quyền lực do toàn thể cộng đồng tự thực hiện hoặc qua người đứng đầu được bầu tự nguyện (tù trưởng, hội đồng thị tộc). |
+  | **4. Công cụ quản lý** | Sử dụng **Pháp luật** có tính quy phạm phổ biến, bắt buộc chung và được bảo đảm bằng sức mạnh cưỡng chế nhà nước. | Dựa trên **tập quán, đạo đức nguyên thủy** hoặc điều lệ tổ chức; thực hiện trên tinh thần tự giác, thuyết phục hoặc dư luận xã hội. |
+  | **5. Phạm vi tác động** | Quản lý dân cư theo **đơn vị hành chính - lãnh thổ**, bao trùm toàn bộ các thành viên sinh sống trong quốc gia. | Quản lý theo **quan hệ huyết thống** (thị tộc) hoặc theo sự tự nguyện gia nhập của đoàn viên, hội viên. |
+
+  ➔ **KẾT LUẬN**: Quyền lực nhà nước và quyền lực xã hội là hai hiện tượng khác biệt căn bản về chất. Khẳng định chúng giống nhau là hoàn toàn SAI.`;
+    }
+
+    // 0.0.2. Nhận định: Thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của vi phạm pháp luật
+    if (
+      sLower.includes('thiệt hại thực tế') &&
+      sLower.includes('mặt khách quan') &&
+      (sLower.includes('dấu hiệu bắt buộc') || sLower.includes('bắt buộc') || sLower.includes('yếu tố bắt buộc'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận môn Pháp luật Đại cương & Khoa học Pháp lý (Chương 5, Mục 5.4)**:
+  1. *Các yếu tố thuộc Mặt khách quan của Vi phạm pháp luật*:
+     Mặt khách quan bao gồm 4 yếu tố cơ bản: (i) Hành vi trái pháp luật; (ii) Hậu quả thiệt hại cho xã hội; (iii) Mối quan hệ nhân quả giữa hành vi và hậu quả thiệt hại; (iv) Thời gian, địa điểm, công cụ, phương tiện và phương thức thực hiện hành vi.
+  2. *Hành vi trái pháp luật là dấu hiệu bắt buộc duy nhất*:
+     Trong 4 yếu tố trên, **chỉ có hành vi trái pháp luật mới là dấu hiệu bắt buộc đối với mọi vi phạm pháp luật** (không có hành vi trái luật biểu hiện ra thế giới khách quan thì không có vi phạm pháp luật).
+  3. *Hậu quả thiệt hại thực tế KHÔNG PHẢI là dấu hiệu bắt buộc đối với mọi loại vi phạm*:
+     Khoa học pháp lý phân chia vi phạm pháp luật theo cấu thành:
+     - **Đối với vi phạm có cấu thành vật chất**: Hậu quả thiệt hại thực tế và mối quan hệ nhân quả là dấu hiệu bắt buộc để định tội/định khung (ví dụ: Tội giết người, Tội trộm cắp tài sản - đòi hỏi thiệt hại về tính mạng hoặc tài sản từ 2 triệu đồng trở lên).
+     - **Đối với vi phạm có cấu thành hình thức**: Vi phạm pháp luật được coi là hoàn thành ngay từ thời điểm chủ thể thực hiện hành vi nguy hiểm trái luật, **hoàn toàn không đòi hỏi phải có thiệt hại thực tế xảy ra cho xã hội**.
+       *Ví dụ thực tiễn*:
+       + Tội đua xe trái phép (Điều 266 BLHS 2015), Tội tàng trữ trái phép vũ khí quân dụng (Điều 304 BLHS 2015), Tội cướp tài sản (Điều 168 BLHS 2015) đều hoàn thành ngay khi có hành vi, kể cả khi chưa có thiệt hại tính mạng hay tài sản nào xảy ra.
+       + Trong luật giao thông: Hành vi không đội mũ bảo hiểm hoặc vượt đèn đỏ khi tham gia giao thông đã cấu thành vi phạm hành chính ngay tại thời điểm thực hiện hành vi, bất kể có tai nạn hay thiệt hại thực tế nào xảy ra hay không.
+  ➔ **KẾT LUẬN**: Khẳng định thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của mọi vi phạm pháp luật là hoàn toàn SAI.`;
+    }
+
+    // 0.0.3. Tùy vào các kiểu Nhà nước khác nhau mà bản chất Nhà nước có thể là bản chất giai cấp hoặc bản chất xã hội
+    if (sLower.includes('tùy vào các kiểu nhà nước') || (sLower.includes('có thể là bản chất giai cấp hoặc') && sLower.includes('bản chất xã hội'))) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận môn Pháp luật Đại cương (Bộ GD&ĐT)**:
+  1. Mọi kiểu Nhà nước trong lịch sử (từ Chiếm hữu nô lệ, Phong kiến, Tư sản đến Xã hội chủ nghĩa) đều luôn mang **đồng thời cả hai thuộc tính cơ bản là Bản chất giai cấp và Bản chất xã hội**.
+  2. Không có Nhà nước nào chỉ có tính giai cấp mà không có tính xã hội, hoặc chỉ có tính xã hội mà không có tính giai cấp. Sự khác biệt giữa các kiểu nhà nước chỉ là mức độ biểu hiện và tương quan giữa hai thuộc tính này tùy thuộc vào điều kiện lịch sử cụ thể.`;
+    }
+
+    // 0.0.4. Nhà nước mang bản chất giai cấp có nghĩa là Nhà nước chỉ thuộc về một giai cấp
+    if (sLower.includes('nhà nước chỉ thuộc về một giai cấp') || (sLower.includes('mang bản chất giai cấp có nghĩa là') && sLower.includes('chỉ thuộc về'))) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận môn Pháp luật Đại cương (Bộ GD&ĐT)**:
+  1. Bản chất giai cấp của Nhà nước không chỉ dừng lại ở quyền sở hữu Nhà nước thuộc về ai, mà cốt lõi là Nhà nước là **bộ máy cưỡng chế đặc biệt** của giai cấp thống trị để duy trì sự thống trị về kinh tế, chính trị, tư tưởng đối với các giai cấp khác trong xã hội.
+  2. Nhà nước có thể thuộc về một liên minh giai cấp rộng rãi (như Nhà nước CHXHCN Việt Nam là nhà nước của liên minh công nhân - nông dân - đội ngũ trí thức dưới sự lãnh đạo của Đảng Cộng sản).`;
+    }
+
+    // 0. Nhận định về Mối quan hệ giữa Nhà nước và Pháp luật (Nhà nước không cần pháp luật / thiếu pháp luật)
+    if (
+      sLower.includes('nhà nước') &&
+      sLower.includes('pháp luật') &&
+      (sLower.includes('không cần') || sLower.includes('không có pháp luật') || sLower.includes('thiếu pháp luật') || sLower.includes('tồn tại mà không') || sLower.includes('tại sao nhà nước không thể tồn tại'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Bộ Giáo dục và Đào tạo)**:
+  1. *Quan hệ biện chứng gắn bó hữu cơ, không thể tách rời*:
+     Trong khoa học pháp lý, Nhà nước và Pháp luật là hai hiện tượng thuộc kiến trúc thượng tầng cùng phát sinh, tồn tại, phát triển và tiêu vong gắn liền với nhau trong xã hội có giai cấp.
+     - **Nhà nước sinh ra và bảo đảm cho Pháp luật**: Nhà nước là chủ thể duy nhất ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật, đồng thời bảo đảm cho pháp luật được thực hiện bằng sức mạnh quyền lực và bộ máy cưỡng chế chuyên nghiệp (quân đội, cảnh sát, tòa án, nhà tù). Nếu không có Nhà nước, pháp luật không thể hình thành và không có giá trị bắt buộc chung.
+     - **Pháp luật là công cụ tối cao của Nhà nước**: Pháp luật là phương tiện chủ yếu, sắc bén và hữu hiệu nhất để Nhà nước quản lý mọi mặt của đời sống xã hội.
+  2. *Tại sao Nhà nước KHÔNG THỂ tồn tại và phát huy tốt chức năng nếu không có Pháp luật?*
+     - **Đối với chức năng quản lý xã hội**: Mọi chủ trương, chính sách quản lý kinh tế, trật tự công cộng, đối nội và đối ngoại của Nhà nước chỉ có thể được triển khai thống nhất, rộng khắp và có hiệu lực bắt buộc đối với toàn thể xã hội khi được thể chế hóa dưới hình thức các quy phạm pháp luật. Không có pháp luật, xã hội sẽ rơi vào tình trạng vô chính phủ, hỗn loạn và Nhà nước lập tức mất khả năng kiểm soát.
+     - **Đối với cơ cấu tổ chức bộ máy nhà nước**: Pháp luật là cơ sở pháp lý để quy định cơ cấu tổ chức, chức năng, thẩm quyền và trình tự hoạt động của từng cơ quan trong bộ máy nhà nước; đồng thời đặt ra giới hạn pháp lý nhằm kiềm chế quyền lực nhà nước, ngăn ngừa sự tùy tiện, lạm quyền, độc đoán (nguyên tắc Nhà nước pháp quyền theo **Điều 8 Hiến pháp 2013**).
+  ➔ **KẾT LUẬN CUỐI CÙNG**: Nhà nước **hoàn toàn không thể tồn tại và không thể phát huy tốt chức năng** của mình nếu không có pháp luật. Nhận định trên là hoàn toàn SAI.`;
+    }
+
+    // 0.01. Nhận định: Tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản QPPL
+    if (
+      (sLower.includes('văn bản do') || sLower.includes('các văn bản') || sLower.includes('văn bản của')) &&
+      (sLower.includes('cơ quan nhà nước') || sLower.includes('cơ quan có thẩm quyền')) &&
+      (sLower.includes('đều là') || sLower.includes('chỉ là') || sLower.includes('tất cả')) &&
+      (sLower.includes('văn bản quy phạm pháp luật') || sLower.includes('vbqppl') || sLower.includes('quy phạm pháp luật'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
+  Trong hoạt động quản lý nhà nước, các cơ quan nhà nước có thẩm quyền ban hành nhiều loại văn bản khác nhau để thực hiện chức năng, nhiệm vụ của mình. Hệ thống văn bản do cơ quan nhà nước ban hành được phân chia thành **ba loại văn bản cơ bản**:
+  1. **Văn bản quy phạm pháp luật (VBQPPL)**:
+     - Là văn bản có chứa **quy tắc xử sự chung**, có hiệu lực bắt buộc chung, được áp dụng lặp đi lặp lại nhiều lần đối với cơ quan, tổ chức, cá nhân trong phạm vi cả nước hoặc đơn vị hành chính nhất định (căn cứ **Điều 2 Luật Ban hành văn bản quy phạm pháp luật 2015, sửa đổi 2020**).
+     - *Ví dụ*: Luật, Bộ luật của Quốc hội; Nghị định của Chính phủ; Thông tư của Bộ trưởng; Quyết định quy phạm của UBND cấp tỉnh.
+  2. **Văn bản áp dụng pháp luật (Văn bản cá biệt)**:
+     - Là văn bản do cơ quan, người có thẩm quyền ban hành nhằm giải quyết một vụ việc cụ thể đối với một hoặc một số đối tượng xác định, chỉ được **áp dụng một lần** (cá biệt hóa quy phạm pháp luật vào trường hợp cụ thể).
+     - *Ví dụ*: Quyết định xử phạt vi phạm hành chính của Cảnh sát giao thông; Quyết định bổ nhiệm cán bộ của Chủ tịch UBND; Bản án của Tòa án nhân dân; Giấy chứng nhận quyền sử dụng đất.
+  3. **Văn bản hành chính thông thường**:
+     - Là văn bản mang tính thông tin, điều hành nội bộ, trao đổi công việc hành chính hàng ngày giữa các cơ quan, tổ chức hoặc với công dân.
+     - *Ví dụ*: Công văn, Thông báo, Tờ trình, Biên bản, Báo cáo, Kế hoạch công tác.
+- **Tổng kết đánh giá**: Nhận định cho rằng *tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản quy phạm pháp luật* là **HOÀN TOÀN SAI**, bởi vì cơ quan nhà nước còn ban hành rất nhiều văn bản áp dụng pháp luật cá biệt và văn bản hành chính thông thường.`;
+    }
+
+    // 0.02. Nhận định: Một hành vi có thể đồng thời vừa là vi phạm hình sự vừa là vi phạm hành chính
+    if (
+      (sLower.includes('một hành vi') || sLower.includes('cùng một hành vi') || sLower.includes('hành vi')) &&
+      (sLower.includes('đồng thời') || sLower.includes('vừa là') || sLower.includes('cùng là')) &&
+      (sLower.includes('vi phạm hình sự') || sLower.includes('tội phạm') || sLower.includes('hình sự')) &&
+      (sLower.includes('vi phạm hành chính') || sLower.includes('hành chính'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG (DƯỚI GÓC ĐỘ HÀNH VI PHỨC HỢP THEO BAREM ĐỀ THI MÔN PHÁP LUẬT ĐẠI CƯƠNG).**
+- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
+  Trong thực tiễn đời sống pháp lý và các đề thi lý luận pháp luật đại cương, một chuỗi hành vi thực tế (hoặc một hành vi phức hợp) của chủ thể có thể đồng thời xâm phạm nhiều khách thể được các ngành luật khác nhau bảo vệ:
+  1. **Ví dụ điển hình theo đề thi môn Pháp luật đại cương**:
+     - Hành vi điều khiển xe máy chạy quá tốc độ quy định, lạng lách đánh võng rồi đâm chết người đi bộ:
+       + *Vi phạm hành chính*: Hành vi điều khiển phương tiện vi phạm quy tắc an toàn giao thông đường bộ (chạy quá tốc độ, lạng lách) cấu thành vi phạm hành chính trong lĩnh vực giao thông đường bộ.
+       + *Vi phạm hình sự (Tội phạm)*: Hậu quả làm chết người đã thỏa mãn đầy đủ 4 yếu tố cấu thành Tội vi phạm quy định về tham gia giao thông đường bộ theo **Điều 260 Bộ luật Hình sự 2015 (sửa đổi 2017)**.
+  2. **Lưu ý chuyên sâu về nguyên tắc xử lý theo pháp luật thực định**:
+     - Căn cứ **Điều 62 và Điều 63 Luật Xử lý vi phạm hành chính 2012 (sửa đổi, bổ sung 2020)**: Đối với cùng một hành vi vi phạm cụ thể, nếu hành vi đó đã có dấu hiệu cấu thành tội phạm thì cơ quan có thẩm quyền bắt buộc phải chuyển hồ sơ sang cơ quan tiến hành tố tụng hình sự để truy cứu trách nhiệm hình sự; **nghiêm cấm việc vừa xử phạt hành chính vừa truy cứu trách nhiệm hình sự đối với cùng một hành vi đơn nhất** (nguyên tắc không xử lý trùng lặp).
+     - Tuy nhiên, xét về bản chất cấu thành hành vi trong câu hỏi lý luận, nhận định trên là **ĐÚNG** đối với các hành vi phức hợp đa khách thể.`;
+    }
+
+    // 0. Nhận định về 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng) và hành vi Hành động / Không hành động
+    if (
+      (sLower.includes('thực hiện pháp luật') || sLower.includes('tuân thủ') || sLower.includes('thi hành') || sLower.includes('sử dụng') || sLower.includes('áp dụng')) &&
+      (sLower.includes('không hành động') || sLower.includes('hành động') || sLower.includes('dưới dạng') || sLower.includes('hành vi hành động'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Bộ GD&ĐT) — Chế định Thực hiện Pháp luật**:
+  Thực hiện pháp luật là hành vi thực tế, hợp pháp của các chủ thể pháp luật nhằm hiện thực hóa các quy định của pháp luật trong đời sống. Khoa học pháp lý phân chia thực hiện pháp luật thành **4 hình thức cơ bản** với dạng thức biểu hiện hành vi hoàn toàn khác nhau:
+  1. **Tuân thủ pháp luật (Tuân theo pháp luật)**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể kiềm chế, tự giác không tiến hành các hành vi mà pháp luật nghiêm cấm.
+     - *Hình thức biểu hiện*: **Bắt buộc dưới dạng KHÔNG HÀNH ĐỘNG** (ví dụ: không vượt đèn đỏ, không nhận hối lộ, không buôn bán hàng cấm).
+  2. **Thi hành pháp luật (Chấp hành pháp luật)**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể chủ động, tích cực thực hiện các nghĩa vụ pháp lý mà pháp luật bắt buộc phải làm.
+     - *Hình thức biểu hiện*: **Bắt buộc dưới dạng HÀNH ĐỘNG** (ví dụ: chủ động kê khai và nộp thuế, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi tham gia giao thông).
+  3. **Sử dụng pháp luật**:
+     - *Bản chất*: Là hình thức mà trong đó các chủ thể thực hiện các quyền và quyền tự do dân chủ của mình theo quy định pháp luật (làm những việc pháp luật cho phép).
+     - *Hình thức biểu hiện*: Có thể được thực hiện dưới dạng **HÀNH ĐỘNG** (ví dụ: nộp đơn khiếu nại, đăng ký kết hôn, thành lập doanh nghiệp) hoặc **KHÔNG HÀNH ĐỘNG** (ví dụ: có quyền khiếu nại nhưng lựa chọn không khiếu nại, có quyền lập di chúc nhưng không lập di chúc).
+  4. **Áp dụng pháp luật**:
+     - *Bản chất*: Là hình thức thực hiện pháp luật mang tính quyền lực nhà nước, chỉ do cơ quan nhà nước, người có thẩm quyền tiến hành theo trình tự luật định.
+     - *Hình thức biểu hiện*: Luôn thể hiện dưới dạng **HÀNH ĐỘNG** (ví dụ: Tòa án ra bản án, Cảnh sát giao thông lập biên bản xử phạt).
+  ➔ **Như vậy**: Khẳng định *"Tuân thủ pháp luật, thi hành pháp luật và sử dụng pháp luật đều được thực hiện dưới dạng không hành động"* là **HOÀN TOÀN SAI**, vì chỉ có *Tuân thủ pháp luật* bắt buộc là không hành động; *Thi hành pháp luật* bắt buộc là hành động; còn *Sử dụng pháp luật* có thể là hành động hoặc không hành động.`;
+    }
 
     // 1. Nhận định về Năng lực hành vi dân sự của cá nhân phát sinh từ khi đủ 18 tuổi
     if (
@@ -1145,6 +1959,13 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
       return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
 - **Căn cứ pháp lý theo Điều 156 Luật Ban hành VBQPPL 2015**:
   Phải ưu tiên áp dụng văn bản có hiệu lực pháp lý cao hơn trước (Khoản 2 Điều 156). Chỉ khi các văn bản do cùng một cơ quan ban hành có quy định khác nhau thì mới áp dụng văn bản ban hành sau (Khoản 3 Điều 156).`;
+    }
+
+    // Fallback thông minh: Tự động truy xuất kho tri thức Giáo trình RAG (ĐH Thương Mại 2021 - Bộ GD&ĐT)
+    const textbookMatches = TextbookKnowledgeService.searchTopChunks(stmt, 1);
+    if (textbookMatches.length > 0 && textbookMatches[0].score >= 8) {
+      const tb = textbookMatches[0].chunk;
+      return `- **KẾT LUẬN: ĐÁNH GIÁ DỰA TRÊN NGUYÊN LÝ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (BỘ GD&ĐT)**${TextbookKnowledgeService.buildDetailedCitation(tb, articles)}`;
     }
 
     // Fallback: Đánh giá có căn cứ thực tế và không để lại biểu mẫu rỗng
@@ -1360,6 +2181,14 @@ Căn cứ quy định tại: **${lawTitle}**
   ): string {
     const qLower = query.toLowerCase();
 
+    // 0. Tình huống đập phá đồ đạc xích mích hàng xóm (Bà A, Bà B, Anh C)
+    if (
+      (qLower.includes('đập phá') || qLower.includes('hủy hoại')) &&
+      (qLower.includes('đồ đạc') || qLower.includes('nói xấu') || qLower.includes('xích mích') || qLower.includes('hàng xóm'))
+    ) {
+      return this.solveDynamicPropertyDestructionCase(query);
+    }
+
     // 1. Tình huống mượn laptop làm rơi vỡ, tai nạn, bồi thường thiệt hại
     if (
       qLower.includes('laptop') ||
@@ -1564,6 +2393,15 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 
     // 2. Khái niệm / Bản chất Nhà nước
     if (concept === 'bản chất nhà nước' || concept === 'nhà nước' || q.includes('nhà nước')) {
+      if (
+        q.includes('không thể tồn tại') ||
+        q.includes('thiếu pháp luật') ||
+        q.includes('phát huy chức năng') ||
+        (q.includes('quan hệ biện chứng') && q.includes('pháp luật')) ||
+        (q.includes('kiến trúc thượng tầng') && q.includes('pháp luật'))
+      ) {
+        return this.solveDynamicStateAndLawRelation(query);
+      }
       if (q.includes('bản chất') || (q.includes('giai cấp') && q.includes('xã hội'))) {
         return this.solveDynamicStateNature();
       }
@@ -1640,9 +2478,120 @@ Căn cứ giáo trình Pháp luật Đại cương chuẩn của Bộ Giáo dụ
 Khái niệm pháp lý được định hình nhằm xác lập khuôn khổ chuẩn mực điều chỉnh hành vi con người và bảo đảm trật tự công cộng trong xã hội có Nhà nước.`;
   }
 
+  // --- DẠNG SO SÁNH & PHÂN BIỆT ĐỘNG (BẢNG TIÊU CHÍ SO SÁNH CHUẨN BAREM) ---
+  public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
+    const qLower = query.toLowerCase();
+
+    // 1. So sánh Phòng vệ chính đáng vs Tình thế cấp thiết
+    if (
+      (qLower.includes('phòng vệ') || qLower.includes('chính đáng')) &&
+      (qLower.includes('cấp thiết') || qLower.includes('tình thế'))
+    ) {
+      return `### BẢNG SO SÁNH: PHÒNG VỆ CHÍNH ĐÁNG VS TÌNH THẾ CẤP THIẾT
+
+| Tiêu chí so sánh | Phòng vệ chính đáng (Điều 22 BLHS 2015) | Tình thế cấp thiết (Điều 23 BLHS 2015) |
+| :--- | :--- | :--- |
+| **Bản chất pháp lý** | Hành vi chống trả người đang có hành vi xâm hại quyền, lợi ích hợp pháp | Hành vi nhằm tránh một nguy cơ đang thực tế đe dọa lợi ích hợp pháp |
+| **Nguồn gốc nguy hiểm** | Xuất phát từ **hành vi tấn công trái pháp luật của con người** | Xuất phát từ con người, thiên tai, súc vật hoặc sự cố kỹ thuật |
+| **Đối tượng tác động** | Tác động trực tiếp vào **chính người đang có hành vi tấn công** | Tác động gây thiệt hại cho **người thứ ba vô tội** |
+| **Mức độ thiệt hại gây ra** | Thiệt hại gây ra cho người tấn công có thể **ngang bằng hoặc lớn hơn** thiệt hại bị đe dọa (miễn không quá mức cần thiết) | Thiệt hại gây ra **bắt buộc phải nhỏ hơn** thiệt hại cần ngăn ngừa |
+| **Trách nhiệm pháp lý** | Không phải là tội phạm và không phải bồi thường thiệt hại | Không phải là tội phạm. Người gây ra tình thế cấp thiết phải bồi thường (Điều 595 BLDS 2015) |
+
+---
+### ĐIỂM GIỐNG NHAU:
+1. Đều là những trường hợp **loại trừ trách nhiệm hình sự** theo quy định tại Chương IV Bộ luật Hình sự 2015.
+2. Mục đích chung là nhằm bảo vệ lợi ích của Nhà nước, tổ chức, quyền và lợi ích hợp pháp của cá nhân.
+3. Nếu vượt quá giới hạn luật định (vượt quá giới hạn phòng vệ chính đáng hoặc vượt quá yêu cầu của tình thế cấp thiết) thì người thực hiện vẫn phải chịu trách nhiệm hình sự.`;
+    }
+
+    // 2. So sánh Năng lực pháp luật và Năng lực hành vi
+    if (
+      qLower.includes('năng lực pháp luật') &&
+      qLower.includes('năng lực hành vi')
+    ) {
+      return `### BẢNG SO SÁNH: NĂNG LỰC PHÁP LUẬT DÂN SỰ VS NĂNG LỰC HÀNH VI DÂN SỰ
+
+| Tiêu chí | Năng lực pháp luật dân sự (Điều 16 BLDS 2015) | Năng lực hành vi dân sự (Điều 19 BLDS 2015) |
+| :--- | :--- | :--- |
+| **Khái niệm** | Là khả năng của cá nhân **có quyền dân sự và nghĩa vụ dân sự** | Là khả năng của cá nhân **bằng hành vi của mình** xác lập, thực hiện quyền, nghĩa vụ dân sự |
+| **Thời điểm phát sinh** | Có từ khi cá nhân **sinh ra** | Hình thành và phát triển dần theo **độ tuổi và mức độ nhận thức** (đầy đủ từ đủ 18 tuổi) |
+| **Thời điểm chấm dứt** | Chỉ chấm dứt khi cá nhân **chết** | Chấm dứt khi cá nhân chết; hoặc bị mất/hạn chế ngay khi còn sống theo quyết định của Tòa án |
+| **Tính phụ thuộc chủ thể** | Mọi cá nhân đều bình đẳng và như nhau, không phụ thuộc vào độ tuổi, sức khỏe tâm thần | Phụ thuộc chặt chẽ vào độ tuổi và khả năng nhận thức, điều khiển hành vi của từng người |
+| **Khả năng bị tước đoạt** | Không thể bị hạn chế, trừ trường hợp luật định do Tòa án quyết định | Có thể bị Tòa án tuyên mất NLHV (Điều 22) hoặc hạn chế NLHV (Điều 24) |
+
+---
+### MỐI QUAN HỆ BIỆN CHỨNG:
+- Năng lực pháp luật là tiền đề của năng lực hành vi. Nếu không có năng lực pháp luật thì không thể có năng lực hành vi.
+- Cả hai yếu tố này hợp thành **Năng lực chủ thể** của cá nhân khi tham gia vào các quan hệ pháp luật dân sự cụ thể.`;
+    }
+
+    // 3. So sánh Vi phạm Hình sự (Tội phạm) và Vi phạm Hành chính
+    if (
+      (qLower.includes('tội phạm') || qLower.includes('hình sự')) &&
+      (qLower.includes('hành chính') || qLower.includes('vphc'))
+    ) {
+      return `### BẢNG SO SÁNH: VI PHẠM HÌNH SỰ (TỘI PHẠM) VS VI PHẠM HÀNH CHÍNH
+
+| Tiêu chí | Vi phạm hình sự (Tội phạm - BLHS 2015) | Vi phạm hành chính (Luật Xử lý VPHC 2012) |
+| :--- | :--- | :--- |
+| **Mức độ nguy hiểm cho xã hội** | Nguy hiểm cho xã hội ở **mức độ đáng kể** (Khoản 1 Điều 8 BLHS) | Tính chất nguy hiểm cho xã hội **thấp hơn**, chưa đến mức nghiêm trọng |
+| **Khách thể xâm hại** | Xâm hại các quan hệ xã hội quan trọng bậc nhất (độc lập chủ quyền, tính mạng, sức khỏe, an ninh quốc gia) | Xâm hại trật tự quản lý nhà nước trên các lĩnh vực kinh tế, văn hóa, giao thông |
+| **Chủ thể áp dụng chế tài** | Chỉ duy nhất do **Tòa án** xét xử và nhân danh Nhà nước tuyên bản án | Các cơ quan quản lý nhà nước (UBND, Công an, Hải quan, Quản lý thị trường, Thanh tra) |
+| **Hệ thống chế tài** | Các hình phạt nghiêm khắc: Cảnh cáo, phạt tiền, cải tạo không giam giữ, tù có thời hạn, tù chung thân, tử hình | Xử phạt hành chính: Cảnh cáo, phạt tiền; biện pháp khắc phục hậu quả; cưỡng chế hành chính |
+| **Hậu quả pháp lý** | Bị kết án và phát sinh **Án tích** (lý lịch tư pháp ghi nhận tiền án) | **Không bị án tích**, hết thời hạn 01 năm coi như chưa bị xử phạt |`;
+    }
+
+    // 4. So sánh Hợp đồng vô hiệu tuyệt đối vs vô hiệu tương đối
+    if (
+      qLower.includes('vô hiệu') &&
+      (qLower.includes('tuyệt đối') || qLower.includes('tương đối'))
+    ) {
+      return `### BẢNG SO SÁNH: HỢP ĐỒNG DÂN SỰ VÔ HIỆU TUYỆT ĐỐI VS VÔ HIỆU TƯƠNG ĐỐI
+
+| Tiêu chí | Hợp đồng vô hiệu tuyệt đối (Đương nhiên vô hiệu) | Hợp đồng vô hiệu tương đối (Tùy nghi vô hiệu) |
+| :--- | :--- | :--- |
+| **Nguyên nhân vô hiệu** | Vi phạm điều cấm của luật hoặc trái đạo đức xã hội (Điều 123 BLDS 2015); Hợp đồng giả tạo (Điều 124) | Do nhầm lẫn (Điều 126), bị lừa dối, đe dọa, cưỡng ép (Điều 127); do người chưa thành niên, mất NLHV xác lập (Điều 125) |
+| **Thời điểm phát sinh hậu quả** | Vô hiệu ngay từ **thời điểm giao kết**, không làm phát sinh bất kỳ quyền và nghĩa vụ nào | Có hiệu lực tạm thời cho đến khi **Tòa án tuyên bố vô hiệu** theo yêu cầu của bên bị thiệt hại |
+| **Thời hiệu yêu cầu Tòa án tuyên** | **Không bị hạn chế thời hiệu** (bất kỳ thời điểm nào cũng có quyền yêu cầu) | **Thời hiệu là 02 năm** kể từ ngày người có quyền biết hoặc phải biết giao dịch bị vi phạm |
+| **Hậu quả pháp lý** | Các bên khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận | Nếu hết 02 năm không yêu cầu thì hợp đồng tiếp tục có hiệu lực pháp luật |`;
+    }
+
+    // Fallback: Tìm trong giáo trình và dựng bảng so sánh tổng quát
+    const topTb = TextbookKnowledgeService.searchTopChunks(query, 1);
+    const contextContent = topTb.length > 0 ? topTb[0].chunk.baremContent : '';
+
+    return `### KẾT QUẢ SO SÁNH & PHÂN BIỆT CHI TIẾT (CHUẨN BAREM GIÁO TRÌNH)
+
+1. **ĐIỂM GIỐNG NHAU**:
+   - Đều là các chế định pháp lý quan trọng được quy định trong hệ thống pháp luật Việt Nam và giáo trình Pháp luật Đại cương.
+   - Đều hướng tới mục tiêu điều chỉnh hành vi của các chủ thể, duy trì trật tự pháp luật và bảo vệ quyền, lợi ích hợp pháp của Nhà nước, tổ chức và công dân.
+
+2. **ĐIỂM KHÁC NHAU (BẢNG TIÊU CHÍ ĐỐI CHIẾU)**:
+   - **Cơ sở pháp lý**: Căn cứ vào các văn bản quy phạm pháp luật chuyên ngành tương ứng.
+   - **Bản chất pháp lý & Dấu hiệu đặc trưng**: Phụ thuộc vào tính chất hành vi, mức độ lỗi và năng lực chủ thể.
+   - **Hệ quả pháp lý**: Áp dụng các biện pháp chế tài và trách nhiệm pháp lý tương ứng.
+
+${contextContent ? `\n---\n**TÀI LIỆU GIÁO TRÌNH THAM CHIẾU**:\n${contextContent}` : ''}`;
+  }
+
   // --- DẠNG 7: LÝ THUYẾT TỔNG HỢP & DỰ PHÒNG THÔNG MINH ---
   private static solveDynamicGeneralTheory(query: string, articles: ILawArticle[]): string {
     const qLower = query.toLowerCase();
+
+    // 0.0. Ưu tiên mối quan hệ giữa Nhà nước và Pháp luật
+    if (
+      qLower.includes('nhà nước') &&
+      qLower.includes('pháp luật') &&
+      (qLower.includes('thiếu pháp luật') ||
+       qLower.includes('không thể tồn tại') ||
+       qLower.includes('phát huy chức năng') ||
+       qLower.includes('quan hệ biện chứng') ||
+       qLower.includes('kiến trúc thượng tầng') ||
+       qLower.includes('tại sao nhà nước')) &&
+      !qLower.includes('chỉ ra đời trong')
+    ) {
+      return this.solveDynamicStateAndLawRelation(query);
+    }
 
     // 0. Ưu tiên câu hỏi về Bản chất Nhà nước (tính giai cấp & tính xã hội)
     if (
@@ -1657,8 +2606,29 @@ Khái niệm pháp lý được định hình nhằm xác lập khuôn khổ chu
     // Kiểm tra ưu tiên nếu là câu hỏi định nghĩa / khái niệm
     const isDef = qLower.includes('là gì') || qLower.includes('thế nào là') || qLower.includes('định nghĩa') || qLower.includes('khái niệm');
     const concept = this.extractLegalConcept(query);
-    if (isDef || (concept && !qLower.includes('bồi thường') && !qLower.includes('tai nạn') && !qLower.includes('đánh') && !qLower.includes('vượt đèn đỏ'))) {
+    if (isDef) {
       return this.solveDynamicDefinition(query, concept);
+    }
+
+    // Nếu là câu hỏi nhận định / đánh giá đúng sai / thực hiện pháp luật
+    if (
+      qLower.includes('đúng hay sai') ||
+      qLower.includes('nhận định') ||
+      qLower.includes('tuân thủ') ||
+      qLower.includes('thi hành') ||
+      qLower.includes('sử dụng pháp luật') ||
+      qLower.includes('áp dụng pháp luật') ||
+      qLower.includes('không hành động') ||
+      qLower.includes('đều được') ||
+      qLower.includes('đều là') ||
+      qLower.includes('chỉ có')
+    ) {
+      return this.solveDynamicTrueFalse(query, articles);
+    }
+
+    // Nếu câu hỏi liên quan đến so sánh & phân biệt
+    if (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('đối chiếu')) {
+      return this.solveDynamicComparison(query, articles);
     }
 
     // Nếu câu hỏi liên quan đến vay nợ, hợp đồng, nghĩa vụ
@@ -1702,6 +2672,12 @@ Theo giáo trình Pháp luật Đại cương:
 | **Nội dung** | Không làm điều pháp luật cấm. | Làm điều pháp luật bắt buộc làm. | Làm điều pháp luật cho phép làm. | Cơ quan có thẩm quyền ra quyết định áp dụng vào vụ việc. |
 | **Chủ thể** | Mọi cá nhân, cơ quan, tổ chức. | Mọi cá nhân, cơ quan, tổ chức. | Mọi cá nhân, cơ quan, tổ chức. | **Chỉ có cơ quan Nhà nước, người có thẩm quyền**. |
 | **Ví dụ** | Không vượt đèn đỏ; không nhận hối lộ. | Nộp thuế đầy đủ; đăng ký nghĩa vụ quân sự. | Kết hôn; lập di chúc; khiếu nại. | Tòa án tuyên án phạt tù; CSGT ra quyết định xử phạt vi phạm. |`;
+    }
+
+    // Kiểm tra kho tri thức Giáo trình RAG (ĐH Thương Mại 2021 - Chủ biên TS. Trần Thành Thọ)
+    const textbookMatches = TextbookKnowledgeService.searchTopChunks(query, 1);
+    if (textbookMatches.length > 0 && textbookMatches[0].score >= 10) {
+      return TextbookKnowledgeService.buildTextbookResponse(query, textbookMatches[0]);
     }
 
     return `### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG

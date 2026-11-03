@@ -250,9 +250,10 @@ interface StudyModeProps {
   initialQuery?: string;
   onClearInitialQuery?: () => void;
   onOpenAuth?: (mode?: 'login' | 'register') => void;
+  isDarkMode?: boolean;
 }
 
-export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearInitialQuery, onOpenAuth }) => {
+export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearInitialQuery, onOpenAuth, isDarkMode }) => {
   const { user, isAuthenticated, remainingQuestions, decrementQuota } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [query, setQuery] = useState('');
@@ -280,10 +281,11 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Khóa lưu trữ cục bộ theo từng người dùng đăng nhập
-  const storageKey = `vietlaw_chat_sessions_${user?.id || user?._id || 'guest'}`;
+  // Khóa lưu trữ cục bộ vĩnh viễn theo email / tên đăng nhập của tài khoản
+  const userIdentifier = (user?.email || user?.username || user?.id || 'guest').toLowerCase().replace(/[^a-z0-9_]/g, '_');
+  const storageKey = `vietlaw_chat_sessions_${userIdentifier}`;
 
-  // 1. Tải các phiên chat đã lưu từ localStorage
+  // 1. Tải và phục hồi toàn bộ các phiên chat đã lưu từ localStorage
   useEffect(() => {
     if (!isAuthenticated) {
       setMessages([]);
@@ -296,70 +298,121 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     }
 
     try {
+      // Đọc từ key chuẩn của người dùng
       const raw = localStorage.getItem(storageKey);
+      let loadedSessions: ChatSession[] = [];
       if (raw) {
         const parsed: ChatSession[] = JSON.parse(raw);
         if (Array.isArray(parsed) && parsed.length > 0) {
-          setSessions(parsed);
-          setActiveSessionId(parsed[0].id);
-          setMessages(parsed[0].messages);
-          return;
+          loadedSessions = parsed;
         }
+      }
+
+      // Quét và khôi phục các session từ các key cũ (do đổi id sau khi backend reboot)
+      const seenTitles = new Set<string>(loadedSessions.map((s) => s.title.toLowerCase().trim()));
+      for (let i = 0; i < localStorage.length; i++) {
+        const k = localStorage.key(i);
+        if (k && k.startsWith('vietlaw_chat_sessions_')) {
+          try {
+            const oldRaw = localStorage.getItem(k);
+            if (oldRaw) {
+              const oldList: ChatSession[] = JSON.parse(oldRaw);
+              if (Array.isArray(oldList)) {
+                for (const oldSess of oldList) {
+                  const tKey = (oldSess.title || '').toLowerCase().trim();
+                  if (tKey && !seenTitles.has(tKey)) {
+                    seenTitles.add(tKey);
+                    loadedSessions.push(oldSess);
+                  }
+                }
+              }
+            }
+          } catch {}
+        }
+      }
+
+      if (loadedSessions.length > 0) {
+        loadedSessions.sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+        setSessions(loadedSessions);
+        setActiveSessionId(loadedSessions[0].id);
+        setMessages(loadedSessions[0].messages);
+        try {
+          localStorage.setItem(storageKey, JSON.stringify(loadedSessions));
+        } catch {}
       }
     } catch (e) {
       console.warn('Lỗi đọc chat sessions từ localStorage:', e);
     }
-  }, [isAuthenticated, user?.id, user?._id]);
+  }, [isAuthenticated, userIdentifier]);
 
-  // 2. Tự động đồng bộ lịch sử từ Server thành các đoạn chat nếu chưa có session cục bộ
+  // 2. Tự động đồng bộ và gộp toàn bộ lịch sử từ Server vào danh sách đoạn chat
   useEffect(() => {
-    if (sessions.length === 0 && history.length > 0) {
-      const serverSessions: ChatSession[] = history.slice(0, 30).map((h) => ({
-        id: 'sess_' + h._id,
-        title: h.query.slice(0, 36) + (h.query.length > 36 ? '...' : ''),
-        createdAt: new Date(h.createdAt).getTime(),
-        updatedAt: new Date(h.createdAt).getTime(),
-        messages: [
-          {
-            id: 'u_' + h._id,
-            role: 'user',
-            content: h.query,
-            timestamp: new Date(h.createdAt).getTime()
-          },
-          {
-            id: 'b_' + h._id,
-            role: 'assistant',
-            content: h.response,
-            timestamp: new Date(h.createdAt).getTime() + 500,
-            data: {
-              success: true,
-              intentCode: h.intentCode,
-              response: h.response,
-              citations: h.citations || [],
-              guardrailMetrics: {
-                verifiedCount: h.verifiedCitationsCount || 0,
-                totalFound: h.citations?.length || 0,
-                precisionRate: 100
-              },
-              retrievedArticles: [],
-              latencyMs: h.latencyMs || 250
-            }
-          }
-        ]
-      }));
+    if (!isAuthenticated || history.length === 0) return;
 
-      setSessions(serverSessions);
-      if (serverSessions.length > 0) {
-        setActiveSessionId(serverSessions[0].id);
-        setMessages(serverSessions[0].messages);
+    setSessions((prevSessions) => {
+      const merged = [...prevSessions];
+
+      for (const h of history) {
+        const title = h.query.slice(0, 36) + (h.query.length > 36 ? '...' : '');
+        const titleKey = title.toLowerCase().trim();
+        const shortQKey = h.query.slice(0, 25).toLowerCase().trim();
+
+        // Kiểm tra xem câu hỏi này đã có trong danh sách session chưa
+        const alreadyExists = merged.some(
+          (s) =>
+            s.id === 'sess_' + h._id ||
+            s.title.toLowerCase().trim() === titleKey ||
+            (s.messages && s.messages.some((m) => m.role === 'user' && m.content.toLowerCase().trim().startsWith(shortQKey)))
+        );
+
+        if (!alreadyExists) {
+          const newSess: ChatSession = {
+            id: 'sess_' + h._id,
+            title,
+            createdAt: new Date(h.createdAt).getTime(),
+            updatedAt: new Date(h.createdAt).getTime(),
+            messages: [
+              {
+                id: 'u_' + h._id,
+                role: 'user',
+                content: h.query,
+                timestamp: new Date(h.createdAt).getTime()
+              },
+              {
+                id: 'b_' + h._id,
+                role: 'assistant',
+                content: h.response,
+                timestamp: new Date(h.createdAt).getTime() + 400,
+                data: {
+                  success: true,
+                  intentCode: h.intentCode,
+                  response: h.response,
+                  citations: h.citations || [],
+                  guardrailMetrics: {
+                    verifiedCount: h.verifiedCitationsCount || 0,
+                    totalFound: h.citations?.length || 0,
+                    precisionRate: 100
+                  },
+                  retrievedArticles: [],
+                  latencyMs: h.latencyMs || 250
+                }
+              }
+            ]
+          };
+          merged.push(newSess);
+        }
       }
+
+      // Sắp xếp các đoạn chat theo thời gian mới nhất lên đầu
+      merged.sort((a, b) => (b.updatedAt || b.createdAt || 0) - (a.updatedAt || a.createdAt || 0));
+
       try {
-        localStorage.setItem(storageKey, JSON.stringify(serverSessions));
-      } catch (err) {
-        // ignore
-      }
-    }
-  }, [history, sessions.length]);
+        localStorage.setItem(storageKey, JSON.stringify(merged));
+      } catch {}
+
+      return merged;
+    });
+  }, [history, isAuthenticated, storageKey]);
 
   // Chọn 1 đoạn chat từ thanh bên để xem lại toàn bộ nội dung
   const handleSelectSession = (id: string) => {
@@ -556,7 +609,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     }
 
     try {
-      const res = await api.solveQuery(textToSend);
+      const res = await api.solveQuery(textToSend, selectedCategoryId);
       if (res.success) {
         const botMsg: ChatMessage = {
           id: 'bot-' + Date.now(),
@@ -699,22 +752,46 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     }
   };
 
-  // Markdown Bold Parser
+  // Enhanced Inline Markdown Parser for bold, code, and line breaks with Vietnamese typography
   const renderFormattedInline = (text: string) => {
-    const parts = text.split(/(\*\*[^*]+\*\*)/g);
-    return parts.map((part, i) => {
-      if (part.startsWith('**') && part.endsWith('**')) {
-        return (
-          <strong key={i} className="font-bold text-slate-900">
-            {part.slice(2, -2)}
-          </strong>
-        );
-      }
-      return part;
+    const lines = text.split('\n');
+    return lines.map((line, lineIdx) => {
+      const parts = line.split(/(\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g);
+      const renderedParts = parts.map((part, i) => {
+        if (part.startsWith('**') && part.endsWith('**')) {
+          return (
+            <strong key={i} className="font-semibold text-[#111827] dark:text-amber-200">
+              {part.slice(2, -2)}
+            </strong>
+          );
+        }
+        if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+          return (
+            <em key={i} className="italic text-[#374151] dark:text-[#cbd5e1]">
+              {part.slice(1, -1)}
+            </em>
+          );
+        }
+        if (part.startsWith('`') && part.endsWith('`')) {
+          return (
+            <code key={i} className="px-1.5 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-xs font-mono text-indigo-700 dark:text-indigo-300 border border-slate-200 dark:border-slate-700">
+              {part.slice(1, -1)}
+            </code>
+          );
+        }
+        return part;
+      });
+
+      return (
+        <React.Fragment key={lineIdx}>
+          {lineIdx > 0 && <br />}
+          {renderedParts}
+        </React.Fragment>
+      );
     });
   };
 
-  // Markdown Formatter for Assistant Response
+  // Markdown Formatter for Assistant Response with Rich Editorial Legal Typography
   const formatMarkdown = (text: string) => {
     const lines = text.split('\n');
     const elements: React.ReactNode[] = [];
@@ -722,7 +799,9 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     let inTable = false;
 
     lines.forEach((line, idx) => {
-      if (line.trim().startsWith('|')) {
+      const trimmed = line.trim();
+
+      if (trimmed.startsWith('|')) {
         inTable = true;
         tableRows.push(line);
       } else {
@@ -732,34 +811,152 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
           inTable = false;
         }
 
-        if (line.startsWith('### ')) {
+        if (!trimmed) {
+          return;
+        }
+
+        // 1. Standard Markdown H3
+        if (trimmed.startsWith('### ')) {
           elements.push(
-            <h3 key={idx} className="text-base font-bold text-blue-700 mt-5 mb-2 flex items-center gap-2">
-              <span className="w-1.5 h-4 bg-blue-600 rounded-full inline-block"></span>
-              {renderFormattedInline(line.replace('### ', ''))}
+            <h3 key={idx} className="font-display text-base font-bold text-indigo-600 dark:text-indigo-400 mt-5 mb-2 flex items-center gap-2">
+              <span className="w-1.5 h-4 bg-gradient-to-b from-indigo-600 to-blue-500 rounded-full inline-block shadow-2xs"></span>
+              {renderFormattedInline(trimmed.replace('### ', ''))}
             </h3>
           );
-        } else if (line.startsWith('## ')) {
+          return;
+        }
+
+        // 2. Standard Markdown H2
+        if (trimmed.startsWith('## ')) {
           elements.push(
-            <h2 key={idx} className="text-lg font-bold text-slate-900 mt-6 mb-3 border-b border-slate-200 pb-1.5">
-              {renderFormattedInline(line.replace('## ', ''))}
+            <h2 key={idx} className="font-display text-lg font-bold text-[#111827] dark:text-white mt-6 mb-3 border-b border-black/[0.08] dark:border-white/10 pb-2 flex items-center gap-2">
+              <span className="w-2 h-4.5 bg-indigo-600 dark:bg-indigo-400 rounded-full inline-block shadow-2xs"></span>
+              {renderFormattedInline(trimmed.replace('## ', ''))}
             </h2>
           );
-        } else if (line.trim() === '---') {
-          elements.push(<hr key={idx} className="my-4 border-slate-200" />);
-        } else if (line.trim().startsWith('- ') || line.trim().startsWith('• ')) {
-          elements.push(
-            <li key={idx} className="text-slate-800 ml-4 list-disc text-[14.5px] my-1 leading-relaxed">
-              {renderFormattedInline(line.replace(/^[-•]\s*/, ''))}
-            </li>
-          );
-        } else if (line.trim()) {
-          elements.push(
-            <p key={idx} className="text-slate-800 text-[14.5px] my-2 leading-relaxed">
-              {renderFormattedInline(line)}
-            </p>
-          );
+          return;
         }
+
+        // 3. Roman Numeral Major Section Headings (e.g. "I. KẾT LUẬN SƠ BỘ:", "II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT:")
+        const romanMatch = trimmed.match(/^(I|II|III|IV|V|VI|VII|VIII|IX|X)\.\s*(.*)$/i);
+        if (romanMatch) {
+          const roman = romanMatch[1].toUpperCase();
+          const title = romanMatch[2];
+          elements.push(
+            <div key={idx} className="pt-3.5 pb-1.5 border-b border-black/[0.08] dark:border-white/10 mt-5 first:mt-1 mb-2">
+              <div className="flex items-center gap-2.5">
+                <span className="px-2.5 py-0.5 rounded-lg bg-slate-900 dark:bg-indigo-600 text-white font-bold text-xs font-mono tracking-wider shadow-xs shrink-0">
+                  MỤC {roman}
+                </span>
+                <h3 className="font-display font-bold text-[15.5px] sm:text-[16.5px] text-[#111827] dark:text-white tracking-tight uppercase">
+                  {renderFormattedInline(title)}
+                </h3>
+              </div>
+            </div>
+          );
+          return;
+        }
+
+        // 4. Numbered Sub-Sections in All-Caps / Colon (e.g. "1. MẶT KHÁCH QUAN:", "2. MẶT CHỦ QUAN:", "3. CHỦ THỂ:", "4. KHÁCH THỂ:")
+        const numSectionMatch = trimmed.match(/^(\d+)\.\s+([A-ZÀ-Ỹ0-9\s/_\-()]{3,}):?\s*(.*)$/);
+        if (numSectionMatch) {
+          const num = numSectionMatch[1];
+          const subTitle = numSectionMatch[2];
+          const extraText = numSectionMatch[3];
+          elements.push(
+            <div key={idx} className="flex items-start gap-2.5 mt-4 mb-2">
+              <span className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0 border border-indigo-200 dark:border-indigo-800 shadow-2xs font-mono mt-0.5">
+                {num}
+              </span>
+              <div className="flex-1 min-w-0">
+                <span className="font-display font-bold text-[14.5px] sm:text-[15px] text-[#1f2937] dark:text-amber-100 tracking-wide uppercase">
+                  {subTitle}{subTitle.endsWith(':') ? '' : ':'}
+                </span>
+                {extraText && (
+                  <span className="ml-1.5 text-[#374151] dark:text-[#cbd5e1] font-chat text-[15px]">
+                    {renderFormattedInline(extraText)}
+                  </span>
+                )}
+              </div>
+            </div>
+          );
+          return;
+        }
+
+        // 5. Divider
+        if (trimmed === '---') {
+          elements.push(<hr key={idx} className="my-4 border-black/[0.08] dark:border-white/10" />);
+          return;
+        }
+
+        // 6. Bullet lists with smart key-value highlighting
+        if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
+          const rawBullet = trimmed.replace(/^[-•*]\s*/, '');
+          const colonIdx = rawBullet.indexOf(':');
+          if (colonIdx > 0 && colonIdx <= 45) {
+            const label = rawBullet.substring(0, colonIdx);
+            const rest = rawBullet.substring(colonIdx + 1).trim();
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 my-2 pl-1 group">
+                <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 shrink-0 mt-2.5 ring-4 ring-indigo-500/15 group-hover:scale-125 transition-transform duration-200"></span>
+                <div className="flex-1 text-[15px] leading-[1.78] font-chat text-[#374151] dark:text-[#d1d5db]">
+                  <strong className="font-semibold text-[#111827] dark:text-amber-200 mr-1.5">
+                    {renderFormattedInline(label)}:
+                  </strong>
+                  {renderFormattedInline(rest)}
+                </div>
+              </div>
+            );
+          } else {
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 my-2 pl-1 group">
+                <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-indigo-400 shrink-0 mt-2.5 ring-4 ring-indigo-500/15 group-hover:scale-125 transition-transform duration-200"></span>
+                <div className="flex-1 text-[15px] leading-[1.78] font-chat text-[#374151] dark:text-[#d1d5db]">
+                  {renderFormattedInline(rawBullet)}
+                </div>
+              </div>
+            );
+          }
+          return;
+        }
+
+        // 7. Indented sub-bullets (starting with +)
+        if (trimmed.startsWith('+ ')) {
+          const rawSubBullet = trimmed.replace(/^\+\s*/, '');
+          const colonIdx = rawSubBullet.indexOf(':');
+          if (colonIdx > 0 && colonIdx <= 45) {
+            const label = rawSubBullet.substring(0, colonIdx);
+            const rest = rawSubBullet.substring(colonIdx + 1).trim();
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 my-1.5 pl-6 group">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/70 shrink-0 mt-2.5"></span>
+                <div className="flex-1 text-[14.5px] leading-[1.7] font-chat text-[#4b5563] dark:text-[#cbd5e1]">
+                  <strong className="font-medium text-[#1f2937] dark:text-slate-200 mr-1.5">
+                    {renderFormattedInline(label)}:
+                  </strong>
+                  {renderFormattedInline(rest)}
+                </div>
+              </div>
+            );
+          } else {
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 my-1.5 pl-6 group">
+                <span className="w-1.5 h-1.5 rounded-full bg-indigo-500/70 shrink-0 mt-2.5"></span>
+                <div className="flex-1 text-[14.5px] leading-[1.7] font-chat text-[#4b5563] dark:text-[#cbd5e1]">
+                  {renderFormattedInline(rawSubBullet)}
+                </div>
+              </div>
+            );
+          }
+          return;
+        }
+
+        // 7. Regular paragraph with beautiful Vietnamese font legibility
+        elements.push(
+          <p key={idx} className="text-[#2c3038] dark:text-[#e2e8f0] text-[15px] sm:text-[15.5px] my-2.5 leading-[1.78] font-chat">
+            {renderFormattedInline(trimmed)}
+          </p>
+        );
       }
     });
 
@@ -784,23 +981,28 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     );
 
     return (
-      <div key={key} className="overflow-x-auto my-4 rounded-xl border border-blue-200 bg-white shadow-xs">
-        <table className="w-full text-left text-xs text-slate-700">
-          <thead className="bg-blue-50/90 text-blue-900 border-b border-blue-200 uppercase tracking-wider text-[11px] font-semibold">
+      <div key={key} className="overflow-x-auto my-5 rounded-2xl border border-black/[0.08] dark:border-white/10 bg-white dark:bg-[#121319] shadow-sm font-chat">
+        <table className="w-full text-left text-xs sm:text-sm text-[#27251e] dark:text-slate-200">
+          <thead className="bg-[#faf8f5] dark:bg-[#181818] text-[#111827] dark:text-white border-b border-black/[0.08] dark:border-white/10 text-[12.5px] font-bold font-display">
             <tr>
               {headerRow.map((col, i) => (
-                <th key={i} className="px-4 py-3 border-r border-blue-200/60 last:border-r-0">
-                  {col}
+                <th key={i} className="px-4 py-3.5 border-r border-black/[0.06] dark:border-white/10 last:border-r-0">
+                  <span className="font-bold text-[#111827] dark:text-white">
+                    {renderFormattedInline(col)}
+                  </span>
                 </th>
               ))}
             </tr>
           </thead>
-          <tbody className="divide-y divide-slate-100">
+          <tbody className="divide-y divide-black/[0.05] dark:divide-white/[0.06]">
             {bodyRows.map((row, rIdx) => (
-              <tr key={rIdx} className="hover:bg-blue-50/30 transition-colors">
+              <tr 
+                key={rIdx} 
+                className="hover:bg-slate-50 dark:hover:bg-slate-800/50 transition-colors odd:bg-white dark:odd:bg-[#121319] even:bg-[#faf8f5]/60 dark:even:bg-[#181818]/60"
+              >
                 {row.map((cell, cIdx) => (
-                  <td key={cIdx} className="px-4 py-3 align-top border-r border-slate-100 last:border-r-0 leading-relaxed">
-                    <span dangerouslySetInnerHTML={{ __html: cell.replace(/<br>/g, '<br/>') }} />
+                  <td key={cIdx} className="px-4 py-3.5 align-top border-r border-black/[0.05] dark:border-white/[0.06] last:border-r-0 leading-relaxed text-xs sm:text-sm">
+                    {renderFormattedInline(cell.replace(/<br\s*\/?>/gi, '\n'))}
                   </td>
                 ))}
               </tr>
@@ -812,7 +1014,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
   };
 
   return (
-    <div className="flex h-[calc(100vh-65px)] overflow-hidden bg-[#f8fafc] text-slate-900 relative">
+    <div className="flex h-[calc(100vh-65px)] overflow-hidden bg-[#f8fafc] dark:bg-[#0b0f19] text-slate-800 dark:text-slate-100 relative">
       {/* 1. Thanh bên lịch sử đoạn chat trong 1 lần đăng nhập */}
       <ChatHistorySidebar
         isOpen={isSidebarOpen}
@@ -831,8 +1033,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
 
       {/* 2. Cột trò chuyện chính */}
       <div className="flex-1 flex flex-col h-full min-w-0 overflow-hidden relative">
-        {/* Top Floating Control Bar */}
-        <div className="sticky top-0 z-20 bg-[#f8fafc]/90 backdrop-blur-md border-b border-slate-200/60 px-4 py-2.5 shrink-0">
+        {/* Top Floating Control Bar - Modern Glassmorphism & Magic UI Badges */}
+        <div className="sticky top-0 z-20 bg-[#f8fafc]/85 dark:bg-[#0b0f19]/85 backdrop-blur-xl border-b border-slate-200/80 dark:border-slate-800/80 px-4 py-2.5 shrink-0 transition-colors">
           <div className="max-w-4xl mx-auto flex items-center justify-between">
             <div className="flex items-center gap-2 min-w-0">
               {/* Nút Toggle mở/đóng thanh bên */}
@@ -840,45 +1042,49 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                 type="button"
                 onClick={() => setIsSidebarOpen((prev) => !prev)}
                 title={isSidebarOpen ? 'Thu gọn thanh bên' : 'Mở lịch sử đoạn chat'}
-                className="p-1.5 rounded-lg border border-slate-200 bg-white text-slate-600 hover:text-slate-900 hover:bg-slate-50 shadow-2xs transition-all flex items-center gap-1.5 text-xs font-medium cursor-pointer shrink-0"
+                className="p-1.5 rounded-xl border border-black/10 dark:border-white/10 bg-white/80 dark:bg-white/5 text-[#72706b] hover:text-[#27251e] dark:hover:text-white hover:border-indigo-500/50 shadow-xs hover:shadow-sm transition-all flex items-center gap-1.5 text-xs font-medium cursor-pointer shrink-0"
               >
                 {isSidebarOpen ? (
-                  <PanelLeftClose className="w-4 h-4 text-blue-600" />
+                  <PanelLeftClose className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 ) : (
-                  <PanelLeft className="w-4 h-4 text-blue-600" />
+                  <PanelLeft className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
                 )}
                 {!isSidebarOpen && (
                   <span className="hidden sm:inline">Lịch sử ({sessions.length})</span>
                 )}
               </button>
 
-              <Button
-                variant="outline"
-                size="sm"
+              <button
+                type="button"
                 onClick={handleNewChat}
-                className="gap-1.5 text-xs bg-white hover:bg-slate-50 border-slate-200 text-slate-700 shadow-2xs rounded-lg shrink-0"
+                className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium rounded-xl bg-white/80 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border border-black/10 dark:border-white/10 hover:border-indigo-500/50 text-[#27251e] dark:text-[#f8fafc] shadow-xs hover:shadow-sm transition-all shrink-0 cursor-pointer"
               >
-                <SquarePen className="w-3.5 h-3.5 text-slate-500" />
+                <SquarePen className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
                 <span className="hidden sm:inline">Đoạn chat mới</span>
-              </Button>
+              </button>
 
-              <span className="text-xs text-slate-400 hidden md:inline">•</span>
-              <span className="text-xs text-slate-500 font-medium hidden md:inline truncate max-w-[240px]">
-                {activeSessionId
-                  ? sessions.find((s) => s.id === activeSessionId)?.title || 'Đoạn chat hiện tại'
-                  : 'Đoạn chat mới'}
-              </span>
+              <span className="text-xs text-black/20 dark:text-white/20 hidden md:inline">•</span>
+              
+              {/* Active session title indicator */}
+              <div className="hidden md:flex items-center gap-1.5 text-xs text-[#72706b] dark:text-[#94a3b8] font-medium truncate max-w-[280px]">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse shrink-0"></span>
+                <span className="truncate">
+                  {activeSessionId
+                    ? sessions.find((s) => s.id === activeSessionId)?.title || 'Đoạn chat hiện tại'
+                    : 'Đoạn chat mới'}
+                </span>
+              </div>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               {isAuthenticated && (
-                <span className="text-xs text-slate-500 hidden sm:inline">
-                  Hạn mức:{' '}
-                  <strong className={`font-bold ${remainingQuestions <= 5 ? 'text-rose-600' : 'text-emerald-600'}`}>
+                <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs">
+                  <span className="text-[#72706b] dark:text-[#94a3b8] hidden sm:inline">Hạn mức:</span>
+                  <span className="font-semibold text-indigo-600 dark:text-indigo-400">
                     {remainingQuestions}
-                  </strong>
-                  /30 câu
-                </span>
+                  </span>
+                  <span className="text-[#92918b] dark:text-[#64748b]">/30 câu</span>
+                </div>
               )}
             </div>
           </div>
@@ -887,531 +1093,644 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         {/* Main Conversation Stream */}
         <div className="flex-1 overflow-y-auto w-full px-4 py-6 space-y-6 pb-44">
           <div className="max-w-4xl mx-auto space-y-6">
-            {/* Empty State: ChatGPT Greeting */}
+            {/* Empty State: Modern Glass Hero with Category Cards & Ambient Orbs */}
             {messages.length === 0 && (
-          <div className="py-12 md:py-16 text-center space-y-8 animate-fadeIn">
-            <div className="space-y-3">
-              <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center mx-auto shadow-md shadow-blue-500/20">
-                <Scale className="w-7 h-7" />
-              </div>
-              <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
-                Bạn muốn hỏi gì về Pháp luật đại cương? ⚖️
-              </h2>
-              <p className="text-sm text-slate-500 max-w-lg mx-auto leading-relaxed">
-                Nhập câu hỏi lý thuyết, nhận định đúng sai hoặc bài tập tình huống cần giải theo Barem chuẩn Bộ GD&ĐT nhé!
-              </p>
-            </div>
+              <div className="relative py-8 md:py-12 text-center space-y-8 animate-fadeIn overflow-hidden">
+                {/* Magic UI Ambient Background Glow Mesh */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 rounded-full bg-gradient-to-tr from-indigo-500/15 via-blue-500/10 to-transparent blur-3xl pointer-events-none animate-float-orb"></div>
+                <div className="absolute top-1/3 left-1/3 w-64 h-64 rounded-full bg-emerald-500/10 blur-3xl pointer-events-none animate-float-orb-slow"></div>
 
-            {/* 5 Archetype Category Cards */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-left max-w-3xl mx-auto">
-              {QUESTION_CATEGORIES.map((cat) => (
-                <button
-                  key={cat.id}
-                  onClick={() => {
-                    setSelectedCategoryId(cat.id);
-                    setActiveCategoryId(cat.id);
-                    setIsDropdownOpen(true);
-                  }}
-                  className="group p-3.5 rounded-xl border border-slate-200 bg-white hover:bg-blue-50/60 hover:border-blue-300 transition-all text-left shadow-2xs hover:shadow-xs cursor-pointer flex flex-col justify-between"
-                >
-                  <div>
-                    <div className="flex items-center justify-between mb-2">
-                      <div className="w-7 h-7 rounded-lg bg-blue-50 text-blue-600 flex items-center justify-center group-hover:bg-blue-600 group-hover:text-white transition-colors">
-                        {renderCategoryIcon(cat.iconName, 'w-4 h-4')}
-                      </div>
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 text-slate-600 border border-slate-200 group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
-                        {cat.badge}
-                      </span>
-                    </div>
-                    <h4 className="text-xs font-bold text-slate-800 group-hover:text-blue-700 transition-colors">
-                      {cat.name}
-                    </h4>
-                    <p className="text-[11px] text-slate-500 line-clamp-2 mt-1 leading-relaxed">
-                      {cat.description}
-                    </p>
+                <div className="relative z-10 space-y-3">
+                  <div className="relative w-16 h-16 rounded-2xl bg-slate-900 dark:bg-indigo-600 text-white flex items-center justify-center mx-auto shadow-xl shadow-slate-900/20 dark:shadow-indigo-500/30 transition-all duration-300 hover:scale-110 hover:rotate-3 cursor-pointer group">
+                    <Scale className="w-8 h-8 transition-transform group-hover:scale-110" />
+                    <span className="absolute -top-1 -right-1 flex h-3.5 w-3.5">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-indigo-600"></span>
+                    </span>
                   </div>
-                  <div className="pt-2 mt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 group-hover:text-blue-600">
-                    <span>{cat.questions.length} câu hỏi mẫu</span>
-                    <span className="font-semibold">Chọn dạng ▾</span>
-                  </div>
-                </button>
-              ))}
-            </div>
-          </div>
-        )}
-
-        {/* Message List */}
-        {messages.map((msg, index) => (
-          <div key={msg.id} className="space-y-4">
-            {msg.role === 'user' ? (
-              /* User Bubble (Right Aligned, ChatGPT Style) */
-              <div className="flex justify-end w-full animate-fadeIn">
-                <div className="max-w-[85%] sm:max-w-[75%] rounded-[24px] bg-[#f4f4f4] text-slate-900 px-5 py-3 text-[15px] leading-relaxed break-words whitespace-pre-wrap shadow-2xs border border-slate-200/50">
-                  {msg.content}
-                </div>
-              </div>
-            ) : (
-              /* Assistant Bubble (Left Aligned, ChatGPT Style) */
-              <div className="flex gap-3 sm:gap-4 w-full animate-fadeIn">
-                <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 mt-0.5 shadow-2xs">
-                  <Scale className="w-4 h-4" />
+                  <h2 className="text-2xl sm:text-3xl font-bold tracking-tight text-[#27251e] dark:text-white">
+                    Hỏi đáp cùng <span className="animate-text-shimmer font-extrabold">Trợ lý Pháp Luật Đại Cương</span> ⚖️
+                  </h2>
+                  <p className="text-sm text-[#72706b] dark:text-[#94a3b8] max-w-lg mx-auto leading-relaxed">
+                    Nhập câu hỏi lý thuyết, nhận định đúng sai hoặc bài tập tình huống cần giải theo Barem chuẩn Bộ GD&ĐT nhé!
+                  </p>
                 </div>
 
-                <div className="flex-1 space-y-3 min-w-0">
-                  {/* Verified Citation Badges */}
-                  {msg.data?.citations && msg.data.citations.length > 0 && (
-                    <div className="p-2.5 rounded-xl bg-emerald-50/70 border border-emerald-200/80 flex flex-wrap items-center justify-between gap-2">
-                      <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-800">
-                        <ShieldCheck className="w-4 h-4 text-emerald-600 shrink-0" />
-                        <span>Đối soát {msg.data.guardrailMetrics?.verifiedCount}/{msg.data.guardrailMetrics?.totalFound} căn cứ điều luật thực định</span>
-                      </div>
-                      <div className="flex flex-wrap items-center gap-1">
-                        {msg.data.citations.map((c, i) => (
-                          <CitationGuardrailBadge key={i} citation={c} />
-                        ))}
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Assistant Markdown Body */}
-                  <div className="text-[15px] text-slate-800 leading-relaxed bg-white p-5 rounded-2xl border border-slate-200/80 shadow-xs space-y-2">
-                    {formatMarkdown(msg.content)}
-                  </div>
-
-                  {/* Collapsible Retrieved Law Articles */}
-                  {msg.data?.retrievedArticles && msg.data.retrievedArticles.length > 0 && (
-                    <div className="pt-1">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setOpenLawsMap((prev) => ({
-                            ...prev,
-                            [msg.id]: !prev[msg.id]
-                          }))
-                        }
-                        className="flex items-center justify-between w-full p-2.5 rounded-xl bg-slate-50 hover:bg-blue-50/60 border border-slate-200 text-xs font-semibold text-slate-700 transition-colors"
-                      >
-                        <span className="flex items-center gap-1.5">
-                          <BookMarked className="w-3.5 h-3.5 text-blue-600" />
-                          <span>
-                            Toàn văn {msg.data.retrievedArticles.length} Điều luật được trích dẫn (Bấm để xem chi tiết)
+                {/* 5 Archetype Category Cards - Modern Interactive Glass Cards */}
+                <div className="relative z-10 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3.5 text-left max-w-3xl mx-auto">
+                  {QUESTION_CATEGORIES.map((cat) => (
+                    <button
+                      key={cat.id}
+                      onClick={() => {
+                        setSelectedCategoryId(cat.id);
+                        setActiveCategoryId(cat.id);
+                        setIsDropdownOpen(true);
+                      }}
+                      className="group relative p-4 rounded-2xl border border-slate-200/90 dark:border-slate-800 bg-white dark:bg-slate-900/70 hover:border-indigo-500/50 hover:bg-white dark:hover:bg-slate-900 backdrop-blur-sm transition-all duration-300 text-left shadow-xs hover:shadow-lg hover:shadow-indigo-500/10 hover:-translate-y-1 cursor-pointer flex flex-col justify-between overflow-hidden card-spotlight"
+                    >
+                      <div className="absolute top-0 right-0 w-28 h-28 bg-gradient-to-bl from-indigo-500/10 via-blue-500/5 to-transparent rounded-bl-full pointer-events-none group-hover:from-indigo-500/20 transition-all duration-500"></div>
+                      <div>
+                        <div className="flex items-center justify-between mb-2.5">
+                          <div className="w-8 h-8 rounded-xl bg-gradient-to-br from-[#faf8f5] to-[#f0ede6] dark:from-white/10 dark:to-white/5 border border-black/5 dark:border-white/10 text-[#27251e] dark:text-white flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-300 shadow-2xs group-hover:rotate-6">
+                            {renderCategoryIcon(cat.iconName, 'w-4 h-4')}
+                          </div>
+                          <span className="text-[10px] font-semibold px-2.5 py-0.5 rounded-full bg-indigo-600/10 text-indigo-700 dark:text-indigo-300 border border-indigo-500/20 group-hover:bg-indigo-600 group-hover:text-white group-hover:border-indigo-600 transition-all duration-300">
+                            {cat.badge}
                           </span>
+                        </div>
+                        <h4 className="text-xs font-semibold text-[#27251e] dark:text-white group-hover:text-indigo-600 dark:text-indigo-400 transition-colors">
+                          {cat.name}
+                        </h4>
+                        <p className="text-[11px] text-[#72706b] dark:text-[#94a3b8] line-clamp-2 mt-1 leading-relaxed">
+                          {cat.description}
+                        </p>
+                      </div>
+                      <div className="pt-2 mt-2 border-t border-black/[0.06] dark:border-white/[0.06] flex items-center justify-between text-[11px] text-[#92918b] dark:text-[#64748b] group-hover:text-indigo-600 dark:text-indigo-400">
+                        <span>{cat.questions.length} câu hỏi mẫu</span>
+                        <span className="font-semibold group-hover:translate-x-1 transition-transform flex items-center gap-0.5">
+                          Chọn dạng →
                         </span>
-                        {openLawsMap[msg.id] ? (
-                          <ChevronUp className="w-3.5 h-3.5 text-slate-500" />
-                        ) : (
-                          <ChevronDown className="w-3.5 h-3.5 text-slate-500" />
-                        )}
-                      </button>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
-                      {openLawsMap[msg.id] && (
-                        <div className="mt-2.5 space-y-2 pl-2 animate-fadeIn">
-                          {msg.data.retrievedArticles.map((art, aIdx) => (
-                            <div key={aIdx} className="p-3 rounded-lg bg-slate-50 border border-slate-200 text-xs space-y-1">
-                              <div className="font-bold text-slate-800 flex items-center justify-between">
-                                <span>{art.lawCode} — Điều {art.articleNumber}: {art.title}</span>
-                                <span className="text-[10px] text-slate-400 font-mono">{art.articleId}</span>
-                              </div>
-                              {art.contentRaw && (
-                                <p className="text-[11px] text-slate-600 font-mono whitespace-pre-line bg-white p-2 rounded border border-slate-200">
-                                  {art.contentRaw}
-                                </p>
-                              )}
-                            </div>
-                          ))}
+            {/* Message List */}
+            {messages.map((msg, index) => (
+              <div key={msg.id} className="space-y-4">
+                {msg.role === 'user' ? (
+                  /* User Bubble (Modern Charcoal & Crisp Slate) */
+                  <div className="flex justify-end w-full animate-fadeIn group">
+                    <div className="font-chat relative max-w-[85%] sm:max-w-[75%] rounded-3xl rounded-br-md bg-gradient-to-br from-[#27251e] to-[#1a1915] text-[#faf8f5] px-5 py-3.5 text-[15px] sm:text-[15.5px] leading-[1.75] break-words whitespace-pre-wrap shadow-md shadow-black/5 border border-white/10 dark:from-[#232530] dark:to-[#171821] dark:border-white/15 transition-all">
+                      {msg.content}
+                    </div>
+                  </div>
+                ) : (
+                  /* Assistant Bubble (Modern Glassmorphic Card & Verified Shield) */
+                  <div className="flex gap-3 sm:gap-4 w-full animate-fadeIn">
+                    <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white flex items-center justify-center shrink-0 mt-0.5 shadow-md shadow-indigo-500/20">
+                      <Scale className="w-4 h-4" />
+                    </div>
+
+                    <div className="flex-1 space-y-3 min-w-0">
+                      {/* Verified Citation Badges */}
+                      {msg.data?.citations && msg.data.citations.length > 0 && (
+                        <div className="relative overflow-hidden p-3 rounded-2xl bg-gradient-to-r from-emerald-500/10 via-emerald-500/5 to-transparent dark:from-emerald-500/15 dark:to-transparent border border-emerald-500/30 flex flex-wrap items-center justify-between gap-2 shadow-xs backdrop-blur-sm">
+                          <div className="flex items-center gap-2 text-xs font-semibold text-emerald-800 dark:text-emerald-400">
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                            </span>
+                            <ShieldCheck className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" />
+                            <span>Đối soát {msg.data.guardrailMetrics?.verifiedCount}/{msg.data.guardrailMetrics?.totalFound} căn cứ điều luật thực định</span>
+                          </div>
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            {msg.data.citations.map((c, i) => (
+                              <CitationGuardrailBadge key={i} citation={c} />
+                            ))}
+                          </div>
                         </div>
                       )}
-                    </div>
-                  )}
 
-                  {/* ChatGPT-style Action Toolbar */}
-                  <div className="flex items-center gap-1 text-slate-400 pt-1">
-                    <button
-                      onClick={() => handleCopy(msg.id, msg.content)}
-                      title="Sao chép câu trả lời"
-                      className="p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer"
-                    >
-                      {copiedId === msg.id ? <Check className="w-4 h-4 text-emerald-600" /> : <Copy className="w-4 h-4" />}
-                    </button>
-                    <button
-                      onClick={() =>
-                        setFeedbackMap((prev) => ({
-                          ...prev,
-                          [msg.id]: prev[msg.id] === 'up' ? undefined! : 'up'
-                        }))
-                      }
-                      title="Đánh giá tốt"
-                      className={`p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer ${
-                        feedbackMap[msg.id] === 'up' ? 'text-blue-600 bg-blue-50' : ''
-                      }`}
-                    >
-                      <ThumbsUp className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() =>
-                        setFeedbackMap((prev) => ({
-                          ...prev,
-                          [msg.id]: prev[msg.id] === 'down' ? undefined! : 'down'
-                        }))
-                      }
-                      title="Chưa hài lòng"
-                      className={`p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer ${
-                        feedbackMap[msg.id] === 'down' ? 'text-rose-600 bg-rose-50' : ''
-                      }`}
-                    >
-                      <ThumbsDown className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => handleSpeak(msg.id, msg.content)}
-                      title="Đọc phát âm"
-                      className={`p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer ${
-                        speakingId === msg.id ? 'text-blue-600 animate-pulse' : ''
-                      }`}
-                    >
-                      {speakingId === msg.id ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-                    </button>
-                    <button
-                      onClick={() => handleRegenerate(index)}
-                      title="Tạo lại câu trả lời"
-                      className="p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <RotateCcw className="w-4 h-4" />
-                    </button>
-                    <button
-                      onClick={() => window.print()}
-                      title="In / Xuất PDF"
-                      className="p-1.5 hover:bg-slate-100 hover:text-slate-700 rounded-lg transition-colors cursor-pointer"
-                    >
-                      <Printer className="w-4 h-4" />
-                    </button>
+                      {/* Assistant Markdown Body */}
+                      <div className="font-chat text-[15px] sm:text-[15.5px] text-[#24272f] dark:text-[#f3f4f6] leading-[1.78] bg-white/98 dark:bg-[#181a22]/98 backdrop-blur-md p-6 sm:p-7 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.25)] space-y-3.5">
+                        {formatMarkdown(msg.content)}
+                      </div>
+
+                      {/* Collapsible Retrieved Law Articles */}
+                      {msg.data?.retrievedArticles && msg.data.retrievedArticles.length > 0 && (
+                        <div className="pt-1">
+                          <button
+                            type="button"
+                            onClick={() =>
+                              setOpenLawsMap((prev) => ({
+                                ...prev,
+                                ...{ [msg.id]: !prev[msg.id] }
+                              }))
+                            }
+                            className="flex items-center justify-between w-full p-3 rounded-2xl bg-white/80 dark:bg-white/5 hover:bg-white dark:hover:bg-white/10 border border-black/[0.07] dark:border-white/[0.08] text-xs font-medium text-[#27251e] dark:text-[#e2e8f0] transition-all shadow-xs hover:border-indigo-500/40 cursor-pointer"
+                          >
+                            <span className="flex items-center gap-2">
+                              <BookMarked className="w-4 h-4 text-indigo-600 dark:text-indigo-400" />
+                              <span>
+                                Toàn văn {msg.data.retrievedArticles.length} Điều luật được trích dẫn (Bấm để xem chi tiết)
+                              </span>
+                            </span>
+                            {openLawsMap[msg.id] ? (
+                              <ChevronUp className="w-4 h-4 text-[#72706b]" />
+                            ) : (
+                              <ChevronDown className="w-4 h-4 text-[#72706b]" />
+                            )}
+                          </button>
+
+                          {openLawsMap[msg.id] && (
+                            <div className="mt-2.5 space-y-2 pl-2 animate-fadeIn">
+                              {msg.data.retrievedArticles.map((art, aIdx) => (
+                                <div key={aIdx} className="p-3.5 rounded-2xl bg-white/60 dark:bg-white/[0.03] border border-black/[0.07] dark:border-white/[0.08] text-xs space-y-1.5 shadow-xs">
+                                  <div className="font-semibold text-[#27251e] dark:text-white flex items-center justify-between">
+                                    <span className="text-indigo-600 dark:text-indigo-400">{art.lawCode} — Điều {art.articleNumber}: {art.title}</span>
+                                    <span className="text-[10px] text-[#92918b] font-mono px-2 py-0.5 rounded-md bg-black/[0.04] dark:bg-white/[0.06]">{art.articleId}</span>
+                                  </div>
+                                  {art.contentRaw && (
+                                    <p className="text-[11px] text-[#72706b] dark:text-[#94a3b8] font-mono whitespace-pre-line bg-[#faf8f5] dark:bg-black/30 p-3 rounded-xl border border-black/[0.05] dark:border-white/[0.05] leading-relaxed">
+                                      {art.contentRaw}
+                                    </p>
+                                  )}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Action Toolbar */}
+                      <div className="flex items-center gap-1 text-[#92918b] pt-1">
+                        <button
+                          onClick={() => handleCopy(msg.id, msg.content)}
+                          title="Sao chép câu trả lời"
+                          className="p-1.5 hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white rounded-lg border border-transparent hover:border-black/10 dark:hover:border-white/10 transition-all cursor-pointer hover:shadow-xs active:scale-95"
+                        >
+                          {copiedId === msg.id ? <Check className="w-4 h-4 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                        </button>
+                        <button
+                          onClick={() =>
+                            setFeedbackMap((prev) => ({
+                              ...prev,
+                              [msg.id]: prev[msg.id] === 'up' ? undefined! : 'up'
+                            }))
+                          }
+                          title="Đánh giá tốt"
+                          className={`p-1.5 rounded-lg border border-transparent transition-all cursor-pointer active:scale-95 ${
+                            feedbackMap[msg.id] === 'up'
+                              ? 'text-emerald-600 bg-emerald-500/10 border-emerald-500/30 shadow-xs'
+                              : 'hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white hover:border-black/10 dark:hover:border-white/10'
+                          }`}
+                        >
+                          <ThumbsUp className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            setFeedbackMap((prev) => ({
+                              ...prev,
+                              [msg.id]: prev[msg.id] === 'down' ? undefined! : 'down'
+                            }))
+                          }
+                          title="Chưa hài lòng"
+                          className={`p-1.5 rounded-lg border border-transparent transition-all cursor-pointer active:scale-95 ${
+                            feedbackMap[msg.id] === 'down'
+                              ? 'text-rose-600 bg-rose-500/10 border-rose-500/30 shadow-xs'
+                              : 'hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white hover:border-black/10 dark:hover:border-white/10'
+                          }`}
+                        >
+                          <ThumbsDown className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => handleSpeak(msg.id, msg.content)}
+                          title="Đọc phát âm"
+                          className={`p-1.5 rounded-lg border border-transparent transition-all cursor-pointer active:scale-95 ${
+                            speakingId === msg.id
+                              ? 'text-indigo-600 dark:text-indigo-400 bg-indigo-600/15 border-indigo-500/30 animate-pulse'
+                              : 'hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white hover:border-black/10 dark:hover:border-white/10'
+                          }`}
+                        >
+                          {speakingId === msg.id ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
+                        </button>
+                        <button
+                          onClick={() => handleRegenerate(index)}
+                          title="Tạo lại câu trả lời"
+                          className="p-1.5 hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white rounded-lg border border-transparent hover:border-black/10 dark:hover:border-white/10 transition-all cursor-pointer active:scale-95"
+                        >
+                          <RotateCcw className="w-4 h-4" />
+                        </button>
+                        <button
+                          onClick={() => window.print()}
+                          title="In / Xuất PDF"
+                          className="p-1.5 hover:bg-white dark:hover:bg-white/10 hover:text-[#27251e] dark:hover:text-white rounded-lg border border-transparent hover:border-black/10 dark:hover:border-white/10 transition-all cursor-pointer active:scale-95"
+                        >
+                          <Printer className="w-4 h-4" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {/* Typing / Thinking Indicator - Modern Magic Pulse */}
+            {isLoading && (
+              <div className="flex gap-3 sm:gap-4 w-full animate-fadeIn">
+                <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20 animate-pulse">
+                  <Scale className="w-4 h-4" />
+                </div>
+                <div className="flex-1 space-y-2 py-1">
+                  <div className="flex items-center gap-2 text-xs text-[#72706b] dark:text-[#94a3b8] font-medium">
+                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                    <span>Chatbot đang phân tích đề bài & đối soát căn cứ pháp luật...</span>
+                  </div>
+                  <div className="flex items-center gap-1.5 py-1">
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce"></span>
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce [animation-delay:0.2s]"></span>
+                    <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce [animation-delay:0.4s]"></span>
                   </div>
                 </div>
               </div>
             )}
-          </div>
-        ))}
 
-        {/* Typing / Thinking Indicator */}
-        {isLoading && (
-          <div className="flex gap-3 sm:gap-4 w-full animate-fadeIn">
-            <div className="w-8 h-8 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center text-blue-600 shrink-0 animate-pulse">
-              <Scale className="w-4 h-4" />
-            </div>
-            <div className="flex-1 space-y-2 py-1">
-              <div className="flex items-center gap-2 text-xs text-slate-500 font-medium">
-                <Sparkles className="w-3.5 h-3.5 text-blue-600 animate-spin" />
-                <span>Chatbot đang phân tích đề bài & đối soát căn cứ pháp luật...</span>
+            {/* Error message */}
+            {errorMessage && (
+              <div className="p-4 rounded-2xl bg-red-500/10 border border-red-500/20 text-red-600 dark:text-red-400 text-xs flex items-center gap-2 shadow-xs backdrop-blur-sm">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{errorMessage}</span>
               </div>
-              <div className="flex items-center gap-1.5 py-1">
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce"></span>
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.2s]"></span>
-                <span className="w-2 h-2 rounded-full bg-slate-400 animate-bounce [animation-delay:0.4s]"></span>
-              </div>
-            </div>
-          </div>
-        )}
+            )}
 
-        {/* Error message */}
-        {errorMessage && (
-          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-            <AlertCircle className="w-4 h-4 shrink-0" />
-            <span>{errorMessage}</span>
-          </div>
-        )}
-
-        <div ref={messagesEndRef} />
+            <div ref={messagesEndRef} />
           </div>
         </div>
 
-        {/* Floating Bottom Pill Input Bar (ChatGPT Style) */}
-        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-[#f8fafc] via-[#f8fafc]/95 to-transparent pt-4 pb-4 px-4 pointer-events-none">
+        {/* Floating Bottom Hero Input Bar - Magic UI / 21st.dev Floating Glass Island */}
+        <div className="absolute bottom-0 left-0 right-0 z-20 bg-gradient-to-t from-[#f8fafc] dark:from-[#0b0f19] via-[#f8fafc]/90 dark:via-[#0b0f19]/90 to-transparent pt-6 pb-4 px-4 pointer-events-none">
           <div className="max-w-3xl sm:max-w-4xl mx-auto space-y-2 pointer-events-auto">
-          {/* Unauthenticated Alert inside input */}
-          {!isAuthenticated && (
-            <div className="p-3 rounded-xl bg-amber-50 border border-amber-200 text-center text-xs text-amber-800 flex items-center justify-center gap-2 shadow-2xs">
-              <Lock className="w-3.5 h-3.5 text-amber-600" />
-              <span>Vui lòng đăng nhập để gửi câu hỏi và nhận bài giải chi tiết.</span>
-              <button
-                onClick={() => onOpenAuth?.('login')}
-                className="underline font-bold text-blue-700 hover:text-blue-800 cursor-pointer ml-1"
-              >
-                Đăng nhập ngay
-              </button>
-            </div>
-          )}
+            {/* Unauthenticated Alert inside input */}
+            {!isAuthenticated && (
+              <div className="p-3 rounded-2xl bg-white/80 dark:bg-[#181922]/90 backdrop-blur-md border border-black/[0.08] dark:border-white/[0.08] text-center text-xs text-[#72706b] dark:text-[#94a3b8] flex items-center justify-center gap-2 shadow-xs">
+                <Lock className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                <span>Vui lòng đăng nhập để gửi câu hỏi và nhận bài giải chi tiết.</span>
+                <button
+                  onClick={() => onOpenAuth?.('login')}
+                  className="font-semibold text-indigo-600 dark:text-indigo-400 hover:underline cursor-pointer ml-1"
+                >
+                  Đăng nhập ngay
+                </button>
+              </div>
+            )}
 
-          {/* ChatGPT Pill-shaped Input Container */}
-          <div className="relative rounded-[28px] border border-slate-300/80 bg-white shadow-md focus-within:border-blue-500 focus-within:ring-2 focus-within:ring-blue-500/20 transition-all p-2 pl-3.5 pr-2 flex items-end gap-2">
-            {/* Quick Prompts Menu (+) */}
-            <button
-              type="button"
-              onClick={() => setIsHistoryOpen(true)}
-              title="Mở Lịch sử / Bộ đề thi"
-              className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors shrink-0 mb-0.5 cursor-pointer"
-            >
-              <Plus className="w-5 h-5" />
-            </button>
-
-            {/* Archetype / Category Dropdown Trigger (Dropdown Menu) */}
-            <div className="relative shrink-0 mb-0.5" ref={dropdownRef}>
+            {/* 21st.dev Style Floating Island Input Container */}
+            <div className="relative rounded-2xl sm:rounded-3xl border border-black/[0.1] dark:border-white/[0.12] bg-white/95 dark:bg-[#181922]/95 backdrop-blur-2xl p-2 pl-3 sm:pl-3.5 pr-2 flex items-end gap-2 shadow-[0_12px_40px_rgba(0,0,0,0.08)] dark:shadow-[0_16px_48px_rgba(0,0,0,0.4)] focus-within:border-indigo-500 focus-within:ring-4 focus-within:ring-indigo-500/15 focus-within:shadow-[0_16px_48px_rgba(99,102,241,0.15)] transition-all duration-300">
+              {/* Quick Prompts Menu (+) */}
               <button
                 type="button"
-                onClick={() => {
-                  if (!isDropdownOpen && selectedCategoryId) {
-                    setActiveCategoryId(selectedCategoryId);
-                  }
-                  setIsDropdownOpen((prev) => !prev);
-                }}
-                className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all cursor-pointer select-none border ${
-                  isDropdownOpen
-                    ? 'bg-slate-900 text-white border-slate-900 shadow-sm'
-                    : selectedCategoryId
-                    ? 'bg-blue-600 text-white border-blue-600 shadow-xs hover:bg-blue-700'
-                    : 'bg-slate-100 text-slate-700 border-slate-200 hover:bg-slate-200/90'
-                }`}
-                title="Chọn dạng câu hỏi & chức năng (Nhận định, So sánh, Tình huống, Định nghĩa, Phân tích)"
+                onClick={() => setIsHistoryOpen(true)}
+                title="Mở Lịch sử / Bộ đề thi"
+                className="p-2 rounded-xl text-[#92918b] hover:text-[#27251e] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5 transition-colors shrink-0 mb-0.5 cursor-pointer active:scale-95"
               >
-                {selectedCategory ? (
-                  renderCategoryIcon(selectedCategory.iconName, 'w-3.5 h-3.5')
-                ) : (
-                  <Scale className="w-3.5 h-3.5 text-blue-600" />
-                )}
-                <span className="max-w-[85px] sm:max-w-[130px] truncate">
-                  {selectedCategory ? selectedCategory.shortName : 'Dạng bài'}
-                </span>
-                {isDropdownOpen ? (
-                  <ChevronUp className="w-3.5 h-3.5 opacity-80" />
-                ) : (
-                  <ChevronDown className="w-3.5 h-3.5 opacity-60" />
-                )}
+                <Plus className="w-5 h-5" />
               </button>
 
-              {/* Sleek Dark Dropdown Popover Menu (Matching screenshot 2) */}
-              {isDropdownOpen && (
-                <div
-                  className="absolute bottom-full mb-3 -left-12 sm:left-0 w-[calc(100vw-36px)] sm:w-[620px] max-w-[94vw] sm:max-w-[620px] bg-[#1a1b1e] text-slate-200 border border-slate-700/80 rounded-2xl shadow-2xl z-50 overflow-hidden animate-fadeIn backdrop-blur-md"
-                  style={{ boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.7)' }}
+              {/* Archetype / Category Pill Chip Trigger */}
+              <div className="relative shrink-0 mb-0.5" ref={dropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (!isDropdownOpen && selectedCategoryId) {
+                      setActiveCategoryId(selectedCategoryId);
+                    }
+                    setIsDropdownOpen((prev) => !prev);
+                  }}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer select-none border active:scale-95 ${
+                    isDropdownOpen
+                      ? 'bg-[#27251e] text-[#faf8f5] border-[#27251e] shadow-md dark:bg-white dark:text-[#121319]'
+                      : selectedCategoryId
+                      ? 'bg-slate-900 dark:bg-indigo-600 text-white border-transparent shadow-sm shadow-indigo-500/25'
+                      : 'bg-black/[0.04] dark:bg-white/[0.06] text-[#27251e] dark:text-white border-transparent hover:bg-black/[0.08] dark:hover:bg-white/10'
+                  }`}
+                  title={selectedCategory ? `Đang chọn: ${selectedCategory.name} (Bắt buộc trả lời theo dạng này)` : 'Phần chung: Tự động trả lời mọi dạng bài'}
                 >
-                  {/* Top Bar / Header */}
-                  <div className="px-3.5 py-2.5 border-b border-slate-800 bg-[#141517] flex items-center justify-between text-xs">
-                    <div className="flex items-center gap-2">
-                      <span className="text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
-                        Dạng bài thi & Chức năng
-                      </span>
-                      {selectedCategoryId && (
-                        <span className="text-[10px] bg-blue-500/20 text-blue-400 border border-blue-500/30 px-2 py-0.5 rounded-full font-medium">
-                          Đang chọn: {selectedCategory?.shortName}
-                        </span>
-                      )}
-                    </div>
-                    <div className="flex items-center gap-2">
-                      {selectedCategoryId && (
-                        <button
-                          type="button"
-                          onClick={() => setSelectedCategoryId(null)}
-                          className="text-[11px] text-slate-400 hover:text-white transition-colors cursor-pointer underline-offset-2 hover:underline"
-                        >
-                          Bỏ chọn
-                        </button>
-                      )}
-                      <button
-                        type="button"
-                        onClick={() => setIsDropdownOpen(false)}
-                        className="p-1 rounded-md text-slate-400 hover:text-white hover:bg-slate-800 transition-colors cursor-pointer"
-                        title="Đóng menu"
-                      >
-                        <X className="w-3.5 h-3.5" />
-                      </button>
-                    </div>
-                  </div>
+                  {selectedCategory ? (
+                    renderCategoryIcon(selectedCategory.iconName, 'w-3.5 h-3.5')
+                  ) : (
+                    <Scale className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400" />
+                  )}
+                  <span className="max-w-[85px] sm:max-w-[130px] truncate">
+                    {selectedCategory ? selectedCategory.shortName : 'Phần chung'}
+                  </span>
+                  {isDropdownOpen ? (
+                    <ChevronUp className="w-3.5 h-3.5 opacity-80" />
+                  ) : (
+                    <ChevronDown className="w-3.5 h-3.5 opacity-60" />
+                  )}
+                </button>
 
-                  {/* Body: Left Categories + Right Question Templates */}
-                  <div className="grid grid-cols-1 sm:grid-cols-12 min-h-[310px]">
-                    {/* Left Column: 5 Main Categories (Exact look of Screenshot 2) */}
-                    <div className="sm:col-span-5 p-2 space-y-1 bg-[#161719] border-b sm:border-b-0 sm:border-r border-slate-800">
-                      <div className="px-2 py-1 text-[10px] font-bold text-slate-500 uppercase tracking-wider">
-                        Danh mục câu hỏi (5 dạng)
-                      </div>
-                      {QUESTION_CATEGORIES.map((cat) => {
-                        const isActive = activeCategory.id === cat.id;
-                        const isSelected = selectedCategoryId === cat.id;
-                        return (
-                          <button
-                            key={cat.id}
-                            type="button"
-                            onClick={() => {
-                              setActiveCategoryId(cat.id);
-                            }}
-                            className={`w-full text-left px-2.5 py-2.5 rounded-xl flex items-center justify-between transition-all cursor-pointer ${
-                              isActive
-                                ? 'bg-blue-600 text-white font-semibold shadow-xs ring-1 ring-blue-400'
-                                : 'text-slate-300 hover:bg-slate-800/80 hover:text-white'
-                            } ${isSelected && !isActive ? 'border-l-2 border-blue-500' : ''}`}
-                          >
-                            <div className="flex items-center gap-2.5 min-w-0">
-                              <div
-                                className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
-                                  isActive
-                                    ? 'bg-white/20 text-white'
-                                    : isSelected
-                                    ? 'bg-blue-950 text-blue-400 border border-blue-700/60'
-                                    : 'bg-slate-800 text-slate-400'
-                                }`}
-                              >
-                                {renderCategoryIcon(cat.iconName, 'w-3.5 h-3.5')}
-                              </div>
-                              <div className="min-w-0">
-                                <div className="text-xs truncate">{cat.name}</div>
-                              </div>
-                            </div>
-                            <ChevronRight
-                              className={`w-3.5 h-3.5 shrink-0 transition-transform ${
-                                isActive ? 'text-white translate-x-0.5' : 'text-slate-600'
-                              }`}
-                            />
-                          </button>
-                        );
-                      })}
-                    </div>
+                {/* Dropdown Menu - Clean Synchronized White Theme with Magic UI Accents */}
+                {isDropdownOpen && (
+                  <div
+                    className="absolute bottom-full mb-3.5 left-0 sm:left-0 w-[calc(100vw-32px)] sm:w-[680px] max-w-[95vw] sm:max-w-[680px] z-50 animate-fadeIn"
+                    style={{ filter: 'drop-shadow(0 20px 45px rgba(0, 0, 0, 0.12))' }}
+                  >
+                    {/* Glowing Magic UI Rotating Border Beam */}
+                    <div className="relative rounded-[28px] p-[1.5px] magic-border-beam overflow-hidden shadow-2xl">
+                      {/* Inner Glassmorphism Modal Body - Clean Synchronized White Theme */}
+                      <div className="relative bg-white/98 dark:bg-[#121319]/96 backdrop-blur-2xl text-[#1e2029] dark:text-[#faf8f5] rounded-[27px] overflow-hidden flex flex-col max-h-[min(510px,calc(100vh-140px))] border border-black/[0.07] dark:border-white/10 shadow-lg">
+                        {/* Ambient Glow Orbs inside Modal */}
+                        <div className="absolute -top-16 -left-16 w-48 h-48 rounded-full bg-indigo-600/10 dark:bg-indigo-600/25 blur-3xl pointer-events-none animate-float-orb"></div>
+                        <div className="absolute -bottom-16 -right-16 w-48 h-48 rounded-full bg-blue-500/10 dark:bg-blue-500/20 blur-3xl pointer-events-none animate-float-orb-slow"></div>
 
-                    {/* Right Column: Templates & Prompts */}
-                    <div className="sm:col-span-7 p-3 bg-[#1a1b1e] flex flex-col justify-between space-y-2.5">
-                      <div className="space-y-2.5">
-                        {/* Header of Active Category */}
-                        <div className="flex items-center justify-between pb-2 border-b border-slate-800/90">
-                          <div>
-                            <div className="text-xs font-bold text-white flex items-center gap-1.5">
-                              {renderCategoryIcon(activeCategory.iconName, 'w-3.5 h-3.5 text-blue-400')}
-                              <span>{activeCategory.name}</span>
+                        {/* Header: Title, Live Status Badge, Selected Pill & Close */}
+                        <div className="relative z-10 px-4 py-3 border-b border-black/[0.06] dark:border-white/10 bg-[#faf8f5]/90 dark:bg-white/[0.03] flex items-center justify-between text-xs shrink-0">
+                          <div className="flex items-center gap-2.5">
+                            <div className="w-6 h-6 rounded-lg bg-slate-900 dark:bg-indigo-600 text-white flex items-center justify-center shadow-md shadow-indigo-500/20 animate-pulse">
+                              <Scale className="w-3.5 h-3.5" />
                             </div>
-                            <div className="text-[11px] text-slate-400 mt-0.5 line-clamp-1">
-                              {activeCategory.description}
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold tracking-wide text-[#1e2029] dark:text-white">
+                                Barem & Dạng Đề Thi
+                              </span>
+                              <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-500/25 flex items-center gap-1.5 shadow-2xs">
+                                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-ping"></span>
+                                Bộ GD&ĐT
+                              </span>
                             </div>
                           </div>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setSelectedCategoryId(activeCategory.id);
-                              setIsDropdownOpen(false);
-                            }}
-                            className="px-2.5 py-1 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-[11px] font-semibold transition-all shrink-0 cursor-pointer shadow-xs"
-                          >
-                            Chọn dạng này
-                          </button>
+
+                          <div className="flex items-center gap-2">
+                            {selectedCategoryId && (
+                              <div className="flex items-center gap-1.5 bg-indigo-600/10 dark:bg-indigo-600/15 text-indigo-700 dark:text-indigo-300 border border-indigo-500/30 px-2.5 py-0.5 rounded-full text-[11px] font-medium shadow-xs">
+                                <span>Đang chọn: <strong>{selectedCategory?.shortName}</strong></span>
+                                <button
+                                  type="button"
+                                  onClick={() => setSelectedCategoryId(null)}
+                                  className="text-[11px] text-indigo-700 dark:text-indigo-300 hover:text-indigo-900 dark:hover:text-white transition-colors cursor-pointer ml-0.5"
+                                  title="Bỏ chọn dạng này"
+                                >
+                                  ✕
+                                </button>
+                              </div>
+                            )}
+                            <button
+                              type="button"
+                              onClick={() => setIsDropdownOpen(false)}
+                              className="p-1.5 rounded-xl text-[#72706b] hover:text-[#1e2029] dark:text-white/60 dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/10 transition-all cursor-pointer hover:rotate-90 duration-300"
+                              title="Đóng bảng chọn"
+                            >
+                              <X className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
 
-                        {/* Quick Boilerplate Template Card */}
-                        <button
-                          type="button"
-                          onClick={() => handleSelectQuestionOrTemplate(activeCategory.template, activeCategory.id)}
-                          className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-blue-950/40 to-slate-900 border border-blue-500/30 hover:border-blue-400 hover:from-blue-900/40 transition-all cursor-pointer group"
-                        >
-                          <div className="flex items-center justify-between text-xs font-semibold text-blue-300 group-hover:text-blue-200">
-                            <span className="flex items-center gap-1.5">
-                              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
-                              Dùng khung sườn Barem (Template)
-                            </span>
-                            <span className="text-[10px] text-blue-400/80 group-hover:text-blue-300 bg-blue-900/40 px-1.5 py-0.5 rounded border border-blue-700/40">
-                              Điền mẫu ↵
-                            </span>
-                          </div>
-                          <p className="text-[11px] text-slate-400 mt-1 line-clamp-2 font-mono italic leading-relaxed">
-                            {activeCategory.template}
-                          </p>
-                        </button>
+                        {/* Content Grid: 2 Columns */}
+                        <div className="relative z-10 grid grid-cols-1 sm:grid-cols-12 flex-1 min-h-0 overflow-hidden">
+                          {/* Left Column: 5 Main Categories (Clean Synchronized Light Tabs) */}
+                          <div className="sm:col-span-5 p-2.5 space-y-1.5 bg-[#f7f5f1] dark:bg-black/30 border-b sm:border-b-0 sm:border-r border-black/[0.06] dark:border-white/10 overflow-y-auto">
+                            <div className="px-2 py-1 text-[10px] font-semibold text-[#72706b] dark:text-[#94a3b8] uppercase tracking-wider flex items-center justify-between">
+                              <span>Danh mục dạng bài</span>
+                              <span className="text-[10px] font-mono text-[#9ca3af]">5 dạng + Phần chung</span>
+                            </div>
 
-                        {/* Exam Sample Questions */}
-                        <div>
-                          <div className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-1.5 flex items-center justify-between">
-                            <span>Đề thi & Câu hỏi mẫu tiêu biểu ({activeCategory.questions.length})</span>
-                            <span className="text-[10px] text-slate-600 font-normal">Nhấn để điền</span>
-                          </div>
-                          <div className="max-h-[170px] overflow-y-auto space-y-1.5 pr-1">
-                            {activeCategory.questions.map((q) => (
-                              <button
-                                key={q.id}
-                                type="button"
-                                onClick={() => handleSelectQuestionOrTemplate(q.prompt, activeCategory.id)}
-                                className="w-full text-left p-2 rounded-lg bg-slate-800/40 hover:bg-slate-800 border border-slate-700/40 hover:border-blue-500/40 transition-all cursor-pointer group"
-                              >
-                                <div className="flex items-center justify-between text-xs text-slate-200 group-hover:text-white">
-                                  <span className="font-medium line-clamp-1 flex-1 pr-2">{q.title}</span>
-                                  {q.tag && (
-                                    <span className="text-[10px] px-1.5 py-0.2 rounded bg-slate-700/80 text-slate-300 font-mono shrink-0">
-                                      {q.tag}
-                                    </span>
-                                  )}
+                            {/* Nút 0: Phần chung (Tự động nhận diện mọi dạng đề) */}
+                            <button
+                              type="button"
+                              onClick={() => {
+                                setSelectedCategoryId(null);
+                                setIsDropdownOpen(false);
+                              }}
+                              className={`relative overflow-hidden w-full text-left px-3 py-2.5 rounded-2xl flex items-center justify-between transition-all duration-300 cursor-pointer group ${
+                                selectedCategoryId === null
+                                  ? 'bg-gradient-to-r from-emerald-600 via-emerald-500 to-teal-500 text-white font-semibold shadow-md shadow-emerald-500/30 ring-1 ring-emerald-300/50'
+                                  : 'text-[#4b5563] dark:text-[#cbd5e1] hover:bg-white dark:hover:bg-white/[0.07] hover:text-[#111827] dark:hover:text-white hover:shadow-2xs hover:translate-x-1'
+                              }`}
+                            >
+                              <div className="flex items-center gap-2.5 min-w-0">
+                                <div
+                                  className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-200 ${
+                                    selectedCategoryId === null
+                                      ? 'bg-white/25 text-white shadow-xs'
+                                      : 'bg-white dark:bg-white/5 text-emerald-600 border border-black/[0.06] dark:border-white/10 shadow-2xs'
+                                  }`}
+                                >
+                                  <Scale className="w-3.5 h-3.5" />
                                 </div>
-                                <p className="text-[11px] text-slate-400 mt-0.5 line-clamp-2 leading-relaxed">
-                                  {q.prompt}
+                                <div className="min-w-0">
+                                  <div className="text-xs font-semibold truncate flex items-center gap-1.5">
+                                    <span>0. Phần chung (Tự do)</span>
+                                    {selectedCategoryId === null && (
+                                      <span className="w-1.5 h-1.5 rounded-full bg-white shrink-0 animate-ping"></span>
+                                    )}
+                                  </div>
+                                  <div className={`text-[10px] truncate ${selectedCategoryId === null ? 'text-white/90' : 'text-[#72706b] dark:text-[#94a3b8]'}`}>
+                                    Trả lời linh hoạt mọi dạng đề
+                                  </div>
+                                </div>
+                              </div>
+                              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                                selectedCategoryId === null ? 'bg-white/20 text-white' : 'bg-black/5 dark:bg-white/10 text-[#6b7280] dark:text-[#94a3b8]'
+                              }`}>
+                                Đa năng
+                              </span>
+                            </button>
+                            {QUESTION_CATEGORIES.map((cat, idx) => {
+                              const isActive = activeCategory.id === cat.id;
+                              const isSelected = selectedCategoryId === cat.id;
+                              return (
+                                <button
+                                  key={cat.id}
+                                  type="button"
+                                  onClick={() => {
+                                    setActiveCategoryId(cat.id);
+                                  }}
+                                  className={`relative overflow-hidden w-full text-left px-3 py-2.5 rounded-2xl flex items-center justify-between transition-all duration-300 cursor-pointer group ${
+                                    isActive
+                                      ? 'bg-slate-900 dark:bg-indigo-600 text-white font-semibold shadow-md shadow-indigo-500/25'
+                                      : 'text-[#4b5563] dark:text-[#cbd5e1] hover:bg-white dark:hover:bg-white/[0.07] hover:text-[#111827] dark:hover:text-white hover:shadow-2xs hover:translate-x-1'
+                                  } ${isSelected && !isActive ? 'border-l-3 border-indigo-600' : ''}`}
+                                >
+                                  {isActive && (
+                                    <span className="absolute inset-0 -translate-x-full animate-shimmer-sweep pointer-events-none"></span>
+                                  )}
+                                  <div className="flex items-center gap-2.5 min-w-0">
+                                    <div
+                                      className={`w-7 h-7 rounded-xl flex items-center justify-center shrink-0 transition-transform group-hover:scale-110 duration-200 ${
+                                        isActive
+                                          ? 'bg-white/25 text-white shadow-xs'
+                                          : isSelected
+                                          ? 'bg-indigo-600/15 text-[#d97706] border border-indigo-500/40'
+                                          : 'bg-white dark:bg-white/5 text-[#6b7280] dark:text-[#94a3b8] border border-black/[0.06] dark:border-white/10 shadow-2xs'
+                                      }`}
+                                    >
+                                      {renderCategoryIcon(cat.iconName, 'w-3.5 h-3.5')}
+                                    </div>
+                                    <div className="min-w-0">
+                                      <div className="text-xs font-semibold truncate flex items-center gap-1.5">
+                                        <span>{idx + 1}. {cat.shortName}</span>
+                                        {isSelected && (
+                                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0 animate-ping"></span>
+                                        )}
+                                      </div>
+                                      <div className={`text-[10px] truncate ${isActive ? 'text-white/90 font-normal' : 'text-[#72706b] dark:text-[#94a3b8]'}`}>
+                                        {cat.badge} • {cat.questions.length} câu
+                                      </div>
+                                    </div>
+                                  </div>
+                                  <ChevronRight
+                                    className={`w-3.5 h-3.5 shrink-0 transition-transform duration-200 ${
+                                      isActive ? 'text-white translate-x-0.5' : 'text-[#9ca3af] group-hover:text-[#111827] dark:group-hover:text-white group-hover:translate-x-1'
+                                    }`}
+                                  />
+                                </button>
+                              );
+                            })}
+                          </div>
+
+                          {/* Right Column: Active Category Header + Template Card + Questions (Clean White) */}
+                          <div className="sm:col-span-7 p-3.5 bg-white dark:bg-[#121319]/80 flex flex-col justify-between overflow-y-auto space-y-3">
+                            <div className="space-y-3">
+                              {/* Header of Active Category */}
+                              <div className="flex items-center justify-between pb-2.5 border-b border-black/[0.06] dark:border-white/10">
+                                <div className="min-w-0 pr-2">
+                                  <div className="text-xs font-bold text-[#111827] dark:text-white flex items-center gap-1.5">
+                                    <span className="text-indigo-600 dark:text-indigo-400">{renderCategoryIcon(activeCategory.iconName, 'w-3.5 h-3.5')}</span>
+                                    <span className="truncate">{activeCategory.name}</span>
+                                  </div>
+                                  <div className="text-[11px] text-[#6b7280] dark:text-[#94a3b8] mt-0.5 line-clamp-1 leading-relaxed">
+                                    {activeCategory.description}
+                                  </div>
+                                </div>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setSelectedCategoryId(activeCategory.id);
+                                    setIsDropdownOpen(false);
+                                  }}
+                                  className="relative group overflow-hidden px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white text-xs font-semibold shadow-sm transition-all cursor-pointer active:scale-95 flex items-center gap-1.5 shrink-0"
+                                >
+                                  <span>Chọn dạng này</span>
+                                  <Check className="w-3.5 h-3.5 transition-transform group-hover:scale-110" />
+                                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/35 to-transparent transition-transform duration-700"></span>
+                                </button>
+                              </div>
+
+                              {/* Quick Boilerplate Template Card (Clean Synchronized Style) */}
+                              <button
+                                type="button"
+                                onClick={() => handleSelectQuestionOrTemplate(activeCategory.template, activeCategory.id)}
+                                className="relative overflow-hidden w-full text-left p-3.5 rounded-2xl bg-indigo-50/50 dark:bg-indigo-950/20 border border-indigo-200 dark:border-indigo-800/60 hover:border-indigo-500 hover:shadow-md hover:shadow-indigo-500/10 transition-all duration-300 cursor-pointer group card-spotlight"
+                              >
+                                <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/40 to-transparent transition-transform duration-1000 pointer-events-none"></span>
+                                <div className="flex items-center justify-between text-xs font-bold text-[#1e2029] dark:text-[#faf8f5]">
+                                  <span className="flex items-center gap-1.5">
+                                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 group-hover:rotate-45 transition-transform duration-300" />
+                                    <span>Khung sườn chuẩn Barem GD&ĐT</span>
+                                  </span>
+                                  <span className="text-[10px] text-indigo-700 dark:text-indigo-300 bg-indigo-600/15 dark:bg-indigo-600/20 px-2 py-0.5 rounded-full border border-indigo-500/30 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-200">
+                                    Điền mẫu ↵
+                                  </span>
+                                </div>
+                                <p className="text-[11px] text-[#4b5563] dark:text-[#cbd5e1] mt-1.5 line-clamp-2 font-mono italic leading-relaxed group-hover:text-[#111827] dark:group-hover:text-white transition-colors">
+                                  {activeCategory.template}
                                 </p>
                               </button>
-                            ))}
+
+                              {/* Exam Sample Questions (Clean White Cards) */}
+                              <div>
+                                <div className="text-[10px] font-semibold text-[#72706b] dark:text-[#94a3b8] uppercase tracking-wider mb-2 flex items-center justify-between">
+                                  <span>Đề thi & Câu hỏi mẫu ({activeCategory.questions.length})</span>
+                                  <span className="text-[10px] font-normal text-[#9ca3af]">Nhấp để điền nhanh</span>
+                                </div>
+                                <div className="max-h-[175px] overflow-y-auto space-y-1.5 pr-1">
+                                  {activeCategory.questions.map((q) => (
+                                    <button
+                                      key={q.id}
+                                      type="button"
+                                      onClick={() => handleSelectQuestionOrTemplate(q.prompt, activeCategory.id)}
+                                      className="relative w-full text-left p-2.5 rounded-xl bg-[#faf8f5] hover:bg-white dark:bg-white/[0.03] dark:hover:bg-white/[0.08] border border-black/[0.06] hover:border-indigo-500/50 dark:border-white/5 dark:hover:border-indigo-500/40 hover:-translate-y-0.5 hover:shadow-md transition-all duration-200 cursor-pointer group card-spotlight"
+                                    >
+                                      <div className="flex items-center justify-between text-xs text-[#111827] dark:text-[#faf8f5]">
+                                        <span className="font-semibold line-clamp-1 flex-1 pr-2 group-hover:text-indigo-600 dark:group-hover:text-indigo-400 transition-colors">
+                                          {q.title}
+                                        </span>
+                                        {q.tag && (
+                                          <span className="text-[10px] px-2 py-0.5 rounded-md bg-white dark:bg-white/5 text-[#6b7280] dark:text-[#94a3b8] group-hover:text-[#d97706] dark:group-hover:text-white group-hover:bg-indigo-600/10 font-mono shrink-0 border border-black/[0.08] dark:border-white/10 transition-colors">
+                                            {q.tag}
+                                          </span>
+                                        )}
+                                      </div>
+                                      <p className="text-[11px] text-[#6b7280] dark:text-[#94a3b8] group-hover:text-[#374151] dark:group-hover:text-[#cbd5e1] mt-0.5 line-clamp-2 leading-relaxed transition-colors">
+                                        {q.prompt}
+                                      </p>
+                                    </button>
+                                  ))}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Footer Tip */}
+                            <div className="pt-2.5 border-t border-black/[0.06] dark:border-white/10 text-[10px] text-[#72706b] dark:text-[#94a3b8] flex items-center justify-between select-none">
+                              <span className="flex items-center gap-1.5">
+                                <span>💡 Bấm vào câu hỏi để tự động điền vào ô chat</span>
+                              </span>
+                              <span className="font-mono text-indigo-700 dark:text-indigo-300 bg-indigo-600/10 px-1.5 py-0.5 rounded border border-indigo-500/25 font-semibold">
+                                Enter để gửi
+                              </span>
+                            </div>
                           </div>
                         </div>
                       </div>
-
-                      {/* Footer Tip */}
-                      <div className="pt-2 border-t border-slate-800/80 text-[10px] text-slate-500 flex items-center justify-between select-none">
-                        <span>💡 Bấm vào câu hỏi để điền vào ô chat</span>
-                        <span className="font-mono text-slate-600">Enter để gửi</span>
-                      </div>
                     </div>
                   </div>
-                </div>
-              )}
+                )}
+              </div>
+
+              {/* Auto-growing Textarea */}
+              <textarea
+                ref={textareaRef}
+                value={query}
+                onChange={handleTextareaChange}
+                onKeyDown={handleKeyDown}
+                disabled={!isAuthenticated || remainingQuestions <= 0}
+                rows={1}
+                placeholder={
+                  !isAuthenticated
+                    ? 'Đăng nhập tài khoản để đặt câu hỏi...'
+                    : 'Hỏi Chatbot Pháp Luật... (Nhấn Enter để gửi, Shift + Enter xuống dòng)'
+                }
+                className="flex-1 max-h-[160px] min-h-[36px] bg-transparent border-0 outline-none focus:ring-0 text-[15px] text-[#27251e] dark:text-[#f8fafc] placeholder:text-[#92918b] dark:placeholder:text-[#64748b] py-1.5 resize-none leading-relaxed font-normal"
+              />
+
+              {/* Right Buttons inside Island */}
+              <div className="flex items-center gap-1.5 shrink-0 mb-0.5">
+                {/* Voice Input with Siri-style Animated Wave Equalizer */}
+                <button
+                  type="button"
+                  onClick={toggleSpeechRecognition}
+                  title={isListening ? 'Đang lắng nghe giọng nói...' : 'Nhập bằng giọng nói'}
+                  className={`p-2 rounded-xl transition-all cursor-pointer active:scale-95 flex items-center justify-center ${
+                    isListening
+                      ? 'text-rose-600 bg-rose-500/15 ring-2 ring-rose-500/30'
+                      : 'text-[#92918b] hover:text-[#27251e] dark:hover:text-white hover:bg-black/5 dark:hover:bg-white/5'
+                  }`}
+                >
+                  {isListening ? (
+                    <div className="flex items-center gap-0.5 h-4 px-0.5">
+                      <span className="w-0.5 bg-rose-500 rounded-full voice-wave-1"></span>
+                      <span className="w-0.5 bg-rose-500 rounded-full voice-wave-2"></span>
+                      <span className="w-0.5 bg-rose-500 rounded-full voice-wave-3"></span>
+                      <span className="w-0.5 bg-rose-500 rounded-full voice-wave-4"></span>
+                    </div>
+                  ) : (
+                    <Mic className="w-4 h-4 transition-transform hover:scale-110" />
+                  )}
+                </button>
+
+                {/* 21st.dev Style Gradient Action Button with Radiant Glow */}
+                <button
+                  type="button"
+                  onClick={() => handleSend()}
+                  disabled={!query.trim() || isLoading || !isAuthenticated}
+                  className="relative overflow-hidden w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm cursor-pointer group"
+                >
+                  <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5 group-hover:scale-110" />
+                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 pointer-events-none"></span>
+                </button>
+              </div>
             </div>
 
-            {/* Auto-growing Textarea */}
-            <textarea
-              ref={textareaRef}
-              value={query}
-              onChange={handleTextareaChange}
-              onKeyDown={handleKeyDown}
-              disabled={!isAuthenticated || remainingQuestions <= 0}
-              rows={1}
-              placeholder={
-                !isAuthenticated
-                  ? 'Đăng nhập tài khoản để đặt câu hỏi...'
-                  : 'Hỏi Chatbot Pháp Luật... (Nhấn Enter để gửi, Shift + Enter xuống dòng)'
-              }
-              className="flex-1 max-h-[160px] min-h-[36px] bg-transparent border-0 outline-none focus:ring-0 text-[15px] text-slate-900 placeholder:text-slate-400 py-1.5 resize-none leading-relaxed"
-            />
-
-            {/* Right Buttons inside Pill */}
-            <div className="flex items-center gap-1 shrink-0 mb-0.5">
-              {/* Voice Input */}
-              <button
-                type="button"
-                onClick={toggleSpeechRecognition}
-                title={isListening ? 'Đang lắng nghe giọng nói...' : 'Nhập bằng giọng nói'}
-                className={`p-2 rounded-full transition-colors cursor-pointer ${
-                  isListening
-                    ? 'text-rose-600 bg-rose-50 animate-pulse'
-                    : 'text-slate-400 hover:text-slate-700 hover:bg-slate-100'
-                }`}
-              >
-                {isListening ? <MicOff className="w-4 h-4" /> : <Mic className="w-4 h-4" />}
-              </button>
-
-              {/* Send Button (Dark Circle Icon) */}
-              <button
-                type="button"
-                onClick={() => handleSend()}
-                disabled={!query.trim() || isLoading || !isAuthenticated}
-                className="w-9 h-9 rounded-full bg-slate-900 hover:bg-slate-800 text-white flex items-center justify-center transition-all disabled:opacity-20 disabled:cursor-not-allowed shadow-xs cursor-pointer"
-              >
-                <ArrowUp className="w-5 h-5" />
-              </button>
+            {/* Disclaimer Footer */}
+            <div className="text-center text-[11px] text-[#92918b] dark:text-[#64748b] tracking-wide select-none">
+              Chatbot có thể mắc lỗi. Hãy kiểm tra các quy định điều luật quan trọng trong giáo trình Bộ GD&ĐT.
             </div>
-          </div>
-
-          {/* ChatGPT Disclaimer Footer */}
-          <div className="text-center text-[11px] text-slate-400 tracking-wide select-none">
-            Chatbot có thể mắc lỗi. Hãy kiểm tra các quy định điều luật quan trọng trong giáo trình Bộ GD&ĐT.
           </div>
         </div>
-      </div>
     </div>
 
       {/* History Drawer */}

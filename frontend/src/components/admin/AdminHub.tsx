@@ -11,6 +11,7 @@ import { AdminDashboardOverview } from './AdminDashboardOverview';
 import { UserManagementView } from './UserManagementView';
 import { KnowledgeCrawlManagementView } from './KnowledgeCrawlManagementView';
 import { SystemSettingsServicesView } from './SystemSettingsServicesView';
+import { LawKnowledgeBaseView } from './LawKnowledgeBaseView';
 
 export const AdminHub: React.FC = () => {
   const { role, isAuthenticated } = useAuth();
@@ -63,28 +64,50 @@ export const AdminHub: React.FC = () => {
   };
 
   useEffect(() => {
+    api.getLaws().then((res) => {
+      if (res.success && res.articles) setLaws(res.articles);
+    });
+  }, []);
+
+  useEffect(() => {
     loadData();
   }, [activeTab, lawCodeFilter]);
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-8 space-y-6">
-      {/* Admin Banner */}
-      <div className="rounded-2xl p-6 bg-gradient-to-r from-emerald-950/60 via-slate-900 to-teal-950/60 border border-emerald-500/20 shadow-xl">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-          <div className="space-y-1">
-            <div className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
-              <Shield className="w-3.5 h-3.5" />
-              <span>Bảng Điều khiển Quản trị Hệ thống (Admin Hub)</span>
-            </div>
-            <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight">
-              Quản trị Người dùng, Hạn mức Quota & Giám sát Hệ thống
-            </h1>
-          </div>
+      {/* Admin Banner with Magic UI Border Beam & Ambient Glow */}
+      <div className="relative rounded-3xl p-[1.5px] magic-border-beam overflow-hidden shadow-2xl">
+        <div className="relative rounded-[23px] p-6 bg-gradient-to-r from-emerald-950/80 via-slate-900/90 to-teal-950/80 border border-emerald-500/20 backdrop-blur-xl overflow-hidden">
+          {/* Ambient Glow Orbs */}
+          <div className="absolute -top-12 -left-12 w-48 h-48 rounded-full bg-emerald-500/15 blur-3xl pointer-events-none animate-float-orb"></div>
+          <div className="absolute -bottom-12 -right-12 w-48 h-48 rounded-full bg-teal-500/15 blur-3xl pointer-events-none animate-float-orb-slow"></div>
 
-          <Button variant="outline" size="sm" onClick={loadData} isLoading={isLoading} className="gap-2 text-xs">
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Làm mới dữ liệu</span>
-          </Button>
+          <div className="relative z-10 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1.5">
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold bg-emerald-500/15 text-emerald-400 border border-emerald-500/30 shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+                <Shield className="w-3.5 h-3.5" />
+                <span>Bảng Điều khiển Quản trị Hệ thống (Admin Hub)</span>
+              </div>
+              <h1 className="text-xl sm:text-2xl font-bold text-white tracking-tight font-display">
+                Quản trị Người dùng, Hạn mức Quota & Giám sát Hệ thống
+              </h1>
+              <p className="text-xs text-slate-400">
+                Theo dõi số liệu thực tế thời gian thực từ CSDL, quản lý thành viên và điều phối tài nguyên AI.
+              </p>
+            </div>
+
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={loadData}
+              isLoading={isLoading}
+              className="gap-2 text-xs border-emerald-500/30 hover:border-emerald-400 hover:bg-emerald-500/10 text-emerald-300 transition-all cursor-pointer shadow-sm active:scale-95"
+            >
+              <RefreshCw className="w-3.5 h-3.5" />
+              <span>Làm mới dữ liệu</span>
+            </Button>
+          </div>
         </div>
       </div>
 
@@ -95,10 +118,10 @@ export const AdminHub: React.FC = () => {
       )}
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-800 text-sm overflow-x-auto">
+      <div className="flex border-b border-slate-800 text-sm overflow-x-auto gap-1">
         <button
           onClick={() => setActiveTab('dashboard')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium transition-colors shrink-0 ${
+          className={`flex items-center gap-2 pb-3 px-4 font-semibold transition-all shrink-0 cursor-pointer ${
             activeTab === 'dashboard' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
@@ -107,7 +130,7 @@ export const AdminHub: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('users')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium transition-colors shrink-0 ${
+          className={`flex items-center gap-2 pb-3 px-4 font-semibold transition-all shrink-0 cursor-pointer ${
             activeTab === 'users' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
@@ -116,21 +139,21 @@ export const AdminHub: React.FC = () => {
         </button>
         <button
           onClick={() => setActiveTab('knowledge')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium transition-colors shrink-0 ${
+          className={`flex items-center gap-2 pb-3 px-4 font-semibold transition-all shrink-0 cursor-pointer ${
             activeTab === 'knowledge' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Globe className="w-4 h-4" />
-          <span>Quản lý Tri thức & Thu thập (Hình 17 & 19)</span>
+          <span>Quản lý Tri thức & Thu thập</span>
         </button>
         <button
           onClick={() => setActiveTab('settings')}
-          className={`flex items-center gap-2 pb-3 px-4 font-medium transition-colors shrink-0 ${
+          className={`flex items-center gap-2 pb-3 px-4 font-semibold transition-all shrink-0 cursor-pointer ${
             activeTab === 'settings' ? 'text-emerald-400 border-b-2 border-emerald-400' : 'text-slate-400 hover:text-slate-200'
           }`}
         >
           <Settings className="w-4 h-4" />
-          <span>Cấu hình Hệ thống & Dịch vụ (Hình 21)</span>
+          <span>Cấu hình Hệ thống & Dịch vụ</span>
         </button>
         <button
           onClick={() => setActiveTab('laws')}
@@ -139,7 +162,7 @@ export const AdminHub: React.FC = () => {
           }`}
         >
           <Database className="w-4 h-4" />
-          <span>Kho Dữ liệu Luật & Barem ({laws.length})</span>
+          <span>Kho Dữ liệu Luật & Barem ({laws.length || 33})</span>
         </button>
         <button
           onClick={() => setActiveTab('pipeline')}
@@ -157,68 +180,19 @@ export const AdminHub: React.FC = () => {
       {/* Tab 0: Dashboard Overview */}
       {activeTab === 'dashboard' && <AdminDashboardOverview />}
 
-      {/* Tab 1: Users & Quota Management (Hình 18) */}
+      {/* Tab 1: Users & Quota Management */}
       {activeTab === 'users' && <UserManagementView />}
 
-      {/* Tab 2: Knowledge Base & Crawl Management (Hình 17 & 19) */}
+      {/* Tab 2: Knowledge Base & Crawl Management */}
       {activeTab === 'knowledge' && <KnowledgeCrawlManagementView />}
 
-      {/* Tab 3: System Settings & Services (Hình 21) */}
+      {/* Tab 3: System Settings & Services */}
       {activeTab === 'settings' && <SystemSettingsServicesView />}
 
-      {/* Tab 4: Laws & Principles */}
-      {activeTab === 'laws' && (
-        <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3 top-3 text-slate-500" />
-              <Input
-                placeholder="Tìm kiếm theo tiêu đề, số điều luật hoặc từ khóa..."
-                value={lawSearch}
-                onChange={(e) => setLawSearch(e.target.value)}
-                onKeyDown={(e) => e.key === 'Enter' && loadData()}
-                className="pl-9"
-              />
-            </div>
-            <select
-              value={lawCodeFilter}
-              onChange={(e) => setLawCodeFilter(e.target.value)}
-              className="h-10 rounded-lg border border-slate-700 bg-slate-900 px-3 text-xs text-slate-100"
-            >
-              <option value="">Tất cả văn bản luật</option>
-              <option value="BLHS2015">Bộ luật Hình sự 2015</option>
-              <option value="BLDS2015">Bộ luật Dân sự 2015</option>
-              <option value="HP2013">Hiến pháp 2013</option>
-            </select>
-          </div>
+      {/* Tab 4: Laws & Principles Knowledge Base */}
+      {activeTab === 'laws' && <LawKnowledgeBaseView />}
 
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {laws.map((art) => (
-              <Card key={art._id} className="border-slate-800 bg-slate-950/80">
-                <CardHeader className="pb-2">
-                  <div className="flex items-center justify-between text-xs">
-                    <Badge variant="default">{art.lawCode}</Badge>
-                    <span className="text-slate-400">Điều {art.articleNumber}</span>
-                  </div>
-                  <CardTitle className="text-sm font-semibold text-white pt-1">{art.title}</CardTitle>
-                </CardHeader>
-                <CardContent className="text-xs text-slate-300 space-y-2">
-                  <p className="line-clamp-3 leading-relaxed text-slate-400">{art.contentRaw}</p>
-                  <div className="flex flex-wrap gap-1 pt-1">
-                    {art.keywords.map((kw, i) => (
-                      <span key={i} className="px-1.5 py-0.5 rounded text-[10px] bg-slate-900 text-slate-400 border border-slate-800">
-                        #{kw}
-                      </span>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Tab 3: Pipeline */}
+      {/* Tab 5: Pipeline */}
       {activeTab === 'pipeline' && pipelineData && (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <Card className="border-slate-800 bg-slate-950">

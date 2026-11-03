@@ -44,6 +44,9 @@ export async function runSeed(): Promise<void> {
   // Khôi phục tài khoản đã đăng ký vĩnh viễn từ file persisted_users.json
   await PersistenceService.restoreAllUsers();
 
+  // Khôi phục toàn bộ lịch sử hỏi đáp của người dùng từ file persisted_history.json
+  await PersistenceService.restoreAllHistory();
+
   // 2. Seed Law Articles (Bộ luật Hình sự, Dân sự, Hôn nhân gia đình, Hiến pháp)
   const laws = [
     // BLHS 2015

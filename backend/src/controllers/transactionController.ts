@@ -26,7 +26,7 @@ export class TransactionController {
           currency: 'VNĐ',
           paymentMethod: 'Cấp phát hệ thống (Miễn phí)',
           status: 'completed',
-          description: 'Kích hoạt hạn mức 30 câu hỏi ôn tập & tra cứu chuẩn Barem Điểm 10',
+          description: 'Kích hoạt hạn mức 30 câu hỏi ôn tập & tra cứu chuẩn Barem Bộ GD&ĐT',
           billingCycle: 'Chu kỳ tháng',
           questionsAdded: 30
         });
@@ -59,7 +59,7 @@ export class TransactionController {
       let questionsToAdd = 100;
 
       if (planType === 'unlimited') {
-        planName = 'Gói Không giới hạn (Luyện thi Điểm 10 toàn diện)';
+        planName = 'Gói Không giới hạn (Luyện thi Chuẩn Barem Toàn diện)';
         amount = 199000;
         questionsToAdd = 500;
       } else if (planType === 'booster') {

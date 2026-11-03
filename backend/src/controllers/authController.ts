@@ -145,6 +145,118 @@ export class AuthController {
     }
   }
 
+  // 2b. Đăng nhập bằng tài khoản Google
+  public static async googleLogin(req: Request, res: Response): Promise<void> {
+    try {
+      const { email, fullName, googleId, avatarUrl } = req.body;
+
+      if (!email) {
+        res.status(400).json({ success: false, message: 'Vui lòng cung cấp địa chỉ email Google.' });
+        return;
+      }
+
+      const normalizedEmail = email.toLowerCase().trim();
+      let user = await User.findOne({
+        $or: [
+          { email: normalizedEmail },
+          ...(googleId ? [{ googleId }] : [])
+        ]
+      });
+
+      if (user) {
+        // Kiểm tra xem tài khoản có bị khóa không
+        if (user.status === 'locked') {
+          res.status(403).json({
+            success: false,
+            message: `Tài khoản của bạn đã bị tạm khóa. Lý do: ${user.lockReason || 'Vi phạm điều khoản'}. Vui lòng liên hệ Hotline 0366 015 348 để được hỗ trợ mở khóa.`
+          });
+          return;
+        }
+
+        // Cập nhật googleId và avatarUrl nếu có
+        let isModified = false;
+        if (googleId && !user.googleId) {
+          user.googleId = googleId;
+          isModified = true;
+        }
+        if (avatarUrl && (!user.avatarUrl || user.avatarUrl.includes('dicebear'))) {
+          user.avatarUrl = avatarUrl;
+          isModified = true;
+        }
+        if (isModified) {
+          await user.save();
+          PersistenceService.saveUser(user);
+        }
+      } else {
+        // Tạo tài khoản mới từ Google Login
+        const baseUsername = normalizedEmail.split('@')[0].replace(/[^a-zA-Z0-9_]/g, '') || 'google_user';
+        let uniqueUsername = baseUsername;
+        let suffix = 1;
+        while (await User.findOne({ username: uniqueUsername })) {
+          uniqueUsername = `${baseUsername}${suffix++}`;
+        }
+
+        const randomPassword = Math.random().toString(36).slice(-8) + 'VLaw#2026';
+        const salt = await bcrypt.genSalt(10);
+        const passwordHash = await bcrypt.hash(randomPassword, salt);
+
+        const displayName = fullName || normalizedEmail.split('@')[0];
+        const defaultAvatar = avatarUrl || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(displayName)}`;
+
+        user = await User.create({
+          username: uniqueUsername,
+          email: normalizedEmail,
+          passwordHash,
+          fullName: displayName,
+          role: 'student',
+          status: 'active',
+          avatarUrl: defaultAvatar,
+          googleId: googleId || `g_${Date.now()}_${Math.floor(Math.random() * 10000)}`,
+          authProvider: 'google',
+          questionsQuota: getDefaultNewUserQuota(),
+          questionsUsed: 0
+        });
+
+        PersistenceService.saveUser(user);
+      }
+
+      const token = jwt.sign(
+        {
+          id: user._id.toString(),
+          email: user.email,
+          username: user.username,
+          role: user.role,
+          fullName: user.fullName
+        },
+        config.jwtSecret,
+        { expiresIn: config.jwtExpiresIn as any }
+      );
+
+      res.json({
+        success: true,
+        message: `Đăng nhập Google thành công! Chào mừng ${user.fullName}.`,
+        token,
+        user: {
+          id: user._id,
+          username: user.username,
+          email: user.email,
+          role: user.role,
+          status: user.status || 'active',
+          fullName: user.fullName,
+          studentId: user.studentId,
+          avatarUrl: user.avatarUrl,
+          questionsQuota: user.questionsQuota ?? 30,
+          questionsUsed: user.questionsUsed ?? 0,
+          remainingQuestions: Math.max(0, (user.questionsQuota ?? 30) - (user.questionsUsed ?? 0)),
+          quotaResetDate: user.quotaResetDate || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+        }
+      });
+    } catch (err: any) {
+      console.error('Google login error:', err);
+      res.status(500).json({ success: false, message: err.message || 'Lỗi xử lý đăng nhập Google.' });
+    }
+  }
+
   // 3. Lấy thông tin tài khoản hiện tại
   public static async getMe(req: Request, res: Response): Promise<void> {
     try {

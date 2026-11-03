@@ -59,7 +59,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
@@ -81,9 +81,15 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-30 cursor-pointer"
             title="Đóng"
+            aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
@@ -139,7 +145,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           <div className="p-4 rounded-2xl border border-slate-200 bg-white space-y-2.5">
             <h4 className="text-xs font-bold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
               <Zap className="w-3.5 h-3.5 text-amber-500" />
-              <span>Độ chi tiết câu trả lời từ Trợ lý AI</span>
+              <span>Độ chi tiết câu trả lời từ Trợ lý</span>
             </h4>
             <div className="grid grid-cols-2 gap-2 text-xs">
               <button
@@ -206,7 +212,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             <div className="border-t border-slate-100 pt-3 flex items-center justify-between text-xs">
               <div>
                 <span className="font-bold text-slate-900 block">Tự động ghi vết vào Lịch sử sử dụng</span>
-                <span className="text-slate-500 text-[11px]">Lưu lại câu hỏi sau khi Trợ lý AI giải xong</span>
+                <span className="text-slate-500 text-[11px]">Lưu lại câu hỏi sau khi Trợ lý giải xong</span>
               </div>
               <button
                 type="button"

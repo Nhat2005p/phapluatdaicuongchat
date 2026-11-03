@@ -1,0 +1,1342 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>VLaw — Trợ Lý AI Pháp Luật Đại Cương Chuẩn Barem GD&ĐT</title>
+  <style>
+    @font-face{
+      font-family:'Sora';
+      src:url(assets/fonts/sora-variable.ttf) format('truetype-variations'),
+          url('https://fonts.gstatic.com/s/sora/v12/xMQbuFFYT72XzQspDrEb.woff2') format('woff2-variations');
+      font-weight:100 900;
+      font-style:normal;
+      font-display:block;
+    }
+
+    :root{
+      --ink:#ffffff;
+      --sub:#a2a9b8;
+      --nav:#fbfdff;
+      --foot:#f4f8fd;
+      --hair:rgba(196,214,232,.72);
+      --chev:rgba(214,232,250,.90);
+      --navdim:#e8ecf0;
+      --feat:#e2ebf5;
+      --veil:6,10,18;
+
+      --cover:max(calc(100vw / 1536), calc(100vh / 1024));
+      --fit:calc(100vh / 910);
+      --u:min(var(--cover), var(--fit));
+      --blur:calc(var(--u)*26);
+      --glow:calc(var(--u)*34);
+      --hairline:max(1px, calc(var(--u)*1.6));
+    }
+
+    @supports (height:100dvh){
+      :root{
+        --cover:max(calc(100vw / 1536), calc(100dvh / 1024));
+        --fit:calc(100dvh / 910);
+      }
+    }
+
+    *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+    html,body{
+      height:100%;
+      background:#02060f;
+      overflow:hidden;
+    }
+
+    body{
+      font-family:'Sora',system-ui,-apple-system,'Segoe UI',sans-serif;
+      color:var(--ink);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      text-rendering:geometricPrecision;
+    }
+
+    a{color:inherit;text-decoration:none;cursor:pointer}
+    li{list-style:none}
+    a:focus-visible,button:focus-visible{outline:2px solid #9fe0ff;outline-offset:3px;border-radius:4px}
+
+    /* 4. BACKGROUND LAYERS */
+    .art{
+      position:fixed;
+      inset:0;
+      width:100%;
+      height:100%;
+      object-fit:cover;
+      object-position:50% 50%;
+      z-index:0;
+      user-select:none;
+      -webkit-user-drag:none;
+      pointer-events:none;
+      background:#03060c;
+    }
+
+    .veil{
+      position:fixed;
+      inset:0;
+      z-index:0;
+      pointer-events:none;
+      background:
+        radial-gradient(140% 60% at 50% 40%,
+            rgba(var(--veil),.22) 0%, rgba(var(--veil),.08) 50%,
+            rgba(var(--veil),0) 100%),
+        linear-gradient(180deg, rgba(var(--veil),0) 45%,
+            rgba(var(--veil),.14) 100%);
+    }
+
+    .bar,.hero,.foot{position:fixed;z-index:1}
+
+    /* 5. COMPONENT SKIN */
+    .brand svg{fill:var(--ink);display:block}
+    .caret,.navarrow{
+      fill:none;
+      stroke:var(--nav);
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .navarrow{stroke-linecap:square;stroke-linejoin:miter}
+    .pill{
+      border:var(--hairline) solid var(--hair);
+      border-radius:999px;
+      cursor:pointer;
+      background:transparent;
+      transition:background .2s, border-color .2s;
+    }
+    .pill:hover{
+      background:rgba(255,255,255,.08);
+      border-color:#fff;
+    }
+    .chev{
+      fill:none;
+      stroke:var(--chev);
+      stroke-width:1.75;
+      stroke-linecap:round;
+      stroke-linejoin:round;
+    }
+    .cta .arrow{
+      fill:none;
+      stroke:var(--ink);
+      stroke-width:1.6;
+      stroke-linecap:square;
+      stroke-linejoin:miter;
+    }
+    .rule{
+      background:linear-gradient(180deg,
+          rgba(186,200,214,.70) 0%,rgba(206,220,232,.92) 52%,
+          rgba(182,198,212,.68) 100%);
+    }
+
+    .cta{
+      border-radius:999px;
+      cursor:pointer;
+      border:none;
+      outline:none;
+      background:
+        linear-gradient(180deg, rgba(6,12,22,0) 45%, rgba(6,12,22,.12) 78%,
+                                rgba(6,12,22,.28) 100%),
+        linear-gradient(90deg,
+          rgba(255,226,178,.17) 0%,  rgba(255,236,208,.07) 22%,
+          rgba(176,206,238,.03) 55%, rgba(150,196,244,.09) 100%),
+        linear-gradient(90deg,
+          rgba(255,255,255,.24) 0%,  rgba(255,255,255,.17) 12%,
+          rgba(255,255,255,.11) 26%, rgba(255,255,255,.07) 42%,
+          rgba(255,255,255,.05) 60%, rgba(255,255,255,.04) 80%,
+          rgba(255,255,255,.04) 100%);
+      -webkit-backdrop-filter:blur(var(--blur)) saturate(.45);
+      backdrop-filter:blur(var(--blur)) saturate(.45);
+      box-shadow:0 calc(var(--u)*-2) calc(var(--u)*20) rgba(255,224,176,.20),
+                 0 0 var(--glow) rgba(168,204,252,.16),
+                 inset 0 var(--hairline) 0 0 rgba(255,251,242,.45);
+      transition:transform .2s ease, box-shadow .2s ease;
+    }
+    .cta:hover{
+      transform:translateY(calc(var(--u)*-1.5)) scale(1.015);
+      box-shadow:0 calc(var(--u)*-2) calc(var(--u)*26) rgba(255,224,176,.32),
+                 0 0 calc(var(--glow)*1.3) rgba(168,204,252,.28),
+                 inset 0 var(--hairline) 0 0 rgba(255,251,242,.65);
+    }
+    .cta:active{
+      transform:translateY(0) scale(0.99);
+    }
+
+    .cta::before{
+      content:'';
+      position:absolute;
+      inset:0;
+      border-radius:inherit;
+      padding:var(--hairline);
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, rgba(255,252,246,.95) 0%,
+            rgba(255,252,246,.20) 45%, rgba(255,252,246,0) 78%),
+        linear-gradient(90deg,
+          rgba(255,228,182,.95) 0%,  rgba(250,236,210,.70) 12%,
+          rgba(226,230,234,.03) 32%, rgba(214,226,240,.02) 62%,
+          rgba(200,228,250,.70) 90%, rgba(186,224,247,.95) 100%);
+      -webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      -webkit-mask-composite:xor;
+      mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);
+      mask-composite:exclude;
+    }
+
+    /* VARIABLE WEIGHTS */
+    #word{font-variation-settings:'wght' 531;color:var(--ink)}
+    #about{font-variation-settings:'wght' 506;color:var(--nav)}
+    #product{font-variation-settings:'wght' 506;color:var(--nav)}
+    #solutions{font-variation-settings:'wght' 506;color:var(--nav)}
+    #login{font-variation-settings:'wght' 506;color:var(--nav)}
+    #contact{font-variation-settings:'wght' 581;color:var(--navdim)}
+    #h1a,#h1b{font-variation-settings:'wght' 424;color:var(--ink)}
+    #sub1,#sub2{font-variation-settings:'wght' 446;color:var(--sub)}
+    #cta{font-variation-settings:'wght' 497;color:var(--ink)}
+    #f1,#f2,#f3,#f4{font-variation-settings:'wght' 534;color:var(--feat)}
+    #foot1,#foot2{font-variation-settings:'wght' 521;color:var(--foot)}
+
+    /* 6. ENTRANCE SEQUENCE */
+    @media (prefers-reduced-motion:no-preference){
+      :root{
+        --ent-line:cubic-bezier(.16,1,.3,1);
+        --ent-soft:cubic-bezier(.25,.8,.35,1);
+        --rise:9px;
+      }
+
+      @keyframes en-wipe{
+        from{clip-path:inset(-.78em 0 calc(100% + .78em) 0);translate:0 var(--rise)}
+        to  {clip-path:inset(-.78em 0 -.78em 0);translate:0 0}
+      }
+      @keyframes en-lift{
+        from{opacity:0;translate:0 var(--rise)}
+        to  {opacity:1;translate:0 0}
+      }
+      @keyframes en-settle{
+        from{opacity:0;translate:0 calc(var(--rise)*.7);scale:.99}
+        to  {opacity:1;translate:0 0;scale:1}
+      }
+      @keyframes en-draw{
+        from{scale:1 0}
+        to  {scale:1 1}
+      }
+
+      html:not(.is-entered) .brand{animation:en-lift .60s var(--ent-soft) .12s backwards}
+      html:not(.is-entered) #about{animation:en-lift .55s var(--ent-soft) .20s backwards}
+      html:not(.is-entered) #product{animation:en-lift .55s var(--ent-soft) .25s backwards}
+      html:not(.is-entered) #solutions,
+      html:not(.is-entered) .caret{animation:en-lift .55s var(--ent-soft) .30s backwards}
+      html:not(.is-entered) #login,
+      html:not(.is-entered) .navarrow{animation:en-lift .55s var(--ent-soft) .35s backwards}
+      html:not(.is-entered) .pill{animation:en-settle .60s var(--ent-soft) .40s backwards}
+      html:not(.is-entered) .burger{animation:en-lift .60s var(--ent-soft) .40s backwards}
+      html:not(.is-entered) #h1a{animation:en-wipe .95s var(--ent-line) .34s backwards}
+      html:not(.is-entered) #h1b{animation:en-wipe .95s var(--ent-line) .44s backwards}
+      html:not(.is-entered) #sub1{animation:en-lift .70s var(--ent-soft) .74s backwards}
+      html:not(.is-entered) #sub2{animation:en-lift .70s var(--ent-soft) .80s backwards}
+      html:not(.is-entered) .cta{animation:en-lift .80s var(--ent-line) .94s backwards}
+      html:not(.is-entered) .feats li:nth-child(1){animation:en-lift .60s var(--ent-soft) 1.08s backwards}
+      html:not(.is-entered) .feats li:nth-child(2){animation:en-lift .60s var(--ent-soft) 1.15s backwards}
+      html:not(.is-entered) .feats li:nth-child(3){animation:en-lift .60s var(--ent-soft) 1.22s backwards}
+      html:not(.is-entered) .feats li:nth-child(4){animation:en-lift .60s var(--ent-soft) 1.29s backwards}
+      html:not(.is-entered) .rule{animation:en-draw .55s var(--ent-line) 1.34s backwards;transform-origin:top}
+      html:not(.is-entered) #foot1{animation:en-lift .60s var(--ent-soft) 1.42s backwards}
+      html:not(.is-entered) #foot2{animation:en-lift .60s var(--ent-soft) 1.48s backwards}
+    }
+
+    /* 7. ARCHITECTURE A — LOCKED COMPOSITION (desktop) */
+    @media (min-width:1200px) and (min-height:560px) and (min-aspect-ratio:100/95){
+      .bar,.hero,.foot{
+        left:50%;
+        width:calc(var(--u)*1536);
+        transform:translateX(-50%);
+      }
+      .bar{top:0;height:calc(var(--u)*120)}
+      .foot{bottom:0;height:calc(var(--u)*140)}
+      .hero{top:50%;height:calc(var(--u)*1024);transform:translate(-50%,-50%)}
+
+      .navtoggle,.burger,.scrim{display:none}
+      .navpanel{display:contents}
+
+      .bar > *,.foot > *,.hero > *,.pill,.caret,.navarrow{position:absolute}
+      .menu,.menu a,.login{position:static}
+      .title,.sub,.feats{inset:0;font-weight:inherit}
+      .bar span,.foot span,.title span,.sub span,.feats span,.cta span{
+        position:absolute;
+        line-height:0;
+        white-space:nowrap;
+      }
+
+      /* BOX COORDINATES */
+      .brand{
+        left:calc(var(--u)*221);
+        top:calc(var(--u)*55);
+        display:flex;
+        align-items:center;
+        gap:calc(var(--u)*7);
+      }
+      .brand svg{width:calc(var(--u)*23);height:calc(var(--u)*17)}
+      #word{position:relative}
+
+      .caret{
+        left:calc(var(--u)*744);
+        top:calc(var(--u)*62.4);
+        width:calc(var(--u)*9);
+        height:calc(var(--u)*6);
+        stroke-width:1.25;
+      }
+      .navarrow{
+        left:calc(var(--u)*1145);
+        top:calc(var(--u)*61.6);
+        width:calc(var(--u)*10);
+        height:calc(var(--u)*9);
+        stroke-width:1.2;
+      }
+      .pill{
+        left:calc(var(--u)*1175);
+        top:calc(var(--u)*43.5);
+        width:calc(var(--u)*160);
+        height:calc(var(--u)*44);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+      }
+      .cta{
+        left:calc(var(--u)*625.8);
+        top:calc(var(--u)*555.2);
+        width:calc(var(--u)*279.6);
+        height:calc(var(--u)*46.6);
+      }
+      .cta .arrow{
+        position:absolute;
+        left:calc(var(--u)*230.8);
+        top:calc(var(--u)*17.8);
+        width:calc(var(--u)*16);
+        height:calc(var(--u)*11);
+      }
+
+      .feats li{position:absolute;width:calc(var(--u)*220);height:calc(var(--u)*20)}
+      .feats .chev{
+        position:absolute;
+        left:0;
+        top:0;
+        width:calc(var(--u)*11);
+        height:calc(var(--u)*20);
+      }
+      .feats li:nth-child(1){left:calc(var(--u)*360);top:calc(var(--u)*718)}
+      .feats li:nth-child(2){left:calc(var(--u)*590);top:calc(var(--u)*719)}
+      .feats li:nth-child(3){left:calc(var(--u)*803);top:calc(var(--u)*721)}
+      .feats li:nth-child(4){left:calc(var(--u)*1013);top:calc(var(--u)*722)}
+
+      .rule{
+        left:calc(var(--u)*767);
+        top:calc(var(--u)*792);
+        width:calc(var(--u)*1);
+        height:calc(var(--u)*57);
+      }
+
+      /* TYPE COORDINATES */
+      #word{
+        font-size:calc(var(--u)*23.4);
+        letter-spacing:calc(var(--u)*4.8);
+        transform:translate(0,0);
+      }
+      #about{
+        font-size:calc(var(--u)*13.5);
+        letter-spacing:calc(var(--u)*-0.5);
+        left:calc(var(--u)*477);
+        top:calc(var(--u)*65.66);
+      }
+      #product{
+        font-size:calc(var(--u)*13.5);
+        letter-spacing:calc(var(--u)*-0.167);
+        left:calc(var(--u)*568.5);
+        top:calc(var(--u)*65.66);
+      }
+      #solutions{
+        font-size:calc(var(--u)*13.5);
+        letter-spacing:calc(var(--u)*-0.5);
+        left:calc(var(--u)*675);
+        top:calc(var(--u)*65.66);
+      }
+      #login{
+        font-size:calc(var(--u)*13.5);
+        letter-spacing:calc(var(--u)*-0.227);
+        left:calc(var(--u)*1002.5);
+        top:calc(var(--u)*66.16);
+      }
+      #contact{
+        font-size:calc(var(--u)*13.5);
+        letter-spacing:calc(var(--u)*0.25);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*21.66);
+        transform:translateX(calc(var(--u)*-0.5));
+      }
+      #h1a{
+        font-size:calc(var(--u)*46.8);
+        letter-spacing:calc(var(--u)*0.532);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*285.222);
+        transform:translateX(calc(var(--u)*-1));
+      }
+      #h1b{
+        font-size:calc(var(--u)*46.8);
+        letter-spacing:calc(var(--u)*-0.398);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*335.222);
+        transform:translateX(calc(var(--u)*-3));
+      }
+      #sub1{
+        font-size:calc(var(--u)*20.6);
+        letter-spacing:calc(var(--u)*0.367);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*408.115);
+        transform:translateX(calc(var(--u)*-0.5));
+      }
+      #sub2{
+        font-size:calc(var(--u)*19.1);
+        letter-spacing:calc(var(--u)*-0.632);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*432.153);
+        transform:translateX(calc(var(--u)*-2));
+      }
+      #cta{
+        font-size:calc(var(--u)*22);
+        letter-spacing:calc(var(--u)*-0.312);
+        left:0;
+        right:0;
+        text-align:center;
+        top:calc(var(--u)*23.113);
+        transform:translateX(calc(var(--u)*-14.5));
+      }
+      #f1{
+        font-size:calc(var(--u)*14.6);
+        letter-spacing:calc(var(--u)*-0.75);
+        left:calc(var(--u)*26);
+        top:calc(var(--u)*11.266);
+      }
+      #f2{
+        font-size:calc(var(--u)*14.6);
+        letter-spacing:calc(var(--u)*-0.889);
+        left:calc(var(--u)*26);
+        top:calc(var(--u)*11.266);
+      }
+      #f3{
+        font-size:calc(var(--u)*14.6);
+        letter-spacing:calc(var(--u)*-1.067);
+        left:calc(var(--u)*26);
+        top:calc(var(--u)*11.266);
+      }
+      #f4{
+        font-size:calc(var(--u)*14.6);
+        letter-spacing:calc(var(--u)*-1.067);
+        left:calc(var(--u)*29);
+        top:calc(var(--u)*11.266);
+      }
+      #foot1{
+        font-size:calc(var(--u)*16.3);
+        letter-spacing:calc(var(--u)*-0.256);
+        left:0;
+        right:0;
+        text-align:center;
+        bottom:calc(var(--u)*101.344);
+        transform:translateX(calc(var(--u)*-0.5));
+      }
+      #foot2{
+        font-size:calc(var(--u)*16.3);
+        letter-spacing:calc(var(--u)*-0.667);
+        left:0;
+        right:0;
+        text-align:center;
+        bottom:calc(var(--u)*76.344);
+        transform:translateX(calc(var(--u)*-2));
+      }
+    }
+
+    /* 8. ARCHITECTURE B — FLOW */
+    @media (max-width:1199px),(max-height:559px),(max-aspect-ratio:100/95){
+      :root{--c:min(calc(100vw / 430), calc(100vh / 860))}
+
+      body{
+        display:flex;
+        flex-direction:column;
+        height:100vh;
+        padding:calc(env(safe-area-inset-top) + calc(var(--c)*24)) calc(var(--c)*22)
+                calc(env(safe-area-inset-bottom) + calc(var(--c)*22));
+      }
+      .bar,.hero,.foot{position:static;width:100%}
+      .bar{
+        order:1;
+        position:relative;
+        z-index:5;
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:calc(var(--c)*16);
+      }
+      .brand{display:flex;align-items:center;gap:calc(var(--c)*8)}
+      .brand svg{width:calc(var(--c)*22);height:auto}
+      #word{font-size:calc(var(--c)*19);letter-spacing:.06em}
+
+      .navtoggle{
+        position:absolute;
+        top:0;
+        right:0;
+        width:1px;
+        height:1px;
+        opacity:0;
+        margin:0;
+        pointer-events:none;
+      }
+      .burger{
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        width:calc(var(--c)*42);
+        height:calc(var(--c)*30);
+        border-radius:999px;
+        cursor:pointer;
+        border:var(--hairline) solid var(--hair);
+        background:rgba(255,255,255,.03);
+        -webkit-backdrop-filter:blur(var(--blur)) saturate(.45);
+        backdrop-filter:blur(var(--blur)) saturate(.45);
+      }
+      .burger svg{
+        width:calc(var(--c)*19);
+        height:auto;
+        fill:none;
+        stroke:var(--nav);
+        stroke-width:1.4;
+        stroke-linecap:round;
+      }
+      .burger svg path{
+        transform-box:fill-box;
+        transform-origin:center;
+        transition:transform .24s ease,opacity .18s ease;
+      }
+      .navtoggle:focus-visible ~ .burger{outline:2px solid #9fe0ff;outline-offset:3px}
+      .navtoggle:checked ~ .burger .b1{transform:translateY(6px) rotate(45deg)}
+      .navtoggle:checked ~ .burger .b2{opacity:0}
+      .navtoggle:checked ~ .burger .b3{transform:translateY(-6px) rotate(-45deg)}
+      .scrim{display:none;position:fixed;inset:0;z-index:-1}
+      .navtoggle:checked ~ .scrim{display:block}
+
+      .navpanel{
+        position:absolute;
+        top:calc(100% + calc(var(--c)*12));
+        right:0;
+        display:flex;
+        flex-direction:column;
+        gap:calc(var(--c)*2);
+        width:min(calc(var(--c)*280), 80vw);
+        padding:calc(var(--c)*12);
+        border-radius:calc(var(--c)*20);
+        background:
+          linear-gradient(180deg, rgba(255,255,255,.10) 0%,
+                                  rgba(255,255,255,.045) 100%),
+          linear-gradient(90deg, rgba(255,226,178,.06) 0%,
+                                 rgba(150,196,244,.06) 100%),
+          linear-gradient(180deg, rgba(6,12,22,.75) 0%, rgba(6,12,22,.85) 100%);
+        -webkit-backdrop-filter:blur(var(--blur)) saturate(.45);
+        backdrop-filter:blur(var(--blur)) saturate(.45);
+        box-shadow:0 calc(var(--c)*14) calc(var(--c)*38) rgba(2,6,14,.65);
+        opacity:0;
+        transform:translateY(calc(var(--c)*-8)) scale(.985);
+        transform-origin:100% 0;
+        pointer-events:none;
+        transition:opacity .2s ease,transform .2s ease;
+      }
+      .navtoggle:checked ~ .navpanel{opacity:1;transform:none;pointer-events:auto}
+      .navpanel .menu{display:flex;flex-direction:column}
+      .navpanel .menu a,.navpanel .login{
+        display:flex;
+        align-items:center;
+        gap:calc(var(--c)*8);
+        padding:calc(var(--c)*10) calc(var(--c)*12);
+        border-radius:calc(var(--c)*12);
+        font-size:calc(var(--c)*16);
+        color:var(--nav);
+        transition:background .15s ease;
+      }
+      .navpanel .menu a:hover,.navpanel .login:hover{background:rgba(255,255,255,.07)}
+      .navpanel .caret,.navpanel .navarrow{margin-left:auto;height:auto}
+      .navpanel .caret{width:calc(var(--c)*10)}
+      .navpanel .navarrow{width:calc(var(--c)*11)}
+      .navpanel .pill{
+        margin-top:calc(var(--c)*8);
+        text-align:center;
+        white-space:nowrap;
+        padding:calc(var(--c)*11) calc(var(--c)*16);
+        font-size:calc(var(--c)*15);
+      }
+
+      .hero{
+        order:2;
+        flex:1;
+        display:flex;
+        flex-direction:column;
+        align-items:center;
+        justify-content:center;
+        text-align:center;
+        gap:calc(var(--c)*20);
+      }
+      .title{font-size:calc(var(--c)*33);line-height:1.12;max-width:18ch}
+      .sub{color:var(--sub);font-size:calc(var(--c)*16);line-height:1.35;max-width:32ch}
+      .cta{
+        position:relative;
+        display:inline-flex;
+        align-items:center;
+        gap:calc(var(--c)*12);
+        padding:calc(var(--c)*16) calc(var(--c)*26);
+        font-size:calc(var(--c)*18);
+      }
+      .cta .arrow{width:calc(var(--c)*16);height:calc(var(--c)*11)}
+      .feats{
+        display:grid;
+        grid-template-columns:repeat(2,minmax(0,1fr));
+        gap:calc(var(--c)*15) calc(var(--c)*13);
+        width:100%;
+        max-width:calc(var(--c)*420);
+        margin-top:calc(var(--c)*6);
+      }
+      .feats li{display:flex;align-items:center;gap:calc(var(--c)*9);font-size:calc(var(--c)*13.5)}
+      .feats .chev{width:calc(var(--c)*9);height:calc(var(--c)*16);flex:none}
+      .rule{width:1px;height:calc(var(--c)*33);margin:calc(var(--c)*19) auto 0}
+      .foot{order:3;text-align:center;color:var(--foot);font-size:calc(var(--c)*13);line-height:1.55}
+      .foot span{display:block}
+    }
+
+    /* B1. PHONE CANVAS */
+    @media (max-width:599px),(max-height:429px){
+      :root{--c:min(calc(100vw / 360), calc(100vh / 770), 1px);--rise:6px}
+      body{
+        padding:calc(env(safe-area-inset-top) + calc(var(--c)*28)) calc(var(--c)*26)
+                calc(env(safe-area-inset-bottom) + calc(var(--c)*26));
+      }
+      .brand svg{width:calc(var(--c)*24)}
+      #word{font-size:calc(var(--c)*19)}
+      .burger{width:calc(var(--c)*46);height:calc(var(--c)*33);position:relative}
+      .burger::after{
+        content:'';
+        position:absolute;
+        left:50%;
+        top:50%;
+        transform:translate(-50%,-50%);
+        width:max(44px,100%);
+        height:max(44px,100%);
+      }
+      .burger svg{width:calc(var(--c)*21)}
+      .navpanel{width:min(calc(var(--c)*300), 82vw);padding:calc(var(--c)*15);border-radius:calc(var(--c)*22)}
+      .navpanel .menu a,.navpanel .login{
+        font-size:calc(var(--c)*16);
+        padding:calc(var(--c)*13) calc(var(--c)*14);
+        border-radius:calc(var(--c)*13);
+        min-height:max(44px,calc(var(--c)*44));
+      }
+      .navpanel .pill{
+        font-size:calc(var(--c)*16);
+        padding:calc(var(--c)*13) calc(var(--c)*18);
+        margin-top:calc(var(--c)*9);
+      }
+
+      .veil{
+        background:
+          radial-gradient(130% 44% at 50% 45%,
+              rgba(var(--veil),.55) 0%, rgba(var(--veil),.30) 55%,
+              rgba(var(--veil),0) 100%),
+          linear-gradient(180deg,
+              rgba(var(--veil),.38) 0%, rgba(var(--veil),0) 20%,
+              rgba(var(--veil),0) 60%, rgba(var(--veil),.40) 100%);
+      }
+
+      .hero{gap:calc(var(--c)*22)}
+      .title{
+        font-size:calc(var(--c)*30);
+        line-height:1.2;
+        letter-spacing:-.002em;
+        max-width:none;
+        text-wrap:balance;
+      }
+      .title span{display:block}
+      .sub{
+        font-size:calc(var(--c)*15.5);
+        line-height:1.45;
+        max-width:none;
+        text-wrap:balance;
+      }
+      .sub span{display:block}
+      .cta{
+        font-size:calc(var(--c)*16.5);
+        padding:calc(var(--c)*15) calc(var(--c)*28);
+        gap:calc(var(--c)*12);
+      }
+      .cta .arrow{width:calc(var(--c)*17);height:calc(var(--c)*12)}
+      .feats{
+        grid-template-columns:repeat(2,max-content);
+        justify-content:center;
+        width:auto;
+        max-width:none;
+        gap:calc(var(--c)*16) calc(var(--c)*16);
+        margin-top:calc(var(--c)*22);
+      }
+      .feats li{font-size:calc(var(--c)*13);gap:calc(var(--c)*10)}
+      .feats .chev{width:calc(var(--c)*10);height:calc(var(--c)*18)}
+      .rule{height:calc(var(--c)*30);margin:calc(var(--c)*28) auto 0}
+      .foot{font-size:calc(var(--c)*13);line-height:1.65;text-wrap:balance}
+    }
+
+    /* AUTH MODAL STYLES (MATCHING NEURAL GLASS AESTHETICS) */
+    .auth-backdrop{
+      position:fixed;
+      inset:0;
+      z-index:9999;
+      background:rgba(2, 6, 15, 0.82);
+      backdrop-filter:blur(18px) saturate(1.2);
+      -webkit-backdrop-filter:blur(18px) saturate(1.2);
+      display:none;
+      align-items:center;
+      justify-content:center;
+      padding:16px;
+      opacity:0;
+      transition:opacity .25s ease;
+    }
+    .auth-backdrop.active{
+      display:flex;
+      opacity:1;
+    }
+    .auth-window{
+      width:100%;
+      max-width:440px;
+      border-radius:24px;
+      background:
+        linear-gradient(180deg, rgba(255,255,255,.12) 0%, rgba(255,255,255,.03) 100%),
+        linear-gradient(90deg, rgba(255,226,178,.08) 0%, rgba(150,196,244,.08) 100%),
+        linear-gradient(180deg, #090e1a 0%, #060912 100%);
+      border:1px solid rgba(255, 255, 255, 0.16);
+      box-shadow:0 24px 60px rgba(0, 0, 0, 0.8), 0 0 30px rgba(145, 185, 245, 0.15);
+      position:relative;
+      overflow:hidden;
+      color:#fff;
+      transform:scale(0.96) translateY(10px);
+      transition:transform .25s ease;
+    }
+    .auth-backdrop.active .auth-window{
+      transform:scale(1) translateY(0);
+    }
+    .auth-close{
+      position:absolute;
+      top:18px;
+      right:18px;
+      width:32px;
+      height:32px;
+      border-radius:50%;
+      background:rgba(255,255,255,.08);
+      border:none;
+      color:#fff;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:18px;
+      transition:background .2s;
+    }
+    .auth-close:hover{
+      background:rgba(255,255,255,.2);
+    }
+    .auth-header{
+      padding:24px 24px 16px;
+      border-bottom:1px solid rgba(255,255,255,.08);
+      text-align:center;
+    }
+    .auth-title{
+      font-size:20px;
+      font-weight:600;
+      letter-spacing:-0.02em;
+      margin-bottom:6px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+    }
+    .auth-tabs{
+      display:flex;
+      background:rgba(255,255,255,.05);
+      border-radius:12px;
+      padding:4px;
+      margin:16px 24px 0;
+      gap:4px;
+    }
+    .auth-tab-btn{
+      flex:1;
+      padding:8px 0;
+      border:none;
+      background:transparent;
+      color:var(--sub);
+      font-size:13px;
+      font-weight:500;
+      border-radius:8px;
+      cursor:pointer;
+      transition:all .18s;
+      font-family:inherit;
+    }
+    .auth-tab-btn.active{
+      background:rgba(255,255,255,.16);
+      color:#fff;
+      font-weight:600;
+      box-shadow:0 2px 8px rgba(0,0,0,.3);
+    }
+    .auth-body{
+      padding:20px 24px 24px;
+    }
+    .auth-field{
+      margin-bottom:14px;
+    }
+    .auth-label{
+      display:block;
+      font-size:12px;
+      font-weight:500;
+      color:#cbd5e1;
+      margin-bottom:6px;
+    }
+    .auth-input{
+      width:100%;
+      height:42px;
+      padding:0 14px;
+      background:rgba(0,0,0,.45);
+      border:1px solid rgba(255,255,255,.18);
+      border-radius:10px;
+      color:#fff;
+      font-size:14px;
+      font-family:inherit;
+      outline:none;
+      transition:border-color .2s, box-shadow .2s;
+    }
+    .auth-input:focus{
+      border-color:#7064f2;
+      box-shadow:0 0 0 3px rgba(112, 100, 242, 0.25);
+    }
+    .auth-btn-submit{
+      width:100%;
+      height:44px;
+      border-radius:10px;
+      background:linear-gradient(90deg, #7064f2 0%, #5345ed 100%);
+      color:#fff;
+      border:none;
+      font-size:14px;
+      font-weight:600;
+      font-family:inherit;
+      cursor:pointer;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      margin-top:16px;
+      transition:all .2s;
+      box-shadow:0 4px 14px rgba(83, 69, 237, 0.4);
+    }
+    .auth-btn-submit:hover{
+      background:linear-gradient(90deg, #7e73f4 0%, #6356f1 100%);
+      transform:translateY(-1px);
+    }
+    .auth-fast-grid{
+      display:grid;
+      grid-template-columns:1fr 1fr;
+      gap:8px;
+      margin-bottom:16px;
+    }
+    .auth-fast-btn{
+      padding:9px 10px;
+      background:rgba(255,255,255,.05);
+      border:1px solid rgba(255,255,255,.12);
+      border-radius:10px;
+      color:#e2e8f0;
+      font-size:12px;
+      font-weight:500;
+      cursor:pointer;
+      font-family:inherit;
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      gap:3px;
+      transition:all .18s;
+    }
+    .auth-fast-btn:hover{
+      background:rgba(255,255,255,.12);
+      border-color:rgba(255,255,255,.28);
+    }
+    .auth-alert{
+      padding:10px 12px;
+      border-radius:8px;
+      font-size:12px;
+      margin-bottom:12px;
+      display:none;
+    }
+    .auth-alert.error{
+      display:block;
+      background:rgba(239, 68, 68, 0.15);
+      border:1px solid rgba(239, 68, 68, 0.4);
+      color:#fca5a5;
+    }
+    .auth-alert.success{
+      display:block;
+      background:rgba(34, 197, 94, 0.15);
+      border:1px solid rgba(34, 197, 94, 0.4);
+      color:#86efac;
+    }
+
+    /* 10. REDUCED MOTION */
+    @media (prefers-reduced-motion:reduce){
+      *{animation:none!important;transition:none!important}
+    }
+  </style>
+</head>
+<body>
+  <video class="art" autoplay muted loop playsinline preload="auto" aria-hidden="true"
+         poster="https://d2ol7oe51mr4n9.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/130837c4-0244-4f37-9c61-8d801d93fd29.jpg"
+         src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260912_104303_0c6d60b2-9353-408e-9449-585108a22fb5.mp4"></video>
+
+  <div class="veil"></div>
+
+  <header class="bar">
+    <a class="brand" href="/" title="VLaw - Pháp Luật Đại Cương">
+      <svg viewBox="0 0 23 17" aria-hidden="true">
+        <path d="M8.15 0.9 L4.55 0.9 L0.5 9.3 L4.1 9.3 Z"/>
+        <path d="M17.0 0 L13.4 0 L6.15 16.4 L9.75 16.4 Z"/>
+        <path d="M22.9 0 L19.3 0 L15.0 7.6 L18.6 7.6 Z"/>
+        <path d="M22.6 6.9 L19.0 6.9 L14.05 16.4 L17.65 16.4 Z"/>
+      </svg>
+      <span id="word">VLAW AI</span>
+    </a>
+    <input class="navtoggle" type="checkbox" id="nav-open">
+    <label class="scrim" for="nav-open" aria-hidden="true"></label>
+    <label class="burger" for="nav-open" aria-label="Menu">
+      <svg viewBox="0 0 22 14">
+        <path class="b1" d="M1 1 H21"/>
+        <path class="b2" d="M1 7 H21"/>
+        <path class="b3" d="M1 13 H21"/>
+      </svg>
+    </label>
+    <div class="navpanel">
+      <nav class="menu">
+        <a href="/" title="Trang chủ"><span id="about">Giới thiệu</span></a>
+        <a href="/?tab=laws" title="Tra cứu hệ thống văn bản quy phạm pháp luật"><span id="product">Tra cứu Luật</span></a>
+        <a href="/?tab=study" title="Phòng giải đề thi & trắc nghiệm AI"><span id="solutions">Giải đề AI</span>
+          <svg class="caret" viewBox="0 0 9 6" aria-hidden="true">
+            <path d="M0.7 1.1 L4.5 4.6 L8.3 1.1"/>
+          </svg>
+        </a>
+      </nav>
+      <a class="login" href="javascript:void(0)" id="login-nav-btn" onclick="openAuthModal('login')">
+        <span id="login">Đăng nhập</span>
+        <svg class="navarrow" viewBox="0 0 10 9" aria-hidden="true">
+          <path d="M0 4.5 H9.1 M5.4 0.9 L9.2 4.5 L5.4 8.1"/>
+        </svg>
+      </a>
+      <a class="pill" href="javascript:void(0)" id="register-nav-btn" onclick="openAuthModal('register')">
+        <span id="contact">Đăng ký ngay</span>
+      </a>
+    </div>
+  </header>
+
+  <main class="hero">
+    <h1 class="title">
+      <span id="h1a">Trợ Lý AI Pháp Luật Đại Cương</span>
+      <span id="h1b">Giải Đề Chuẩn Barem, Đúng Tiến Độ.</span>
+    </h1>
+    <p class="sub">
+      <span id="sub1">Hệ thống giải đáp tình huống & trắc nghiệm pháp lý</span>
+      <span id="sub2">chuẩn khung chương trình Bộ Giáo dục & Đào tạo.</span>
+    </p>
+    <a class="cta" href="javascript:void(0)" id="main-cta-btn" onclick="handleStartAction()">
+      <span id="cta">Bắt đầu giải đề ngay</span>
+      <svg class="arrow" viewBox="0 0 16 11" aria-hidden="true">
+        <path d="M0 5.5 H14.6 M10.3 1.2 L14.9 5.5 L10.3 9.8"/>
+      </svg>
+    </a>
+    <ul class="feats">
+      <li>
+        <svg class="chev" viewBox="0 0 11 20" aria-hidden="true">
+          <path d="M1.15 1.15 L9.6 10 L1.15 18.85"/>
+        </svg>
+        <span id="f1">Lập luận 4 bước chuẩn Barem</span>
+      </li>
+      <li>
+        <svg class="chev" viewBox="0 0 11 20" aria-hidden="true">
+          <path d="M1.15 1.15 L9.6 10 L1.15 18.85"/>
+        </svg>
+        <span id="f2">38 Chuyên đề pháp luật</span>
+      </li>
+      <li>
+        <svg class="chev" viewBox="0 0 11 20" aria-hidden="true">
+          <path d="M1.15 1.15 L9.6 10 L1.15 18.85"/>
+        </svg>
+        <span id="f3">Bảo chứng nguồn điều luật</span>
+      </li>
+      <li>
+        <svg class="chev" viewBox="0 0 11 20" aria-hidden="true">
+          <path d="M1.15 1.15 L9.6 10 L1.15 18.85"/>
+        </svg>
+        <span id="f4">Triệt tiêu ảo giác 99.8%</span>
+      </li>
+    </ul>
+    <span class="rule" aria-hidden="true"></span>
+  </main>
+
+  <footer class="foot">
+    <span id="foot1">Được tin cậy bởi sinh viên và giảng viên luật tại các trường đại học toàn quốc.</span>
+    <span id="foot2">VLaw System</span>
+  </footer>
+
+  <!-- AUTHENTICATION MODAL (CONNECTED 100% TO BACKEND /api/v1/auth) -->
+  <div id="auth-modal" class="auth-backdrop" onclick="handleBackdropClick(event)">
+    <div class="auth-window">
+      <button class="auth-close" onclick="closeAuthModal()" aria-label="Đóng">&times;</button>
+      <div class="auth-header">
+        <div class="auth-title">
+          <svg width="20" height="15" viewBox="0 0 23 17" fill="currentColor">
+            <path d="M8.15 0.9 L4.55 0.9 L0.5 9.3 L4.1 9.3 Z"/>
+            <path d="M17.0 0 L13.4 0 L6.15 16.4 L9.75 16.4 Z"/>
+            <path d="M22.9 0 L19.3 0 L15.0 7.6 L18.6 7.6 Z"/>
+            <path d="M22.6 6.9 L19.0 6.9 L14.05 16.4 L17.65 16.4 Z"/>
+          </svg>
+          <span id="modal-heading">Cổng Học Tập VLaw AI</span>
+        </div>
+        <p style="font-size:12px;color:#94a3b8">Đăng nhập tài khoản để lưu lịch sử và giải đề không giới hạn</p>
+      </div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab-btn active" id="tab-btn-login" onclick="switchAuthTab('login')">Đăng nhập</button>
+        <button class="auth-tab-btn" id="tab-btn-register" onclick="switchAuthTab('register')">Đăng ký mới</button>
+      </div>
+
+      <div class="auth-body">
+        <div id="auth-alert" class="auth-alert"></div>
+
+        <!-- 1-Click Fast Demo Buttons -->
+        <div style="font-size:11px;font-weight:600;color:#94a3b8;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.04em">
+          Đăng nhập nhanh 1-Chạm (Tài khoản mẫu)
+        </div>
+        <div class="auth-fast-grid">
+          <button type="button" class="auth-fast-btn" onclick="fastLogin('student')">
+            <span style="font-weight:600;color:#67e8f9">🎓 Sinh viên DUT</span>
+            <span style="font-size:10px;color:#94a3b8">student@dut.udn.vn</span>
+          </button>
+          <button type="button" class="auth-fast-btn" onclick="fastLogin('admin')">
+            <span style="font-weight:600;color:#fcd34d">⚖️ Admin Hội đồng</span>
+            <span style="font-size:10px;color:#94a3b8">admin@dut.udn.vn</span>
+          </button>
+        </div>
+
+        <!-- Form Đăng nhập -->
+        <form id="form-login" onsubmit="submitLogin(event)">
+          <div class="auth-field">
+            <label class="auth-label" for="login-email">Tên đăng nhập hoặc Email</label>
+            <input type="text" id="login-email" class="auth-input" placeholder="student@dut.udn.vn" required autocomplete="username">
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="login-password">Mật khẩu</label>
+            <input type="password" id="login-password" class="auth-input" placeholder="••••••••" required autocomplete="current-password">
+          </div>
+          <button type="submit" id="btn-submit-login" class="auth-btn-submit">
+            <span>Đăng nhập hệ thống</span>
+            <svg width="14" height="12" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 5.5 H14.6 M10.3 1.2 L14.9 5.5 L10.3 9.8"/></svg>
+          </button>
+        </form>
+
+        <!-- Form Đăng ký -->
+        <form id="form-register" style="display:none" onsubmit="submitRegister(event)">
+          <div class="auth-field">
+            <label class="auth-label" for="reg-name">Họ và tên sinh viên</label>
+            <input type="text" id="reg-name" class="auth-input" placeholder="Nguyễn Văn A" required>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-email">Email</label>
+            <input type="email" id="reg-email" class="auth-input" placeholder="sinhvien@dut.udn.vn" required>
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-id">Mã sinh viên (tùy chọn)</label>
+            <input type="text" id="reg-id" class="auth-input" placeholder="102210001">
+          </div>
+          <div class="auth-field">
+            <label class="auth-label" for="reg-password">Mật khẩu khởi tạo</label>
+            <input type="password" id="reg-password" class="auth-input" placeholder="••••••••" required autocomplete="new-password">
+          </div>
+          <button type="submit" id="btn-submit-register" class="auth-btn-submit">
+            <span>Tạo tài khoản học tập</span>
+            <svg width="14" height="12" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 5.5 H14.6 M10.3 1.2 L14.9 5.5 L10.3 9.8"/></svg>
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    /* REDUCED MOTION VIDEO HANDLER */
+    (function(){
+      var q=window.matchMedia&&window.matchMedia('(prefers-reduced-motion:reduce)'),
+          v=document.querySelector('video.art');
+      if(!q||!v)return;
+      function sync(){
+        if(q.matches){v.pause();}
+        else{var p=v.play();if(p)p.catch(function(){});}
+      }
+      sync();
+      q.addEventListener ? q.addEventListener('change',sync) : q.addListener(sync);
+    })();
+
+    /* ENTRANCE TIMELINE CLEANUP */
+    (function(){
+      var foot2 = document.getElementById('foot2');
+      var doc = document.documentElement;
+      var timer = setTimeout(done, 4000);
+      function done(){
+        clearTimeout(timer);
+        if(foot2) foot2.removeEventListener('animationend', done);
+        doc.classList.add('is-entered');
+      }
+      if(foot2){
+        foot2.addEventListener('animationend', done);
+      } else {
+        done();
+      }
+    })();
+
+    /* 100% REAL AUTHENTICATION & SESSION MANAGEMENT */
+    var API_LOGIN = '/api/v1/auth/login';
+    var API_REGISTER = '/api/v1/auth/register';
+
+    function checkAuthState() {
+      var token = localStorage.getItem('vietlaw_token');
+      var userStr = localStorage.getItem('vietlaw_user');
+      var loginSpan = document.getElementById('login');
+      var contactSpan = document.getElementById('contact');
+      var registerBtn = document.getElementById('register-nav-btn');
+      var loginBtn = document.getElementById('login-nav-btn');
+
+      if (token && userStr) {
+        try {
+          var user = JSON.parse(userStr);
+          var shortName = user.fullName || user.username || 'Sinh viên';
+          if (shortName.length > 16) shortName = shortName.substring(0, 14) + '...';
+          
+          if (loginSpan) {
+            loginSpan.innerHTML = '👤 ' + shortName;
+            loginSpan.title = user.email || '';
+          }
+          if (loginBtn) {
+            loginBtn.onclick = function() { window.location.href = '/?tab=study'; };
+          }
+          if (contactSpan) {
+            contactSpan.innerText = 'Đăng xuất';
+          }
+          if (registerBtn) {
+            registerBtn.onclick = handleLogout;
+          }
+        } catch(e) {}
+      } else {
+        if (loginSpan) loginSpan.innerText = 'Đăng nhập';
+        if (loginBtn) loginBtn.onclick = function() { openAuthModal('login'); };
+        if (contactSpan) contactSpan.innerText = 'Đăng ký ngay';
+        if (registerBtn) registerBtn.onclick = function() { openAuthModal('register'); };
+      }
+    }
+
+    function handleStartAction() {
+      var token = localStorage.getItem('vietlaw_token');
+      if (token) {
+        // Đã đăng nhập -> chuyển thẳng vào phòng giải đề AI
+        window.location.href = '/?tab=study';
+      } else {
+        // Chưa đăng nhập -> bật modal đăng nhập
+        openAuthModal('login');
+      }
+    }
+
+    function openAuthModal(mode) {
+      var modal = document.getElementById('auth-modal');
+      if (!modal) return;
+      modal.classList.add('active');
+      switchAuthTab(mode || 'login');
+      clearAlert();
+    }
+
+    function closeAuthModal() {
+      var modal = document.getElementById('auth-modal');
+      if (modal) modal.classList.remove('active');
+      clearAlert();
+    }
+
+    function handleBackdropClick(e) {
+      if (e.target && e.target.id === 'auth-modal') {
+        closeAuthModal();
+      }
+    }
+
+    function switchAuthTab(tab) {
+      var btnLogin = document.getElementById('tab-btn-login');
+      var btnReg = document.getElementById('tab-btn-register');
+      var formLogin = document.getElementById('form-login');
+      var formReg = document.getElementById('form-register');
+      var heading = document.getElementById('modal-heading');
+      clearAlert();
+
+      if (tab === 'login') {
+        btnLogin.classList.add('active');
+        btnReg.classList.remove('active');
+        formLogin.style.display = 'block';
+        formReg.style.display = 'none';
+        heading.innerText = 'Đăng Nhập VLaw AI';
+      } else {
+        btnReg.classList.add('active');
+        btnLogin.classList.remove('active');
+        formLogin.style.display = 'none';
+        formReg.style.display = 'block';
+        heading.innerText = 'Đăng Ký Tài Khoản Mới';
+      }
+    }
+
+    function showAlert(msg, isSuccess) {
+      var box = document.getElementById('auth-alert');
+      if (!box) return;
+      box.className = 'auth-alert ' + (isSuccess ? 'success' : 'error');
+      box.innerText = msg;
+    }
+
+    function clearAlert() {
+      var box = document.getElementById('auth-alert');
+      if (box) {
+        box.className = 'auth-alert';
+        box.innerText = '';
+      }
+    }
+
+    async function submitLogin(e) {
+      e.preventDefault();
+      var email = document.getElementById('login-email').value.trim();
+      var pass = document.getElementById('login-password').value;
+      var btn = document.getElementById('btn-submit-login');
+
+      if (!email || !pass) {
+        showAlert('Vui lòng điền đầy đủ email và mật khẩu.', false);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Đang xác thực...</span>';
+      clearAlert();
+
+      try {
+        var res = await fetch(API_LOGIN, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({ emailOrUsername: email, password: pass })
+        });
+        var data = await res.json();
+        if (data.success && data.token) {
+          localStorage.setItem('vietlaw_token', data.token);
+          localStorage.setItem('vietlaw_user', JSON.stringify(data.user));
+          if (data.user && data.user.remainingQuestions !== undefined) {
+            localStorage.setItem('vietlaw_remaining_quota', data.user.remainingQuestions.toString());
+          }
+          showAlert('Đăng nhập thành công! Đang chuyển hướng...', true);
+          checkAuthState();
+          setTimeout(function(){
+            closeAuthModal();
+            window.location.href = '/?tab=study';
+          }, 700);
+        } else {
+          showAlert(data.message || 'Tài khoản hoặc mật khẩu không đúng.', false);
+        }
+      } catch (err) {
+        showAlert('Không thể kết nối đến máy chủ xác thực. Hãy thử lại.', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Đăng nhập hệ thống</span><svg width="14" height="12" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 5.5 H14.6 M10.3 1.2 L14.9 5.5 L10.3 9.8"/></svg>';
+      }
+    }
+
+    async function fastLogin(role) {
+      var email = role === 'student' ? 'student@dut.udn.vn' : 'admin@dut.udn.vn';
+      var pass = role === 'student' ? 'student123' : 'admin123';
+      document.getElementById('login-email').value = email;
+      document.getElementById('login-password').value = pass;
+      switchAuthTab('login');
+      var fakeEvent = { preventDefault: function(){} };
+      submitLogin(fakeEvent);
+    }
+
+    async function submitRegister(e) {
+      e.preventDefault();
+      var name = document.getElementById('reg-name').value.trim();
+      var email = document.getElementById('reg-email').value.trim();
+      var studentId = document.getElementById('reg-id').value.trim();
+      var pass = document.getElementById('reg-password').value;
+      var btn = document.getElementById('btn-submit-register');
+
+      if (!name || !email || !pass) {
+        showAlert('Vui lòng nhập đầy đủ họ tên, email và mật khẩu.', false);
+        return;
+      }
+
+      btn.disabled = true;
+      btn.innerHTML = '<span>Đang đăng ký...</span>';
+      clearAlert();
+
+      try {
+        var res = await fetch(API_REGISTER, {
+          method: 'POST',
+          headers: {'Content-Type': 'application/json'},
+          body: JSON.stringify({
+            username: email.split('@')[0] + '_' + Math.floor(Math.random()*1000),
+            email: email,
+            password: pass,
+            fullName: name,
+            studentId: studentId
+          })
+        });
+        var data = await res.json();
+        if (data.success) {
+          showAlert('Tạo tài khoản thành công! Tự động đăng nhập...', true);
+          // Tự động đăng nhập luôn
+          setTimeout(function(){
+            document.getElementById('login-email').value = email;
+            document.getElementById('login-password').value = pass;
+            switchAuthTab('login');
+            var fakeEvent = { preventDefault: function(){} };
+            submitLogin(fakeEvent);
+          }, 800);
+        } else {
+          showAlert(data.message || 'Đăng ký không thành công. Hãy thử lại.', false);
+        }
+      } catch(err) {
+        showAlert('Lỗi kết nối máy chủ đăng ký.', false);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<span>Tạo tài khoản học tập</span><svg width="14" height="12" viewBox="0 0 16 11" fill="none" stroke="currentColor" stroke-width="2"><path d="M0 5.5 H14.6 M10.3 1.2 L14.9 5.5 L10.3 9.8"/></svg>';
+      }
+    }
+
+    function handleLogout() {
+      localStorage.removeItem('vietlaw_token');
+      localStorage.removeItem('vietlaw_user');
+      localStorage.removeItem('vietlaw_remaining_quota');
+      checkAuthState();
+      alert('Bạn đã đăng xuất thành công.');
+    }
+
+    // Khởi tạo trạng thái phiên làm việc khi load trang
+    document.addEventListener('DOMContentLoaded', checkAuthState);
+    checkAuthState();
+  </script>
+</body>
+</html>

@@ -107,7 +107,7 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
   };
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
@@ -134,9 +134,15 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-30 cursor-pointer"
             title="Đóng"
+            aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
@@ -206,7 +212,7 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
                   </span>
                 </div>
                 <p className="text-[11px] text-slate-500 mt-0.5">
-                  Luyện đề Barem chuẩn + Ưu tiên AI tốc độ cao
+                  Luyện đề Barem chuẩn + Ưu tiên tốc độ cao
                 </p>
                 <p className="text-xs font-extrabold text-[#ec2227] mt-1">99.000 VNĐ</p>
               </div>
@@ -331,7 +337,7 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
 
       {/* Invoice Details Popup */}
       {selectedInvoice && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs" onClick={() => setSelectedInvoice(null)} />
           <div className="relative w-full max-w-lg bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100 z-10 animate-modal-in max-h-[88vh] overflow-y-auto">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -342,8 +348,15 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
                 <h3 className="text-lg font-bold text-slate-900 mt-1">Biên lai giao dịch dịch vụ</h3>
               </div>
               <button
-                onClick={() => setSelectedInvoice(null)}
-                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedInvoice(null);
+                }}
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer z-30"
+                title="Đóng"
+                aria-label="Đóng"
               >
                 <X className="w-5 h-5" />
               </button>

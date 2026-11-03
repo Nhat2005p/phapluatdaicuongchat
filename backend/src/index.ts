@@ -30,7 +30,6 @@ async function startServer() {
   try {
     await connectDB();
     await runSeed();
-    await LlamaManager.ensureRunning();
 
     app.listen(config.port, () => {
       console.log(`=======================================================`);
@@ -38,6 +37,11 @@ async function startServer() {
       console.log(`🔗 API Base: http://localhost:${config.port}/api/v1`);
       console.log(`👥 Roles configured: student (User) & admin (Council/Admin)`);
       console.log(`=======================================================`);
+    });
+
+    // Start LLM model in background so Auth & API routes respond instantly
+    LlamaManager.ensureRunning().catch((err) => {
+      console.warn('⚠️ [Llama-Server] Khởi động mô hình trong nền gặp sự cố:', err);
     });
   } catch (err) {
     console.error('Failed to start server:', err);

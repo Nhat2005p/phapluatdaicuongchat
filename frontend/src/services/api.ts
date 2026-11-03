@@ -36,6 +36,15 @@ export const api = {
     return res.json();
   },
 
+  async googleLogin(data: { email: string; fullName?: string; googleId?: string; avatarUrl?: string }) {
+    const res = await fetch(`${API_BASE}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
   async register(data: { username: string; email: string; password: string; fullName: string; studentId?: string; role?: string }) {
     const res = await fetch(`${API_BASE}/auth/register`, {
       method: 'POST',
@@ -89,11 +98,11 @@ export const api = {
   },
 
   // --- Student Query & History ---
-  async solveQuery(query: string): Promise<QueryResponse> {
+  async solveQuery(query: string, categoryId?: string | null): Promise<QueryResponse> {
     const res = await fetch(`${API_BASE}/query/solve`, {
       method: 'POST',
       headers: getAuthHeaders(),
-      body: JSON.stringify({ query })
+      body: JSON.stringify({ query, categoryId: categoryId || null })
     });
     return res.json();
   },
@@ -274,12 +283,21 @@ export const api = {
     return res.json();
   },
 
+  async createLawArticle(data: Partial<LawArticle>): Promise<{ success: boolean; message: string; article: LawArticle }> {
+    const res = await fetch(`${API_BASE}/laws/articles`, {
+      method: 'POST',
+      headers: getAuthHeaders(),
+      body: JSON.stringify(data)
+    });
+    return res.json();
+  },
+
   async getPrinciples(): Promise<{ success: boolean; principles: TextbookPrinciple[] }> {
     const res = await fetch(`${API_BASE}/laws/principles`);
     return res.json();
   },
 
-  // --- Knowledge Base & Crawl Management (Hình 17 & 19) ---
+  // --- Knowledge Base & Crawl Management ---
   async getCrawlSources(): Promise<{ success: boolean; sources: CrawlSourceItem[] }> {
     const res = await fetch(`${API_BASE}/admin/crawl/sources`, {
       headers: getAuthHeaders()
@@ -379,7 +397,7 @@ export const api = {
     return res.json();
   },
 
-  // --- System Settings & Services (Hình 21) ---
+  // --- System Settings & Services ---
   async getSystemSettings(): Promise<{ success: boolean; settings: SystemSettingsData }> {
     const res = await fetch(`${API_BASE}/admin/settings`, {
       headers: getAuthHeaders()

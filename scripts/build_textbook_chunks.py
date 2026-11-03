@@ -1,0 +1,466 @@
+"""
+VietLawAssist — Xây dựng danh sách Chunk tri thức chuẩn cấu trúc từ Giáo trình Pháp luật Đại cương 2021 (237 trang).
+Theo nguyên tắc Page 04 trong Sổ tay RAG:
+- Cắt theo cấu trúc Chương / Mục / Tiểu mục.
+- Giữ nguyên tiêu đề, số trang và ngữ cảnh.
+- Gắn metadata: tên tài liệu, số chương, mục, trang, từ khóa, cơ sở pháp lý.
+"""
+import json
+import os
+import sys
+
+if hasattr(sys.stdout, 'reconfigure'):
+    sys.stdout.reconfigure(encoding='utf-8')
+
+CHUNKS = [
+    # =========================================================================
+    # CHƯƠNG 1: MỘT SỐ VẤN ĐỀ LÝ LUẬN CƠ BẢN VỀ NHÀ NƯỚC (tr. 5 - 32)
+    # =========================================================================
+    {
+        "id": "CH1_SEC1_1_1",
+        "chapterNumber": 1,
+        "chapterTitle": "Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam",
+        "sectionCode": "1.1.1",
+        "sectionTitle": "Nguồn gốc của Nhà nước (Quan niệm phi Mác-xít và Học thuyết Mác - Lênin)",
+        "pageRange": "tr. 5 - 10",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["nguồn gốc nhà nước", "thuyết thần học", "thuyết gia trưởng", "thuyết bạo lực", "khế ước xã hội", "mác lênin", "tiền đề kinh tế", "tiền đề xã hội", "chế độ tư hữu", "đấu tranh giai cấp"],
+        "summary": "Lý giải nguồn gốc nhà nước qua 4 học thuyết phi Mác-xít và 2 tiền đề kinh tế - xã hội của Chủ nghĩa Mác - Lênin.",
+        "legalBasis": ["Học thuyết Mác - Lênin về Nhà nước và Pháp luật", "Tác phẩm Nguồn gốc của gia đình, của tư hữu và của nhà nước (Ph.Ăngghen)"],
+        "content": (
+            "I. CÁC QUAN NIỆM PHI MÁC-XÍT VỀ NGUỒN GỐC NHÀ NƯỚC:\n"
+            "1. Thuyết thần học: Thượng đế là người sắp đặt trật tự xã hội, nhà nước là do Thượng đế sáng tạo ra để bảo vệ trật tự chung; quyền lực nhà nước là vĩnh cửu và con người có bổn phận phục tùng (J.Calvin, J.Althisius).\n"
+            "2. Thuyết gia trưởng: Nhà nước là kết quả phát triển tự nhiên của gia đình và quyền gia trưởng; quyền lực nhà nước giống như quyền lực của người đứng đầu gia đình (Aristote, Bodin).\n"
+            "3. Thuyết bạo lực: Nhà nước xuất hiện trực tiếp từ việc sử dụng bạo lực của thị tộc này đối với thị tộc khác, thị tộc chiến thắng lập ra bộ máy nhà nước để nô dịch kẻ chiến bại (Hume, Gumplowicz, E.Duhring).\n"
+            "4. Thuyết khế ước xã hội: Nhà nước ra đời từ một bản 'khế ước xã hội' (hợp đồng) giữa các thành viên nhằm bảo vệ quyền tự nhiên của con người. Nếu nhà nước vi phạm khế ước, nhân dân có quyền lật đổ và lập khế ước mới (Thomas Hobbes, John Locke, J.J.Rousseau).\n\n"
+            "II. HỌC THUYẾT MÁC - LÊNIN VỀ NGUỒN GỐC NHÀ NƯỚC:\n"
+            "Chủ nghĩa Mác - Lênin khẳng định nhà nước là một hiện tượng lịch sử khách quan, xuất hiện khi xã hội phát triển đến một giai đoạn nhất định do 2 tiền đề:\n"
+            "1. Tiền đề kinh tế: Lực lượng sản xuất phát triển qua ba lần phân công lao động xã hội lớn (Chăn nuôi tách khỏi trồng trọt -> Thủ công nghiệp tách khỏi nông nghiệp -> Thương nghiệp xuất hiện) làm năng suất lao động tăng, xuất hiện của cải dư thừa, dẫn đến sự xuất hiện của chế độ tư hữu về tư liệu sản xuất.\n"
+            "2. Tiền đề xã hội: Xã hội phân chia thành các giai cấp đối kháng có lợi ích mâu thuẫn gay gắt không thể điều hòa. Để giữ cho sự xung đột giai cấp không tự thiêu hủy xã hội, giai cấp thống trị đã lập ra bộ máy quyền lực công đặc biệt để trấn áp và quản lý - đó là Nhà nước."
+        )
+    },
+    {
+        "id": "CH1_SEC1_1_2_1_1_3",
+        "chapterNumber": 1,
+        "chapterTitle": "Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam",
+        "sectionCode": "1.1.2_1.1.3",
+        "sectionTitle": "Khái niệm, Bản chất và Đặc trưng của Nhà nước",
+        "pageRange": "tr. 10 - 14",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["khái niệm nhà nước", "bản chất nhà nước", "tính giai cấp", "tính xã hội", "5 đặc trưng nhà nước", "quyền lực công cộng đặc biệt", "thu thuế", "chủ quyền quốc gia", "lãnh thổ"],
+        "summary": "Định nghĩa nhà nước, phân tích tính giai cấp và tính xã hội, 5 đặc trưng cơ bản phân biệt nhà nước với tổ chức khác.",
+        "legalBasis": ["Hiến pháp 2013 (Điều 2)", "Giáo trình Pháp luật đại cương ĐH Thương Mại 2021"],
+        "content": (
+            "I. KHÁI NIỆM VÀ BẢN CHẤT NHÀ NƯỚC:\n"
+            "- Định nghĩa: Nhà nước là tổ chức quyền lực công cộng đặc biệt, có bộ máy chuyên làm nhiệm vụ cưỡng chế và thực hiện chức năng quản lý xã hội, phục vụ và bảo vệ lợi ích của giai cấp cầm quyền và lợi ích chung của xã hội.\n"
+            "- Bản chất của nhà nước bao gồm hai thuộc tính thống nhất biện chứng:\n"
+            "  1. Tính giai cấp: Nhà nước là công cụ thống trị giai cấp của giai cấp cầm quyền trên 3 mặt: quyền lực kinh tế (nắm tư liệu sản xuất chủ yếu), quyền lực chính trị (sử dụng bộ máy bạo lực trấn áp) và quyền lực tư tưởng (xác lập hệ tư tưởng thống trị trong xã hội).\n"
+            "  2. Tính xã hội: Nhà nước là bộ máy thực thi quyền lực công nhằm duy trì trật tự xã hội, giải quyết các nhu cầu chung của cộng đồng (y tế, giáo dục, giao thông, phòng chống dịch bệnh, thiên tai, an sinh xã hội).\n\n"
+            "II. NĂM ĐẶC ĐIỂM CƠ BẢN PHÂN BIỆT NHÀ NƯỚC VỚI CÁC TỔ CHỨC KHÁC:\n"
+            "1. Thiết lập quyền lực công cộng đặc biệt: Có lớp người chuyên làm nhiệm vụ quản lý và bộ máy cưỡng chế chuyên nghiệp (quân đội, công an, tòa án, viện kiểm sát, nhà tù).\n"
+            "2. Phân chia dân cư theo lãnh thổ: Quản lý công dân theo đơn vị hành chính lãnh thổ, không phụ thuộc vào quan hệ huyết thống hay nghề nghiệp.\n"
+            "3. Có chủ quyền quốc gia: Có quyền tối cao về đối nội và độc lập tự quyết trong quan hệ đối ngoại.\n"
+            "4. Ban hành pháp luật và quản lý xã hội bằng pháp luật: Là tổ chức duy nhất có quyền ban hành các quy tắc xử sự có tính bắt buộc chung đối với toàn xã hội.\n"
+            "5. Quy định và thực hiện việc thu các loại thuế: Là chủ thể duy nhất quy định và thu thuế bắt buộc nhằm nuôi dưỡng bộ máy nhà nước và phục vụ lợi ích công cộng."
+        )
+    },
+    {
+        "id": "CH1_SEC1_1_4_1_1_6",
+        "chapterNumber": 1,
+        "chapterTitle": "Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam",
+        "sectionCode": "1.1.4_1.1.6",
+        "sectionTitle": "Hình thức Nhà nước, Chức năng Nhà nước và Các kiểu Nhà nước",
+        "pageRange": "tr. 14 - 21",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["hình thức nhà nước", "hình thức chính thể", "quân chủ", "cộng hòa", "cấu trúc nhà nước", "đơn nhất", "liên bang", "chế độ chính trị", "chức năng nhà nước", "các kiểu nhà nước"],
+        "summary": "3 yếu tố cấu thành hình thức nhà nước (chính thể, cấu trúc, chế độ chính trị), chức năng đối nội/đối ngoại, 4 kiểu nhà nước.",
+        "legalBasis": ["Hiến pháp 2013 (Điều 1, Điều 2)", "Giáo trình Pháp luật đại cương ĐH Thương Mại 2021"],
+        "content": (
+            "I. HÌNH THỨC NHÀ NƯỚC (GỒM 3 YẾU TỐ CẤU THÀNH):\n"
+            "1. Hình thức chính thể: Cách thức tổ chức và trình tự thành lập cơ quan quyền lực nhà nước tối cao:\n"
+            "   - Chính thể quân chủ: Quyền lực tối cao tập trung vào người đứng đầu (Vua/Hoàng đế) theo nguyên tắc thế vị (Quân chủ tuyệt đối hoặc Quân chủ hạn chế/lập hiến như Anh, Nhật).\n"
+            "   - Chính thể cộng hòa: Quyền lực tối cao thuộc về cơ quan được bầu theo nhiệm kỳ (Cộng hòa dân chủ và Cộng hòa quý tộc).\n"
+            "2. Hình thức cấu trúc: Cách thức tổ chức nhà nước thành các đơn vị hành chính lãnh thổ:\n"
+            "   - Nhà nước đơn nhất: Có chủ quyền chung, một Hiến pháp, một hệ thống pháp luật thống nhất, một cơ quan lập pháp cao nhất (Việt Nam, Pháp, Nhật).\n"
+            "   - Nhà nước liên bang: Gồm hai hay nhiều nhà nước thành viên hợp lại, có Hiến pháp chung và Hiến pháp riêng của từng bang (Mỹ, Đức, Nga, Ấn Độ).\n"
+            "3. Chế độ chính trị: Tổng thể phương pháp thực hiện quyền lực nhà nước (Phương pháp dân chủ và Phương pháp phản dân chủ/độc tài).\n\n"
+            "II. BỐN KIỂU NHÀ NƯỚC TRONG LỊCH SỬ:\n"
+            "Nhà nước chủ nô -> Nhà nước phong kiến -> Nhà nước tư sản -> Nhà nước xã hội chủ nghĩa."
+        )
+    },
+    {
+        "id": "CH1_SEC1_2",
+        "chapterNumber": 1,
+        "chapterTitle": "Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam",
+        "sectionCode": "1.2.1_1.2.3",
+        "sectionTitle": "Nhà nước CHXHCN Việt Nam và Bộ máy Nhà nước theo Hiến pháp 2013",
+        "pageRange": "tr. 21 - 32",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["bộ máy nhà nước việt nam", "quốc hội", "chủ tịch nước", "chính phủ", "tòa án nhân dân", "viện kiểm sát nhân dân", "hội đồng nhân dân", "ủy ban nhân dân", "hiến pháp 2013"],
+        "summary": "Bản chất Nhà nước pháp quyền XHCN Việt Nam và hệ thống 4 nhóm cơ quan trong bộ máy nhà nước theo Hiến pháp 2013.",
+        "legalBasis": ["Hiến pháp 2013 (Điều 2, Chương V, VI, VII, VIII, IX)"],
+        "content": (
+            "I. BẢN CHẤT NHÀ NƯỚC CHXHCN VIỆT NAM:\n"
+            "Theo Điều 2 Hiến pháp 2013: Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam là nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân. Nước CHXHCN Việt Nam do Nhân dân làm chủ; tất cả quyền lực nhà nước thuộc về Nhân dân mà nền tảng là liên minh giữa giai cấp công nhân với giai cấp nông dân và đội ngũ trí thức.\n"
+            "Quyền lực nhà nước là thống nhất, có sự phân công, phối hợp, kiểm soát giữa các cơ quan nhà nước trong việc thực hiện các quyền lập pháp, hành pháp, tư pháp.\n\n"
+            "II. CƠ CẤU BỘ MÁY NHÀ NƯỚC THEO HIẾN PHÁP 2013:\n"
+            "1. Hệ thống cơ quan quyền lực nhà nước (cơ quan đại biểu của nhân dân):\n"
+            "   - Quốc hội: Cơ quan đại biểu cao nhất của Nhân dân, cơ quan quyền lực nhà nước cao nhất, thực hiện quyền lập hiến, lập pháp, quyết định các vấn đề quan trọng của đất nước và giám sát tối cao.\n"
+            "   - Hội đồng nhân dân (các cấp tỉnh, huyện, xã): Cơ quan quyền lực nhà nước ở địa phương, đại diện cho ý chí, nguyện vọng của Nhân dân địa phương.\n"
+            "2. Hệ thống cơ quan hành chính nhà nước (cơ quan quản lý hành chính):\n"
+            "   - Chính phủ: Cơ quan hành chính nhà nước cao nhất, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội.\n"
+            "   - Ủy ban nhân dân (các cấp): Cơ quan hành chính nhà nước ở địa phương, cơ quan chấp hành của Hội đồng nhân dân cùng cấp.\n"
+            "3. Hệ thống cơ quan xét xử: Tòa án nhân dân (TAND Tối cao, TAND Cấp cao, TAND cấp tỉnh, TAND cấp huyện, Tòa án quân sự) - thực hiện quyền tư pháp, bảo vệ công lý.\n"
+            "4. Hệ thống cơ quan kiểm sát: Viện kiểm sát nhân dân (VKSND Tối cao, VKSND Cấp cao, VKSND cấp tỉnh, VKSND cấp huyện, Viện kiểm sát quân sự) - thực hành quyền công tố, kiểm sát hoạt động tư pháp.\n"
+            "5. Nguyên thủ quốc gia: Chủ tịch nước là người đứng đầu Nhà nước, thay mặt nước CHXHCN Việt Nam về đối nội và đối ngoại."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 2: MỘT SỐ VẤN ĐỀ LÝ LUẬN CƠ BẢN VỀ PHÁP LUẬT (tr. 33 - 70)
+    # =========================================================================
+    {
+        "id": "CH2_SEC2_1",
+        "chapterNumber": 2,
+        "chapterTitle": "Chương 2: Một số vấn đề lý luận cơ bản về pháp luật",
+        "sectionCode": "2.1.1_2.1.4",
+        "sectionTitle": "Khái niệm, Nguồn gốc, Bản chất và Đặc trưng của Pháp luật",
+        "pageRange": "tr. 33 - 44",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["khái niệm pháp luật", "nguồn gốc pháp luật", "bản chất pháp luật", "tính quy phạm phổ biến", "tính quyền lực bắt buộc chung", "tính xác định chặt chẽ về hình thức", "đặc trưng pháp luật"],
+        "summary": "Khái niệm pháp luật, bản chất giai cấp và xã hội, 3 đặc trưng cơ bản phân biệt pháp luật với đạo đức và tập quán.",
+        "legalBasis": ["Hiến pháp 2013", "Luật Ban hành văn bản quy phạm pháp luật 2015"],
+        "content": (
+            "I. ĐỊNH NGHĨA PHÁP LUẬT:\n"
+            "Pháp luật là hệ thống các quy tắc xử sự chung do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện, thể hiện ý chí của giai cấp thống trị và là nhân tố điều chỉnh các quan hệ xã hội nhằm bảo vệ quyền lợi của giai cấp mình và duy trì trật tự xã hội.\n\n"
+            "II. BẢN CHẤT CỦA PHÁP LUẬT:\n"
+            "1. Tính giai cấp: Pháp luật phản ánh ý chí của giai cấp thống trị trong xã hội, bảo vệ trước hết lợi ích của giai cấp thống trị.\n"
+            "2. Tính xã hội: Pháp luật còn phản ánh ý chí, nguyện vọng và lợi ích của các tầng lớp khác trong xã hội, là công cụ thiết lập trật tự an toàn xã hội chung.\n\n"
+            "III. BA ĐẶC TRƯNG CƠ BẢN CỦA PHÁP LUẬT:\n"
+            "1. Tính quy phạm phổ biến: Là khuôn mẫu, thước đo hành vi xử sự chung cho mọi cá nhân, tổ chức; được áp dụng nhiều lần, trong không gian rộng và với nhiều đối tượng.\n"
+            "2. Tính quyền lực bắt buộc chung (tính cưỡng chế): Do Nhà nước ban hành và được bảo đảm thực hiện bằng sức mạnh cưỡng chế của bộ máy nhà nước. Mọi chủ thể vi phạm đều bị xử lý theo chế tài luật định.\n"
+            "3. Tính xác định chặt chẽ về hình thức: Thể hiện bằng các văn bản quy phạm pháp luật có tên gọi, thẩm quyền, thủ tục ban hành và ngôn ngữ pháp lý rõ ràng, chính xác, không đa nghĩa."
+        )
+    },
+    {
+        "id": "CH2_SEC2_3",
+        "chapterNumber": 2,
+        "chapterTitle": "Chương 2: Một số vấn đề lý luận cơ bản về pháp luật",
+        "sectionCode": "2.3.1_2.3.5",
+        "sectionTitle": "Hình thức Pháp luật và Hệ thống Văn bản Quy phạm Pháp luật Việt Nam",
+        "pageRange": "tr. 49 - 61",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["hình thức pháp luật", "tập quán pháp", "tiền lệ pháp", "án lệ", "văn bản quy phạm pháp luật", "luật ban hành văn bản 2015", "thẩm quyền ban hành", "nguyên tắc áp dụng"],
+        "summary": "3 hình thức pháp luật trong lịch sử và hệ thống thứ bậc văn bản QPPL tại Việt Nam theo Luật Ban hành VBQPPL 2015.",
+        "legalBasis": ["Luật Ban hành văn bản quy phạm pháp luật 2015 (sửa đổi, bổ sung 2020, Điều 4, Điều 156)"],
+        "content": (
+            "I. BA HÌNH THỨC PHÁP LUẬT TRONG LỊCH SỬ:\n"
+            "1. Tập quán pháp: Nhà nước thừa nhận các tập quán sẵn có phù hợp với lợi ích giai cấp thống trị thành quy tắc pháp lý mang tính cưỡng chế.\n"
+            "2. Tiền lệ pháp (Án lệ): Nhà nước thừa nhận các quyết định hoặc bản án của cơ quan xét xử trước đó làm khuôn mẫu để giải quyết vụ việc tương tự xảy ra sau này.\n"
+            "3. Văn bản quy phạm pháp luật: Văn bản do cơ quan nhà nước có thẩm quyền ban hành theo đúng hình thức, trình tự, thủ tục luật định chứa đựng các quy tắc xử sự chung.\n\n"
+            "II. HỆ THỐNG VĂN BẢN QPPL Ở VIỆT NAM (ĐIỀU 4 LUẬT BAN HÀNH VBQPPL 2015/2020):\n"
+            "1. Văn bản luật: Hiến pháp (có hiệu lực pháp lý cao nhất); Luật, Bộ luật, Nghị quyết của Quốc hội.\n"
+            "2. Văn bản dưới luật:\n"
+            "   - Pháp lệnh, Nghị quyết của Ủy ban Thường vụ Quốc hội.\n"
+            "   - Lệnh, Quyết định của Chủ tịch nước.\n"
+            "   - Nghị định của Chính phủ; Nghị quyết liên tịch giữa Chính phủ với Đoàn Chủ tịch UBTƯ MTTQ Việt Nam.\n"
+            "   - Quyết định của Thủ tướng Chính phủ.\n"
+            "   - Thông tư của Bộ trưởng, Thủ trưởng cơ quan ngang bộ; Thông tư liên tịch.\n"
+            "   - Nghị quyết của Hội đồng nhân dân các cấp tỉnh, huyện, xã.\n"
+            "   - Quyết định của Ủy ban nhân dân các cấp tỉnh, huyện, xã.\n\n"
+            "III. NGUYÊN TẮC ÁP DỤNG VĂN BẢN QPPL (ĐIỀU 156):\n"
+            "- Văn bản có hiệu lực pháp lý cao hơn được ưu tiên áp dụng so với văn bản có hiệu lực thấp hơn.\n"
+            "- Trong các văn bản do cùng cơ quan ban hành có quy định khác nhau về cùng vấn đề thì áp dụng quy định của văn bản ban hành sau.\n"
+            "- Quy định chuyên ngành được ưu tiên áp dụng so với quy định chung."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 3: QUY PHẠM PHÁP LUẬT VÀ THỰC HIỆN PHÁP LUẬT (tr. 71 - 89)
+    # =========================================================================
+    {
+        "id": "CH3_SEC3_1",
+        "chapterNumber": 3,
+        "chapterTitle": "Chương 3: Quy phạm pháp luật và Thực hiện pháp luật",
+        "sectionCode": "3.1.1_3.1.2",
+        "sectionTitle": "Cơ cấu của Quy phạm Pháp luật (Giả định - Quy định - Chế tài)",
+        "pageRange": "tr. 71 - 79",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["cơ cấu quy phạm pháp luật", "giả định", "quy định", "chế tài", "xác định bộ phận", "ai ở điều kiện nào", "được làm gì", "phải chịu hậu quả gì"],
+        "summary": "3 bộ phận cấu thành quy phạm pháp luật: Giả định (chủ thể + hoàn cảnh), Quy định (mệnh lệnh hành vi), Chế tài (hậu quả bất lợi).",
+        "legalBasis": ["Giáo trình Pháp luật đại cương ĐH Thương Mại 2021 (tr. 71 - 79)"],
+        "content": (
+            "I. KHÁI NIỆM QUY PHẠM PHÁP LUẬT (QPPL):\n"
+            "Quy phạm pháp luật là quy tắc xử sự chung do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện nhằm điều chỉnh các quan hệ xã hội theo định hướng của Nhà nước.\n\n"
+            "II. CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT:\n"
+            "1. Bộ phận Giả định:\n"
+            "   - Khái niệm: Là bộ phận nêu rõ chủ thể (cá nhân, tổ chức nào) và những điều kiện, hoàn cảnh thực tế mà khi gặp phải thì chủ thể phải xử sự theo quy tắc mà quy phạm đặt ra.\n"
+            "   - Trả lời câu hỏi: 'Ai?', 'Khi nào?', 'Trong điều kiện, hoàn cảnh nào?'.\n"
+            "2. Bộ phận Quy định:\n"
+            "   - Khái niệm: Là bộ phận trung tâm của QPPL, chỉ rõ cách thức xử sự của chủ thể: được làm gì, không được làm gì, hoặc phải làm gì khi ở vào điều kiện đã nêu ở phần giả định.\n"
+            "   - Trả lời câu hỏi: 'Được làm gì?', 'Không được làm gì?', 'Phải làm gì?'.\n"
+            "3. Bộ phận Chế tài:\n"
+            "   - Khái niệm: Là bộ phận chỉ rõ các biện pháp tác động bất lợi (hậu quả pháp lý) mà Nhà nước dự kiến áp dụng đối với chủ thể không thực hiện đúng bộ phận quy định.\n"
+            "   - Trả lời câu hỏi: 'Phải chịu hậu quả bất lợi gì?'.\n"
+            "   - Phân loại chế tài: Chế tài hình sự, chế tài hành chính, chế tài dân sự, chế tài kỷ luật."
+        )
+    },
+    {
+        "id": "CH3_SEC3_2",
+        "chapterNumber": 3,
+        "chapterTitle": "Chương 3: Quy phạm pháp luật và Thực hiện pháp luật",
+        "sectionCode": "3.2.1_3.2.2",
+        "sectionTitle": "Các Hình thức Thực hiện Pháp luật và Áp dụng Pháp luật",
+        "pageRange": "tr. 79 - 89",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["hình thức thực hiện pháp luật", "tuân thủ pháp luật", "thi hành pháp luật", "sử dụng pháp luật", "áp dụng pháp luật", "dưới dạng không hành động", "dưới dạng hành động", "chủ thể đặc biệt"],
+        "summary": "4 hình thức thực hiện pháp luật: Tuân thủ (không làm điều cấm - không hành động), Thi hành (làm điều bắt buộc), Sử dụng (thực hiện quyền), Áp dụng (cơ quan nhà nước ra quyết định).",
+        "legalBasis": ["Giáo trình Pháp luật đại cương ĐH Thương Mại 2021 (tr. 79 - 89)"],
+        "content": (
+            "I. BỐN HÌNH THỨC THỰC HIỆN PHÁP LUẬT:\n"
+            "1. Tuân thủ pháp luật (Tuân theo pháp luật):\n"
+            "   - Khái niệm: Là hình thức thực hiện pháp luật trong đó các chủ thể kiềm chế không tiến hành những hành vi mà pháp luật cấm.\n"
+            "   - Đặc điểm: Luôn được thực hiện dưới dạng KHÔNG HÀNH ĐỘNG (ví dụ: không vượt đèn đỏ, không buôn bán ma túy, không nhận hối lộ).\n"
+            "2. Thi hành pháp luật (Chấp hành pháp luật):\n"
+            "   - Khái niệm: Là hình thức các chủ thể thực hiện nghĩa vụ pháp lý bằng những hành vi tích cực mà pháp luật yêu cầu phải làm.\n"
+            "   - Đặc điểm: Luôn được thực hiện dưới dạng HÀNH ĐỘNG TÍCH CỰC (ví dụ: nộp thuế đầy đủ, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi đi xe máy).\n"
+            "3. Sử dụng pháp luật:\n"
+            "   - Khái niệm: Là hình thức các chủ thể tự mình quyết định thực hiện quyền chủ thể của mình (làm những gì mà pháp luật cho phép làm).\n"
+            "   - Đặc điểm: Có thể thực hiện dưới dạng HÀNH ĐỘNG hoặc KHÔNG HÀNH ĐỘNG tùy theo ý chí chủ thể (ví dụ: đăng ký kinh doanh, lập di chúc, khiếu nại tố cáo, hoặc từ chối nhận di sản).\n"
+            "4. Áp dụng pháp luật:\n"
+            "   - Khái niệm: Là hình thức thực hiện pháp luật có tính tổ chức và quyền lực nhà nước, do CƠ QUAN NHÀ NƯỚC CÓ THẨM QUYỀN hoặc người có thẩm quyền tiến hành nhằm ban hành các quyết định cá biệt đối với trường hợp cụ thể.\n"
+            "   - Đặc điểm: Mang tính quyền lực nhà nước, chỉ do chủ thể có thẩm quyền thực hiện, luôn theo trình tự luật định và ban hành văn bản áp dụng pháp luật (ví dụ: Tòa án tuyên án phạt tù, Cảnh sát giao thông xử phạt vi phạm hành chính)."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 4: QUAN HỆ PHÁP LUẬT (tr. 90 - 103)
+    # =========================================================================
+    {
+        "id": "CH4_SEC4_1_4_3",
+        "chapterNumber": 4,
+        "chapterTitle": "Chương 4: Quan hệ pháp luật",
+        "sectionCode": "4.1_4.3",
+        "sectionTitle": "Cấu thành Quan hệ Pháp luật và Sự kiện Pháp lý",
+        "pageRange": "tr. 90 - 103",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["quan hệ pháp luật", "năng lực chủ thể", "năng lực pháp luật", "năng lực hành vi", "nội dung quan hệ pháp luật", "quyền chủ thể", "nghĩa vụ pháp lý", "khách thể quan hệ pháp luật", "sự kiện pháp lý", "hành vi pháp lý", "sự biến pháp lý"],
+        "summary": "3 yếu tố cấu thành quan hệ pháp luật (Chủ thể, Nội dung, Khách thể) và phân loại Sự kiện pháp lý (Sự biến và Hành vi).",
+        "legalBasis": ["Bộ luật Dân sự 2015", "Giáo trình Pháp luật đại cương ĐH Thương Mại 2021"],
+        "content": (
+            "I. KHÁI NIỆM QUAN HỆ PHÁP LUẬT:\n"
+            "Là quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia có những quyền chủ thể và nghĩa vụ pháp lý nhất định được Nhà nước bảo đảm thực hiện.\n\n"
+            "II. BA YẾU TỐ CẤU THÀNH QUAN HỆ PHÁP LUẬT:\n"
+            "1. Chủ thể của quan hệ pháp luật: Cá nhân, pháp nhân, nhà nước có năng lực chủ thể (gồm năng lực pháp luật và năng lực hành vi pháp luật).\n"
+            "   - Năng lực pháp luật: Khả năng chủ thể có quyền và nghĩa vụ do Nhà nước thừa nhận, xuất hiện từ khi sinh ra/thành lập và chấm dứt khi chết/giải thể.\n"
+            "   - Năng lực hành vi: Khả năng chủ thể bằng hành vi của mình xác lập và thực hiện các quyền và nghĩa vụ pháp lý, phụ thuộc vào độ tuổi và tình trạng nhận thức.\n"
+            "2. Nội dung của quan hệ pháp luật: Gồm Quyền chủ thể và Nghĩa vụ pháp lý của các bên tham gia.\n"
+            "3. Khách thể của quan hệ pháp luật: Lợi ích vật chất, tinh thần hoặc hành vi xử sự mà các bên hướng tới khi tham gia quan hệ pháp luật.\n\n"
+            "III. SỰ KIỆN PHÁP LÝ:\n"
+            "Là những sự việc, hiện tượng xảy ra trong thực tế đời sống mà quy phạm pháp luật gắn việc phát sinh, thay đổi hoặc chấm dứt quan hệ pháp luật với sự xuất hiện của chúng.\n"
+            "- Phân loại: Sự biến pháp lý (xảy ra ngoài ý muốn chủ quan của con người: thiên tai, dịch bệnh, người chết tự nhiên) và Hành vi pháp lý (xảy ra theo ý chí con người, gồm hành vi hợp pháp và hành vi bất hợp pháp)."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 5: VI PHẠM PHÁP LUẬT VÀ TRÁCH NHIỆM PHÁP LÝ (tr. 104 - 116)
+    # =========================================================================
+    {
+        "id": "CH5_SEC5_1_5_2",
+        "chapterNumber": 5,
+        "chapterTitle": "Chương 5: Vi phạm pháp luật và Trách nhiệm pháp lý",
+        "sectionCode": "5.1_5.2",
+        "sectionTitle": "Khái niệm, 4 Dấu hiệu và 4 Yếu tố Cấu thành Vi phạm Pháp luật",
+        "pageRange": "tr. 104 - 112",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["vi phạm pháp luật", "4 dấu hiệu vi phạm pháp luật", "cấu thành vi phạm pháp luật", "mặt khách quan", "mặt chủ quan", "chủ thể", "khách thể", "lỗi cố ý", "lỗi vô ý"],
+        "summary": "4 dấu hiệu cơ bản của vi phạm pháp luật và 4 yếu tố cấu thành (Chủ thể, Khách thể, Mặt chủ quan, Mặt khách quan).",
+        "legalBasis": ["Bộ luật Hình sự 2015", "Luật Xử lý vi phạm hành chính 2012 (sửa đổi 2020)"],
+        "content": (
+            "I. BỐN DẤU HIỆU CƠ BẢN CỦA VI PHẠM PHÁP LUẬT:\n"
+            "1. Phải là hành vi xác định của con người (hành động hoặc không hành động). Ý nghĩ, tư tưởng chưa biểu hiện ra hành vi thực tế thì không phải là vi phạm pháp luật.\n"
+            "2. Là hành vi trái pháp luật: Xâm phạm đến các quan hệ xã hội được pháp luật bảo vệ.\n"
+            "3. Chủ thể có lỗi: Lỗi là thái độ tâm lý tiêu cực của chủ thể đối với hành vi và hậu quả nguy hiểm (Lỗi cố ý trực tiếp, cố ý gián tiếp, vô ý do quá tự tin, vô ý do cẩu thả).\n"
+            "4. Chủ thể có năng lực trách nhiệm pháp lý: Đạt độ tuổi theo luật định và có khả năng nhận thức, điều khiển hành vi.\n\n"
+            "II. BỐN YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT:\n"
+            "1. Mặt khách quan: Hành vi trái pháp luật, hậu quả nguy hiểm cho xã hội và mối quan hệ nhân quả giữa hành vi và hậu quả.\n"
+            "2. Khách thể: Quan hệ xã hội được pháp luật bảo vệ nhưng bị hành vi vi phạm xâm hại.\n"
+            "3. Mặt chủ quan: Lỗi của chủ thể, động cơ và mục đích vi phạm.\n"
+            "4. Chủ thể: Cá nhân hoặc tổ chức có năng lực trách nhiệm pháp lý thực hiện hành vi vi phạm."
+        )
+    },
+    {
+        "id": "CH5_SEC5_3_5_4",
+        "chapterNumber": 5,
+        "chapterTitle": "Chương 5: Vi phạm pháp luật và Trách nhiệm pháp lý",
+        "sectionCode": "5.3_5.4",
+        "sectionTitle": "Phân loại Vi phạm Pháp luật và 4 Loại Trách nhiệm Pháp lý",
+        "pageRange": "tr. 112 - 116",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["phân loại vi phạm pháp luật", "tội phạm", "vi phạm hành chính", "vi phạm dân sự", "vi phạm kỷ luật", "trách nhiệm hình sự", "trách nhiệm hành chính", "trách nhiệm dân sự", "trách nhiệm kỷ luật"],
+        "summary": "4 loại vi phạm pháp luật tương ứng với 4 loại trách nhiệm pháp lý: Hình sự, Hành chính, Dân sự, Kỷ luật.",
+        "legalBasis": ["Bộ luật Hình sự 2015", "Bộ luật Dân sự 2015", "Luật Xử lý vi phạm hành chính 2012"],
+        "content": (
+            "I. BỐN LOẠI VI PHẠM PHÁP LUẬT VÀ TRÁCH NHIỆM PHÁP LÝ TƯƠNG ỨNG:\n"
+            "1. Vi phạm hình sự (Tội phạm) -> Gánh chịu Trách nhiệm hình sự (loại trách nhiệm nghiêm khắc nhất do Tòa án áp dụng theo Bộ luật Hình sự).\n"
+            "2. Vi phạm hành chính -> Gánh chịu Trách nhiệm hành chính (do cơ quan hành chính nhà nước có thẩm quyền áp dụng theo Luật Xử lý vi phạm hành chính).\n"
+            "3. Vi phạm dân sự -> Gánh chịu Trách nhiệm dân sự (bồi thường thiệt hại, khắc phục hậu quả, thực hiện nghĩa vụ theo Bộ luật Dân sự).\n"
+            "4. Vi phạm kỷ luật -> Gánh chịu Trách nhiệm kỷ luật (khiển trách, cảnh cáo, cách chức, buộc thôi việc theo Luật Cán bộ, công chức và Bộ luật Lao động)."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 6: MỘT SỐ NỘI DUNG CƠ BẢN CỦA LUẬT DÂN SỰ (tr. 117 - 147)
+    # =========================================================================
+    {
+        "id": "CH6_SEC6_1_6_3",
+        "chapterNumber": 6,
+        "chapterTitle": "Chương 6: Một số nội dung cơ bản của Luật Dân sự",
+        "sectionCode": "6.1_6.3",
+        "sectionTitle": "Chủ thể Quan hệ Dân sự và Điều kiện Hiệu lực của Giao dịch Dân sự",
+        "pageRange": "tr. 117 - 130",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["chủ thể luật dân sự", "cá nhân", "pháp nhân", "giao dịch dân sự", "điều kiện có hiệu lực", "giao dịch dân sự vô hiệu", "lừa dối", "đe dọa", "giả tạo", "bộ luật dân sự 2015"],
+        "summary": "Năng lực chủ thể dân sự (cá nhân, pháp nhân) và 4 điều kiện có hiệu lực của giao dịch dân sự theo Điều 117 BLDS 2015.",
+        "legalBasis": ["Bộ luật Dân sự 2015 (Điều 74, Điều 117, Điều 122 - 133)"],
+        "content": (
+            "I. ĐIỀU KIỆN ĐỂ MỘT TỔ CHỨC CÓ TƯ CÁCH PHÁP NHÂN (ĐIỀU 74 BLDS 2015):\n"
+            "1. Được thành lập theo quy định của pháp luật.\n"
+            "2. Có cơ cấu tổ chức chặt chẽ theo quy định của pháp luật và điều lệ.\n"
+            "3. Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình.\n"
+            "4. Nhân danh mình tham gia các quan hệ pháp luật một cách độc lập.\n\n"
+            "II. ĐIỀU KIỆN CÓ HIỆU LỰC CỦA GIAO DỊCH DÂN SỰ (ĐIỀU 117 BLDS 2015):\n"
+            "1. Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch được xác lập.\n"
+            "2. Chủ thể tham gia giao dịch hoàn toàn tự nguyện.\n"
+            "3. Mục đích và nội dung của giao dịch không vi phạm điều cấm của luật, không trái đạo đức xã hội.\n"
+            "4. Hình thức của giao dịch dân sự là điều kiện có hiệu lực trong trường hợp luật có quy định (công chứng, chứng thực, văn bản)."
+        )
+    },
+    {
+        "id": "CH6_SEC6_5",
+        "chapterNumber": 6,
+        "chapterTitle": "Chương 6: Một số nội dung cơ bản của Luật Dân sự",
+        "sectionCode": "6.5",
+        "sectionTitle": "Pháp luật về Thừa kế (Thừa kế theo Di chúc và Thừa kế theo Pháp luật)",
+        "pageRange": "tr. 138 - 147",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["thừa kế", "di chúc", "di sản", "thừa kế theo pháp luật", "hàng thừa kế", "người thừa kế không phụ thuộc nội dung di chúc", "điều 644", "điều 651", "thừa kế thế vị"],
+        "summary": "Quy định về di chúc hợp pháp, quyền hưởng thừa kế không phụ thuộc nội dung di chúc (Điều 644), 3 hàng thừa kế (Điều 651), thừa kế thế vị (Điều 652).",
+        "legalBasis": ["Bộ luật Dân sự 2015 (Chương XXI, XXII, XXIII, Điều 612, 644, 651, 652)"],
+        "content": (
+            "I. NGUYÊN TẮC XÁC ĐỊNH DI SẢN THỪA KẾ (ĐIỀU 612 BLDS 2015):\n"
+            "Di sản bao gồm tài sản riêng của người chết, phần tài sản của người chết trong khối tài sản chung với người khác (ví dụ tài sản chung vợ chồng chia đôi: 1/2 của người chết là di sản).\n\n"
+            "II. NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC VÀO NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015):\n"
+            "Những người sau đây vẫn được hưởng phần di sản bằng 2/3 suất của một người thừa kế theo pháp luật nếu di sản được chia theo pháp luật, trong trường hợp họ không được người lập di chúc cho hưởng di sản hoặc chỉ cho hưởng phần di sản ít hơn 2/3 suất đó:\n"
+            "1. Con chưa thành niên (dưới 18 tuổi), cha, mẹ, vợ, chồng.\n"
+            "2. Con thành niên mà không có khả năng lao động.\n\n"
+            "III. THỪA KẾ THEO PHÁP LUẬT VÀ 3 HÀNG THỪA KẾ (ĐIỀU 651 BLDS 2015):\n"
+            "- Hàng thừa kế thứ nhất: Vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết.\n"
+            "- Hàng thừa kế thứ hai: Ông nội, bà nội, ông ngoại, bà ngoại, anh ruột, chị ruột, em ruột của người chết; cháu ruột của người chết mà người chết là ông nội, bà nội, ông ngoại, bà ngoại.\n"
+            "- Hàng thừa kế thứ ba: Cụ nội, cụ ngoại của người chết; bác ruột, chú ruột, cậu ruột, cô ruột, dì ruột; cháu ruột gọi người chết là bác/chú/cậu/cô/dì; chắt ruột mà người chết là cụ nội/ngoại.\n"
+            "- Nguyên tắc phân chia: Những người thừa kế cùng hàng được hưởng phần di sản bằng nhau. Những người ở hàng sau chỉ được hưởng nếu không còn ai ở hàng trước do đã chết, không có quyền hưởng, bị truất quyền hoặc từ chối nhận di sản.\n\n"
+            "IV. THỪA KẾ THẾ VỊ (ĐIỀU 652 BLDS 2015):\n"
+            "Trường hợp con của người để lại di sản chết trước hoặc cùng thời điểm với người để lại di sản thì cháu được hưởng phần di sản mà cha hoặc mẹ của cháu được hưởng nếu còn sống; nếu cháu cũng chết trước hoặc cùng thời điểm với người để lại di sản thì chắt được hưởng phần di sản đó."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 7: MỘT SỐ NỘI DUNG CƠ BẢN CỦA LUẬT HÌNH SỰ (tr. 148 - 180)
+    # =========================================================================
+    {
+        "id": "CH7_SEC7_1_7_3",
+        "chapterNumber": 7,
+        "chapterTitle": "Chương 7: Một số nội dung cơ bản của Luật Hình sự",
+        "sectionCode": "7.1_7.3",
+        "sectionTitle": "Tội phạm, Độ tuổi chịu Trách nhiệm Hình sự, Phân loại Tội phạm và Hệ thống Hình phạt",
+        "pageRange": "tr. 148 - 180",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["luật hình sự", "tội phạm", "độ tuổi chịu trách nhiệm hình sự", "điều 12 blhs", "phân loại tội phạm", "ít nghiêm trọng", "nghiêm trọng", "rất nghiêm trọng", "đặc biệt nghiêm trọng", "hình phạt chính", "hình phạt bổ sung"],
+        "summary": "Quy định về độ tuổi chịu TNHS (Điều 12 BLHS), phân loại 4 nhóm tội phạm (Điều 9 BLHS), và hệ thống hình phạt chính / bổ sung (Điều 32 BLHS).",
+        "legalBasis": ["Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017, Điều 8, 9, 12, 32)"],
+        "content": (
+            "I. ĐỘ TUỔI CHỊU TRÁCH NHIỆM HÌNH SỰ (ĐIỀU 12 BLHS 2015):\n"
+            "1. Người từ đủ 16 tuổi trở lên phải chịu trách nhiệm hình sự về mọi tội phạm, trừ những tội phạm mà Bộ luật này có quy định khác.\n"
+            "2. Người từ đủ 14 tuổi đến dưới 16 tuổi chỉ phải chịu trách nhiệm hình sự về:\n"
+            "   - Tội phạm rất nghiêm trọng hoặc tội phạm đặc biệt nghiêm trọng quy định tại một số điều luật cụ thể (Điều 123 - Giết người, Điều 134 - Cố ý gây thương tích, Điều 141 - Hiếp dâm, Điều 168 - Cướp tài sản...).\n\n"
+            "II. PHÂN LOẠI 4 NHÓM TỘI PHẠM (ĐIỀU 9 BLHS 2015):\n"
+            "1. Tội phạm ít nghiêm trọng: Tính chất và mức độ nguy hại cho xã hội không lớn; khung hình phạt cao nhất là phạt tiền, phạt cải tạo không giam giữ hoặc phạt tù đến 03 năm.\n"
+            "2. Tội phạm nghiêm trọng: Tính chất và mức độ nguy hại lớn; khung hình phạt cao nhất từ trên 03 năm tù đến 07 năm tù.\n"
+            "3. Tội phạm rất nghiêm trọng: Tính chất và mức độ nguy hại rất lớn; khung hình phạt cao nhất từ trên 07 năm tù đến 15 năm tù.\n"
+            "4. Tội phạm đặc biệt nghiêm trọng: Tính chất và mức độ nguy hại đặc biệt lớn; khung hình phạt cao nhất từ trên 15 năm tù đến 20 năm tù, tù chung thân hoặc tử hình.\n\n"
+            "III. HỆ THỐNG HÌNH PHẠT (ĐIỀU 32 BLHS 2015):\n"
+            "- Hình phạt chính: Cảnh cáo, Phạt tiền, Cải tạo không giam giữ, Trục xuất, Tù có thời hạn, Tù chung thân, Tử hình (mỗi tội phạm chỉ bị áp dụng một hình phạt chính).\n"
+            "- Hình phạt bổ sung: Cấm đảm nhiệm chức vụ, Cấm hành nghề, Cấm cư trú, Quản chế, Tước một số quyền công dân, Tịch thu tài sản, Phạt tiền (khi không áp dụng là hình phạt chính), Trục xuất (khi không áp dụng là hình phạt chính)."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 8: MỘT SỐ NỘI DUNG CƠ BẢN CỦA LUẬT HÀNH CHÍNH (tr. 181 - 201)
+    # =========================================================================
+    {
+        "id": "CH8_SEC8_1_8_3",
+        "chapterNumber": 8,
+        "chapterTitle": "Chương 8: Một số nội dung cơ bản của Luật Hành chính",
+        "sectionCode": "8.1_8.3",
+        "sectionTitle": "Quản lý Hành chính Nhà nước và Xử phạt Vi phạm Hành chính",
+        "pageRange": "tr. 181 - 201",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["luật hành chính", "quản lý hành chính nhà nước", "quan hệ pháp luật hành chính", "vi phạm hành chính", "xử phạt vi phạm hành chính", "hình thức xử phạt", "cảnh cáo", "phạt tiền", "tước quyền sử dụng giấy phép"],
+        "summary": "Đặc điểm quản lý hành chính nhà nước, phương pháp mệnh lệnh - phục tùng, và các hình thức xử phạt vi phạm hành chính theo Luật XLVPHC 2012.",
+        "legalBasis": ["Luật Xử lý vi phạm hành chính 2012 (sửa đổi, bổ sung 2020)"],
+        "content": (
+            "I. KHÁI NIỆM VÀ PHƯƠNG PHÁP ĐIỀU CHỈNH CỦA LUẬT HÀNH CHÍNH:\n"
+            "- Khái niệm: Là ngành luật bao gồm hệ thống các quy phạm pháp luật điều chỉnh các quan hệ xã hội phát sinh trong quá trình tổ chức và thực hiện hoạt động chấp hành - điều hành của các cơ quan quản lý nhà nước.\n"
+            "- Phương pháp điều chỉnh chủ yếu: Phương pháp mệnh lệnh - phục tùng (bất bình đẳng về mặt ý chí giữa cơ quan công quyền và đối tượng quản lý).\n\n"
+            "II. CÁC HÌNH THỨC XỬ PHẠT VI PHẠM HÀNH CHÍNH (ĐIỀU 21 LUẬT XLVPHC 2012/2020):\n"
+            "1. Cảnh cáo (áp dụng đối với vi phạm nhỏ, người chưa thành niên từ 14 đến dưới 16 tuổi).\n"
+            "2. Phạt tiền.\n"
+            "3. Tước quyền sử dụng giấy phép, chứng chỉ hành nghề có thời hạn hoặc đình chỉ hoạt động có thời hạn.\n"
+            "4. Tịch thu tang vật vi phạm hành chính, phương tiện được sử dụng để vi phạm hành chính.\n"
+            "5. Trục xuất (áp dụng đối với người nước ngoài)."
+        )
+    },
+
+    # =========================================================================
+    # CHƯƠNG 9: PHÁP LUẬT VỀ PHÒNG, CHỐNG THAM NHŨNG (tr. 202 - 229)
+    # =========================================================================
+    {
+        "id": "CH9_SEC9_1_9_2",
+        "chapterNumber": 9,
+        "chapterTitle": "Chương 9: Một số nội dung cơ bản của pháp luật về Phòng, chống tham nhũng",
+        "sectionCode": "9.1_9.2",
+        "sectionTitle": "Khái niệm Tham nhũng, Các Hành vi Tham nhũng và Biện pháp Phòng ngừa",
+        "pageRange": "tr. 202 - 229",
+        "source": "Giáo trình Pháp luật đại cương - ĐH Thương Mại 2021 (TS. Trần Thành Thọ)",
+        "keywords": ["tham nhũng", "luật phòng chống tham nhũng 2018", "hành vi tham nhũng", "nhận hối lộ", "tham ô tài sản", "lợi dụng chức vụ quyền hạn", "kê khai tài sản thu nhập", "công khai minh bạch"],
+        "summary": "Khái niệm tham nhũng, 3 dấu hiệu cấu thành tham nhũng, các hành vi tham nhũng khu vực công và khu vực tư, biện pháp kê khai tài sản theo Luật PCTN 2018.",
+        "legalBasis": ["Luật Phòng, chống tham nhũng 2018 (Điều 2, 3, 20, 33, 34)"],
+        "content": (
+            "I. KHÁI NIỆM THAM NHŨNG (ĐIỀU 3 LUẬT PHÒNG, CHỐNG THAM NHŨNG 2018):\n"
+            "Tham nhũng là hành vi của người có chức vụ, quyền hạn đã lợi dụng chức vụ, quyền hạn đó vì vụ lợi.\n"
+            "3 dấu hiệu bắt buộc cấu thành hành vi tham nhũng:\n"
+            "1. Chủ thể: Phải là người có chức vụ, quyền hạn (do bổ nhiệm, bầu cử, tuyển dụng hoặc theo hợp đồng trong cơ quan, tổ chức, đơn vị).\n"
+            "2. Hành vi: Đã lợi dụng chức vụ, quyền hạn (sử dụng quyền hạn trái pháp luật hoặc vượt quá quyền hạn được giao).\n"
+            "3. Mục đích: Vì vụ lợi (động cơ thu lợi ích vật chất hoặc lợi ích phi vật chất cho bản thân hoặc người khác).\n\n"
+            "II. CÁC HÀNH VI THAM NHŨNG (ĐIỀU 2 LUẬT PCTN 2018):\n"
+            "- Trong khu vực nhà nước: Tham ô tài sản; Nhận hối lộ; Lạm dụng chức vụ, quyền hạn chiếm đoạt tài sản; Lợi dụng chức vụ, quyền hạn trong khi thi hành nhiệm vụ, công vụ vì vụ lợi; Lạm quyền trong khi thi hành nhiệm vụ, công vụ vì vụ lợi; Nhũng nhiễu vì vụ lợi...\n"
+            "- Trong khu vực ngoài nhà nước: Tham ô tài sản; Nhận hối lộ; Đưa hối lộ, môi giới hối lộ để giải quyết công việc vì vụ lợi.\n\n"
+            "III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG:\n"
+            "1. Công khai, minh bạch về tổ chức và hoạt động của cơ quan, tổ chức, đơn vị.\n"
+            "2. Xây dựng và thực hiện định mức, tiêu chuẩn, chế độ.\n"
+            "3. Thực hiện quy tắc ứng xử, quy tắc đạo đức nghề nghiệp và chuyển đổi vị trí công tác của người có chức vụ, quyền hạn.\n"
+            "4. Minh bạch tài sản, thu nhập: Người có nghĩa vụ phải kê khai trung thực tài sản, thu nhập và biến động tài sản hàng năm."
+        )
+    }
+]
+
+def main():
+    rag_dir = os.path.join("data", "rag")
+    os.makedirs(rag_dir, exist_ok=True)
+    out_file = os.path.join(rag_dir, "textbook_chunks.json")
+    with open(out_file, "w", encoding="utf-8") as f:
+        json.dump(CHUNKS, f, ensure_ascii=False, indent=2)
+    print(f"[*] Xuất thành công {len(CHUNKS)} chunks cấu trúc vào {out_file}")
+
+if __name__ == "__main__":
+    main()

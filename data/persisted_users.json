@@ -15,14 +15,66 @@
   {
     "username": "longvu",
     "email": "longvu24112005@gmail.com",
-    "passwordHash": "$2a$10$SwSyZ8Y4MqvWof3VqGh0uOLewcpukl6CYoRonjf9FOIasZzzghQLe",
+    "passwordHash": "$2a$10$8O.YQcMZSjK.gF64sgZgrecezmLrXsO.uQixBL6/uiik4PtShgZ2O",
     "role": "student",
     "fullName": "longvu",
     "studentId": "0987654322",
     "avatarUrl": "",
     "status": "active",
+    "questionsQuota": 80,
+    "questionsUsed": 25,
+    "quotaResetDate": "2026-11-19T13:50:55.687Z"
+  },
+  {
+    "username": "admin_council",
+    "email": "admin@dut.udn.vn",
+    "passwordHash": "$2a$10$dSHvriFHzC14KcKaW5qYmuVTiroVQIFEArfasfc8ioXk.XnIoYPza",
+    "role": "admin",
+    "fullName": "Hội đồng Chấm thi & Quản trị Hệ thống",
+    "studentId": "ADMIN-PBL6",
+    "avatarUrl": "default_green",
+    "status": "active",
     "questionsQuota": 30,
     "questionsUsed": 0,
-    "quotaResetDate": "2026-11-19T13:50:55.687Z"
+    "quotaResetDate": "2026-11-20T00:26:33.041Z"
+  },
+  {
+    "username": "student_dut",
+    "email": "student@dut.udn.vn",
+    "passwordHash": "$2a$10$pf1rxTbhCw6JzIhXEa8SUunLLhzfYKY7p5YmcX63IZ9iFoacPORaC",
+    "role": "student",
+    "fullName": "Nguyễn Văn An (Sinh viên DUT)",
+    "studentId": "102210001",
+    "avatarUrl": "https://api.dicebear.com/7.x/initials/svg?seed=Sinh%20vi%C3%AAn%20B%C3%A1ch%20Khoa%20(DUT)",
+    "status": "active",
+    "questionsQuota": 30,
+    "questionsUsed": 0,
+    "quotaResetDate": "2026-11-22T15:54:42.970Z"
+  },
+  {
+    "username": "nhattt",
+    "email": "nhattt@gmail.com",
+    "passwordHash": "$2a$10$IwUf7qAXZFJv4QaP5xpbnui.qRqIv6sXtdkdz1GLs7BGUNhBz49Xi",
+    "role": "student",
+    "fullName": "nhattt",
+    "studentId": "",
+    "avatarUrl": "https://api.dicebear.com/7.x/initials/svg?seed=nhattt",
+    "status": "active",
+    "questionsQuota": 30,
+    "questionsUsed": 0,
+    "quotaResetDate": "2026-11-22T16:08:31.525Z"
+  },
+  {
+    "username": "nnnn",
+    "email": "nnnn@gmail.com",
+    "passwordHash": "$2a$10$2E5PvKqObXI8ovYFtaJbH.AoYxsHVJvBuohUuCdGelHeELccVmkku",
+    "role": "student",
+    "fullName": "nnnn",
+    "studentId": "",
+    "avatarUrl": "https://api.dicebear.com/7.x/initials/svg?seed=nnnn",
+    "status": "active",
+    "questionsQuota": 30,
+    "questionsUsed": 0,
+    "quotaResetDate": "2026-11-22T16:15:05.247Z"
   }
 ]

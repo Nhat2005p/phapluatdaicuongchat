@@ -11,6 +11,7 @@ interface AuthContextType {
   remainingQuestions: number;
   totalQuestions: number;
   login: (emailOrUser: string, pass: string) => Promise<boolean>;
+  googleLogin: (data: { email: string; fullName?: string; googleId?: string; avatarUrl?: string }) => Promise<{ success: boolean; message?: string }>;
   demoLogin: (targetRole: UserRole) => Promise<boolean>;
   logout: () => void;
   refreshUser: () => Promise<void>;
@@ -75,6 +76,24 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const googleLogin = async (data: { email: string; fullName?: string; googleId?: string; avatarUrl?: string }): Promise<{ success: boolean; message?: string }> => {
+    try {
+      const res = await api.googleLogin(data);
+      if (res.success && res.token && res.user) {
+        localStorage.setItem('vietlaw_token', res.token);
+        setToken(res.token);
+        setUser(res.user);
+        const quota = res.user.remainingQuestions !== undefined ? res.user.remainingQuestions : 30;
+        setRemainingQuestions(quota);
+        localStorage.setItem('vietlaw_remaining_quota', quota.toString());
+        return { success: true, message: res.message };
+      }
+      return { success: false, message: res.message || 'Đăng nhập Google thất bại.' };
+    } catch (err: any) {
+      return { success: false, message: err.message || 'Lỗi kết nối khi đăng nhập Google.' };
+    }
+  };
+
   const demoLogin = async (targetRole: UserRole): Promise<boolean> => {
     if (targetRole === 'student') {
       return login('student@dut.udn.vn', 'student123');
@@ -123,6 +142,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         remainingQuestions,
         totalQuestions,
         login,
+        googleLogin,
         demoLogin,
         logout,
         refreshUser,

@@ -137,7 +137,7 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
   });
 
   return createPortal(
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
+    <div className="fixed inset-0 z-[999] flex items-center justify-center p-3 sm:p-6 overflow-y-auto">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-slate-900/60 backdrop-blur-sm transition-opacity" onClick={onClose} />
 
@@ -164,9 +164,15 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
             </div>
           </div>
           <button
-            onClick={onClose}
-            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors"
+            type="button"
+            onClick={(e) => {
+              e.preventDefault();
+              e.stopPropagation();
+              onClose();
+            }}
+            className="p-2 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 transition-colors z-30 cursor-pointer"
             title="Đóng"
+            aria-label="Đóng"
           >
             <X className="w-5 h-5" />
           </button>
@@ -206,7 +212,7 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
               <Bookmark className="w-10 h-10 text-amber-200 mx-auto mb-2" />
               <p className="text-sm font-semibold text-slate-700">Chưa có hội thoại nào được lưu</p>
               <p className="text-xs text-slate-400 mt-1 max-w-md mx-auto">
-                Khi hỏi đáp AI hoặc xem lịch sử, bạn có thể bấm biểu tượng bookmark ⭐ để lưu các câu hỏi quan trọng phục vụ ôn thi vào danh mục này.
+                Khi hỏi đáp hoặc xem lịch sử, bạn có thể bấm biểu tượng bookmark ⭐ để lưu các câu hỏi quan trọng phục vụ ôn thi vào danh mục này.
               </p>
             </div>
           ) : (
@@ -348,7 +354,7 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
 
       {/* Detail Modal */}
       {selectedDetail && (
-        <div className="fixed inset-0 z-60 flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[1000] flex items-center justify-center p-4">
           <div className="fixed inset-0 bg-slate-950/70 backdrop-blur-xs" onClick={() => setSelectedDetail(null)} />
           <div className="relative w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 sm:p-8 border border-slate-100 z-10 max-h-[85vh] flex flex-col animate-modal-in">
             <div className="flex items-center justify-between pb-4 border-b border-slate-100">
@@ -362,8 +368,15 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
                 </span>
               </div>
               <button
-                onClick={() => setSelectedDetail(null)}
-                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  setSelectedDetail(null);
+                }}
+                className="p-1.5 rounded-full text-slate-400 hover:text-slate-700 hover:bg-slate-100 cursor-pointer z-30"
+                title="Đóng"
+                aria-label="Đóng"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -443,7 +456,7 @@ export const SavedConversationsModal: React.FC<SavedConversationsModalProps> = (
                   className="bg-[#ec2227] hover:bg-[#d01c21] text-white text-xs gap-1.5"
                 >
                   <ExternalLink className="w-3.5 h-3.5" />
-                  <span>Mở lại câu hỏi trong AI Hỏi đáp</span>
+                  <span>Mở lại câu hỏi trong Hỏi đáp</span>
                 </Button>
               )}
             </div>

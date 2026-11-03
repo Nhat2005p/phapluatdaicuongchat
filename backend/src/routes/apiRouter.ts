@@ -15,6 +15,7 @@ export const apiRouter = Router();
 // --- Auth Routes ---
 apiRouter.post('/auth/register', AuthController.register);
 apiRouter.post('/auth/login', AuthController.login);
+apiRouter.post('/auth/google', AuthController.googleLogin);
 apiRouter.get('/auth/me', authenticate, AuthController.getMe);
 apiRouter.post('/auth/forgot-password/send-otp', AuthController.sendForgotOtp);
 apiRouter.post('/auth/forgot-password/verify-reset', AuthController.verifyOtpAndReset);
