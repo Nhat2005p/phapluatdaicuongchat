@@ -60,21 +60,49 @@ export class RagService {
 
     // Check article patterns: e.g. "điều 12", "khoản 1", "blhs", "blds"
     if (/\b(?:điều|khoản|điểm)\s+\d+/i.test(query)) return true;
-    if (/\b(?:blhs|blds|blld|hngd|vbqppl|luật|nghị định|thông tư|hiến pháp)\b/i.test(query)) return true;
+    if (/\b(?:blhs|blds|blld|hngd|vbqppl|luật|nghị định|thông tư|hiến pháp|pháp lệnh|nghị quyết|án lệ)\b/i.test(query)) return true;
 
-    // Check legal vocabulary of General Law (Pháp luật Đại cương)
+    // Check chapter patterns: "chương 1", "chương 2", "chương 7", "chương vii", etc.
+    if (/\bchương\s+(?:\d+|i{1,3}|iv|v|vi|vii|viii|ix|x)\b/i.test(query)) return true;
+
+    // Check legal vocabulary of General Law (Pháp luật Đại cương - Đầy đủ 9 Chương)
     const legalKeywords = [
+      // 1. Lý luận chung về Nhà nước & Pháp luật (Chương 1 - 5)
       'nhà nước', 'pháp luật', 'quy phạm', 'quan hệ pháp luật', 'vi phạm', 'trách nhiệm pháp lý',
       'chế tài', 'giả định', 'quy định', 'tính giai cấp', 'tính xã hội', 'quyền lực', 'chủ quyền',
       'bộ máy nhà nước', 'hình thức nhà nước', 'chính thể', 'cấu trúc', 'chế độ chính trị',
       'nguồn của pháp luật', 'hệ thống pháp luật', 'văn bản quy phạm', 'thực hiện pháp luật',
       'tuân thủ', 'chấp hành', 'thi hành', 'sử dụng pháp luật', 'áp dụng pháp luật', 'sự kiện pháp lý',
       'năng lực pháp luật', 'năng lực hành vi', 'lỗi cố ý', 'lỗi vô ý', 'phòng vệ chính đáng',
-      'tình thế cấp thiết', 'tội phạm', 'hình phạt', 'độ tuổi', 'tuổi chịu', 'thừa kế', 'di chúc',
-      'hợp đồng', 'kết hôn', 'ly hôn', 'lao động', 'tham nhũng', 'tòa án', 'viện kiểm sát',
-      'công dân', 'chủ thể', 'khách thể', 'hành vi', 'bồi thường', 'thiệt hại', 'tài sản',
-      'đúng hay sai', 'nhận định', 'so sánh', 'phân biệt', 'bản chất', 'pháp chế', 'cơ cấu',
-      'pháp quyền', 'cưỡng chế', 'chế tài hình sự', 'chế tài hành chính', 'chế tài dân sự'
+      'tình thế cấp thiết', 'đúng hay sai', 'nhận định', 'so sánh', 'phân biệt', 'bản chất', 'pháp chế', 'cơ cấu',
+      'pháp quyền', 'cưỡng chế', 'chế tài hình sự', 'chế tài hành chính', 'chế tài dân sự', 'chế tài kỷ luật',
+      'pháp lý', 'hậu quả pháp lý', 'căn cứ pháp lý',
+
+      // 2. Chương 6: Nội dung cơ bản Luật Dân sự
+      'dân sự', 'giao dịch', 'giao dịch dân sự', 'vô hiệu', 'hợp đồng', 'pháp nhân', 'tư cách pháp nhân',
+      'nhân thân', 'quan hệ nhân thân', 'quyền nhân thân', 'tài sản', 'quyền tài sản', 'quyền sở hữu',
+      'chiếm hữu', 'sử dụng', 'định đoạt', 'thừa kế', 'di sản', 'di chúc', 'hàng thừa kế', 'thế vị',
+      'bồi thường', 'thiệt hại', 'bồi thường thiệt hại', 'nghĩa vụ', 'đại diện', 'thời hiệu', 'hợp đồng vay',
+      'đặt cọc', 'cầm cố', 'thế chấp',
+
+      // 3. Chương 7: Nội dung cơ bản Luật Hình sự
+      'hình sự', 'tội phạm', 'tội danh', 'tội', 'phạm tội', 'đồng phạm', 'người thực hành', 'người tổ chức',
+      'người xúi giục', 'người giúp sức', 'chủ mưu', 'cấu thành tội phạm', 'khách thể của tội phạm',
+      'chủ thể của tội phạm', 'mặt khách quan của tội phạm', 'mặt chủ quan của tội phạm',
+      'hình phạt', 'tử hình', 'tù chung thân', 'tù có thời hạn', 'cải tạo không giam giữ', 'cảnh cáo',
+      'trục xuất', 'hình phạt chính', 'hình phạt bổ sung', 'miễn trách nhiệm hình sự', 'xóa án tích',
+      'phòng vệ', 'cấp thiết', 'sự kiện bất ngờ', 'độ tuổi', 'tuổi chịu', 'chưa thành niên',
+      'chuẩn bị phạm tội', 'phạm tội chưa đạt', 'tự ý nửa chừng', 'tái phạm',
+
+      // 4. Chương 8 & 9: Luật Hành chính & Phòng, chống tham nhũng
+      'hành chính', 'quản lý nhà nước', 'xử phạt', 'vi phạm hành chính', 'xử phạt vi phạm hành chính',
+      'biện pháp ngăn chặn', 'tạm giữ', 'khám xét',
+      'tham nhũng', 'vụ lợi', 'chức vụ', 'quyền hạn', 'kê khai tài sản', 'hối lộ', 'nhận hối lộ', 'tham ô',
+
+      // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
+      'hiến pháp', 'luật hiến pháp', 'quốc hội', 'chính phủ', 'chủ tịch nước', 'tòa án', 'viện kiểm sát',
+      'hội đồng nhân dân', 'ủy ban nhân dân', 'quyền con người', 'quyền công dân', 'nghĩa vụ công dân',
+      'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'sa thải', 'hợp đồng lao động'
     ];
 
     for (const kw of legalKeywords) {

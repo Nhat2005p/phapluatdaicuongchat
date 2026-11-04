@@ -1175,17 +1175,18 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
    */
   public static async generate(
     query: string,
-    intentCode: ExamArchetype,
-    promptContext: string,
+    intentCode?: ExamArchetype,
+    promptContext: string = '',
     retrievedArticles: ILawArticle[] = [],
     forcedCategory?: string | null
   ): Promise<{ text: string; latencyMs: number }> {
     const startTime = Date.now();
+    const effectiveIntent = intentCode || RagService.detectIntent(query, forcedCategory);
 
     // =========================================================================
     // BƯỚC -1: GUARDRAIL PHẠM VI MÔN HỌC & DANH TÍNH MÔ HÌNH CHATBOT
     // =========================================================================
-    if (intentCode === 'OUT_OF_SCOPE' || RagService.isModelIdentityQuery(query) || !RagService.isLegalQuery(query, forcedCategory)) {
+    if (effectiveIntent === 'OUT_OF_SCOPE' || RagService.isModelIdentityQuery(query) || !RagService.isLegalQuery(query, forcedCategory)) {
       if (RagService.isModelIdentityQuery(query)) {
         return {
           text: this.solveModelIdentity(),
@@ -1203,7 +1204,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     // =========================================================================
 
     // BƯỚC 0: ƯU TIÊN SỐ 1: BỘ DỮ LIỆU ĐÃ TRAIN (SFT MASTER CORPUS) KẾT HỢP RAG GIÁO TRÌNH
-    const sftMatch = this.matchSftSample(query, intentCode);
+    const sftMatch = this.matchSftSample(query, effectiveIntent);
     if (sftMatch) {
       const hasCitation =
         sftMatch.output.includes('CĂN CỨ GIÁO TRÌNH') ||
@@ -1249,7 +1250,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
     // BƯỚC 2: Xác định quy tắc định dạng bắt buộc theo Dạng bài người dùng chọn
     let modeRule = '';
-    const activeCategory = (forcedCategory || intentCode).toUpperCase();
+    const activeCategory = (forcedCategory || effectiveIntent || '').toUpperCase();
     if (activeCategory.includes('NHAN_DINH') || activeCategory === 'TRUE_FALSE') {
       modeRule = `YÊU CẦU ĐỊNH DẠNG BẮT BUỘC (DẠNG ĐỀ NHẬN ĐỊNH ĐÚNG / SAI):
 - Bắt buộc dòng đầu tiên phải mở đầu bằng: '- KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.' hoặc '- KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.'
@@ -1330,7 +1331,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
     // BƯỚC 4: HYBRID FALLBACK: Sử dụng Bộ giải Barem ĐỘNG (Dynamic RAG Solver)
     // Tự động phân tích các thực thể, tình tiết, điều luật và giáo trình đã RAG
-    const generatedText = this.generateDynamicRagSolution(query, intentCode, fullRagContext, retrievedArticles, forcedCategory);
+    const generatedText = this.generateDynamicRagSolution(query, effectiveIntent, fullRagContext, retrievedArticles, forcedCategory);
     const extraCitation =
       !generatedText.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
         ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
