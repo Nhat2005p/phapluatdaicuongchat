@@ -803,6 +803,15 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.3'))) finalScore += 50;
       }
 
+      // G. Nếu hỏi về "pháp luật xã hội chủ nghĩa", "pháp luật xhcn" -> Ưu tiên Mục 2.1.1_2.1.3 (Khái niệm, Bản chất và Đặc trưng của Pháp luật)
+      if (
+        rawQueryText.includes('pháp luật') &&
+        (rawQueryText.includes('xã hội chủ nghĩa') || rawQueryText.includes('xhcn'))
+      ) {
+        if (c.chapterNumber === 1) finalScore -= 40;
+        if (c.sectionCode.includes('2.1.1_2.1.3')) finalScore += 55;
+      }
+
       return { chunk: c, score: finalScore };
     });
 

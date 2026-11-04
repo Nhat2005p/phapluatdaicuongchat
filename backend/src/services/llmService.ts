@@ -339,19 +339,27 @@ export class LlmService {
       return null;
     }
 
-    // Trường hợp 2: Dạng câu hỏi lý thuyết chỉ hỏi "Định nghĩa" / "Khái niệm" / "là gì"
+    // Trường hợp 2: Dạng câu hỏi lý thuyết chỉ hỏi "Định nghĩa" / "Khái niệm" / "là gì" ĐƠN THUẦN
+    const hasOtherAspects =
+      qNorm.includes('đặc điểm') ||
+      qNorm.includes('đặc trưng') ||
+      qNorm.includes('bản chất') ||
+      qNorm.includes('kinh tế') ||
+      qNorm.includes('chính trị') ||
+      qNorm.includes('đạo đức') ||
+      qNorm.includes('mối quan hệ') ||
+      qNorm.includes('hậu quả') ||
+      qNorm.includes('trách nhiệm') ||
+      qNorm.includes('xã hội chủ nghĩa') ||
+      qNorm.includes('xhcn');
+
     const isOnlyDef =
       (qNorm.includes('định nghĩa') ||
        qNorm.includes('khái niệm') ||
        qNorm.includes('là gì') ||
        qNorm.includes('thế nào là') ||
        qNorm.includes('hiểu thế nào')) &&
-      !qNorm.includes('kinh tế') &&
-      !qNorm.includes('chính trị') &&
-      !qNorm.includes('đạo đức') &&
-      !qNorm.includes('mối quan hệ') &&
-      !qNorm.includes('hậu quả') &&
-      !qNorm.includes('trách nhiệm');
+      !hasOtherAspects;
 
     if (isOnlyDef && rawOutput.includes('1. ') && rawOutput.includes('2. ')) {
       const defMatch = rawOutput.match(/(?:^|\n)\s*(1\.\s*(?:Định nghĩa|Khái niệm)[\s\S]*?)(?=\n\s*2\.|$)/i);
@@ -585,6 +593,23 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
       return null;
     }
     const icStr = (intentCode as string) || '';
+    const qLower = query.toLowerCase();
+
+    // 0.0. Nhánh chuyên biệt: Khái niệm & Đặc điểm của Pháp luật Xã hội chủ nghĩa Việt Nam
+    const isPlXhcn =
+      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      (qLower.includes('xã hội chủ nghĩa') || qLower.includes('xhcn')) &&
+      (qLower.includes('khái niệm') || qLower.includes('đặc điểm') || qLower.includes('đặc trưng') || qLower.includes('bản chất') || qLower.includes('trình bày'));
+
+    if (isPlXhcn) {
+      return {
+        sample_id: 'SFT_THEORY_PHAP_LUAT_XHCN_VN',
+        intent_code: 'DEFINITION',
+        instruction: 'Trình bày khái niệm và các đặc điểm cơ bản của Pháp luật xã hội chủ nghĩa Việt Nam theo Giáo trình Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicSocialistLaw()
+      };
+    }
 
     // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Định nghĩa / Khái niệm lý thuyết)
     if (intentCode === 'DEFINITION') {
@@ -612,7 +637,6 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
     }
 
     // 0.1. Nhánh chuyên biệt: Phân biệt / So sánh Phòng vệ chính đáng và Tình thế cấp thiết
-    const qLower = query.toLowerCase();
     const hasPvcd = qLower.includes('phòng vệ chính đáng') || qLower.includes('phòng vệ');
     const hasTtct = qLower.includes('tình thế cấp thiết') || qLower.includes('cấp thiết');
     const isComparison =
@@ -2127,6 +2151,48 @@ Tôi là hệ thống được phát triển **chuyên biệt cho học phần m
 💡 *Vui lòng gửi câu hỏi liên quan đến kiến thức môn Pháp luật Đại cương để được hỗ trợ giải đáp chi tiết!*`;
   }
 
+  /**
+   * Bộ giải chuẩn Barem điểm 10: Khái niệm & Đặc điểm của Pháp luật Xã hội chủ nghĩa Việt Nam
+   */
+  public static solveDynamicSocialistLaw(): string {
+    return `### I. KHÁI NIỆM PHÁP LUẬT XÃ HỘI CHỦ NGHĨA VIỆT NAM
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+**Pháp luật xã hội chủ nghĩa Việt Nam** là hệ thống các quy tắc xử sự có tính bắt buộc chung, thể hiện ý chí của giai cấp công nhân và nhân dân lao động Việt Nam dưới sự lãnh đạo của Đảng Cộng sản Việt Nam, do Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam ban hành hoặc thừa nhận và bảo đảm thực hiện bằng sức mạnh quyền lực nhà nước, nhằm điều chỉnh các quan hệ xã hội phát triển theo định hướng xã hội chủ nghĩa, vì mục tiêu *"Dân giàu, nước mạnh, dân chủ, công bằng, văn minh"*.
+
+---
+
+### II. NĂM (05) ĐẶC ĐIỂM (ĐẶC TRƯNG CƠ BẢN) CỦA PHÁP LUẬT XHCN VIỆT NAM
+
+Khác với các kiểu pháp luật bóc lột trong lịch sử (pháp luật chủ nô, phong kiến, tư sản), Pháp luật Xã hội chủ nghĩa Việt Nam mang những đặc trưng ưu việt sau:
+
+1. **Tính nhân văn và dân chủ sâu sắc (Của Nhân dân, do Nhân dân, vì Nhân dân)**:
+   - Pháp luật XHCN Việt Nam là công cụ thể chế hóa và bảo đảm quyền làm chủ thực sự của Nhân dân trên mọi lĩnh vực chính trị, kinh tế, văn hóa và xã hội (căn cứ **Điều 2 Hiến pháp 2013**).
+   - Luôn tôn trọng, ghi nhận, bảo đảm và bảo vệ quyền con người, quyền và nghĩa vụ cơ bản của công dân (ghi nhận tại Chương II Hiến pháp 2013).
+
+2. **Tính giai cấp công nhân gắn liền mật thiết với tính dân tộc và tính nhân dân rộng rãi**:
+   - Pháp luật thể hiện trước hết ý chí của giai cấp công nhân, nhưng ý chí đó hoàn toàn thống nhất với lợi ích, nguyện vọng chính đáng của toàn thể nhân dân lao động và dân tộc Việt Nam.
+   - Thể chế hóa kịp thời, chuẩn xác đường lối, chủ trương, chính sách của Đảng Cộng sản Việt Nam thành các quy tắc pháp lý có hiệu lực bắt buộc chung đối với toàn xã hội.
+
+3. **Tính xã hội rộng lớn và định hướng phát triển tiến bộ, bền vững**:
+   - Pháp luật XHCN đóng vai trò là công cụ quản lý vĩ mô sắc bén của Nhà nước nhằm phát triển nền kinh tế thị trường định hướng XHCN, thúc đẩy sản xuất kinh doanh, giải phóng sức lao động.
+   - Đồng thời giải quyết hài hòa các vấn đề xã hội: thực hiện tiến bộ và công bằng xã hội, bảo đảm an sinh xã hội, bảo vệ môi trường, chăm lo người nghèo và các đối tượng yếu thế trong xã hội.
+
+4. **Tính được bảo đảm thực hiện bằng nguyên tắc Pháp chế xã hội chủ nghĩa**:
+   - Nhà nước quản lý xã hội bằng Hiến pháp và pháp luật; pháp luật giữ vị trí tối thượng trong đời sống xã hội.
+   - Mọi cơ quan nhà nước, cán bộ, đảng viên, tổ chức kinh tế, đoàn thể xã hội và mọi công dân đều bình đẳng trước pháp luật, phải nghiêm chỉnh chấp hành và tuân thủ pháp luật (căn cứ **Điều 8 Hiến pháp 2013**).
+
+5. **Tính mở, linh hoạt và chủ động hội nhập quốc tế**:
+   - Pháp luật XHCN Việt Nam không ngừng được hoàn thiện, tiếp thu có chọn lọc các giá trị pháp lý văn minh, tiến bộ của nhân loại.
+   - Tương thích và nội luật hóa các điều ước quốc tế mà Việt Nam là thành viên, tạo hành lang pháp lý thông thoáng phục vụ hội nhập quốc tế và bảo vệ chủ quyền quốc gia.
+
+---
+
+### III. BẢN CHẤT CỦA PHÁP LUẬT XHCN VIỆT NAM
+- **Về bản chất giai cấp**: Là ý chí của giai cấp công nhân và nhân dân lao động được nâng lên thành luật dưới sự lãnh đạo của Đảng Cộng sản Việt Nam.
+- **Về bản chất xã hội**: Là công cụ duy trì trật tự kỷ cương, phục vụ lợi ích chung của toàn thể cộng đồng dân tộc, bảo đảm cho mọi người dân đều được thụ hưởng thành quả phát triển.`;
+  }
+
   // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG ---
   private static solveDynamicCivilInherit(query: string, actors: string[], money: string | null): string {
     let estateValue = 600000000;
@@ -2475,6 +2541,11 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   // --- DẠNG ĐẶC BIỆT: ĐỊNH NGHĨA & KHÁI NIỆM PHÁP LÝ CHUẨN XÁC 100% (KHÔNG TRẢ VỀ NHIỀU Ý) ---
   public static solveDynamicDefinition(query: string, concept: string | null): string {
     const q = query.toLowerCase();
+
+    // 0. Khái niệm & Đặc điểm Pháp luật Xã hội chủ nghĩa Việt Nam
+    if (q.includes('xã hội chủ nghĩa') || q.includes('xhcn')) {
+      return this.solveDynamicSocialistLaw();
+    }
 
     // 1. Khái niệm / Định nghĩa Pháp luật
     if (concept === 'pháp luật' || (!concept && (q.includes('pháp luật') || q.includes('luật')))) {
