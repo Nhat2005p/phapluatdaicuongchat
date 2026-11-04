@@ -2,7 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { config } from '../config/env.js';
-import { ExamArchetype } from './ragService.js';
+import { ExamArchetype, RagService } from './ragService.js';
 import { ILawArticle } from '../models/LawArticle.js';
 import { TextbookKnowledgeService } from './textbookKnowledgeService.js';
 
@@ -581,6 +581,9 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
    */
   private static matchSftSample(query: string, intentCode?: ExamArchetype): SftSample | null {
     this.initCorpuses();
+    if (intentCode === 'OUT_OF_SCOPE' || (intentCode as string) === 'OUT_OF_SCOPE') {
+      return null;
+    }
     const icStr = (intentCode as string) || '';
 
     // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Định nghĩa / Khái niệm lý thuyết)
@@ -769,7 +772,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     // 0.11. Nhánh chuyên biệt: Mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động
     if (
       qLower.includes('thực hiện pháp luật') &&
-      (qLower.includes('dưới dạng hành động') || qLower.includes('hành vi hành động') || qLower.includes('dạng hành động'))
+      (qLower.includes('dưới dạng hành động') || qLower.includes('hành vi hành động') || qLower.includes('dạng hành động') || qLower.includes('hành động'))
     ) {
       return {
         sample_id: 'SFT_THPL_HANHDONG_KHONGHANHDONG',
@@ -1018,15 +1021,15 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         const diceScore = this.calculateDiceCoefficient(qBigrams, itemBigrams);
 
         // Hợp nhất điểm tương đồng: Ưu tiên Dice n-gram (thứ tự cụm từ) kết hợp Unigram
-        const compositeScore = diceScore > 0 ? (0.65 * diceScore + 0.35 * unigramScore) : unigramScore;
+        // Tuyệt đối không cho phép diceScore === 0 rơi vào unigramScore (tránh false positive các câu ngắn)
+        const compositeScore = diceScore > 0 ? (0.65 * diceScore + 0.35 * unigramScore) : 0;
 
         // Nếu cùng intent_code ngưỡng mềm (0.50), nếu khác intent_code ngưỡng chặt hơn (0.60)
         const isSameIntent = !intentCode || item.intent_code === intentCode;
         const threshold = isSameIntent ? 0.50 : 0.60;
-        const isVeryHighUnigram = isSameIntent ? unigramScore >= 0.70 : unigramScore >= 0.80;
 
-        if ((compositeScore >= threshold || isVeryHighUnigram) && (compositeScore > bestExamScore || unigramScore > bestExamScore)) {
-          bestExamScore = Math.max(compositeScore, unigramScore);
+        if (diceScore >= 0.15 && compositeScore >= threshold && compositeScore > bestExamScore) {
+          bestExamScore = compositeScore;
           bestExam = item;
         }
       }
@@ -1183,6 +1186,22 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     forcedCategory?: string | null
   ): Promise<{ text: string; latencyMs: number }> {
     const startTime = Date.now();
+
+    // =========================================================================
+    // BƯỚC -1: GUARDRAIL PHẠM VI MÔN HỌC & DANH TÍNH MÔ HÌNH CHATBOT
+    // =========================================================================
+    if (intentCode === 'OUT_OF_SCOPE' || RagService.isModelIdentityQuery(query) || !RagService.isLegalQuery(query, forcedCategory)) {
+      if (RagService.isModelIdentityQuery(query)) {
+        return {
+          text: this.solveModelIdentity(),
+          latencyMs: Date.now() - startTime
+        };
+      }
+      return {
+        text: this.solveOutOfScope(),
+        latencyMs: Date.now() - startTime
+      };
+    }
 
     // =========================================================================
     // QUY TRÌNH KẾT HỢP: SFT DATASET (MẪU ĐÃ TRAIN) + RAG GIÁO TRÌNH (TRÍCH DẪN)
@@ -1408,6 +1427,10 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     retrievedArticles: ILawArticle[] = [],
     forcedCategory?: string | null
   ): string {
+    if (intentCode === 'OUT_OF_SCOPE' || RagService.isModelIdentityQuery(query) || !RagService.isLegalQuery(query, forcedCategory)) {
+      return RagService.isModelIdentityQuery(query) ? this.solveModelIdentity() : this.solveOutOfScope();
+    }
+
     const activeCat = (forcedCategory || '').toUpperCase().trim();
     if (activeCat === 'NHAN_DINH' || activeCat === 'TRUE_FALSE') {
       return this.solveDynamicTrueFalse(query, retrievedArticles);
@@ -2049,6 +2072,52 @@ Theo quan điểm của Chủ nghĩa Mác - Lênin và giáo trình **Pháp lu�
 ### V. LIÊN HỆ BẢN CHẤT NHÀ NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
 - Theo **Hiến pháp năm 2013** (Điều 2): Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam là Nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân; do giai cấp công nhân lãnh đạo thông qua Đảng Cộng sản Việt Nam.
 - Tính giai cấp và tính xã hội trong Nhà nước ta có sự thống nhất sâu sắc: Lợi ích của giai cấp công nhân hoàn toàn thống nhất với lợi ích của nhân dân lao động và của toàn thể dân tộc Việt Nam. Mục tiêu cao nhất của Nhà nước là: *"Dân giàu, nước mạnh, dân chủ, công bằng, văn minh"*.`;
+  }
+
+  /**
+   * Giải đáp câu hỏi danh tính & kiến trúc mô hình của Chatbot
+   */
+  public static solveModelIdentity(): string {
+    return `### ⚖️ THÔNG TIN VỀ MÔ HÌNH VÀ HỆ THỐNG TRỢ LÝ PHÁP LUẬT ĐẠI CƯƠNG (VLAW)
+
+Tôi là **Trợ lý Trí tuệ Nhân tạo Hỗ trợ Học tập Môn Pháp luật Đại cương (VLaw)**.
+
+---
+
+#### 1. Kiến trúc mô hình hoạt động:
+- **Kiến trúc cốt lõi**: **Hybrid RAG (Retrieval-Augmented Generation) kết hợp SFT (Supervised Fine-Tuning) Barem Engine**.
+- **Cơ chế suy luận & xử lý**:
+  + **SFT Barem Matcher**: Đối sánh và truy xuất trực tiếp các đề thi mẫu và barem chấm điểm chi tiết của Bộ Giáo dục & Đào tạo và các trường Đại học trọng điểm (TMU, UEL, HCMUTE...).
+  + **Textbook RAG Engine**: Tự động tra cứu và đối chiếu ngữ cảnh chuẩn từ **Giáo trình Pháp luật Đại cương (Trường Đại học Thương Mại 2021 — NXB Hà Nội, Chủ biên: TS. Trần Thành Thọ)**, chỉ rõ từng Chương, Mục và số trang giáo trình.
+  + **Citation Guardrail**: Rà soát và đối soát 100% điều luật thực định (Hiến pháp 2013, BLHS 2015/2017, BLDS 2015, Luật Ban hành VBQPPL...), kiểm tra tính xác thực để chống bịa luật (Anti-hallucination).
+
+---
+
+#### 2. Phạm vi thẩm quyền:
+Tôi là hệ thống được phát triển **chuyên biệt cho học phần môn Pháp luật Đại cương**. Tôi chỉ có quyền hạn giải đáp các câu hỏi trong phạm vi học phần này. Đối với các câu hỏi nằm ngoài phạm vi môn học hoặc các vấn đề xã hội/đời sống khác, hệ thống sẽ từ chối trả lời theo quy định bảo đảm tính học thuật.`;
+  }
+
+  /**
+   * Phản hồi khi câu hỏi không liên quan đến môn học Pháp luật Đại cương
+   */
+  public static solveOutOfScope(): string {
+    return `### ⚠️ THÔNG BÁO TỪ HỆ THỐNG
+
+**Tôi không có quyền hạn trả lời câu hỏi này.**
+
+---
+
+* **Lý do**: Câu hỏi của bạn nằm ngoài phạm vi chương trình và nội dung học tập của môn **Pháp luật Đại cương** (theo chuẩn Giáo trình môn học của Bộ Giáo dục & Đào tạo).
+* **Phạm vi hỗ trợ của hệ thống**: Hệ thống chỉ được cấp quyền hỗ trợ học tập, giải đáp và tra cứu các nội dung thuộc học phần Pháp luật Đại cương:
+  1. *Lý luận chung về Nhà nước*: Nguồn gốc, bản chất, chức năng, hình thức nhà nước, bộ máy nhà nước, Nhà nước CHXHCN Việt Nam.
+  2. *Lý luận chung về Pháp luật*: Nguồn gốc, bản chất, các mối quan hệ xã hội của pháp luật, hình thức pháp luật, hệ thống pháp luật.
+  3. *Quy phạm pháp luật*: Khái niệm, đặc điểm và cơ cấu 3 bộ phận (Giả định – Quy định – Chế tài).
+  4. *Quan hệ pháp luật*: Khái niệm, đặc điểm, thành phần chủ thể, khách thể, nội dung và sự kiện pháp lý.
+  5. *Thực hiện pháp luật & Áp dụng pháp luật*: 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng).
+  6. *Vi phạm pháp luật & Trách nhiệm pháp lý*: Dấu hiệu, phân loại và 4 yếu tố cấu thành vi phạm pháp luật.
+  7. *Các dạng bài tập thực hành*: Nhận định Đúng/Sai có giải thích cơ sở lý luận, So sánh/Phân biệt các chế định pháp lý, Bài tập tình huống môn học.
+
+💡 *Vui lòng gửi câu hỏi liên quan đến kiến thức môn Pháp luật Đại cương để được hỗ trợ giải đáp chi tiết!*`;
   }
 
   // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG ---

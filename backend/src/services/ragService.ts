@@ -13,15 +13,92 @@ export type ExamArchetype =
   | 'GENERAL_THEORY'
   | 'FAMILY_LAW'
   | 'CASE_ANALYSIS'
-  | 'COMPARISON';
+  | 'COMPARISON'
+  | 'OUT_OF_SCOPE';
 
 export class RagService {
+  /**
+   * Nhận diện câu hỏi danh tính / mô hình của Chatbot
+   */
+  public static isModelIdentityQuery(query: string): boolean {
+    const q = (query || '')
+      .toLowerCase()
+      .replace(/[.,;:?!"'“”()\-–—_/\\]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    return (
+      q === 'bạn là mô hình gì' ||
+      q === 'mô hình gì' ||
+      q === 'bạn dùng mô hình gì' ||
+      q === 'bạn là ai' ||
+      q === 'bạn là gì' ||
+      q === 'bạn tên gì' ||
+      q === 'bạn tên là gì' ||
+      q === 'ai tạo ra bạn' ||
+      q === 'bạn hoạt động như thế nào' ||
+      q === 'mô hình nào' ||
+      q === 'mô hình' ||
+      (q.includes('bạn là') && (q.includes('mô hình') || q.includes('ai') || q.includes('gì'))) ||
+      (q.includes('mô hình') && (q.includes('gì') || q.includes('nào') || q.includes('hoạt động') || q.includes('kiến trúc')))
+    );
+  }
+
+  /**
+   * Kiểm tra câu hỏi có thuộc phạm vi môn học Pháp luật Đại cương hay không
+   */
+  public static isLegalQuery(query: string, forcedCategory?: string | null): boolean {
+    if (forcedCategory && forcedCategory.trim()) return true;
+
+    const q = (query || '')
+      .toLowerCase()
+      .replace(/[.,;:?!"'“”()\-–—_/\\]/g, ' ')
+      .replace(/\s+/g, ' ')
+      .trim();
+
+    if (!q || q.length < 2) return false;
+
+    // Check article patterns: e.g. "điều 12", "khoản 1", "blhs", "blds"
+    if (/\b(?:điều|khoản|điểm)\s+\d+/i.test(query)) return true;
+    if (/\b(?:blhs|blds|blld|hngd|vbqppl|luật|nghị định|thông tư|hiến pháp)\b/i.test(query)) return true;
+
+    // Check legal vocabulary of General Law (Pháp luật Đại cương)
+    const legalKeywords = [
+      'nhà nước', 'pháp luật', 'quy phạm', 'quan hệ pháp luật', 'vi phạm', 'trách nhiệm pháp lý',
+      'chế tài', 'giả định', 'quy định', 'tính giai cấp', 'tính xã hội', 'quyền lực', 'chủ quyền',
+      'bộ máy nhà nước', 'hình thức nhà nước', 'chính thể', 'cấu trúc', 'chế độ chính trị',
+      'nguồn của pháp luật', 'hệ thống pháp luật', 'văn bản quy phạm', 'thực hiện pháp luật',
+      'tuân thủ', 'chấp hành', 'thi hành', 'sử dụng pháp luật', 'áp dụng pháp luật', 'sự kiện pháp lý',
+      'năng lực pháp luật', 'năng lực hành vi', 'lỗi cố ý', 'lỗi vô ý', 'phòng vệ chính đáng',
+      'tình thế cấp thiết', 'tội phạm', 'hình phạt', 'độ tuổi', 'tuổi chịu', 'thừa kế', 'di chúc',
+      'hợp đồng', 'kết hôn', 'ly hôn', 'lao động', 'tham nhũng', 'tòa án', 'viện kiểm sát',
+      'công dân', 'chủ thể', 'khách thể', 'hành vi', 'bồi thường', 'thiệt hại', 'tài sản',
+      'đúng hay sai', 'nhận định', 'so sánh', 'phân biệt', 'bản chất', 'pháp chế', 'cơ cấu',
+      'pháp quyền', 'cưỡng chế', 'chế tài hình sự', 'chế tài hành chính', 'chế tài dân sự'
+    ];
+
+    for (const kw of legalKeywords) {
+      if (q.includes(kw)) return true;
+    }
+
+    return false;
+  }
+
   /**
    * Giai đoạn 1: Phân loại và Điều hướng (Intent Routing / Archetype Detection)
    * Nhận diện chuẩn xác các dạng đề thi trọng tâm + tranh chấp hợp đồng/giao dịch dân sự
    * @param forcedCategory Dạng bài người dùng chủ động chọn từ giao diện (nếu có)
    */
   public static detectIntent(query: string, forcedCategory?: string | null): ExamArchetype {
+    // 0. BẢO VỆ PHẠM VI MÔN HỌC (GUARDRAIL OUT-OF-SCOPE & IDENTITY)
+    if (this.isModelIdentityQuery(query)) {
+      return 'OUT_OF_SCOPE';
+    }
+
+    if (!this.isLegalQuery(query, forcedCategory)) {
+      return 'OUT_OF_SCOPE';
+    }
+
     const q = query.toLowerCase().trim();
 
     // 0. BẮT BUỘC ĐIỀU HƯỚNG NẾU NGƯỜI DÙNG CHỌN DANH MỤC CỤ THỂ
@@ -264,6 +341,14 @@ export class RagService {
     principle?: ITextbookPrinciple | null;
     promptContext: string;
   }> {
+    if (intentCode === 'OUT_OF_SCOPE') {
+      return {
+        articles: [],
+        principle: null,
+        promptContext: ''
+      };
+    }
+
     // 1. Quét bảng nguyên lý giáo trình chuẩn
     const principle = await TextbookPrinciple.findOne({ topicCode: intentCode });
 
