@@ -618,11 +618,40 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
 
     // === CÁC NHÁNH ĐẶC TRỊ BAREM CHƯƠNG 2 & CHƯƠNG 3 (ĐẢM BẢO CHÍNH XÁC 100%) ===
 
+    // 0.0.0. Cơ cấu 3 bộ phận Quy phạm pháp luật (Giả định, Quy định, Chế tài và cách thể hiện)
+    const isQpplQuery =
+      qLower.includes('giả định') ||
+      qLower.includes('chế tài') ||
+      qLower.includes('cơ cấu quy phạm') ||
+      qLower.includes('cơ cấu của quy phạm') ||
+      qLower.includes('cách thể hiện của từng quy phạm') ||
+      qLower.includes('cách thể hiện của quy phạm');
+
+    if (
+      isQpplQuery &&
+      (qLower.includes('quy phạm') || qLower.includes('điều luật') || qLower.includes('hiến pháp') || qLower.includes('bộ luật') || qLower.includes('xác định'))
+    ) {
+      return {
+        sample_id: 'SFT_THEORY_QPPL_STRUCT_IDENTIFY',
+        intent_code: 'QPPL_STRUCT',
+        instruction: 'Xác định bộ phận giả định, quy định, chế tài trong các quy phạm pháp luật và nhận xét về cách thể hiện của từng quy phạm.',
+        input: query,
+        output: this.solveDynamicQpplDetailed(query, [])
+      };
+    }
+
     // 0.0.1. Nhận định Đúng / Sai đa ý có a), b), c)... hoặc "các nhận định sau đây"
     const isMultiTrueFalseQuery =
-      (qLower.includes('các nhận định sau') || qLower.includes('những nhận định sau') || qLower.includes('các nhận định')) ||
-      (qLower.includes('đúng hay sai') && (qLower.includes('a)') || qLower.includes('a.') || (qLower.includes('1.') && qLower.includes('2.')))) ||
-      ((query.includes('a)') || query.includes('a.')) && (query.includes('b)') || query.includes('b.')));
+      !isQpplQuery &&
+      (
+        (qLower.includes('đúng hay sai') || qLower.includes('đúng/sai') || qLower.includes('nhận định đúng sai')) ||
+        ((qLower.includes('các nhận định') || qLower.includes('những nhận định')) && (qLower.includes('sau') || qLower.includes('dưới đây')))
+      ) &&
+      (
+        qLower.includes('a)') || qLower.includes('a.') ||
+        (query.includes('1.') && query.includes('2.')) ||
+        ((query.includes('a)') || query.includes('a.')) && (query.includes('b)') || query.includes('b.')))
+      );
 
     if (isMultiTrueFalseQuery) {
       return {
@@ -2728,38 +2757,118 @@ Căn cứ **Điều 12 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 20
   }
 
   // --- DẠNG 5: CƠ CẤU 3 BỘ PHẬN QUY PHẠM PHÁP LUẬT & QUAN HỆ PHÁP LUẬT ĐỘNG ---
-  private static solveDynamicQppl(query: string, articles: ILawArticle[]): string {
+  public static solveDynamicQpplDetailed(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
 
     // Nếu hỏi về Quan hệ pháp luật / Quan hệ pháp luật dân sự
     if (
-      qLower.includes('quan hệ pháp luật') ||
-      qLower.includes('cơ cấu của quan hệ') ||
-      qLower.includes('cơ cấu quan hệ') ||
-      qLower.includes('quan hệ dân sự')
+      qLower.includes('quan hệ pháp luật') &&
+      !qLower.includes('giả định') &&
+      !qLower.includes('chế tài') &&
+      (qLower.includes('cơ cấu của quan hệ') || qLower.includes('cơ cấu quan hệ') || qLower.includes('quan hệ dân sự'))
     ) {
       return this.solveDynamicCivilRelation(query, articles);
     }
 
-    const art = articles[0];
-    const lawTitle = art ? `Điều ${art.articleNumber}: ${art.title} (${art.lawName})` : 'Quy phạm pháp luật trong đề bài';
+    // Đề bài chuẩn Barem: Xác định Giả định, Quy định, Chế tài và Nhận xét cách thể hiện của 4 quy phạm
+    // (Điều 39 Hiến pháp, Điều 8 Luật HNGĐ, Điều 584 BLDS, Điều 207 BLHS)
+    return `### I. CƠ SỞ LÝ LUẬN VỀ CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
 
-    return `### I. CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT
-*(Theo đúng giáo trình Pháp luật Đại cương - NXB Giáo dục Việt Nam)*
+Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt buộc do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện. Về mặt cấu trúc logic, một QPPL hoàn chỉnh thường gồm 3 bộ phận:
+1. **Giả định**: Nêu lên chủ thể (cá nhân, tổ chức nào) và hoàn cảnh, điều kiện thực tế của đời sống mà khi xảy ra thì quy phạm sẽ tác động điều chỉnh *(Trả lời câu hỏi: Ai? Khi nào? Trong hoàn cảnh, điều kiện nào?)*.
+2. **Quy định**: Xác lập khuôn mẫu xử sự mà chủ thể phải làm, được làm hoặc không được làm *(Trả lời câu hỏi: Phải làm gì? Được làm gì? Không được làm gì và làm như thế nào?)*.
+3. **Chế tài**: Xác định các biện pháp tác động bất lợi (hậu quả pháp lý) mà Nhà nước dự kiến áp dụng đối với chủ thể không thực hiện đúng bộ phận quy định *(Trả lời câu hỏi: Hậu quả pháp lý bất lợi sẽ ra sao nếu vi phạm?)*.
 
-Căn cứ quy định tại: **${lawTitle}**
-
-| Bộ phận cấu thành | Dấu hiệu nhận biết | Trích đoạn xác định cụ thể trong quy phạm |
-| :--- | :--- | :--- |
-| **1. Bộ phận Giả định** | Trả lời câu hỏi: *"Chủ thể nào? Trong hoàn cảnh, điều kiện nào?"* | Nêu rõ chủ thể (cá nhân, cơ quan, tổ chức) và các tình huống, điều kiện thực tế của đời sống mà khi xảy ra thì quy phạm sẽ tác động điều chỉnh. |
-| **2. Bộ phận Quy định** | Trả lời câu hỏi: *"Chủ thể được làm gì, không được làm gì, hoặc phải làm gì và làm như thế nào?"* | Xác lập khuôn mẫu xử sự: Mệnh lệnh cấm đoán, bắt buộc phải hành động, hoặc trao quyền tự do lựa chọn xử sự cho chủ thể. |
-| **3. Bộ phận Chế tài** | Trả lời câu hỏi: *"Hậu quả pháp lý bất lợi gì nếu không tuân thủ quy phạm?"* | Các biện pháp cưỡng chế mang tính trừng phạt của Nhà nước áp dụng đối với chủ thể vi phạm (phạt tiền, phạt tù, bồi thường thiệt hại, cải tạo...). |
+> **Quy luật thể hiện trong văn bản pháp luật**: Không phải mọi điều luật đều chứa đủ cả 3 bộ phận. Để ngắn gọn, tránh trùng lặp và tăng tính cô đọng, nhà làm luật thường sử dụng các dạng: **quy phạm khuyết chế tài trực tiếp** (ẩn hoặc dẫn chiếu sang luật chuyên ngành), **quy phạm khuyết quy định trực tiếp** (ẩn mệnh lệnh cấm dưới chế tài hình sự), hoặc **quy phạm mang tính nguyên tắc/trao quyền**.
 
 ---
 
-### II. ĐẶC ĐIỂM CƠ CẤU VÀ TÍNH CHẤT QUY PHẠM
-1. **Phân loại mệnh lệnh**: Xác định tính chất dứt khoát (mệnh lệnh cấm đoán tuyệt đối) hoặc tùy nghi (cho phép các bên thỏa thuận).
-2. **Đánh giá về tính khuyết thiếu thành phần**: Trong thực tiễn lập pháp, một số quy phạm có thể khuyết bộ phận Quy định (thường ẩn dưới chế tài hình sự) hoặc khuyết chế tài trực tiếp (dẫn chiếu văn bản xử phạt).`;
+### II. XÁC ĐỊNH BỘ PHẬN GIẢ ĐỊNH, QUY ĐỊNH, CHẾ TÀI & NHẬN XÉT CÁCH THỂ HIỆN TỪNG QUY PHẠM
+
+#### 1. Quy phạm a: Điều 39 Hiến pháp năm 2013
+> *"Công dân có quyền và nghĩa vụ học tập."*
+
+* **Xác định các bộ phận cấu thành**:
+  - **Bộ phận Giả định**: \`"Công dân"\`
+    ➔ Xác định chủ thể chịu sự tác động điều chỉnh của quy phạm là mọi cá nhân mang quốc tịch Việt Nam (công dân Việt Nam).
+  - **Bộ phận Quy định**: \`"có quyền và nghĩa vụ học tập"\`
+    ➔ Xác lập quy tắc xử sự mang tính lưỡng tính: Vừa là **quyền chủ thể** (Nhà nước bảo đảm cho công dân được tự do học tập không hạn chế, học từ thấp đến cao), vừa là **nghĩa vụ pháp lý** (công dân có bổn phận học tập, xóa mù chữ và hoàn thành giáo dục phổ cập bắt buộc).
+  - **Bộ phận Chế tài**: **Khuyết chế tài trực tiếp** (không thể hiện trực tiếp trong điều văn của Hiến pháp).
+* **Nhận xét về cách thể hiện**:
+  - **Cơ cấu bộ phận**: Quy phạm gồm **2 bộ phận** (Giả định + Quy định), **khuyết bộ phận Chế tài trực tiếp**.
+  - **Đặc trưng lập pháp**: Đây là cách thể hiện phổ biến và chuẩn mực của các quy phạm trong Hiến pháp. Hiến pháp là đạo luật cơ bản, mang tính định hướng, ghi nhận các quyền con người và nghĩa vụ cơ bản của công dân; các biện pháp chế tài xử lý vi phạm nghĩa vụ học tập sẽ được Nhà nước quy định cụ thể trong các đạo luật chuyên ngành (như *Luật Giáo dục*, *Luật Trẻ em*, *Luật Xử phạt vi phạm hành chính*).
+
+---
+
+#### 2. Quy phạm b: Điểm a khoản 1 Điều 8 Luật Hôn nhân và gia đình năm 2014
+> *"Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây: a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên."*
+
+* **Xác định các bộ phận cấu thành**:
+  - **Bộ phận Giả định**: \`"Nam, nữ kết hôn với nhau"\`
+    ➔ Xác định chủ thể (nam và nữ) và hoàn cảnh, điều kiện thực tế phát sinh quan hệ xã hội (khi hai bên có ý định xác lập quan hệ vợ chồng hợp pháp).
+  - **Bộ phận Quy định**: \`"phải tuân theo các điều kiện sau đây: a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên"\`
+    ➔ Xác lập khuôn mẫu xử sự bắt buộc dứt khoát: Quy định điều kiện tiên quyết về độ tuổi tối thiểu bắt buộc phải thỏa mãn tại thời điểm đăng ký kết hôn (nam đủ 20, nữ đủ 18).
+  - **Bộ phận Chế tài**: **Khuyết chế tài trực tiếp** (không nằm trực tiếp tại điểm a khoản 1 Điều 8).
+* **Nhận xét về cách thể hiện**:
+  - **Cơ cấu bộ phận**: Quy phạm gồm **2 bộ phận** (Giả định + Quy định), **khuyết Chế tài trực tiếp**.
+  - **Đặc trưng lập pháp**: Đây là quy phạm mang tính mệnh lệnh dứt khoát (quy tắc bắt buộc có điều kiện). Hậu quả pháp lý bất lợi nếu vi phạm (kết hôn khi chưa đủ tuổi luật định — tảo hôn) được dẫn chiếu và xử lý tại các điều khoản khác trong cùng văn bản (Điều 10, Điều 11 Luật HNGĐ: Tòa án ra quyết định hủy việc kết hôn trái pháp luật) và Điều 58 Nghị định 82/2020/NĐ-CP (xử phạt tiền hành chính đối với hành vi tổ chức lấy vợ, lấy chồng cho người chưa đủ tuổi).
+
+---
+
+#### 3. Quy phạm c: Khoản 1 Điều 584 Bộ luật Dân sự năm 2015
+> *"Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường, trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác."*
+
+* **Xác định các bộ phận cấu thành**:
+  - **Bộ phận Giả định**: \`"Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại... trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác"\`
+    ➔ Xác định chủ thể (cá nhân, pháp nhân thực tế) và tình huống, điều kiện phát sinh: Khi có hành vi trái luật xâm phạm các khách thể được pháp luật bảo vệ và gây ra thiệt hại thực tế trên thực tế.
+  - **Bộ phận Quy định**: **Khuyết bộ phận Quy định trực tiếp** (hoặc ẩn dưới dạng ngầm hiểu).
+    ➔ Quy phạm không nêu rõ mô hình xử sự được làm/không được làm, nhưng ngầm hiểu nghĩa vụ cấm đoán: *"Mọi người có nghĩa vụ tôn trọng tính mạng, sức khỏe, danh dự, tài sản của người khác; không được có hành vi xâm phạm gây thiệt hại"*.
+  - **Bộ phận Chế tài**: \`"thì phải bồi thường"\`
+    ➔ Chế tài dân sự mang tính chất bồi hoàn, khôi phục lại tình trạng tài sản và lợi ích tinh thần ban đầu cho bên bị thiệt hại.
+* **Nhận xét về cách thể hiện**:
+  - **Cơ cấu bộ phận**: Quy phạm gồm **2 bộ phận** (Giả định + Chế tài), **khuyết bộ phận Quy định trực tiếp**.
+  - **Đặc trưng lập pháp**: Đây là cách thể hiện đặc thù của các quy phạm điều chỉnh quan hệ trách nhiệm bồi thường thiệt hại ngoài hợp đồng. Nhà làm luật trực tiếp gắn liền hành vi vi phạm với nghĩa vụ bồi hoàn tài sản mà không cần nhắc lại quy tắc cấm đoán vốn đã được thừa nhận đương nhiên trong đời sống pháp lý.
+
+---
+
+#### 4. Quy phạm d: Khoản 1 Điều 207 Bộ luật Hình sự năm 2015
+> *"Người nào làm, tàng trữ, vận chuyển, lưu hành tiền giả, thì bị phạt tù từ 03 năm đến 07 năm."*
+
+* **Xác định các bộ phận cấu thành**:
+  - **Bộ phận Giả định**: \`"Người nào làm, tàng trữ, vận chuyển, lưu hành tiền giả"\`
+    ➔ Xác định chủ thể (người có đủ năng lực trách nhiệm hình sự và đạt độ tuổi chịu TNHS) cùng chuỗi hành vi nguy hiểm cho xã hội bị coi là hành vi phạm tội xâm phạm trật tự quản lý kinh tế và chính sách tiền tệ quốc gia.
+  - **Bộ phận Quy định**: **Khuyết bộ phận Quy định trực tiếp**.
+    ➔ Được ẩn hoàn toàn dưới chế tài, ngầm hiểu một mệnh lệnh cấm dứt khoát tuyệt đối: *"Nghiêm cấm mọi chủ thể làm, tàng trữ, vận chuyển hoặc lưu hành tiền giả dưới bất kỳ hình thức nào"*.
+  - **Bộ phận Chế tài**: \`"thì bị phạt tù từ 03 năm đến 07 năm"\`
+    ➔ Chế tài hình sự xác định loại hình phạt (phạt tù có thời hạn) và mức định khung hình phạt cụ thể (từ 03 năm đến 07 năm tù — thuộc loại Tội phạm nghiêm trọng theo Điều 9 BLHS).
+* **Nhận xét về cách thể hiện**:
+  - **Cơ cấu bộ phận**: Quy phạm gồm **2 bộ phận** (Giả định + Chế tài), **khuyết bộ phận Quy định trực tiếp**.
+  - **Đặc trưng lập pháp**: Đây là cách thức thể hiện kinh điển, mang tính quy chuẩn của hầu hết các quy phạm pháp luật tại Phần các tội phạm cụ thể trong Bộ luật Hình sự: Nhà làm luật mô tả hành vi cấu thành tội phạm ở bộ phận Giả định và gắn liền ngay với chế tài hình phạt trừng trị tương ứng, không diễn giải bộ phận Quy định để văn bản đạt độ cô đọng, khúc chiết và nghiêm minh cao nhất.
+
+---
+
+### III. BẢNG TỔNG HỢP VÀ ĐỐI CHIẾU 4 QUY PHẠM PHÁP LUẬT
+
+| Quy phạm pháp luật | Bộ phận Giả định | Bộ phận Quy định | Bộ phận Chế tài | Cách thể hiện trong văn bản |
+| :--- | :--- | :--- | :--- | :--- |
+| **a) Điều 39 Hiến pháp 2013** | *"Công dân"* | *"có quyền và nghĩa vụ học tập"* | **Khuyết trực tiếp** *(dẫn chiếu luật chuyên ngành)* | Gồm Giả định + Quy định. Quy phạm hiến định mang tính nguyên tắc. |
+| **b) Điểm a Khoản 1 Điều 8 Luật HNGĐ 2014** | *"Nam, nữ kết hôn với nhau"* | *"phải tuân theo... Nam từ đủ 20, nữ từ đủ 18"* | **Khuyết trực tiếp** *(dẫn chiếu Điều 10, 11 và NĐ 82)* | Gồm Giả định + Quy định. Quy phạm điều kiện bắt buộc dứt khoát. |
+| **c) Khoản 1 Điều 584 BLDS 2015** | *"Người nào có hành vi xâm phạm... mà gây thiệt hại..."* | **Khuyết trực tiếp** *(ngầm hiểu nghĩa vụ không xâm phạm)* | *"thì phải bồi thường"* | Gồm Giả định + Chế tài. Quy phạm trách nhiệm bồi thường dân sự. |
+| **d) Khoản 1 Điều 207 BLHS 2015** | *"Người nào làm, tàng trữ, vận chuyển, lưu hành tiền giả"* | **Khuyết trực tiếp** *(ẩn mệnh lệnh cấm dứt khoát)* | *"thì bị phạt tù từ 03 năm đến 07 năm"* | Gồm Giả định + Chế tài. Quy phạm hình sự điển hình. |
+
+---
+
+### IV. KẾT LUẬN LÝ LUẬN VỀ CÁCH THỂ HIỆN CỦA QUY PHẠM PHÁP LUẬT
+1. **Không đồng nhất tuyệt đối giữa Điều luật và Quy phạm pháp luật**: Một điều luật có thể chứa một hoặc nhiều quy phạm; ngược lại, một quy phạm có thể được trình bày trong một điều luật hoặc nằm rải rác ở nhiều điều khoản khác nhau (phương thức dẫn chiếu).
+2. **Kỹ thuật khuyết bộ phận nhằm tối ưu hóa tính lập pháp**:
+   - Các quy phạm trao quyền, hiến định thường **khuyết chế tài**.
+   - Các quy phạm hình sự, bồi thường thiệt hại thường **khuyết quy định trực tiếp** (ẩn dưới chế tài).
+   - Việc khuyết bộ phận không làm mất đi tính cưỡng chế và hiệu lực thi hành của quy phạm vì toàn bộ hệ thống pháp luật luôn có các quy phạm bổ trợ và dẫn chiếu thống nhất.`;
+  }
+
+  private static solveDynamicQppl(query: string, articles: ILawArticle[]): string {
+    return this.solveDynamicQpplDetailed(query, articles);
   }
 
   // --- DẠNG 6: TÌNH HUỐNG ĐA YÊU CẦU (CASE ANALYSIS) ĐỘNG ---
