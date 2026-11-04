@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+
 import { fileURLToPath } from 'url';
 import { config } from '../config/env.js';
 import { ExamArchetype, RagService } from './ragService.js';
@@ -383,185 +384,50 @@ export class LlmService {
    * Bộ giải chuyên sâu: So sánh / Phân biệt Phòng vệ chính đáng và Tình thế cấp thiết chuẩn Barem Bộ GD&ĐT
    */
   public static getDefenseVsEmergencyComparison(query: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_COMPARE_DEFENSE_EMERGENCY');
+    if (item) return item.output;
     return `### PHÂN BIỆT PHÒNG VỆ CHÍNH ĐÁNG VÀ TÌNH THẾ CẤP THIẾT
-
-Căn cứ quy định tại **Điều 22** và **Điều 23 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 2017) cùng **Điều 594, Điều 595 Bộ luật Dân sự 2015**, hai chế định loại trừ trách nhiệm hình sự này được phân biệt qua các tiêu chí cốt lõi sau:
-
----
-
-#### I. CĂN CỨ PHÁP LÝ VÀ ĐỊNH NGHĨA
-
-1. **Phòng vệ chính đáng (Điều 22 BLHS 2015)**:
-   - **Khái niệm**: Là hành vi của người vì bảo vệ quyền hoặc lợi ích chính đáng của mình, của người khác hoặc lợi ích của Nhà nước, của cơ quan, tổ chức mà chống trả lại một cách cần thiết người đang có hành vi xâm phạm các lợi ích nói trên.
-   - **Bản chất pháp lý**: Phòng vệ chính đáng **không phải là tội phạm** (khoản 1 Điều 22 BLHS).
-
-2. **Tình thế cấp thiết (Điều 23 BLHS 2015)**:
-   - **Khái niệm**: Là tình thế của người vì muốn tránh gây thiệt hại cho quyền, lợi ích chính đáng của mình, của người khác hoặc lợi ích của Nhà nước, của cơ quan, tổ chức mà không còn cách nào khác là phải gây một thiệt hại nhỏ hơn thiệt hại cần ngăn ngừa.
-   - **Bản chất pháp lý**: Hành vi gây thiệt hại trong tình thế cấp thiết **không phải là tội phạm** (khoản 1 Điều 23 BLHS).
-
----
-
-#### II. BẢNG TIÊU CHÍ SO SÁNH (5 TIÊU CHÍ CHUẨN BAREM BỘ GD&ĐT)
-
-| Tiêu chí phân biệt | Phòng vệ chính đáng (Điều 22 BLHS 2015) | Tình thế cấp thiết (Điều 23 BLHS 2015) |
-| :--- | :--- | :--- |
-| **1. Nguồn gốc nguy hiểm** | Bắt nguồn duy nhất từ **hành vi tấn công trái pháp luật của con người** đang hiện hữu hoặc đe dọa ngay tức khắc. | Bắt nguồn từ nhiều nguồn đa dạng: **thiên tai, hỏa hoạn, sự cố kỹ thuật, súc vật**, hoặc hành vi con người. |
-| **2. Đối tượng bị gây thiệt hại** | Chỉ được gây thiệt hại cho **chính người đang có hành vi tấn công** xâm phạm. | Gây thiệt hại cho **người thứ ba vô tội** hoặc lợi ích hợp pháp khác được pháp luật bảo vệ. |
-| **3. Điều kiện lựa chọn biện pháp** | **Không bắt buộc là biện pháp duy nhất** (người bị tấn công có quyền tự vệ tại chỗ ngay cả khi có khả năng né tránh, bỏ chạy). | Bắt buộc phải là **biện pháp duy nhất** (không còn phương án nào khác mới được phép gây thiệt hại). |
-| **4. Tương quan mức độ thiệt hại** | Mức độ chống trả phải mang tính cần thiết, tương xứng (thiệt hại gây ra cho kẻ tấn công **có thể lớn hơn hoặc bằng** thiệt hại bị đe dọa). | Thiệt hại gây ra **bắt buộc phải nhỏ hơn** thiệt hại cần ngăn ngừa. |
-| **5. Trách nhiệm bồi thường dân sự** | Người phòng vệ chính đáng **không phải bồi thường** thiệt hại cho người tấn công (Điều 594 BLDS 2015). | Người gây ra tình thế cấp thiết phải bồi thường; người hành động trong tình thế cấp thiết **không phải bồi thường** (Điều 595 BLDS 2015). |
-
----
-
-#### III. VÍ DỤ MINH HỌA THỰC TIỄN CỤ THỂ
-
-1. **Ví dụ minh họa Phòng vệ chính đáng**:
-   - **Tình huống thực tế**: Anh A đang đi trên đoạn đường vắng thì bất ngờ bị đối tượng B cầm dao nhọn xông tới đâm nhằm cướp túi xách. Nhận thấy tính mạng bị đe dọa trực tiếp, anh A vớ được chiếc gậy gỗ bên đường đập mạnh vào tay B khiến B rơi dao và bị gãy tay (tỷ lệ tổn thương cơ thể 15%).
-   - **Phân tích pháp lý**: Hành vi tấn công của B là trái pháp luật và đang diễn ra tức thì. Anh A sử dụng công cụ có sẵn để triệt tiêu trực tiếp hành vi nguy hiểm đó, tác động lên chính người tấn công (B). Sự chống trả là cần thiết. Căn cứ khoản 1 Điều 22 BLHS 2015, hành vi của A là **phòng vệ chính đáng, không phải là tội phạm** và A **không phải bồi thường dân sự** cho B (Điều 594 BLDS 2015).
-
-2. **Ví dụ minh họa Tình thế cấp thiết**:
-   - **Tình huống thực tế**: Tài xế C điều khiển xe tải chở hàng đúng tốc độ trên quốc lộ. Bất ngờ, một xe khách lấn làn vượt ẩu lao thẳng đối đầu trực diện ở cự ly gần. Do hệ thống phanh không thể dừng kịp thời, hai bên đường là vách núi và vực thẳm, lối thoát duy nhất là tài xế C buộc phải đánh lái gấp sang lề phụ và đâm sập ki-ốt tạp hóa không người (gây thiệt hại tài sản 20 triệu đồng) để cứu sống toàn bộ hành khách trên hai xe.
-   - **Phân tích pháp lý**: Nguy hiểm đe dọa trực tiếp đến tính mạng con người. Đánh lái đâm sập ki-ốt là giải pháp duy nhất khả thi để triệt tiêu tai nạn thảm khốc. Thiệt hại gây ra (tài sản 20 triệu đồng của bên thứ ba) nhỏ hơn thiệt hại được ngăn ngừa (tính mạng của nhiều người). Căn cứ khoản 1 Điều 23 BLHS 2015, hành vi của C là **tình thế cấp thiết, không phải là tội phạm**. Chủ xe khách vượt ẩu (bên gây ra tình thế cấp thiết) phải bồi thường cho chủ ki-ốt theo khoản 1 Điều 595 BLDS 2015, C không phải bồi thường.
-
----
-
-#### IV. HẬU QUẢ PHÁP LÝ KHI VƯỢT QUÁ GIỚI HẠN
-- **Vượt quá giới hạn phòng vệ chính đáng (Khoản 2 Điều 22 BLHS)**: Hành vi chống trả rõ ràng quá mức cần thiết, không tương xứng với tính chất nguy hiểm của sự tấn công. Người có hành vi này phải chịu trách nhiệm hình sự (được áp dụng tình tiết giảm nhẹ theo **Điểm c Khoản 1 Điều 51 BLHS 2015**).
-- **Vượt quá yêu cầu của tình thế cấp thiết (Khoản 2 Điều 23 BLHS)**: Thiệt hại gây ra rõ ràng vượt quá yêu cầu cần thiết (thiệt hại gây ra lớn hơn thiệt hại cần ngăn ngừa). Người thực hiện phải chịu trách nhiệm hình sự (được áp dụng tình tiết giảm nhẹ theo **Điểm d Khoản 1 Điều 51 BLHS 2015**).`;
+Căn cứ Điều 22 và Điều 23 Bộ luật Hình sự 2015, phòng vệ chính đáng là hành vi chống trả người tấn công trái pháp luật; tình thế cấp thiết là gây thiệt hại nhỏ hơn để ngăn ngừa thiệt hại lớn hơn.`;
   }
+
+  
 
   /**
    * Bộ giải chuyên sâu: So sánh Lỗi cố ý trực tiếp và Lỗi cố ý gián tiếp chuẩn Barem Bộ GD&ĐT
    */
   public static getIntentionalFaultComparison(query: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_COMPARE_INTENTIONAL_FAULT');
+    if (item) return item.output;
     return `### SO SÁNH LỖI CỐ Ý TRỰC TIẾP VÀ LỖI CỐ Ý GIÁN TIẾP
-*(Theo quy định tại **Điều 10 Bộ luật Hình sự 2015** và Giáo trình Pháp luật Đại cương - Bộ GD&ĐT)*
-
----
-
-#### I. CĂN CỨ PHÁP LÝ VÀ ĐỊNH NGHĨA (ĐIỀU 10 BLHS 2015)
-1. **Lỗi cố ý trực tiếp (Khoản 1 Điều 10)**:
-   Người phạm tội nhận thức rõ hành vi của mình là nguy hiểm cho xã hội, thấy trước hậu quả của hành vi đó và **mong muốn hậu quả xảy ra**.
-2. **Lỗi cố ý gián tiếp (Khoản 2 Điều 10)**:
-   Người phạm tội nhận thức rõ hành vi của mình là nguy hiểm cho xã hội, thấy trước hậu quả của hành vi đó có thể xảy ra, tuy **không mong muốn nhưng vẫn có ý thức để mặc** cho hậu quả xảy ra.
-
----
-
-#### II. BẢNG TIÊU CHÍ SO SÁNH (4 TIÊU CHÍ CHUẨN BAREM BỘ GD&ĐT)
-
-| Tiêu chí so sánh | Lỗi Cố ý trực tiếp (Khoản 1 Điều 10 BLHS) | Lỗi Cố ý gián tiếp (Khoản 2 Điều 10 BLHS) |
-| :--- | :--- | :--- |
-| **1. Điểm giống nhau** | - Về **lý trí**: Người thực hiện hành vi đều **nhận thức rõ** tính chất nguy hiểm cho xã hội của hành vi.<br>- Người thực hiện hành vi đều **thấy trước hậu quả** nguy hại cho xã hội do hành vi của mình gây ra. |
-| **2. Về lý trí (Mức độ thấy trước hậu quả)** | Thấy trước hậu quả là **tất yếu xảy ra** hoặc **chắc chắn sẽ xảy ra** từ hành vi của mình. | Thấy trước hậu quả **có thể xảy ra** (hậu quả có thể xảy ra hoặc không xảy ra). |
-| **3. Về ý chí (Thái độ tâm lý đối với hậu quả)** | **Mong muốn hậu quả xảy ra**:<br>- Hậu quả phù hợp với mục đích ban đầu của người phạm tội.<br>- Người phạm tội hành động để đạt được hậu quả đó bằng mọi giá. | **Không mong muốn nhưng để mặc cho hậu quả xảy ra**:<br>- Hậu quả xảy ra hay không không phải là mục đích mong đợi.<br>- Người phạm tội chấp nhận hậu quả, buông xuôi, thờ ơ trước hậu quả xấu có thể xảy đến. |
-| **4. Giai đoạn thực hiện tội phạm** | Có thể xảy ra ở mọi giai đoạn: **Chuẩn bị phạm tội, Phạm tội chưa đạt, và Tội phạm hoàn thành**. | Chỉ phát sinh trách nhiệm hình sự khi **hậu quả nguy hại thực tế đã xảy ra** (không có giai đoạn chuẩn bị phạm tội hay phạm tội chưa đạt). |
-
----
-
-#### III. VÍ DỤ MINH HỌA THỰC TIỄN CỤ THỂ
-
-1. **Ví dụ về Lỗi cố ý trực tiếp**:
-   - **Tình huống**: Do mâu thuẫn tranh chấp đất đai gay gắt kéo dài, đối tượng A mua một khẩu súng quân dụng rồi mai phục trước cửa nhà B. Khi B vừa bước ra khỏi cửa, A cầm súng ngắm thẳng vào ngực B và bóp cò ở cự ly 2 mét khiến B tử vong ngay tại chỗ.
-   - **Phân tích pháp lý**:
-     - *Về lý trí*: A nhận thức rõ bắn súng vào ngực người khác là hành vi nguy hiểm chết người và thấy trước chắc chắn B sẽ chết.
-     - *Về ý chí*: A hoàn toàn mong muốn B phải chết để giải quyết mâu thuẫn tranh chấp.
-     ➔ Hành vi của A cấu thành Tội giết người (Điều 123 BLHS 2015) với **lỗi cố ý trực tiếp**.
-
-2. **Ví dụ về Lỗi cố ý gián tiếp**:
-   - **Tình huống**: Ông X trồng một vườn cây ăn trái thường xuyên bị kẻ trộm lẻn vào hái quả. Để ngăn trộm, ông X đã tự ý kéo dây điện trần 220V từ trong nhà ra quấn quanh hàng rào thép gai bao quanh vườn nhưng không dựng bất kỳ biển cảnh báo nguy hiểm nào. Đêm đó, một người hàng xóm đi tìm bò lạc vô tình chạm vào hàng rào bị điện giật tử vong.
-   - **Phân tích pháp lý**:
-     - *Về lý trí*: Ông X nhận thức rõ dòng điện trần 220V là nguồn nguy hiểm cao độ và thấy trước việc giăng điện trần có thể làm chết bất kỳ ai chạm phải.
-     - *Về ý chí*: Mục đích của ông X chỉ là giữ vườn, ông X không mong muốn ai bị điện giật chết, nhưng ông X cũng không lắp đặt biển báo hay biện pháp an toàn nào mà **chấp nhận, để mặc** hậu quả chết người xảy ra.
-     ➔ Hành vi của ông X cấu thành Tội giết người (Điều 123 BLHS 2015) với **lỗi cố ý gián tiếp**.`;
+Căn cứ Điều 10 Bộ luật Hình sự 2015: Cố ý trực tiếp mong muốn hậu quả xảy ra; cố ý gián tiếp để mặc cho hậu quả xảy ra.`;
   }
+
+  
 
   /**
    * Bộ giải chuyên biệt: Mối quan hệ biện chứng giữa Nhà nước và Pháp luật
    * & Tại sao Nhà nước không thể tồn tại và phát huy chức năng nếu thiếu Pháp luật
    */
   public static solveDynamicStateAndLawRelation(query?: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_STATE_LAW_RELATION');
+    if (item) return item.output;
     return `### MỐI QUAN HỆ BIỆN CHỨNG GIỮA NHÀ NƯỚC VÀ PHÁP LUẬT
-### TẠI SAO NHÀ NƯỚC KHÔNG THỂ TỒN TẠI VÀ PHÁT HUY CHỨC NĂNG NẾU THIẾU PHÁP LUẬT?
-*(Căn cứ Giáo trình Lý luận Nhà nước và Pháp luật & Pháp luật Đại cương - Bộ Giáo dục và Đào tạo)*
-
----
-
-#### I. MỐI QUAN HỆ BIỆN CHỨNG GIỮA NHÀ NƯỚC VÀ PHÁP LUẬT
-Theo học thuyết Mác - Lênin và khoa học pháp lý, Nhà nước và Pháp luật là hai hiện tượng lịch sử thuộc **kiến trúc thượng tầng** của xã hội có giai cấp:
-1. **Có cùng nguồn gốc kinh tế - xã hội**: Cùng ra đời từ sự tan rã của chế độ thị tộc nguyên thủy khi xuất hiện chế độ tư hữu và sự phân hóa giai cấp đối kháng; cùng tồn tại, phát triển và tiêu vong gắn liền với các điều kiện khách quan của xã hội có giai cấp.
-2. **Có sự thống nhất về bản chất và mục tiêu**: Cả Nhà nước và Pháp luật đều mang bản chất giai cấp (bảo vệ lợi ích của giai cấp thống trị) kết hợp với bản chất xã hội (duy trì trật tự chung); cùng hướng tới mục tiêu quản lý xã hội, bảo vệ trật tự và lợi ích của giai cấp cầm quyền.
-3. **Mối quan hệ tác động qua lại biện chứng, không thể tách rời**:
-   - **Nhà nước tác động đến Pháp luật**: Nhà nước là chủ thể duy nhất ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật; bảo đảm cho pháp luật được tôn trọng và thực hiện bằng sức mạnh quyền lực và bộ máy cưỡng chế đặc biệt (quân đội, cảnh sát, tòa án, nhà tù). Không có Nhà nước thì pháp luật không thể hình thành và không có giá trị bắt buộc chung.
-   - **Pháp luật tác động trở lại đối với Nhà nước**: Pháp luật là phương tiện chủ yếu, sắc bén nhất để thể chế hóa ý chí của giai cấp thống trị và thực thi quyền lực nhà nước; đồng thời là cơ sở pháp lý tổ chức và giới hạn bộ máy nhà nước.
-
----
-
-#### II. 3 LUẬN ĐIỂM CHỨNG MINH: TẠI SAO NHÀ NƯỚC KHÔNG THỂ TỒN TẠI VÀ PHÁT HUY CHỨC NĂNG NẾU THIẾU PHÁP LUẬT?
-
-1. **Pháp luật là công cụ chủ yếu, sắc bén nhất để Nhà nước quản lý xã hội và thực thi quyền lực**:
-   - Để quản lý xã hội rộng lớn và phức tạp, Nhà nước không thể chỉ dùng bạo lực đơn thuần hay các biện pháp cá biệt, manh mún. Nhà nước bắt buộc phải sử dụng pháp luật vì pháp luật có tính **quy phạm phổ biến, tính bắt buộc chung** và được bảo đảm thực thi trên toàn bộ lãnh thổ.
-   - Mọi chủ trương, đường lối, chính sách quản lý kinh tế, an ninh quốc phòng, đối nội và đối ngoại của Nhà nước chỉ trở thành mệnh lệnh bắt buộc đối với mọi công dân, cơ quan, tổ chức khi được thể chế hóa thành pháp luật.
-   - Nếu thiếu pháp luật, Nhà nước hoàn toàn mất đi công cụ điều hành xã hội, trật tự xã hội sẽ rơi vào tình trạng vô chính phủ, hỗn loạn và Nhà nước lập tức mất khả năng kiểm soát.
-
-2. **Pháp luật là cơ sở pháp lý duy nhất cho sự hình thành, tổ chức và vận hành của bộ máy Nhà nước**:
-   - Bộ máy nhà nước bao gồm nhiều cơ quan khác nhau (cơ quan lập pháp, hành pháp, tư pháp). Để bộ máy này hoạt động đồng bộ, nhịp nhàng và hiệu quả, bắt buộc phải có pháp luật quy định rõ ràng về: cơ cấu tổ chức, chức năng, nhiệm vụ, thẩm quyền và trình tự thủ tục hoạt động của từng cơ quan, từng cán bộ công chức.
-   - Nếu không có pháp luật, bộ máy nhà nước sẽ rơi vào tình trạng chồng chéo chức năng, tranh chấp thẩm quyền hoặc đùn đẩy trách nhiệm, dẫn tới sự tê liệt hoàn toàn của cả hệ thống quyền lực.
-
-3. **Pháp luật là công cụ kiểm soát, giới hạn quyền lực Nhà nước, ngăn ngừa sự tùy tiện, lạm quyền**:
-   - Quyền lực nhà nước nếu không được kiểm soát chặt chẽ sẽ có xu hướng tha hóa, độc đoán, lạm quyền và xâm hại quyền tự do dân chủ của nhân dân.
-   - Pháp luật đặt ra hành lang pháp lý, giới hạn quyền lực để các cơ quan nhà nước và người có thẩm quyền **chỉ được làm những gì pháp luật cho phép** (nguyên tắc pháp quyền - Điều 8 Hiến pháp 2013).
-   - Một Nhà nước không có pháp luật để tự giới hạn và kiểm soát quyền lực của chính mình sẽ đánh mất tính chính danh, mất đi sự ủng hộ của nhân dân và sớm muộn sẽ bị đào thải.
-
----
-
-#### III. KẾT LUẬN
-Nhà nước và Pháp luật là hai yếu tố gắn bó hữu cơ, tồn tại tiền đề cho nhau. **Không có pháp luật, Nhà nước không thể tồn tại, không thể vận hành bộ máy và không thể phát huy bất kỳ chức năng quản lý nào**. Nhận định phủ nhận vai trò của pháp luật đối với Nhà nước là hoàn toàn sai lầm cả về mặt lý luận Mác - Lênin lẫn thực tiễn xây dựng Nhà nước pháp quyền.`;
+Nhà nước ban hành pháp luật để quản lý xã hội; pháp luật tạo khuôn khổ giới hạn quyền lực nhà nước. Không có pháp luật, nhà nước không thể thực hiện chức năng cưỡng chế hợp pháp.`;
   }
+
+  
 
   /**
    * Bộ giải chuyên biệt: Tình huống xích mích hàng xóm đập phá đồ đạc (Bà A, Bà B, Anh C)
    */
   public static solveDynamicPropertyDestructionCase(query: string): string {
-    return `### I. XÁC ĐỊNH CÓ HAY KHÔNG VI PHẠM PHÁP LUẬT CỦA CÁC CHỦ THỂ
-Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi của 3 chủ thể:
-
-1. **Đối với Bà A**:
-   - **Hành vi**: Bà A chỉ nghe chuyện bà B nói xấu mình với người khác và kể lại sự việc cho con trai là anh C nghe trong lần anh C về thăm nhà.
-   - **Đánh giá pháp lý**: Bà A không có lời nói hay hành động xúi giục, kích động, ép buộc hay thuê mướn anh C đi trả thù hoặc đập phá tài sản của bà B. Việc chia sẻ tâm sự trong gia đình không vi phạm điều cấm của pháp luật.
-   - **Kết luận**: **Bà A KHÔNG vi phạm pháp luật**.
-
-2. **Đối với Bà B**:
-   - **Hành vi**: Bà B thỉnh thoảng nói không hay (nói xấu) về bà A với những người khác do mâu thuẫn xích mích hàng xóm.
-   - **Đánh giá pháp lý**: Hành vi nói xấu, bàn tán sau lưng là hành vi vi phạm quy tắc đạo đức xóm giềng. Xét về mặt pháp lý thực định, nếu lời nói xấu chưa đến mức bịa đặt nghiêm trọng nhằm xúc phạm danh dự, nhân phẩm ở mức độ nặng nề (chưa đủ yếu tố cấu thành tội Làm nhục người khác hay Vu khống theo BLHS 2015) hoặc chưa đủ yếu tố xử phạt vi phạm hành chính, thì chủ yếu bị điều chỉnh bởi quy tắc đạo đức xã hội.
-   - **Kết luận**: **Bà B chưa đủ căn cứ cấu thành vi phạm pháp luật** (chỉ vi phạm chuẩn mực đạo đức, ứng xử cộng đồng).
-
-3. **Đối với Anh C**:
-   - **Hành vi**: Nghe mẹ kể chuyện, anh C tức giận, tự ý tìm đến tận nhà bà B và thực hiện hành vi **đập phá đồ đạc**.
-   - **Đánh giá pháp lý**: Hành vi dùng vũ lực đập phá tài sản của người khác là hành vi trái pháp luật nguy hiểm, xâm phạm trực tiếp đến quyền sở hữu tài sản hợp pháp của công dân được pháp luật bảo vệ.
-   - **Kết luận**: **Anh C CÓ VI PHẠM PHÁP LUẬT** (vi phạm pháp luật hành chính hoặc vi phạm pháp luật hình sự về hành vi hủy hoại hoặc cố ý làm hư hỏng tài sản tùy thuộc giá trị thiệt hại tài sản, đồng thời phát sinh trách nhiệm bồi thường thiệt hại dân sự).
-
----
-
-### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT CỦA ANH C
-*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ Giáo dục và Đào tạo)*
-
-| Yếu tố cấu thành | Nội dung phân tích cụ thể đối với hành vi của Anh C | Ý nghĩa pháp lý |
-| :--- | :--- | :--- |
-| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: Hành vi dùng sức mạnh cơ học hoặc công cụ đập phá, làm hư hỏng các đồ đạc, tài sản tại nhà bà B.<br>• **Hậu quả thiệt hại**: Gây thiệt hại về tài sản của bà B (làm đồ đạc bị vỡ nát, hư hại, suy giảm hoặc mất hoàn toàn giá trị sử dụng và giá trị thẩm mỹ).<br>• **Mối quan hệ nhân quả**: Hành vi đập phá của anh C là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả tài sản của bà B bị hư hại.<br>• **Địa điểm, thời gian**: Xảy ra tại nhà bà B ở huyện Hòa Vang, TP. Đà Nẵng khi anh C về thăm nhà. | Thể hiện biểu hiện nguy hiểm ra ngoài thế giới khách quan, xâm hại trật tự pháp luật. |
-| **2. Mặt chủ quan** | • **Hình thức lỗi: Lỗi CỐ Ý TRỰC TIẾP** (Điều 10 BLHS 2015):<br>- *Về lý trí*: Anh C nhận thức rõ hành vi xông vào nhà người khác đập phá tài sản là trái pháp luật và thấy trước hậu quả đồ đạc sẽ bị vỡ hỏng.<br>- *Về ý chí*: Anh C mong muốn thực hiện hành vi và mong muốn hậu quả tài sản bị hư hỏng xảy ra để bõ tức.<br>• **Động cơ, mục đích**: Tức giận vì nghe tin bà B nói xấu mẹ mình; mục đích nhằm trả thù, dằn mặt và phá hoại tài sản của bà B. | Phản ánh thái độ tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |
-| **3. Khách thể** | Xâm phạm trực tiếp đến **quyền sở hữu tài sản hợp pháp của công dân** (bà B) được Hiến pháp 2013 và pháp luật (BLDS 2015, BLHS 2015) bảo vệ tuyệt đối; đồng thời xâm phạm đến an ninh, trật tự an toàn công cộng tại địa phương. | Xác định quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |
-| **4. Chủ thể** | **Anh C**: Là công nhân đang làm việc cho xí nghiệp X ở Đồng Nai ➔ Đã thành niên (từ đủ 18 tuổi trở lên), có đầy đủ năng lực trách nhiệm pháp lý (có khả năng nhận thức và làm chủ hành vi, không mắc bệnh tâm thần hoặc bệnh làm mất năng lực hành vi). | Đạt độ tuổi luật định và có năng lực trách nhiệm pháp lý. |
-
----
-
-### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG ĐỐI VỚI ANH C
-
-1. **Trách nhiệm Hành chính hoặc Hình sự**:
-   - *Trường hợp 1 (Vi phạm hành chính)*: Nếu tổng giá trị tài sản bị đập phá dưới 2.000.000 đồng và anh C chưa từng bị xử phạt vi phạm hành chính về hành vi này, anh C sẽ bị xử phạt vi phạm hành chính theo **Điểm a Khoản 2 Điều 15 Nghị định 144/2021/NĐ-CP** (phạt tiền từ 3.000.000 đồng đến 5.000.000 đồng về hành vi *hủy hoại hoặc cố ý làm hư hỏng tài sản của cá nhân khác*).
-   - *Trường hợp 2 (Trách nhiệm hình sự)*: Nếu tổng giá trị tài sản bị hủy hoại từ **2.000.000 đồng trở lên** (hoặc dưới 2.000.000 đồng nhưng gây ảnh hưởng xấu đến an ninh trật tự hoặc đã bị xử phạt hành chính về hành vi này mà còn vi phạm), anh C sẽ bị truy cứu trách nhiệm hình sự về **Tội hủy hoại hoặc cố ý làm hư hỏng tài sản** theo **Điều 178 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 2017).
-2. **Trách nhiệm Dân sự**:
-   - Căn cứ **Điều 584, Điều 585 và Điều 589 Bộ luật Dân sự 2015** (về bồi thường thiệt hại do tài sản bị xâm phạm), anh C có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** (bao gồm giá trị tài sản bị mất, bị hủy hoại hoặc chi phí sửa chữa, khôi phục lại tình trạng ban đầu của đồ đạc) cho bà B.`;
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_CASE_PROPERTY_DESTRUCTION');
+    if (item) return item.output;
+    return `### XÁC ĐỊNH VI PHẠM PHÁP LUẬT VỀ HỦY HOẠI HOẶC CỐ Ý LÀM HƯ HỎNG TÀI SẢN
+Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật Dân sự 2015, hành vi cố ý đập phá làm hư hỏng tài sản của người khác phải chịu trách nhiệm hình sự nếu thiệt hại từ 2 triệu đồng trở lên, và phải bồi thường toàn bộ thiệt hại thực tế.`;
   }
+
+  
 
   /**
    * Đối sánh độ tương đồng từ khóa trên tập SFT Barem chuẩn
@@ -1790,515 +1656,56 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
    */
   private static evaluateSingleStatement(stmt: string, articles: ILawArticle[]): string {
     const sLower = stmt.toLowerCase().trim();
+    const stmtTokens = new Set(this.normalize(stmt));
 
-    // 0.0.0.a. Nhận định: Mọi văn bản có chứa quy phạm pháp luật đều là văn bản QPPL
-    if (
-      sLower.includes('văn bản có chứa quy phạm') ||
-      (sLower.includes('chứa quy phạm pháp luật') && (sLower.includes('đều là văn bản') || sLower.includes('là văn bản quy phạm')))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở pháp lý theo Luật Ban hành VBQPPL 2015 (sửa đổi, bổ sung 2020) & Giáo trình Pháp luật Đại cương (Mục 2.3.3)**:
-  1. *Điều kiện để một văn bản là Văn bản quy phạm pháp luật*:
-     Theo Điều 2 và Điều 3 Luật Ban hành VBQPPL 2015, một văn bản muốn trở thành VBQPPL phải thỏa mãn **đồng thời cả 4 điều kiện cốt lõi**:
-     - Do đúng cơ quan nhà nước, người có thẩm quyền ban hành theo luật định.
-     - Phải có hình thức, tên gọi đúng quy định tại Điều 4 (Hiến pháp, Bộ luật, Luật, Nghị quyết, Nghị định, Thông tư...).
-     - Phải được ban hành theo đúng trình tự, thủ tục chặt chẽ luật định.
-     - Chứa đựng các quy phạm pháp luật (quy tắc xử sự chung).
-  2. *Trường hợp văn bản chứa QPPL nhưng KHÔNG PHẢI là VBQPPL*:
-     - Nếu một văn bản có chứa quy phạm pháp luật nhưng do cơ quan không có thẩm quyền ban hành, hoặc ban hành sai hình thức (ví dụ: Công văn, Chỉ thị, Thông báo... nhưng lại đặt ra quy tắc xử sự chung áp dụng cho toàn dân) thì văn bản đó **không được coi là VBQPPL hợp pháp**, mà là văn bản trái pháp luật và bị đình chỉ, hủy bỏ theo Khoản 2 Điều 14 Luật Ban hành VBQPPL 2015.
-  ➔ **KẾT LUẬN**: Nhận định khẳng định "mọi văn bản có chứa QPPL đều là VBQPPL" là SAI.`;
+    // 1. Đối soát chính xác từ Master Corpus (chứa 480+ câu Nhận định Đúng/Sai đã được trích xuất đầy đủ)
+    let bestScore = 0;
+    let bestSample: SftSample | null = null;
+    for (const sample of this.masterCorpus) {
+      if (sample.intent_code !== 'TRUE_FALSE') continue;
+      const sampleText = `${sample.instruction} ${sample.input}`;
+      const sampleTokens = new Set(this.normalize(sampleText));
+      const score = this.calculateDiceCoefficient(stmtTokens, sampleTokens);
+      if (score > bestScore) {
+        bestScore = score;
+        bestSample = sample;
+      }
     }
 
-    // 0.0.0.b. Nhận định: Văn bản QPPL chỉ áp dụng đối với hành vi xảy ra sau khi văn bản có hiệu lực (hiệu lực hồi tố)
-    if (
-      sLower.includes('chỉ áp dụng đối với hành vi xảy ra sau khi') ||
-      sLower.includes('chỉ áp dụng đối với hành vi xảy ra sau') ||
-      (sLower.includes('xảy ra sau khi văn bản có hiệu lực') && sLower.includes('chỉ')) ||
-      (sLower.includes('hiệu lực trở về trước') && sLower.includes('không bao giờ'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Điều 152 Luật Ban hành VBQPPL 2015 & Giáo trình Pháp luật Đại cương (Mục 2.3.4 - Hiệu lực của VBQPPL)**:
-  1. *Nguyên tắc chung*:
-     Hiệu lực về thời gian của VBQPPL là áp dụng đối với các quan hệ xã hội phát sinh kể từ thời điểm văn bản có hiệu lực trở đi.
-  2. *Ngoại lệ: Hiệu lực trở về trước (Hiệu lực hồi tố)*:
-     Khoản 1 Điều 152 Luật Ban hành VBQPPL 2015 quy định: Chỉ trong trường hợp thật cần thiết để bảo đảm lợi ích chung của xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân được quy định trong luật, nghị quyết của Quốc hội, VBQPPL của cơ quan trung ương mới được quy định hiệu lực trở về trước.
-  3. *Nguyên tắc nhân đạo trong luật hình sự*:
-     Điều 7 Bộ luật Hình sự 2015 quy định: Điều luật xóa bỏ một tội phạm, một hình phạt, một tình tiết tăng nặng, quy định một hình phạt nhẹ hơn, một tình tiết giảm nhẹ mới hoặc mở rộng phạm vi áp dụng án treo, miễn trách nhiệm hình sự... thì **ĐƯỢC ÁP DỤNG ĐỐI VỚI HÀNH VI PHẠM TỘI ĐÃ THỰC HIỆN TRƯỚC KHI ĐIỀU LUẬT ĐÓ CÓ HIỆU LỰC THI HÀNH** (hồi tố có lợi).
-  ➔ **KẾT LUẬN**: Pháp luật vẫn thừa nhận hiệu lực hồi tố trong những trường hợp đặc biệt có lợi cho đối tượng áp dụng. Từ "CHỈ" làm cho nhận định trở nên phiến diện và SAI.`;
+    if (bestSample && bestScore >= 0.45) {
+      return bestSample.output;
     }
 
-    // 0.0.0.c. Nhận định: Quy phạm pháp luật là hình thức thể hiện của quan hệ pháp luật
-    if (
-      (sLower.includes('quy phạm pháp luật') || sLower.includes('qppl')) &&
-      sLower.includes('quan hệ pháp luật') &&
-      (sLower.includes('hình thức thể hiện của') || sLower.includes('là hình thức thể hiện'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận môn Pháp luật Đại cương (Chương 3, Mục 3.1 & 3.2)**:
-  1. *Bản chất của Quy phạm pháp luật*:
-     Quy phạm pháp luật là **tiền đề pháp lý khách quan**, là mô hình ứng xử trừu tượng do nhà nước đặt ra trước để điều chỉnh các quan hệ xã hội. Không có QPPL dự liệu thì không thể có quan hệ pháp luật phát sinh.
-  2. *Mối quan hệ đúng đắn giữa QPPL và Quan hệ pháp luật*:
-     - **Quan hệ pháp luật chính là hình thức thực tế hóa, là kết quả cụ thể** của việc đưa các quy phạm pháp luật vào đời sống xã hội khi có sự kiện pháp lý xảy ra.
-     - Ngược lại, hình thức biểu hiện của quan hệ pháp luật là sự tương tác cụ thể về quyền chủ thể và nghĩa vụ pháp lý giữa các bên tham gia (được thể hiện qua hợp đồng, văn bản cam kết, thỏa thuận...).
-     - QPPL không phải là "hình thức thể hiện" của quan hệ pháp luật mà là tiền đề pháp lý trực tiếp quy định nội dung cho quan hệ pháp luật.
-  ➔ **KẾT LUẬN**: Nhận định đã đảo ngược bản chất lý luận giữa tiền đề pháp lý (QPPL) và kết quả thực tế (QHPL). Nhận định trên là SAI.`;
-    }
-
-    // 0.0.0.d. Nhận định: Năng lực pháp luật và năng lực hành vi của cá nhân xuất hiện đồng thời
-    if (
-      (sLower.includes('năng lực pháp luật') && sLower.includes('năng lực hành vi')) &&
-      (sLower.includes('xuất hiện đồng thời') || sLower.includes('cùng xuất hiện') || sLower.includes('ra đời đồng thời') || sLower.includes('đồng thời phát sinh'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI (ĐỐI VỚI CÁ NHÂN).**
-- **Cơ sở pháp lý theo Điều 16, Điều 19 Bộ luật Dân sự 2015 & Giáo trình Pháp luật Đại cương (Mục 3.1.2)**:
-  1. *Thời điểm xuất hiện của Năng lực pháp luật của cá nhân*:
-     Căn cứ Khoản 3 Điều 16 BLDS 2015: Năng lực pháp luật dân sự của cá nhân **xuất hiện ngay từ khi người đó sinh ra** và chỉ chấm dứt khi người đó chết (mọi cá nhân đều bình đẳng về năng lực pháp luật).
-  2. *Thời điểm xuất hiện và phát triển của Năng lực hành vi của cá nhân*:
-     Năng lực hành vi của cá nhân **KHÔNG XUẤT HIỆN ĐỒNG THỜI KHI SINH RA**, mà phụ thuộc vào độ tuổi và khả năng nhận thức, phát triển dần theo các giai đoạn luật định:
-     - Dưới 6 tuổi: Chưa có năng lực hành vi dân sự.
-     - Từ đủ 6 tuổi đến chưa đủ 15 tuổi: Có năng lực hành vi một phần (giao dịch nhỏ phục vụ sinh hoạt hàng ngày).
-     - Từ đủ 15 tuổi đến chưa đủ 18 tuổi: Tự mình xác lập, thực hiện một số giao dịch nếu có tài sản riêng.
-     - Từ đủ 18 tuổi trở lên: Có năng lực hành vi đầy đủ (trừ trường hợp mất/hạn chế NLHV theo quyết định của Tòa án).
-  3. *Lưu ý*:
-     Chỉ đối với **PHÁP NHÂN** thì Năng lực pháp luật và Năng lực hành vi mới xuất hiện đồng thời (kể từ thời điểm được thành lập hoặc cấp phép đăng ký kinh doanh). Đối với cá nhân, khẳng định xuất hiện đồng thời là hoàn toàn sai.
-  ➔ **KẾT LUẬN**: Nhận định trên là HOÀN TOÀN SAI.`;
-    }
-
-    // 0.0.0.e. Nhận định: Mọi quan hệ xã hội được pháp luật điều chỉnh đều là quan hệ pháp luật
-    if (
-      (sLower.includes('mọi quan hệ xã hội') || sLower.includes('các quan hệ xã hội')) &&
-      sLower.includes('được pháp luật điều chỉnh') &&
-      (sLower.includes('đều là quan hệ pháp luật') || sLower.includes('trở thành quan hệ pháp luật') || sLower.includes('là quan hệ pháp luật'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Chương 3, Mục 3.1 - Quan hệ pháp luật)**:
-  1. *Định nghĩa Quan hệ pháp luật*:
-     Quan hệ pháp luật là các quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia có các quyền chủ thể và nghĩa vụ pháp lý xác định được Nhà nước bảo đảm thực hiện.
-  2. *Phân tích logic*:
-     - Các quan hệ xã hội trong đời sống vô cùng phong phú (tình bạn, tình yêu, phong tục tập quán, đạo đức...).
-     - Khi một quan hệ xã hội được Nhà nước ban hành quy phạm pháp luật để điều chỉnh (xác định rõ quyền, nghĩa vụ và chế tài bảo đảm của nhà nước) thì quan hệ xã hội đó đã khoác lên mình "chiếc áo pháp lý" và chính thức trở thành **Quan hệ pháp luật**.
-     - Ví dụ: Quan hệ trao đổi tài sản thông thường khi được pháp luật dân sự điều chỉnh thì trở thành Quan hệ hợp đồng mua bán tài sản (QHPL dân sự); quan hệ hôn nhân khi được luật điều chỉnh trở thành Quan hệ hôn nhân và gia đình.
-  ➔ **KẾT LUẬN**: Nhận định trên là HOÀN TOÀN ĐÚNG.`;
-    }
-
-    // 0.0. Nhận định: Nhà nước và pháp luật chỉ ra đời trong xã hội có phân chia giai cấp
-    if (
-      sLower.includes('nhà nước') &&
-      sLower.includes('pháp luật') &&
-      sLower.includes('giai cấp') &&
-      (sLower.includes('chỉ ra đời') || sLower.includes('ra đời trong') || sLower.includes('chỉ xuất hiện') || sLower.includes('phân chia giai cấp'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận theo Chủ nghĩa Mác - Lênin & Giáo trình Pháp luật Đại cương (Bộ GD&ĐT)**:
-  1. *Nhà nước và Pháp luật không phải là hiện tượng vĩnh cửu*:
-     Trong xã hội Cộng sản nguyên thủy (thời kỳ thị tộc, bộ lạc), do lực lượng sản xuất chưa phát triển, tư liệu sản xuất thuộc sở hữu chung của toàn thị tộc (công hữu), xã hội chưa có người bóc lột người, chưa có sự phân chia giai cấp đối kháng nên **hoàn toàn chưa có Nhà nước và Pháp luật**.
-  2. *Điều kiện kinh tế và xã hội dẫn đến sự ra đời*:
-     Qua ba lần phân công lao động xã hội lớn, năng suất lao động tăng dẫn đến của cải dư thừa, chế độ tư hữu về tư liệu sản xuất xuất hiện (tiền đề kinh tế). Xã hội phân hóa thành các giai cấp đối kháng có lợi ích mâu thuẫn gay gắt không thể điều hòa được (tiền đề xã hội).
-  3. *Sự xuất hiện tất yếu khách quan*:
-     Để xã hội không tự tiêu diệt trong cuộc đấu tranh giai cấp khốc liệt đó, giai cấp thống trị đã thiết lập nên **Nhà nước** (bộ máy quyền lực công cộng đặc biệt) và ban hành **Pháp luật** (hệ thống quy tắc xử sự có tính bắt buộc chung) để duy trì trật tự và bảo vệ quyền lợi của giai cấp mình.
-  ➔ **Như vậy**: Nhà nước và pháp luật là hai hiện tượng thuộc kiến trúc thượng tầng, chỉ ra đời, tồn tại và sẽ tiêu vong cùng với những điều kiện khách quan của xã hội có phân chia giai cấp. Nhận định trên là hoàn toàn ĐÚNG.`;
-    }
-
-    // 0.0.0.1. Nhận định: Mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động
-    if (
-      sLower.includes('thực hiện pháp luật') &&
-      (sLower.includes('dạng hành động') || sLower.includes('dưới dạng hành động') || (sLower.includes('hành động') && sLower.includes('không hành động')) || sLower.includes('đều được thực hiện dưới dạng') || sLower.includes('đều là hành vi hành động'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận môn Pháp luật Đại cương (Chương 3, Mục 3.2.1 - Bộ GD&ĐT)**:
-  Thực hiện pháp luật là quá trình hoạt động có mục đích làm cho những quy định của pháp luật đi vào đời sống thực tế, bao gồm **4 hình thức cơ bản** với phương thức thể hiện hành vi khác nhau:
-  1. *Tuân thủ pháp luật (Tuân theo pháp luật)*:
-     - Các chủ thể kiềm chế không thực hiện những hành vi mà pháp luật cấm.
-     - Hình thức này **LUÔN ĐƯỢC THỰC HIỆN DƯỚI DẠNG KHÔNG HÀNH ĐỘNG** (ví dụ: không vượt đèn đỏ, không nhận hối lộ, không buôn bán chất ma túy).
-  2. *Thi hành pháp luật (Chấp hành pháp luật)*:
-     - Các chủ thể thực hiện nghĩa vụ pháp lý bằng những hành vi tích cực mà pháp luật bắt buộc phải làm.
-     - Hình thức này **ĐƯỢC THỰC HIỆN DƯỚI DẠNG HÀNH ĐỘNG TÍCH CỰC** (ví dụ: nộp thuế đầy đủ, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm).
-  3. *Sử dụng pháp luật*:
-     - Các chủ thể tự mình quyết định thực hiện quyền chủ thể (làm những gì pháp luật cho phép).
-     - Có thể thực hiện dưới dạng **HÀNH ĐỘNG** (đăng ký kinh doanh, lập di chúc) hoặc **KHÔNG HÀNH ĐỘNG** (từ chối nhận di sản, không khiếu nại).
-  4. *Áp dụng pháp luật*:
-     - Do cơ quan nhà nước hoặc người có thẩm quyền tiến hành nhân danh quyền lực nhà nước ban hành văn bản áp dụng pháp luật cá biệt.
-  ➔ **KẾT LUẬN**: Khẳng định "mọi hành vi thực hiện pháp luật đều được thực hiện dưới dạng hành động" là hoàn toàn SAI, vì hình thức Tuân thủ pháp luật luôn ở dạng không hành động.`;
-    }
-
-    // 0.0.0.2. Nhận định: Nhà nước phong kiến là nhà nước đã từng tồn tại trong lịch sử
-    if (
-      (sLower.includes('nhà nước phong kiến') || sLower.includes('kiểu nhà nước phong kiến')) &&
-      (sLower.includes('tồn tại') || sLower.includes('lịch sử') || sLower.includes('từng tồn tại') || sLower.includes('trong lịch sử'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận theo Học thuyết Mác - Lênin & Giáo trình Pháp luật Đại cương (Chương 1, Mục 1.1.6 - Bộ GD&ĐT)**:
-  1. *Khái niệm kiểu Nhà nước*:
-     Kiểu nhà nước là tổng thể các đặc điểm cơ bản của nhà nước thể hiện bản chất giai cấp, vai trò xã hội và những điều kiện kinh tế - xã hội của nhà nước trong một hình thái kinh tế - xã hội nhất định.
-  2. *Bốn kiểu Nhà nước trong lịch sử nhân loại*:
-     Lịch sử xã hội loài người có giai cấp đã và đang trải qua 4 kiểu nhà nước:
-     - **Kiểu Nhà nước Chủ nô**: Nhà nước đầu tiên trong lịch sử, đại diện cho giai cấp chủ nô để bóc lột giai cấp nô lệ.
-     - **Kiểu Nhà nước Phong kiến**: Thay thế nhà nước chủ nô, xác lập trên quan hệ sở hữu phong kiến về ruộng đất và phương thức bóc lột địa tô của giai cấp địa chủ, phong kiến đối với nông dân. Nhà nước này đã từng tồn tại trong lịch sử nhiều thế kỷ ở cả phương Đông và phương Tây (tại Việt Nam tồn tại qua các triều đại Ngô, Đinh, Tiền Lê, Lý, Trần, Lê đến hết triều Nguyễn năm 1945).
-     - **Kiểu Nhà nước Tư sản**: Ra đời sau các cuộc cách mạng tư sản, dựa trên chế độ tư hữu tư bản chủ nghĩa.
-     - **Kiểu Nhà nước Xã hội chủ nghĩa**: Ra đời từ sau Cách mạng Tháng Mười Nga 1917, là kiểu nhà nước tiến bộ nhất của Nhân dân lao động.
-  ➔ **KẾT LUẬN**: Nhà nước phong kiến là một kiểu nhà nước cụ thể, khách quan và đã từng tồn tại lâu dài trong lịch sử phát triển của nhân loại. Nhận định trên là hoàn toàn ĐÚNG.`;
-    }
-
-    // 0.0.0.3. Nhận định: Thủ tướng là người đứng đầu cơ quan quyền lực của nhà nước CHXHCN Việt Nam
-    if (
-      (sLower.includes('thủ tướng') || sLower.includes('thủ tướng chính phủ')) &&
-      (sLower.includes('cơ quan quyền lực') || sLower.includes('đứng đầu cơ quan quyền lực'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ Hiến pháp 2013 (Điều 69, Điều 94, Điều 95) & Giáo trình Pháp luật Đại cương (Chương 1, Mục 1.2.3 - Bộ máy Nhà nước)**:
-  1. *Về Cơ quan quyền lực nhà nước theo Hiến pháp 2013*:
-     - Cơ quan quyền lực nhà nước cao nhất của nước CHXHCN Việt Nam là **QUỐC HỘI** (Điều 69 Hiến pháp 2013: Quốc hội là cơ quan đại biểu cao nhất của Nhân dân, cơ quan quyền lực nhà nước cao nhất). Người đứng đầu Quốc hội là **Chủ tịch Quốc hội**.
-     - Ở địa phương, cơ quan quyền lực nhà nước là **Hội đồng nhân dân** (HĐND các cấp tỉnh, huyện, xã), do Chủ tịch HĐND đứng đầu.
-  2. *Về Vị trí pháp lý của Thủ tướng Chính phủ*:
-     - Theo Điều 94 và Điều 95 Hiến pháp 2013: **Chính phủ** là cơ quan **HÀNH CHÍNH NHÀ NƯỚC CAO NHẤT**, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội.
-     - **Thủ tướng Chính phủ** là người đứng đầu Chính phủ (cơ quan hành chính), chịu trách nhiệm trước Quốc hội về hoạt động của Chính phủ.
-  ➔ **KẾT LUẬN**: Thủ tướng Chính phủ là người đứng đầu **cơ quan hành chính nhà nước cao nhất** (Chính phủ), KHÔNG PHẢI là người đứng đầu cơ quan quyền lực nhà nước (Quốc hội). Nhận định đã đồng nhất sai lệch giữa nhánh quyền lực lập pháp (quyền lực nhà nước) và nhánh hành pháp (hành chính). Nhận định trên là HOÀN TOÀN SAI.`;
-    }
-
-    // 0.0.0.4. Nhận định: Người đủ 18 tuổi trở lên thì có hành vi năng lực đầy đủ (năng lực hành vi đầy đủ)
-    if (
-      (sLower.includes('18 tuổi') || sLower.includes('đủ 18 tuổi')) &&
-      (sLower.includes('năng lực hành vi') || sLower.includes('hành vi năng lực') || sLower.includes('năng lực đầy đủ'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI (CHƯA CHÍNH XÁC NẾU KHẲNG ĐỊNH TUYỆT ĐỐI).**
-- **Căn cứ pháp lý theo Bộ luật Dân sự 2015 (Điều 19, 20, 22, 23, 24) & Giáo trình Pháp luật Đại cương (Chương 4, Mục 4.2.1)**:
-  1. *Nguyên tắc chung (Điều 19, Điều 20 BLDS 2015)*:
-     Người từ đủ 18 tuổi trở lên là người thành niên và theo nguyên tắc chung có năng lực hành vi dân sự đầy đủ, tự mình xác lập, thực hiện quyền và nghĩa vụ dân sự.
-  2. *Các trường hợp luật định loại trừ / hạn chế (Ngoại lệ)*:
-     Khẳng định mang tính tuyệt đối hóa "người đủ 18 tuổi trở lên thì có năng lực hành vi đầy đủ" là SAI vì pháp luật quy định các trường hợp ngoại lệ người đã đủ 18 tuổi nhưng **KHÔNG CÓ** năng lực hành vi đầy đủ:
-     - **Mất năng lực hành vi dân sự (Điều 22 BLDS 2015)**: Người từ đủ 18 tuổi trở lên do bị bệnh tâm thần hoặc bệnh khác mà không thể nhận thức, làm chủ hành vi của mình thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án ra quyết định tuyên bố mất năng lực hành vi dân sự. Giao dịch của người này phải do người đại diện theo pháp luật xác lập, thực hiện.
-     - **Người có khó khăn trong nhận thức, làm chủ hành vi (Điều 23 BLDS 2015)**: Người thành niên do tình trạng thể chất hoặc tinh thần mà không đủ khả năng nhận thức, làm chủ hành vi nhưng chưa đến mức mất năng lực hành vi dân sự thì được Tòa án tuyên bố có khó khăn trong nhận thức, làm chủ hành vi và chỉ định người giám hộ.
-     - **Hạn chế năng lực hành vi dân sự (Điều 24 BLDS 2015)**: Người nghiện ma túy, nghiện các chất kích thích khác dẫn đến phá tán tài sản của gia đình thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án ra quyết định tuyên bố bị hạn chế năng lực hành vi dân sự.
-  ➔ **KẾT LUẬN**: Vì tồn tại các trường hợp ngoại lệ (bị Tòa án tuyên bố mất NLHV, hạn chế NLHV hoặc có khó khăn trong nhận thức), một cá nhân dù từ đủ 18 tuổi trở lên không đương nhiên luôn có năng lực hành vi đầy đủ. Nhận định mang tính khẳng định tuyệt đối là SAI.`;
-    }
-
-    // 0.0.1. Nhận định: Quyền lực nhà nước và quyền lực xã hội là giống nhau
-    if (
-      sLower.includes('quyền lực nhà nước') &&
-      sLower.includes('quyền lực xã hội') &&
-      (sLower.includes('giống nhau') || sLower.includes('đồng nhất') || sLower.includes('như nhau') || sLower.includes('là một'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận phân biệt theo Giáo trình Pháp luật Đại cương (Mục 1.1.7 - Bộ GD&ĐT)**:
-  Quyền lực nhà nước và quyền lực xã hội (trong thị tộc nguyên thủy hoặc của các tổ chức đoàn thể xã hội) là hai loại quyền lực có bản chất, nguồn gốc và đặc trưng hoàn toàn khác nhau:
-
-  | Tiêu chí so sánh | Quyền lực Nhà nước | Quyền lực Xã hội (thị tộc / tổ chức xã hội) |
-  | :--- | :--- | :--- |
-  | **1. Cơ sở kinh tế & xã hội** | Ra đời trên cơ sở **chế độ tư hữu** và xã hội **phân hóa giai cấp đối kháng**. | Tồn tại trên cơ sở **chế độ công hữu** về tư liệu sản xuất, không có áp bức giai cấp. |
-  | **2. Bản chất quyền lực** | Đứng trên xã hội, tách rời khỏi xã hội; mang bản chất giai cấp sâu sắc (phục vụ lợi ích giai cấp thống trị) kết hợp với tính xã hội. | Hòa nhập vào toàn bộ cộng đồng; phục vụ lợi ích chung của tất cả thành viên trong thị tộc, bộ lạc. |
-  | **3. Bộ máy thực thi** | Có **bộ máy chuyên nghiệp cưỡng chế đặc biệt** tách rời khỏi sản xuất (quân đội, cảnh sát, tòa án, nhà tù). | Không có bộ máy cưỡng chế riêng; quyền lực do toàn thể cộng đồng tự thực hiện hoặc qua người đứng đầu được bầu tự nguyện (tù trưởng, hội đồng thị tộc). |
-  | **4. Công cụ quản lý** | Sử dụng **Pháp luật** có tính quy phạm phổ biến, bắt buộc chung và được bảo đảm bằng sức mạnh cưỡng chế nhà nước. | Dựa trên **tập quán, đạo đức nguyên thủy** hoặc điều lệ tổ chức; thực hiện trên tinh thần tự giác, thuyết phục hoặc dư luận xã hội. |
-  | **5. Phạm vi tác động** | Quản lý dân cư theo **đơn vị hành chính - lãnh thổ**, bao trùm toàn bộ các thành viên sinh sống trong quốc gia. | Quản lý theo **quan hệ huyết thống** (thị tộc) hoặc theo sự tự nguyện gia nhập của đoàn viên, hội viên. |
-
-  ➔ **KẾT LUẬN**: Quyền lực nhà nước và quyền lực xã hội là hai hiện tượng khác biệt căn bản về chất. Khẳng định chúng giống nhau là hoàn toàn SAI.`;
-    }
-
-    // 0.0.2. Nhận định: Thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của vi phạm pháp luật
-    if (
-      sLower.includes('thiệt hại thực tế') &&
-      sLower.includes('mặt khách quan') &&
-      (sLower.includes('dấu hiệu bắt buộc') || sLower.includes('bắt buộc') || sLower.includes('yếu tố bắt buộc'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận môn Pháp luật Đại cương & Khoa học Pháp lý (Chương 5, Mục 5.4)**:
-  1. *Các yếu tố thuộc Mặt khách quan của Vi phạm pháp luật*:
-     Mặt khách quan bao gồm 4 yếu tố cơ bản: (i) Hành vi trái pháp luật; (ii) Hậu quả thiệt hại cho xã hội; (iii) Mối quan hệ nhân quả giữa hành vi và hậu quả thiệt hại; (iv) Thời gian, địa điểm, công cụ, phương tiện và phương thức thực hiện hành vi.
-  2. *Hành vi trái pháp luật là dấu hiệu bắt buộc duy nhất*:
-     Trong 4 yếu tố trên, **chỉ có hành vi trái pháp luật mới là dấu hiệu bắt buộc đối với mọi vi phạm pháp luật** (không có hành vi trái luật biểu hiện ra thế giới khách quan thì không có vi phạm pháp luật).
-  3. *Hậu quả thiệt hại thực tế KHÔNG PHẢI là dấu hiệu bắt buộc đối với mọi loại vi phạm*:
-     Khoa học pháp lý phân chia vi phạm pháp luật theo cấu thành:
-     - **Đối với vi phạm có cấu thành vật chất**: Hậu quả thiệt hại thực tế và mối quan hệ nhân quả là dấu hiệu bắt buộc để định tội/định khung (ví dụ: Tội giết người, Tội trộm cắp tài sản - đòi hỏi thiệt hại về tính mạng hoặc tài sản từ 2 triệu đồng trở lên).
-     - **Đối với vi phạm có cấu thành hình thức**: Vi phạm pháp luật được coi là hoàn thành ngay từ thời điểm chủ thể thực hiện hành vi nguy hiểm trái luật, **hoàn toàn không đòi hỏi phải có thiệt hại thực tế xảy ra cho xã hội**.
-       *Ví dụ thực tiễn*:
-       + Tội đua xe trái phép (Điều 266 BLHS 2015), Tội tàng trữ trái phép vũ khí quân dụng (Điều 304 BLHS 2015), Tội cướp tài sản (Điều 168 BLHS 2015) đều hoàn thành ngay khi có hành vi, kể cả khi chưa có thiệt hại tính mạng hay tài sản nào xảy ra.
-       + Trong luật giao thông: Hành vi không đội mũ bảo hiểm hoặc vượt đèn đỏ khi tham gia giao thông đã cấu thành vi phạm hành chính ngay tại thời điểm thực hiện hành vi, bất kể có tai nạn hay thiệt hại thực tế nào xảy ra hay không.
-  ➔ **KẾT LUẬN**: Khẳng định thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của mọi vi phạm pháp luật là hoàn toàn SAI.`;
-    }
-
-    // 0.0.3. Tùy vào các kiểu Nhà nước khác nhau mà bản chất Nhà nước có thể là bản chất giai cấp hoặc bản chất xã hội
-    if (sLower.includes('tùy vào các kiểu nhà nước') || (sLower.includes('có thể là bản chất giai cấp hoặc') && sLower.includes('bản chất xã hội'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận môn Pháp luật Đại cương (Bộ GD&ĐT)**:
-  1. Mọi kiểu Nhà nước trong lịch sử (từ Chiếm hữu nô lệ, Phong kiến, Tư sản đến Xã hội chủ nghĩa) đều luôn mang **đồng thời cả hai thuộc tính cơ bản là Bản chất giai cấp và Bản chất xã hội**.
-  2. Không có Nhà nước nào chỉ có tính giai cấp mà không có tính xã hội, hoặc chỉ có tính xã hội mà không có tính giai cấp. Sự khác biệt giữa các kiểu nhà nước chỉ là mức độ biểu hiện và tương quan giữa hai thuộc tính này tùy thuộc vào điều kiện lịch sử cụ thể.`;
-    }
-
-    // 0.0.4. Nhà nước mang bản chất giai cấp có nghĩa là Nhà nước chỉ thuộc về một giai cấp
-    if (sLower.includes('nhà nước chỉ thuộc về một giai cấp') || (sLower.includes('mang bản chất giai cấp có nghĩa là') && sLower.includes('chỉ thuộc về'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận môn Pháp luật Đại cương (Bộ GD&ĐT)**:
-  1. Bản chất giai cấp của Nhà nước không chỉ dừng lại ở quyền sở hữu Nhà nước thuộc về ai, mà cốt lõi là Nhà nước là **bộ máy cưỡng chế đặc biệt** của giai cấp thống trị để duy trì sự thống trị về kinh tế, chính trị, tư tưởng đối với các giai cấp khác trong xã hội.
-  2. Nhà nước có thể thuộc về một liên minh giai cấp rộng rãi (như Nhà nước CHXHCN Việt Nam là nhà nước của liên minh công nhân - nông dân - đội ngũ trí thức dưới sự lãnh đạo của Đảng Cộng sản).`;
-    }
-
-    // 0. Nhận định về Mối quan hệ giữa Nhà nước và Pháp luật (Nhà nước không cần pháp luật / thiếu pháp luật)
-    if (
-      sLower.includes('nhà nước') &&
-      sLower.includes('pháp luật') &&
-      (sLower.includes('không cần') || sLower.includes('không có pháp luật') || sLower.includes('thiếu pháp luật') || sLower.includes('tồn tại mà không') || sLower.includes('tại sao nhà nước không thể tồn tại'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Bộ Giáo dục và Đào tạo)**:
-  1. *Quan hệ biện chứng gắn bó hữu cơ, không thể tách rời*:
-     Trong khoa học pháp lý, Nhà nước và Pháp luật là hai hiện tượng thuộc kiến trúc thượng tầng cùng phát sinh, tồn tại, phát triển và tiêu vong gắn liền với nhau trong xã hội có giai cấp.
-     - **Nhà nước sinh ra và bảo đảm cho Pháp luật**: Nhà nước là chủ thể duy nhất ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật, đồng thời bảo đảm cho pháp luật được thực hiện bằng sức mạnh quyền lực và bộ máy cưỡng chế chuyên nghiệp (quân đội, cảnh sát, tòa án, nhà tù). Nếu không có Nhà nước, pháp luật không thể hình thành và không có giá trị bắt buộc chung.
-     - **Pháp luật là công cụ tối cao của Nhà nước**: Pháp luật là phương tiện chủ yếu, sắc bén và hữu hiệu nhất để Nhà nước quản lý mọi mặt của đời sống xã hội.
-  2. *Tại sao Nhà nước KHÔNG THỂ tồn tại và phát huy tốt chức năng nếu không có Pháp luật?*
-     - **Đối với chức năng quản lý xã hội**: Mọi chủ trương, chính sách quản lý kinh tế, trật tự công cộng, đối nội và đối ngoại của Nhà nước chỉ có thể được triển khai thống nhất, rộng khắp và có hiệu lực bắt buộc đối với toàn thể xã hội khi được thể chế hóa dưới hình thức các quy phạm pháp luật. Không có pháp luật, xã hội sẽ rơi vào tình trạng vô chính phủ, hỗn loạn và Nhà nước lập tức mất khả năng kiểm soát.
-     - **Đối với cơ cấu tổ chức bộ máy nhà nước**: Pháp luật là cơ sở pháp lý để quy định cơ cấu tổ chức, chức năng, thẩm quyền và trình tự hoạt động của từng cơ quan trong bộ máy nhà nước; đồng thời đặt ra giới hạn pháp lý nhằm kiềm chế quyền lực nhà nước, ngăn ngừa sự tùy tiện, lạm quyền, độc đoán (nguyên tắc Nhà nước pháp quyền theo **Điều 8 Hiến pháp 2013**).
-  ➔ **KẾT LUẬN CUỐI CÙNG**: Nhà nước **hoàn toàn không thể tồn tại và không thể phát huy tốt chức năng** của mình nếu không có pháp luật. Nhận định trên là hoàn toàn SAI.`;
-    }
-
-    // 0.01. Nhận định: Tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản QPPL
-    if (
-      (sLower.includes('văn bản do') || sLower.includes('các văn bản') || sLower.includes('văn bản của')) &&
-      (sLower.includes('cơ quan nhà nước') || sLower.includes('cơ quan có thẩm quyền')) &&
-      (sLower.includes('đều là') || sLower.includes('chỉ là') || sLower.includes('tất cả')) &&
-      (sLower.includes('văn bản quy phạm pháp luật') || sLower.includes('vbqppl') || sLower.includes('quy phạm pháp luật'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
-  Trong hoạt động quản lý nhà nước, các cơ quan nhà nước có thẩm quyền ban hành nhiều loại văn bản khác nhau để thực hiện chức năng, nhiệm vụ của mình. Hệ thống văn bản do cơ quan nhà nước ban hành được phân chia thành **ba loại văn bản cơ bản**:
-  1. **Văn bản quy phạm pháp luật (VBQPPL)**:
-     - Là văn bản có chứa **quy tắc xử sự chung**, có hiệu lực bắt buộc chung, được áp dụng lặp đi lặp lại nhiều lần đối với cơ quan, tổ chức, cá nhân trong phạm vi cả nước hoặc đơn vị hành chính nhất định (căn cứ **Điều 2 Luật Ban hành văn bản quy phạm pháp luật 2015, sửa đổi 2020**).
-     - *Ví dụ*: Luật, Bộ luật của Quốc hội; Nghị định của Chính phủ; Thông tư của Bộ trưởng; Quyết định quy phạm của UBND cấp tỉnh.
-  2. **Văn bản áp dụng pháp luật (Văn bản cá biệt)**:
-     - Là văn bản do cơ quan, người có thẩm quyền ban hành nhằm giải quyết một vụ việc cụ thể đối với một hoặc một số đối tượng xác định, chỉ được **áp dụng một lần** (cá biệt hóa quy phạm pháp luật vào trường hợp cụ thể).
-     - *Ví dụ*: Quyết định xử phạt vi phạm hành chính của Cảnh sát giao thông; Quyết định bổ nhiệm cán bộ của Chủ tịch UBND; Bản án của Tòa án nhân dân; Giấy chứng nhận quyền sử dụng đất.
-  3. **Văn bản hành chính thông thường**:
-     - Là văn bản mang tính thông tin, điều hành nội bộ, trao đổi công việc hành chính hàng ngày giữa các cơ quan, tổ chức hoặc với công dân.
-     - *Ví dụ*: Công văn, Thông báo, Tờ trình, Biên bản, Báo cáo, Kế hoạch công tác.
-- **Tổng kết đánh giá**: Nhận định cho rằng *tất cả các văn bản do cơ quan nhà nước có thẩm quyền ban hành đều là văn bản quy phạm pháp luật* là **HOÀN TOÀN SAI**, bởi vì cơ quan nhà nước còn ban hành rất nhiều văn bản áp dụng pháp luật cá biệt và văn bản hành chính thông thường.`;
-    }
-
-    // 0.02. Nhận định: Một hành vi có thể đồng thời vừa là vi phạm hình sự vừa là vi phạm hành chính
-    if (
-      (sLower.includes('một hành vi') || sLower.includes('cùng một hành vi') || sLower.includes('hành vi')) &&
-      (sLower.includes('đồng thời') || sLower.includes('vừa là') || sLower.includes('cùng là')) &&
-      (sLower.includes('vi phạm hình sự') || sLower.includes('tội phạm') || sLower.includes('hình sự')) &&
-      (sLower.includes('vi phạm hành chính') || sLower.includes('hành chính'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG (DƯỚI GÓC ĐỘ HÀNH VI PHỨC HỢP THEO BAREM ĐỀ THI MÔN PHÁP LUẬT ĐẠI CƯƠNG).**
-- **Cơ sở lý luận & Barem chuẩn môn Pháp luật đại cương (Bộ GD&ĐT)**:
-  Trong thực tiễn đời sống pháp lý và các đề thi lý luận pháp luật đại cương, một chuỗi hành vi thực tế (hoặc một hành vi phức hợp) của chủ thể có thể đồng thời xâm phạm nhiều khách thể được các ngành luật khác nhau bảo vệ:
-  1. **Ví dụ điển hình theo đề thi môn Pháp luật đại cương**:
-     - Hành vi điều khiển xe máy chạy quá tốc độ quy định, lạng lách đánh võng rồi đâm chết người đi bộ:
-       + *Vi phạm hành chính*: Hành vi điều khiển phương tiện vi phạm quy tắc an toàn giao thông đường bộ (chạy quá tốc độ, lạng lách) cấu thành vi phạm hành chính trong lĩnh vực giao thông đường bộ.
-       + *Vi phạm hình sự (Tội phạm)*: Hậu quả làm chết người đã thỏa mãn đầy đủ 4 yếu tố cấu thành Tội vi phạm quy định về tham gia giao thông đường bộ theo **Điều 260 Bộ luật Hình sự 2015 (sửa đổi 2017)**.
-  2. **Lưu ý chuyên sâu về nguyên tắc xử lý theo pháp luật thực định**:
-     - Căn cứ **Điều 62 và Điều 63 Luật Xử lý vi phạm hành chính 2012 (sửa đổi, bổ sung 2020)**: Đối với cùng một hành vi vi phạm cụ thể, nếu hành vi đó đã có dấu hiệu cấu thành tội phạm thì cơ quan có thẩm quyền bắt buộc phải chuyển hồ sơ sang cơ quan tiến hành tố tụng hình sự để truy cứu trách nhiệm hình sự; **nghiêm cấm việc vừa xử phạt hành chính vừa truy cứu trách nhiệm hình sự đối với cùng một hành vi đơn nhất** (nguyên tắc không xử lý trùng lặp).
-     - Tuy nhiên, xét về bản chất cấu thành hành vi trong câu hỏi lý luận, nhận định trên là **ĐÚNG** đối với các hành vi phức hợp đa khách thể.`;
-    }
-
-    // 0. Nhận định về 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng) và hành vi Hành động / Không hành động
-    if (
-      (sLower.includes('thực hiện pháp luật') || sLower.includes('tuân thủ') || sLower.includes('thi hành') || sLower.includes('sử dụng') || sLower.includes('áp dụng')) &&
-      (sLower.includes('không hành động') || sLower.includes('hành động') || sLower.includes('dưới dạng') || sLower.includes('hành vi hành động'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Bộ GD&ĐT) — Chế định Thực hiện Pháp luật**:
-  Thực hiện pháp luật là hành vi thực tế, hợp pháp của các chủ thể pháp luật nhằm hiện thực hóa các quy định của pháp luật trong đời sống. Khoa học pháp lý phân chia thực hiện pháp luật thành **4 hình thức cơ bản** với dạng thức biểu hiện hành vi hoàn toàn khác nhau:
-  1. **Tuân thủ pháp luật (Tuân theo pháp luật)**:
-     - *Bản chất*: Là hình thức mà trong đó các chủ thể kiềm chế, tự giác không tiến hành các hành vi mà pháp luật nghiêm cấm.
-     - *Hình thức biểu hiện*: **Bắt buộc dưới dạng KHÔNG HÀNH ĐỘNG** (ví dụ: không vượt đèn đỏ, không nhận hối lộ, không buôn bán hàng cấm).
-  2. **Thi hành pháp luật (Chấp hành pháp luật)**:
-     - *Bản chất*: Là hình thức mà trong đó các chủ thể chủ động, tích cực thực hiện các nghĩa vụ pháp lý mà pháp luật bắt buộc phải làm.
-     - *Hình thức biểu hiện*: **Bắt buộc dưới dạng HÀNH ĐỘNG** (ví dụ: chủ động kê khai và nộp thuế, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi tham gia giao thông).
-  3. **Sử dụng pháp luật**:
-     - *Bản chất*: Là hình thức mà trong đó các chủ thể thực hiện các quyền và quyền tự do dân chủ của mình theo quy định pháp luật (làm những việc pháp luật cho phép).
-     - *Hình thức biểu hiện*: Có thể được thực hiện dưới dạng **HÀNH ĐỘNG** (ví dụ: nộp đơn khiếu nại, đăng ký kết hôn, thành lập doanh nghiệp) hoặc **KHÔNG HÀNH ĐỘNG** (ví dụ: có quyền khiếu nại nhưng lựa chọn không khiếu nại, có quyền lập di chúc nhưng không lập di chúc).
-  4. **Áp dụng pháp luật**:
-     - *Bản chất*: Là hình thức thực hiện pháp luật mang tính quyền lực nhà nước, chỉ do cơ quan nhà nước, người có thẩm quyền tiến hành theo trình tự luật định.
-     - *Hình thức biểu hiện*: Luôn thể hiện dưới dạng **HÀNH ĐỘNG** (ví dụ: Tòa án ra bản án, Cảnh sát giao thông lập biên bản xử phạt).
-  ➔ **Như vậy**: Khẳng định *"Tuân thủ pháp luật, thi hành pháp luật và sử dụng pháp luật đều được thực hiện dưới dạng không hành động"* là **HOÀN TOÀN SAI**, vì chỉ có *Tuân thủ pháp luật* bắt buộc là không hành động; *Thi hành pháp luật* bắt buộc là hành động; còn *Sử dụng pháp luật* có thể là hành động hoặc không hành động.`;
-    }
-
-    // 1. Nhận định về Năng lực hành vi dân sự của cá nhân phát sinh từ khi đủ 18 tuổi
-    if (
-      sLower.includes('năng lực hành vi') &&
-      (sLower.includes('18 tuổi') || sLower.includes('mười tám') || sLower.includes('đủ 18')) &&
-      (sLower.includes('phát sinh') || sLower.includes('bắt đầu') || sLower.includes('khi người đó'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý & Phân tích chi tiết**:
-  Căn cứ theo quy định tại **Điều 19, Điều 20 và Điều 21 Bộ luật Dân sự 2015**:
-  1. *Khái niệm*: Năng lực hành vi dân sự của cá nhân là khả năng của cá nhân bằng hành vi của mình xác lập, thực hiện quyền, nghĩa vụ dân sự (Điều 19 BLDS 2015).
-  2. *Năng lực hành vi dân sự hình thành và phát triển dần theo từng độ tuổi và khả năng nhận thức của cá nhân*, chứ **không phải đến khi đủ 18 tuổi mới phát sinh**:
-     - **Dưới 6 tuổi**: Không có năng lực hành vi dân sự; các giao dịch dân sự hoàn toàn do người đại diện theo pháp luật xác lập, thực hiện (Khoản 2 Điều 21).
-     - **Từ đủ 6 tuổi đến chưa đủ 15 tuổi**: Đã phát sinh năng lực hành vi dân sự một phần; được tự mình xác lập, thực hiện các giao dịch dân sự phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi (Khoản 3 Điều 21).
-     - **Từ đủ 15 tuổi đến dưới 18 tuổi**: Tự mình xác lập, thực hiện các giao dịch dân sự, trừ giao dịch liên quan đến bất động sản, động sản phải đăng ký và các giao dịch luật định khác phải có người đại diện đồng ý (Khoản 4 Điều 21).
-  3. *Ý nghĩa của mốc 18 tuổi*: Căn cứ **Điều 20 BLDS 2015**, người từ **đủ 18 tuổi trở lên** là người thành niên có **năng lực hành vi dân sự đầy đủ**.
-  ➔ **Như vậy**, mốc 18 tuổi là thời điểm cá nhân đạt được năng lực hành vi dân sự **ĐẦY ĐỦ**, còn năng lực hành vi dân sự đã **bắt đầu phát sinh từng phần từ khi đủ 6 tuổi**. Do đó, khẳng định trên là SAI.`;
-    }
-
-    // 2. Nhận định: Mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm hình sự
-    if (
-      (sLower.includes('vi phạm pháp luật') || sLower.includes('vppl')) &&
-      (sLower.includes('trách nhiệm hình sự') || sLower.includes('tnhs') || sLower.includes('hình sự')) &&
-      (sLower.includes('mọi') || sLower.includes('tất cả') || sLower.includes('đều'))
-    ) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận & Căn cứ pháp lý**:
-  1. *Phân loại 4 hình thức vi phạm pháp luật và 4 loại trách nhiệm pháp lý tương ứng*:
-     Trong khoa học pháp lý và hệ thống pháp luật Việt Nam, vi phạm pháp luật được phân chia thành **4 loại** với tính chất, mức độ nguy hiểm cho xã hội và chế tài trách nhiệm pháp lý hoàn toàn khác nhau:
-     - **Vi phạm hình sự (Tội phạm)**: Hành vi nguy hiểm cho xã hội ở mức độ đáng kể, xâm phạm trật tự luật định ➔ Chịu **Trách nhiệm hình sự** (loại chế tài nghiêm khắc nhất do Tòa án tuyên theo Bộ luật Hình sự 2015, sửa đổi 2017).
-     - **Vi phạm hành chính**: Hành vi vi phạm trật tự quản lý nhà nước nhưng chưa đến mức nghiêm trọng ➔ Chịu **Trách nhiệm hành chính** (xử phạt cảnh cáo, phạt tiền theo Luật Xử lý vi phạm hành chính 2012, sửa đổi 2020).
-     - **Vi phạm dân sự**: Hành vi xâm hại quyền, nghĩa vụ tài sản, quan hệ hợp đồng hoặc nhân thân ➔ Chịu **Trách nhiệm dân sự** (bồi thường thiệt hại, hoàn trả tài sản theo Bộ luật Dân sự 2015).
-     - **Vi phạm kỷ luật**: Hành vi vi phạm quy chế lao động, nội quy cơ quan, tổ chức ➔ Chịu **Trách nhiệm kỷ luật** (áp dụng với cán bộ, công chức, viên chức, người lao động theo Luật Cán bộ, công chức và Bộ luật Lao động 2019).
-  2. *Ranh giới của Trách nhiệm hình sự*:
-     - Căn cứ **Khoản 1 Điều 8 Bộ luật Hình sự 2015**: Chỉ những hành vi nguy hiểm cho xã hội ở mức độ đáng kể cấu thành **Tội phạm** mới phải chịu trách nhiệm hình sự.
-     - Các vi phạm hành chính, vi phạm dân sự và vi phạm kỷ luật không cấu thành tội phạm và hoàn toàn **không phải gánh chịu trách nhiệm hình sự**. Khẳng định "mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm hình sự" là SAI.`;
-    }
-
-    // 3. Mọi hành vi vi phạm pháp luật đều là hành vi trái pháp luật
-    if (sLower.includes('mọi hành vi vi phạm pháp luật đều là hành vi trái pháp luật') || sLower.includes('mọi vi phạm pháp luật đều trái pháp luật')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận**:
-  1. Tính trái pháp luật là thuộc tính khách quan bắt buộc đầu tiên của vi phạm pháp luật. Theo giáo trình Pháp luật Đại cương, vi phạm pháp luật trước hết phải là hành vi trái pháp luật (hành động hoặc không hành động làm trái điều cấm hoặc không thực hiện nghĩa vụ pháp lý).
-  2. Một hành vi nếu không trái pháp luật thì dứt khoát không thể bị coi là vi phạm pháp luật.`;
-    }
-
-    // 4. Mọi hành vi trái pháp luật đều là vi phạm pháp luật
-    if (sLower.includes('mọi hành vi trái pháp luật đều là vi phạm pháp luật') || sLower.includes('hành vi trái pháp luật nào cũng là vi phạm')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận & Phản ví dụ**:
-  1. Không phải mọi hành vi trái pháp luật đều là vi phạm pháp luật. Để cấu thành vi phạm pháp luật, hành vi trái pháp luật đó phải thỏa mãn đồng thời 4 yếu tố: Có hành vi trái pháp luật; Có lỗi của chủ thể; Do chủ thể có năng lực trách nhiệm pháp lý thực hiện; Xâm hại khách thể được pháp luật bảo vệ.
-  2. *Phản ví dụ*: Người mắc bệnh tâm thần mất khả năng nhận thức (Điều 21 BLHS) hoặc hành vi gây thiệt hại trong trường hợp Phòng vệ chính đáng (Điều 22 BLHS) tuy về mặt khách quan có tính trái pháp luật hoặc gây hại nhưng không bị coi là vi phạm pháp luật.`;
-    }
-
-    // 5. Tuổi chịu trách nhiệm hình sự (14 tuổi)
-    if (sLower.includes('14 tuổi') && (sLower.includes('mọi tội phạm') || sLower.includes('đều phải chịu') || sLower.includes('mọi tội'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)**:
-  1. Khoản 1: Người từ **đủ 16 tuổi trở lên** mới phải chịu trách nhiệm hình sự về **mọi tội phạm**.
-  2. Khoản 2: Người từ **đủ 14 tuổi đến dưới 16 tuổi** **CHỈ** phải chịu trách nhiệm hình sự về tội phạm rất nghiêm trọng hoặc đặc biệt nghiêm trọng quy định tại 28 tội danh cụ thể (Điều 123, 134, 141, 142, 143, 144, 150, 151, 168, 169, 170, 171, 173, 178, 248, 249, 250, 251, 252, 299, 303 và 304 BLHS). Do đó, người từ đủ 14 tuổi không phải chịu TNHS về mọi tội phạm.`;
-    }
-
-    // 6. Quy phạm pháp luật bắt buộc có đủ 3 bộ phận
-    if (sLower.includes('quy phạm pháp luật') && (sLower.includes('bắt buộc có đủ 3') || sLower.includes('luôn có đủ 3') || sLower.includes('đủ 3 bộ phận'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận giáo trình**:
-  Về mặt cấu trúc lý thuyết, quy phạm pháp luật gồm 3 bộ phận: Giả định, Quy định và Chế tài. Tuy nhiên trong thực tiễn lập pháp, không bắt buộc một điều luật phải thể hiện đầy đủ cả 3 bộ phận:
-  - Các quy phạm pháp luật hình sự thường khuyết bộ phận Quy định (chỉ có Giả định và Chế tài).
-  - Nhiều quy phạm hành chính dẫn chiếu chế tài xử phạt ở văn bản khác. Nhận định bắt buộc luôn có đủ 3 bộ phận là sai.`;
-    }
-
-    // 7. Bản chất Nhà nước bao gồm tính giai cấp và tính xã hội
-    if (sLower.includes('tính giai cấp') && sLower.includes('tính xã hội')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận giáo trình**:
-  Bất kỳ Nhà nước nào trong lịch sử cũng đều mang hai thuộc tính gắn bó hữu cơ không thể tách rời:
-  - *Tính giai cấp*: Nhà nước là công cụ chuyên chính bảo vệ lợi ích và địa vị thống trị của giai cấp cầm quyền trên các phương diện kinh tế, chính trị, tư tưởng.
-  - *Tính xã hội*: Nhà nước sinh ra từ xã hội, đại diện cho toàn xã hội để giải quyết các nhu cầu chung (đê điều, giao thông, y tế, giáo dục, trật tự công cộng, phòng chống thiên tai). Nếu không thực hiện tính xã hội thì Nhà nước không thể duy trì sự tồn tại của chính mình.`;
-    }
-
-    // 8. Nguy hiểm cho xã hội và tội phạm
-    if (sLower.includes('nguy hiểm cho xã hội') && (sLower.includes('tội phạm') || sLower.includes('hình sự'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Điều 8 Bộ luật Hình sự 2015**:
-  1. Tính nguy hiểm cho xã hội là dấu hiệu chung của các vi phạm pháp luật. Chỉ hành vi nguy hiểm cho xã hội ở **mức độ đáng kể** mới là tội phạm hình sự.
-  2. Khoản 2 Điều 8 BLHS 2015 quy định rõ: Những hành vi tuy có dấu hiệu của tội phạm nhưng tính chất nguy hiểm cho xã hội không đáng kể thì không phải là tội phạm và được xử lý bằng các biện pháp khác.`;
-    }
-
-    // 9. Mọi quy tắc xử sự đều là pháp luật
-    if (sLower.includes('mọi quy tắc xử sự') && sLower.includes('đều là pháp luật')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận**:
-  Trong xã hội cùng tồn tại nhiều hệ thống quy tắc xử sự như: Quy phạm đạo đức, Tập quán, Tín điều tôn giáo, Điều lệ tổ chức. Chỉ những quy tắc do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện bằng sức mạnh cưỡng chế mới là pháp luật.`;
-    }
-
-    // 10. Năng lực pháp luật và năng lực hành vi chỉ chấm dứt khi chết
-    if (sLower.includes('năng lực pháp luật') && sLower.includes('năng lực hành vi') && (sLower.includes('chết') || sLower.includes('chấm dứt'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Bộ luật Dân sự 2015**:
-  Năng lực pháp luật dân sự của cá nhân có từ khi sinh ra và chấm dứt khi chết (Điều 16 BLDS). Nhưng năng lực hành vi dân sự ngay khi cá nhân còn sống vẫn có thể bị mất (Tòa án tuyên mất NLHV theo Điều 22) hoặc bị hạn chế (Điều 24 BLDS). Khẳng định năng lực hành vi chỉ chấm dứt khi chết là sai.`;
-    }
-
-    // 11. Chỉ có cá nhân là chủ thể của vi phạm pháp luật
-    if (sLower.includes('chỉ có cá nhân') && sLower.includes('chủ thể của vi phạm pháp luật')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý**:
-  Chủ thể của vi phạm pháp luật bao gồm cả Cá nhân và Tổ chức (Pháp nhân):
-  - Tổ chức là chủ thể vi phạm hành chính phổ biến (Luật Xử lý VPHC).
-  - Pháp nhân chịu trách nhiệm dân sự (Điều 87 BLDS 2015).
-  - Pháp nhân thương mại là chủ thể chịu trách nhiệm hình sự (Điều 76 BLHS 2015).`;
-    }
-
-    // 12. Con dâu và hàng thừa kế thứ nhất
-    if (sLower.includes('con dâu') && sLower.includes('thừa kế') && sLower.includes('hàng thừa kế thứ nhất')) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Điều 651 Bộ luật Dân sự 2015**:
-  Hàng thừa kế thứ nhất theo pháp luật chỉ gồm: Vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết. Con dâu không thuộc hàng thừa kế theo pháp luật của cha mẹ chồng (chỉ được hưởng nếu có di chúc hợp pháp).`;
-    }
-
-    // 13. Hai văn bản khác nhau chỉ chọn văn bản ban hành sau
-    if (sLower.includes('hai văn bản') && sLower.includes('khác nhau') && (sLower.includes('ban hành sau') || sLower.includes('chỉ chọn'))) {
-      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý theo Điều 156 Luật Ban hành VBQPPL 2015**:
-  Phải ưu tiên áp dụng văn bản có hiệu lực pháp lý cao hơn trước (Khoản 2 Điều 156). Chỉ khi các văn bản do cùng một cơ quan ban hành có quy định khác nhau thì mới áp dụng văn bản ban hành sau (Khoản 3 Điều 156).`;
-    }
-
-    // Fallback thông minh: Tự động truy xuất kho tri thức Giáo trình RAG (ĐH Thương Mại 2021 - Bộ GD&ĐT)
+    // 2. Fallback tự động tra cứu kho Giáo trình Pháp luật Đại cương (ĐH Thương Mại 2021 & Bộ GD&ĐT)
     const textbookMatches = TextbookKnowledgeService.searchTopChunks(stmt, 1);
     if (textbookMatches.length > 0 && textbookMatches[0].score >= 8) {
       const tb = textbookMatches[0].chunk;
       return `- **KẾT LUẬN: ĐÁNH GIÁ DỰA TRÊN NGUYÊN LÝ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (BỘ GD&ĐT)**${TextbookKnowledgeService.buildDetailedCitation(tb, articles)}`;
     }
 
-    // Fallback: Đánh giá có căn cứ thực tế và không để lại biểu mẫu rỗng
-    const citedLaw = articles.length > 0 ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}` : 'nguyên lý môn Pháp luật Đại cương và Bộ luật Dân sự 2015, Bộ luật Hình sự 2015';
+    // 3. Fallback tiêu chuẩn đảm bảo nguyên tắc đối chiếu pháp lý thực định
+    const citedLaw =
+      articles.length > 0
+        ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}`
+        : 'nguyên lý môn Pháp luật Đại cương và Bộ luật Dân sự 2015, Bộ luật Hình sự 2015';
     return `- **KẾT LUẬN: ĐÁNH GIÁ NHẬN ĐỊNH DỰA TRÊN QUY ĐỊNH PHÁP LUẬT**
 - **Cơ sở pháp lý đối chiếu**: Căn cứ **${citedLaw}**.
 - **Phân tích bản chất**: Trong khoa học pháp lý, nhận định mang tính tuyệt đối hóa thường không chuẩn xác nếu đối chiếu với các trường hợp ngoại lệ hoặc quy định loại trừ trong pháp luật thực định. Cần đối chiếu các điều kiện chủ thể, hành vi và khung chế tài cụ thể để áp dụng chính xác.`;
   }
 
+  
+
   /**
    * Bộ giải chuyên biệt bài thi Bản chất Nhà nước: Tính giai cấp & Tính xã hội
    */
   public static solveDynamicStateNature(): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_STATE_NATURE');
+    if (item) return item.output;
     return `### I. KHÁI NIỆM VÀ BẢN CHẤT CỦA NHÀ NƯỚC
-Theo quan điểm của Chủ nghĩa Mác - Lênin và giáo trình **Pháp luật Đại cương** (Bộ GD&ĐT):
-- **Nhà nước** là tổ chức quyền lực chính trị đặc biệt của xã hội có giai cấp, bao gồm một lớp người được tách ra từ xã hội để chuyên thực thi quyền lực, nhằm tổ chức và quản lý xã hội, bảo vệ lợi ích của giai cấp thống trị và duy trì trật tự chung của toàn xã hội.
-- Bản chất của Nhà nước là một thể thống nhất hữu cơ giữa hai thuộc tính cơ bản: **Tính giai cấp** và **Tính xã hội**. Bất kỳ nhà nước nào trong lịch sử (từ Chiếm hữu nô lệ, Phong kiến, Tư sản đến Xã hội chủ nghĩa) cũng đều mang hai tính chất này.
-
----
-
-### II. PHÂN TÍCH TÍNH GIAI CẤP CỦA NHÀ NƯỚC
-1. **Nguồn gốc phát sinh**:
-   - Nhà nước không tồn tại vĩnh viễn mà là sản phẩm và biểu hiện của các cuộc đấu tranh giai cấp không thể điều hòa được. Nhà nước chỉ ra đời khi xã hội xuất hiện chế độ tư hữu và phân hóa thành các giai cấp đối kháng.
-2. **Biểu hiện của tính giai cấp**:
-   - **Nhà nước là công cụ chuyên chính của giai cấp thống trị**: Nhà nước được thiết lập trước hết để bảo vệ lợi ích và củng cố địa vị thống trị của giai cấp cầm quyền trong xã hội.
-   - **Thể hiện trên 3 phương diện quyền lực cơ bản**:
-     + *Về kinh tế*: Giai cấp thống trị nắm quyền sở hữu các tư liệu sản xuất chủ yếu của xã hội, qua đó bóc lột và chi phối các giai cấp khác về mặt kinh tế.
-     + *Về chính trị*: Nhà nước nắm giữ bộ máy bạo lực chuyên nghiệp (quân đội, cảnh sát, tòa án, nhà tù...) có quyền lực cưỡng chế đặc biệt để đàn áp sự phản kháng của các giai cấp bị trị.
-     + *Về tư tưởng*: Giai cấp thống trị thông qua Nhà nước tuyên truyền, áp đặt hệ tư tưởng của giai cấp mình trở thành hệ tư tưởng thống trị trong xã hội.
-
----
-
-### III. PHÂN TÍCH TÍNH XÃ HỘI CỦA NHÀ NƯỚC
-1. **Nguồn gốc và sự tất yếu**:
-   - Nhà nước sinh ra từ trong lòng xã hội, là đại diện chính thức cho toàn bộ xã hội. Dù thuộc kiểu nhà nước nào, Nhà nước cũng không thể tồn tại đơn thuần bằng bạo lực và đàn áp giai cấp, mà bắt buộc phải giải quyết các công việc chung vì sự tồn tại và phát triển của toàn thể cộng đồng.
-2. **Biểu hiện của tính xã hội**:
-   - **Quản lý và giải quyết các nhu cầu công cộng**: Nhà nước tổ chức xây dựng các công trình công cộng hạ tầng (đường sá, đê điều, cầu cống, công trình thủy lợi, cấp thoát nước).
-   - **Phát triển văn hóa - xã hội**: Tổ chức và quản lý hệ thống y tế, phòng chống dịch bệnh, phát triển giáo dục, cứu trợ thiên tai, bảo đảm an sinh xã hội cho người dân.
-   - **Duy trì trật tự an toàn công cộng**: Thiết lập trật tự pháp luật, phòng ngừa tội phạm, giải quyết các tranh chấp trong đời sống dân sự, bảo vệ môi trường sinh thái.
-   - **Bảo vệ độc lập dân tộc**: Tổ chức phòng thủ quốc gia, bảo vệ biên giới lãnh thổ chống giặc ngoại xâm vì sự sinh tồn của cả quốc gia, dân tộc.
-
----
-
-### IV. MỐI QUAN HỆ BIỆN CHỨNG GIỮA TÍNH GIAI CẤP VÀ TÍNH XÃ HỘI
-1. **Mối quan hệ gắn bó hữu cơ, không thể tách rời**:
-   - Tính giai cấp và tính xã hội luôn cùng tồn tại trong một thể thống nhất. Nếu không có tính giai cấp thì không còn là Nhà nước (vì Nhà nước là tổ chức quyền lực chính trị); ngược lại, nếu Nhà nước từ bỏ tính xã hội, không chăm lo các lợi ích chung của cộng đồng thì xã hội sẽ rơi vào hỗn loạn, khủng hoảng và chính Nhà nước đó sẽ bị sụp đổ.
-2. **Sự biến đổi tương quan theo lịch sử**:
-   - Trong các kiểu nhà nước bóc lột trước đây (Chủ nô, Phong kiến), tính giai cấp biểu hiện vô cùng gay gắt và chiếm ưu thế tuyệt đối.
-   - Cùng với sự tiến bộ của lịch sử và sự phát triển của nền văn minh nhân loại, tính xã hội của Nhà nước ngày càng được mở rộng và phát huy mạnh mẽ.
-
----
-
-### V. LIÊN HỆ BẢN CHẤT NHÀ NƯỚC CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM
-- Theo **Hiến pháp năm 2013** (Điều 2): Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam là Nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân; do giai cấp công nhân lãnh đạo thông qua Đảng Cộng sản Việt Nam.
-- Tính giai cấp và tính xã hội trong Nhà nước ta có sự thống nhất sâu sắc: Lợi ích của giai cấp công nhân hoàn toàn thống nhất với lợi ích của nhân dân lao động và của toàn thể dân tộc Việt Nam. Mục tiêu cao nhất của Nhà nước là: *"Dân giàu, nước mạnh, dân chủ, công bằng, văn minh"*.`;
+Nhà nước là một tổ chức quyền lực chính trị đặc biệt, có tính giai cấp và tính xã hội biện chứng.`;
   }
+
+  
 
   /**
    * Giải đáp câu hỏi danh tính & kiến trúc mô hình của Chatbot
@@ -2350,232 +1757,65 @@ Tôi là hệ thống được phát triển **chuyên biệt cho học phần m
    * Bộ giải chuẩn Barem điểm 10: Khái niệm & Đặc điểm của Pháp luật Xã hội chủ nghĩa Việt Nam
    */
   public static solveDynamicSocialistLaw(): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_SOCIALIST_LAW');
+    if (item) return item.output;
     return `### I. KHÁI NIỆM PHÁP LUẬT XÃ HỘI CHỦ NGHĨA VIỆT NAM
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
-
-**Pháp luật xã hội chủ nghĩa Việt Nam** là hệ thống các quy tắc xử sự có tính bắt buộc chung, thể hiện ý chí của giai cấp công nhân và nhân dân lao động Việt Nam dưới sự lãnh đạo của Đảng Cộng sản Việt Nam, do Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam ban hành hoặc thừa nhận và bảo đảm thực hiện bằng sức mạnh quyền lực nhà nước, nhằm điều chỉnh các quan hệ xã hội phát triển theo định hướng xã hội chủ nghĩa, vì mục tiêu *"Dân giàu, nước mạnh, dân chủ, công bằng, văn minh"*.
-
----
-
-### II. NĂM (05) ĐẶC ĐIỂM (ĐẶC TRƯNG CƠ BẢN) CỦA PHÁP LUẬT XHCN VIỆT NAM
-
-Khác với các kiểu pháp luật bóc lột trong lịch sử (pháp luật chủ nô, phong kiến, tư sản), Pháp luật Xã hội chủ nghĩa Việt Nam mang những đặc trưng ưu việt sau:
-
-1. **Tính nhân văn và dân chủ sâu sắc (Của Nhân dân, do Nhân dân, vì Nhân dân)**:
-   - Pháp luật XHCN Việt Nam là công cụ thể chế hóa và bảo đảm quyền làm chủ thực sự của Nhân dân trên mọi lĩnh vực chính trị, kinh tế, văn hóa và xã hội (căn cứ **Điều 2 Hiến pháp 2013**).
-   - Luôn tôn trọng, ghi nhận, bảo đảm và bảo vệ quyền con người, quyền và nghĩa vụ cơ bản của công dân (ghi nhận tại Chương II Hiến pháp 2013).
-
-2. **Tính giai cấp công nhân gắn liền mật thiết với tính dân tộc và tính nhân dân rộng rãi**:
-   - Pháp luật thể hiện trước hết ý chí của giai cấp công nhân, nhưng ý chí đó hoàn toàn thống nhất với lợi ích, nguyện vọng chính đáng của toàn thể nhân dân lao động và dân tộc Việt Nam.
-   - Thể chế hóa kịp thời, chuẩn xác đường lối, chủ trương, chính sách của Đảng Cộng sản Việt Nam thành các quy tắc pháp lý có hiệu lực bắt buộc chung đối với toàn xã hội.
-
-3. **Tính xã hội rộng lớn và định hướng phát triển tiến bộ, bền vững**:
-   - Pháp luật XHCN đóng vai trò là công cụ quản lý vĩ mô sắc bén của Nhà nước nhằm phát triển nền kinh tế thị trường định hướng XHCN, thúc đẩy sản xuất kinh doanh, giải phóng sức lao động.
-   - Đồng thời giải quyết hài hòa các vấn đề xã hội: thực hiện tiến bộ và công bằng xã hội, bảo đảm an sinh xã hội, bảo vệ môi trường, chăm lo người nghèo và các đối tượng yếu thế trong xã hội.
-
-4. **Tính được bảo đảm thực hiện bằng nguyên tắc Pháp chế xã hội chủ nghĩa**:
-   - Nhà nước quản lý xã hội bằng Hiến pháp và pháp luật; pháp luật giữ vị trí tối thượng trong đời sống xã hội.
-   - Mọi cơ quan nhà nước, cán bộ, đảng viên, tổ chức kinh tế, đoàn thể xã hội và mọi công dân đều bình đẳng trước pháp luật, phải nghiêm chỉnh chấp hành và tuân thủ pháp luật (căn cứ **Điều 8 Hiến pháp 2013**).
-
-5. **Tính mở, linh hoạt và chủ động hội nhập quốc tế**:
-   - Pháp luật XHCN Việt Nam không ngừng được hoàn thiện, tiếp thu có chọn lọc các giá trị pháp lý văn minh, tiến bộ của nhân loại.
-   - Tương thích và nội luật hóa các điều ước quốc tế mà Việt Nam là thành viên, tạo hành lang pháp lý thông thoáng phục vụ hội nhập quốc tế và bảo vệ chủ quyền quốc gia.
-
----
-
-### III. BẢN CHẤT CỦA PHÁP LUẬT XHCN VIỆT NAM
-- **Về bản chất giai cấp**: Là ý chí của giai cấp công nhân và nhân dân lao động được nâng lên thành luật dưới sự lãnh đạo của Đảng Cộng sản Việt Nam.
-- **Về bản chất xã hội**: Là công cụ duy trì trật tự kỷ cương, phục vụ lợi ích chung của toàn thể cộng đồng dân tộc, bảo đảm cho mọi người dân đều được thụ hưởng thành quả phát triển.`;
+Pháp luật XHCN Việt Nam thể hiện ý chí của giai cấp công nhân và nhân dân lao động, do Đảng Cộng sản Việt Nam lãnh đạo.`;
   }
+
+  
 
   /**
    * Barem điểm 10: Khái niệm, Đặc điểm của Hệ thống pháp luật & Các ngành luật cơ bản của Việt Nam
    * (Chương 2, Mục 2.3 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
   public static solveDynamicLegalSystem(query?: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_LEGAL_SYSTEM');
+    if (item) return item.output;
     return `### I. KHÁI NIỆM HỆ THỐNG PHÁP LUẬT
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
-
-**Hệ thống pháp luật** là tổng thể các quy phạm pháp luật có mối liên hệ nội tại thống nhất với nhau, được phân định thành các chế định pháp luật và các ngành luật, đồng thời được biểu hiện ra bên ngoài dưới các hình thức văn bản quy phạm pháp luật do cơ quan nhà nước có thẩm quyền ban hành theo trình tự, thủ tục luật định.
-
-Hệ thống pháp luật bao gồm hai phương diện cấu thành gắn bó hữu cơ:
-1. **Hệ thống cấu trúc pháp luật (Mặt bên trong — Nội dung)**:
-   - **Quy phạm pháp luật**: Đơn vị nhỏ nhất cấu thành hệ thống pháp luật, là quy tắc xử sự chung bắt buộc do nhà nước ban hành (gồm 3 bộ phận: Giả định, Quy định, Chế tài).
-   - **Chế định pháp luật**: Nhóm các quy phạm pháp luật có đặc điểm chung nhằm điều chỉnh một nhóm quan hệ xã hội tương ứng có cùng tính chất trong một ngành luật (ví dụ: Chế định hợp đồng trong Luật Dân sự, Chế định kết hôn trong Luật Hôn nhân & Gia đình).
-   - **Ngành luật**: Tập hợp các chế định pháp luật điều chỉnh một loại quan hệ xã hội nhất định có cùng tính chất, đặc điểm bằng những phương pháp điều chỉnh đặc thù (như Luật Hiến pháp, Luật Dân sự, Luật Hình sự...).
-2. **Hệ thống văn bản quy phạm pháp luật (Mặt bên ngoài — Hình thức)**:
-   - Tổng thể các văn bản có chứa quy phạm pháp luật do các cơ quan nhà nước có thẩm quyền ban hành theo thứ bậc hiệu lực pháp lý (tối cao là Hiến pháp, sau đó đến Luật, Bộ luật của Quốc hội và các văn bản dưới luật của Chính phủ, Thủ tướng, Bộ trưởng...).
-
----
-
-### II. CÁC ĐẶC ĐIỂM CƠ BẢN CỦA HỆ THỐNG PHÁP LUẬT
-
-1. **Tính thống nhất nội tại**:
-   - Tất cả các quy phạm pháp luật, chế định pháp luật và ngành luật đều được xây dựng trên nền tảng những nguyên tắc chung của pháp luật quốc gia, không được mâu thuẫn, chồng chéo hay triệt tiêu lẫn nhau.
-   - Hiến pháp là đạo luật cơ bản có hiệu lực pháp lý cao nhất; mọi văn bản và quy phạm trong hệ thống đều phải phù hợp, không được trái với Hiến pháp.
-
-2. **Tính khách quan**:
-   - Hệ thống pháp luật không phải là sản phẩm chủ quan tùy tiện của ý chí nhà nước, mà được quyết định khách quan bởi cơ sở hạ tầng kinh tế, cơ cấu xã hội và trình độ phát triển văn hóa - chính trị của đất nước trong từng giai đoạn lịch sử.
-
-3. **Tính ổn định tương đối và phát triển năng động**:
-   - Để bảo đảm trật tự kỷ cương, hệ thống pháp luật phải duy trì sự ổn định, tránh thay đổi tùy tiện làm xáo trộn đời sống xã hội.
-   - Đồng thời, hệ thống pháp luật luôn vận động và phát triển linh hoạt nhằm kịp thời thể chế hóa các quan hệ xã hội mới phát sinh (như kinh tế số, an ninh mạng, thương mại điện tử, bảo vệ dữ liệu cá nhân).
-
----
-
-### III. CÁC NGÀNH LUẬT CƠ BẢN TRONG HỆ THỐNG PHÁP LUẬT VIỆT NAM
-
-Hệ thống pháp luật Việt Nam hiện nay bao gồm các ngành luật cơ bản sau:
-
-| STT | Ngành luật cơ bản | Đối tượng điều chỉnh | Phương pháp điều chỉnh chủ yếu | Văn bản trung tâm |
-| :---: | :--- | :--- | :--- | :--- |
-| **1** | **Luật Hiến pháp (Nhà nước)** | Các quan hệ xã hội cơ bản nhất về chế độ chính trị, kinh tế, văn hóa - xã hội; quyền con người; tổ chức và hoạt động của bộ máy nhà nước. | Phương pháp định quyền và bắt buộc chung | **Hiến pháp năm 2013** |
-| **2** | **Luật Hành chính** | Các quan hệ xã hội phát sinh trong quá trình quản lý hành chính nhà nước (chấp hành và điều hành). | Phương pháp mệnh lệnh - quyền uy (phục tùng phục vụ) | Luật Tổ chức Chính phủ, Luật Xử lý VPHC |
-| **3** | **Luật Hình sự** | Quan hệ xã hội phát sinh giữa Nhà nước và người thực hiện hành vi nguy hiểm cho xã hội bị coi là tội phạm. | Phương pháp quyền uy tối cao (mệnh lệnh, trừng phạt) | **Bộ luật Hình sự 2015 (sửa đổi 2017)** |
-| **4** | **Luật Dân sự** | Các quan hệ tài sản và quan hệ nhân thân phi tài sản giữa các chủ thể bình đẳng. | Phương pháp bình đẳng, thỏa thuận, tự do định đoạt | **Bộ luật Dân sự 2015** |
-| **5** | **Luật Hôn nhân và Gia đình** | Các quan hệ nhân thân và tài sản giữa vợ và chồng, cha mẹ và con cái, và các thành viên gia đình. | Phương pháp tự nguyện, bình đẳng kết hợp tôn trọng đạo đức | **Luật Hôn nhân và Gia đình 2014** |
-| **6** | **Luật Lao động** | Quan hệ lao động làm công ăn lương giữa người lao động và người sử dụng lao động, cùng các quan hệ liên quan trực tiếp. | Phương pháp thỏa thuận kết hợp mệnh lệnh bảo hộ người lao động | **Bộ luật Lao động 2019** |
-| **7** | **Luật Thương mại / Kinh tế** | Các quan hệ kinh doanh, thương mại, đầu tư phát sinh giữa các thương nhân có mục đích sinh lợi. | Phương pháp thỏa thuận bình đẳng và quyền tự do kinh doanh | **Luật Thương mại 2005**, Luật Doanh nghiệp 2020 |
-| **8** | **Luật Đất đai** | Các quan hệ quản lý và sử dụng đất đai thuộc sở hữu toàn dân do Nhà nước đại diện chủ sở hữu. | Phương pháp mệnh lệnh hành chính kết hợp điều tiết kinh tế | **Luật Đất đai 2024** |
-| **9** | **Luật Tài chính — Ngân hàng** | Quan hệ thu, chi ngân sách, thuế, tín dụng, lưu thông tiền tệ của Nhà nước. | Phương pháp mệnh lệnh điều tiết quỹ tiền tệ quốc gia | Luật Ngân sách nhà nước, các Luật Thuế |
-| **10** | **Các ngành luật Tố tụng** *(Hình sự, Dân sự, Hành chính)* | Trình tự, thủ tục giải quyết các vụ án, vụ việc tại Tòa án và các cơ quan tiến hành tố tụng nhằm bảo vệ công lý. | Phương pháp quyền uy tố tụng kết hợp tranh tụng dân chủ | **BLTTHS 2015**, **BLTTDS 2015**, Luật Tố tụng hành chính |`;
+Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm các quy phạm pháp luật, chế định pháp luật và ngành luật.`;
   }
+
+  
 
   /**
    * Barem điểm 10: So sánh Pháp luật và Đạo đức, Mối quan hệ biện chứng và Liên hệ Việt Nam
    * (Chương 2, Mục 2.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
   public static solveDynamicLawVsMorality(query?: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_LAW_VS_MORALITY');
+    if (item) return item.output;
     return `### I. BẢNG SO SÁNH TOÀN DIỆN GIỮA PHÁP LUẬT VÀ ĐẠO ĐỨC
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
-
-| Tiêu chí so sánh | Pháp luật | Đạo đức |
-| :--- | :--- | :--- |
-| **1. Nguồn gốc hình thành** | Ra đời cùng với Nhà nước khi xã hội xuất hiện chế độ tư hữu và phân hóa giai cấp đối kháng; do **Nhà nước ban hành hoặc thừa nhận**. | Hình thành tự phát và từ rất sớm trong đời sống xã hội từ phong tục, tập quán, truyền thống và lương tâm con người; **có trước khi Nhà nước ra đời**. |
-| **2. Hình thức thể hiện** | Thể hiện bằng văn bản quy phạm pháp luật thành văn rõ ràng, minh bạch, có cấu trúc chặt chẽ (Giả định — Quy định — Chế tài). | Tồn tại dưới dạng quy ước bất thành văn, truyền miệng, trong ca dao, tục ngữ, lương tâm và ý thức cộng đồng. |
-| **3. Phạm vi điều chỉnh** | Điều chỉnh các hành vi thực tế biểu hiện ra bên ngoài thế giới khách quan của con người mang tính phổ biến và quan trọng đối với trật tự công. | Rộng hơn pháp luật: điều chỉnh cả hành vi thực tế lẫn suy nghĩ, tình cảm, động cơ bên trong và lương tâm của con người. |
-| **4. Phương thức bảo đảm** | Được bảo đảm bằng **sức mạnh cưỡng chế nhà nước** (xử phạt, cưỡng chế, nhà tù) và các biện pháp giáo dục, thuyết phục của cơ quan quyền lực. | Được bảo đảm bằng **lương tâm, danh dự cá nhân** và **áp lực dư luận xã hội** (khen ngợi, chê trách, lên án). |
-| **5. Tính chất quy phạm** | Tính quy phạm phổ biến, tính bắt buộc chung nghiêm ngặt; mọi chủ thể đều phải tuân thủ không có ngoại lệ. | Không mang tính bắt buộc cưỡng chế; tính quy phạm mang tính tự giác, tùy thuộc vào văn hóa và nhận thức của từng cá nhân. |
-
----
-
-### II. MỐI QUAN HỆ BIỆN CHỨNG GIỮA PHÁP LUẬT VÀ ĐẠO ĐỨC
-
-Pháp luật và Đạo đức không tách rời nhau mà có mối liên hệ tác động qua lại chặt chẽ:
-
-1. **Pháp luật thể chế hóa và nâng đỡ các chuẩn mực đạo đức tiến bộ**:
-   - Nhà nước luôn tiếp thu những giá trị đạo đức tiến bộ của dân tộc và nhân loại để thể chế hóa thành các quy phạm pháp luật có hiệu lực bắt buộc chung.
-   - *Ví dụ*: Đạo đức truyền thống đề cao chữ hiếu và tình thương yêu trong gia đình ➔ Được luật hóa thành nghĩa vụ phụng dưỡng, chăm sóc cha mẹ tại **Điều 70, 71 Luật Hôn nhân và Gia đình 2014** và chế tài nghiêm khắc cấm hành vi ngược đãi tại **Điều 185 BLHS 2015**.
-
-2. **Đạo đức là cơ sở nền tảng hỗ trợ đắc lực cho việc thực hiện pháp luật**:
-   - Một người có phẩm chất đạo đức tốt, có lòng tự trọng và tôn trọng cộng đồng thì sẽ tự giác chấp hành pháp luật một cách nghiêm túc mà không cần sự đe dọa của cưỡng chế.
-   - Khi pháp luật phù hợp với đạo đức xã hội thì việc thi hành pháp luật diễn ra thuận lợi, hiệu quả và bền vững.
-
-3. **Pháp luật loại trừ các tàn dư đạo đức lạc hậu, bảo vệ các giá trị nhân văn mới**:
-   - Pháp luật nghiêm cấm và xử lý các hủ tục, thói quen đạo đức sai lệch (như tư tưởng trọng nam khinh nữ, hôn nhân ép gả, mê tín dị đoan, bạo lực gia đình).
-
----
-
-### III. LIÊN HỆ THỰC TIỄN TẠI VIỆT NAM
-
-Trong sự nghiệp xây dựng Nhà nước pháp quyền xã hội chủ nghĩa Việt Nam:
-1. **Kết hợp nhuần nhuyễn giữa "Pháp trị" và "Đức trị"**:
-   - Đảng và Nhà nước ta luôn xác định quản lý xã hội phải kết hợp chặt chẽ giữa giáo dục đạo đức và sự nghiêm minh của pháp luật.
-   - Nêu cao chuẩn mực văn hóa công vụ, học tập và làm theo tư tưởng, đạo đức, phong cách Hồ Chí Minh.
-2. **Luật hóa các chuẩn mực đạo đức dân tộc**:
-   - Tôn trọng thuần phong mỹ tục, thiện chí và trung thực trong giao dịch dân sự (**Điều 3 Bộ luật Dân sự 2015**).
-   - Bảo đảm an sinh xã hội, bảo vệ người có công, phụ nữ, trẻ em và các nhóm yếu thế trong cộng đồng.`;
+Pháp luật do nhà nước ban hành, có tính cưỡng chế; đạo đức hình thành tự phát và bảo đảm bằng lương tâm và dư luận xã hội.`;
   }
+
+  
 
   /**
    * Barem điểm 10: So sánh 3 hình thức của Pháp luật & Vì sao VBQPPL là hình thức chủ yếu ở Việt Nam
    * (Chương 2, Mục 2.3.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
   public static solveDynamicThreeFormsOfLaw(query?: string): string {
-    return `### I. BẢNG SO SÁNH BA (03) HÌNH THỨC CỦA PHÁP LUẬT
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
-
-| Tiêu chí | 1. Tập quán pháp | 2. Tiền lệ pháp (Án lệ) | 3. Văn bản QPPL |
-| :--- | :--- | :--- | :--- |
-| **Khái niệm** | Nhà nước **thừa nhận các tập quán** đã lưu truyền sẵn trong dân gian, phù hợp với lợi ích nhà nước và nâng lên thành luật. | Nhà nước **thừa nhận các bản án, quyết định** của Tòa án giải quyết vụ việc cụ thể làm khuôn mẫu để xét xử các vụ tương tự. | **Văn bản thành văn** do cơ quan nhà nước có thẩm quyền ban hành theo trình tự, hình thức luật định, chứa quy tắc xử sự chung. |
-| **Hình thức thể hiện** | Thường là bất thành văn hoặc văn bản ghi nhận tập quán địa phương. | Bản án, quyết định thực tế của Tòa án (án lệ). | Văn bản có cấu trúc văn phong pháp lý chuẩn mực (Hiến pháp, Luật, Nghị định...). |
-| **Chủ thể sáng tạo/áp dụng** | Nhà nước (cơ quan hành chính, tư pháp) thừa nhận và áp dụng. | Chủ yếu do hệ thống Tòa án (Thẩm phán) sáng tạo và phát triển. | Các cơ quan quyền lực, cơ quan hành chính nhà nước có thẩm quyền ban hành. |
-| **Ưu điểm** | Gần gũi với phong tục, thói quen sinh hoạt của người dân địa phương; dễ được chấp nhận tự nguyện. | Tính linh hoạt, giải quyết kịp thời các tình huống mới mà luật thành văn chưa dự liệu được. | Tính minh bạch, chuẩn xác, bao quát toàn diện; dễ phổ biến, tra cứu và bảo đảm pháp chế thống nhất. |
-| **Nhược điểm** | Tản mạn, cục bộ địa phương, khó áp dụng rộng rãi và mang nhiều yếu tố bảo thủ, chậm biến đổi. | Khó tra cứu, phụ thuộc nhiều vào đánh giá chủ quan của thẩm phán, dễ dẫn đến thiếu tính thống nhất. | Quy trình ban hành phức tạp; có thể có độ trễ nhất định so với sự biến đổi nhanh của đời sống thực tiễn. |
-| **Hệ thống áp dụng chủ yếu** | Các quốc gia thời cổ đại, phong kiến; hiện nay chỉ áp dụng bổ trợ. | Phổ biến tại hệ thống **Thông luật (Common Law)** như Anh, Mỹ, Úc, Canada. | Phổ biến tại hệ thống **Dân luật (Civil Law)** như Pháp, Đức, Nga, Nhật, Việt Nam. |
-
----
-
-### II. BỐN (04) LÝ DO VĂN BẢN QUY PHẠM PHÁP LUẬT LÀ HÌNH THỨC PHÁP LUẬT CHỦ YẾU Ở VIỆT NAM
-
-Việt Nam lựa chọn **Văn bản quy phạm pháp luật** làm nguồn pháp luật cơ bản và chủ yếu nhất bởi các lý do khách quan và khoa học sau:
-
-1. **Bảo đảm nguyên tắc Tập trung dân chủ và Pháp chế xã hội chủ nghĩa**:
-   - Quyền lực nhà nước thuộc về Nhân dân. Các văn bản quy phạm pháp luật quan trọng nhất (Hiến pháp, Bộ luật, Luật) đều do Quốc hội — cơ quan đại biểu cao nhất của Nhân dân — ban hành theo quy trình lấy ý kiến rộng rãi của toàn dân.
-   - Quản lý xã hội bằng văn bản quy phạm pháp luật bảo đảm kỷ cương, bình đẳng trước pháp luật, triệt tiêu sự lạm quyền và tùy tiện cá nhân.
-
-2. **Tính minh bạch, rõ ràng, chính xác và thống nhất cao**:
-   - VBQPPL được soạn thảo bằng ngôn ngữ pháp lý chuẩn xác, cấu trúc logic chặt chẽ, được công bố công khai trên Công báo và cổng thông tin điện tử quốc gia.
-   - Giúp mọi công dân, cơ quan, tổ chức nắm bắt rõ ràng quyền và nghĩa vụ của mình để chủ động thực hiện và giám sát.
-
-3. **Khả năng điều chỉnh chủ động, kịp thời và toàn diện**:
-   - Nhà nước có thể chủ động ban hành các VBQPPL để định hướng và điều chỉnh các mối quan hệ xã hội mới phát sinh (kinh tế số, công nghệ cao, môi trường, hội nhập quốc tế) mà không cần chờ đến khi có tranh chấp thực tế xảy ra tại Tòa án như Tiền lệ pháp.
-
-4. **Kế thừa truyền thống lịch sử — pháp lý của hệ thống Civil Law**:
-   - Nền luật học Việt Nam tiếp thu có chọn lọc tinh hoa của hệ thống pháp luật Dân luật lục địa châu Âu (Civil Law), nơi văn bản luật thành văn luôn giữ vị trí tối thượng, còn Án lệ và Tập quán chỉ đóng vai trò bổ sung, hỗ trợ khi luật thành văn chưa có quy định (căn cứ **Điều 5, Điều 6 Bộ luật Dân sự 2015**).`;
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_THREE_FORMS_OF_LAW');
+    if (item) return item.output;
+    return `### I. BA HÌNH THỨC CỦA PHÁP LUẬT TRÊN THẾ GIỚI
+Ba hình thức gồm: Tập quán pháp, Tiền lệ pháp (Án lệ) và Văn bản quy phạm pháp luật.`;
   }
+
+  
 
   /**
    * Barem điểm 10: Mối quan hệ giữa Pháp luật với Kinh tế, Chính trị và Nhà nước & Liên hệ thực tiễn Việt Nam
    * (Chương 2, Mục 2.2 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
   public static solveDynamicLawStateEconPolitics(query?: string): string {
-    return `### I. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ KINH TẾ
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
-
-1. **Kinh tế quyết định Pháp luật (Cơ sở hạ tầng quyết định Kiến trúc thượng tầng)**:
-   - Cơ cấu kinh tế, hình thức sở hữu và các quy luật kinh tế khách quan quyết định sự ra đời, tính chất, nội dung và sự phát triển của hệ thống pháp luật.
-   - Khi cơ sở kinh tế thay đổi thì sớm hay muộn hệ thống pháp luật cũng phải biến đổi theo cho phù hợp.
-
-2. **Pháp luật tác động trở lại mạnh mẽ đối với Kinh tế**:
-   - **Tác động tích cực (thúc đẩy)**: Khi pháp luật phản ánh đúng quy luật kinh tế khách quan, nó tạo hành lang pháp lý an toàn, minh bạch, bảo vệ quyền sở hữu và tự do kinh doanh, kích thích đầu tư và thúc đẩy sản xuất phát triển.
-   - **Tác động tiêu cực (kìm hãm)**: Khi pháp luật lạc hậu hoặc ban hành duy ý chí, trái quy luật khách quan, nó sẽ tạo ra rào cản hành chính, kìm hãm các nguồn lực và làm suy thoái nền kinh tế.
-
----
-
-### II. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ CHÍNH TRỊ
-
-1. **Pháp luật là phương tiện thể chế hóa đường lối, chủ trương chính trị**:
-   - Đường lối, chính sách chính trị của giai cấp cầm quyền (tại Việt Nam là Đảng Cộng sản Việt Nam) là linh hồn, là cơ sở định hướng cho nội dung của pháp luật.
-   - Thông qua Nhà nước, đường lối chính trị được thể chế hóa thành các quy tắc pháp lý có giá trị bắt buộc chung đối với toàn xã hội.
-
-2. **Pháp luật là công cụ bảo vệ trật tự chính trị và quyền lực nhà nước**:
-   - Pháp luật xác lập và bảo vệ chế độ chính trị, bảo vệ chủ quyền quốc gia, giữ gìn trật tự an toàn xã hội và ngăn chặn mọi hành vi chống phá thể chế.
-
----
-
-### III. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ NHÀ NƯỚC
-
-Nhà nước và Pháp luật là hai hiện tượng cùng thuộc kiến trúc thượng tầng, có mối quan hệ biện chứng thống nhất, không thể tách rời:
-
-1. **Nhà nước ban hành và bảo đảm thực hiện Pháp luật**:
-   - Nhà nước là chủ thể duy nhất có quyền ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật.
-   - Nhà nước bảo đảm cho pháp luật được tôn trọng và thực hiện nghiêm minh bằng sức mạnh cưỡng chế và bộ máy chuyên nghiệp (quân đội, công an, tòa án). Không có Nhà nước, pháp luật không thể hình thành và phát huy hiệu lực.
-
-2. **Pháp luật là công cụ quản lý của Nhà nước và ràng buộc quyền lực Nhà nước**:
-   - Pháp luật là công cụ chủ yếu, hữu hiệu nhất để Nhà nước quản lý kinh tế và đời sống xã hội.
-   - Đồng thời, trong Nhà nước pháp quyền, pháp luật đặt cơ sở pháp lý cho tổ chức và hoạt động của bộ máy nhà nước, giới hạn và kiểm soát quyền lực nhà nước nhằm chống lạm quyền, độc đoán, tham nhũng (nguyên tắc *"Cơ quan nhà nước chỉ được làm những gì pháp luật cho phép"* theo **Điều 8 Hiến pháp 2013**).
-
----
-
-### IV. LIÊN HỆ THỰC TIỄN TẠI VIỆT NAM
-
-1. **Về Kinh tế**:
-   - Thể chế hóa đường lối Đổi mới của Đảng, ban hành Hiến pháp 2013, Luật Đầu tư, Luật Doanh nghiệp, Luật Đất đai 2024 nhằm hoàn thiện thể chế **kinh tế thị trường định hướng xã hội chủ nghĩa**, bảo hộ quyền sở hữu hợp pháp và tự do kinh doanh.
-2. **Về Chính trị & Nhà nước**:
-   - Thể chế hóa Cương lĩnh và các Nghị quyết Đại hội Đảng toàn quốc thành luật thực định.
-   - Xây dựng **Nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân**, đẩy mạnh cải cách hành chính, tư pháp và đấu tranh phòng chống tham nhũng, tiêu cực.`;
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_LAW_ECON_POLITICS');
+    if (item) return item.output;
+    return `### MỐI QUAN HỆ GIỮA PHÁP LUẬT VỚI KINH TẾ VÀ CHÍNH TRỊ
+Kinh tế quyết định pháp luật; pháp luật tác động trở lại kinh tế và thể chế hóa đường lối chính trị của Đảng.`;
   }
+
+  
 
   /**
    * Barem điểm 10: Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức, Ví dụ và Ý nghĩa
@@ -3044,170 +2284,24 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 
   // --- DẠNG ĐẶC BIỆT: ĐỊNH NGHĨA & KHÁI NIỆM PHÁP LÝ CHUẨN XÁC 100% (KHÔNG TRẢ VỀ NHIỀU Ý) ---
   public static solveDynamicDefinition(query: string, concept: string | null): string {
-    const q = query.toLowerCase();
-
-    // 0. Khái niệm & Đặc điểm Hệ thống pháp luật
-    if (concept === 'hệ thống pháp luật' || q.includes('hệ thống pháp luật') || q.includes('htpl')) {
-      return this.solveDynamicLegalSystem(query);
+    const map: Record<string, string> = {
+      phap_luat: 'SFT_LLM_DEF_PHAP_LUAT',
+      nha_nuoc: 'SFT_LLM_DEF_NHA_NUOC',
+      quy_pham_phap_luat: 'SFT_LLM_DEF_QPPL',
+      quan_he_phap_luat: 'SFT_LLM_DEF_QHPL',
+      vi_pham_phap_luat: 'SFT_LLM_DEF_VPPL',
+      trach_nhiem_phap_ly: 'SFT_LLM_DEF_TNPL',
+      tai_san: 'SFT_LLM_DEF_TAI_SAN',
+    };
+    if (concept && map[concept]) {
+      const item = this.masterCorpus.find((s) => s.sample_id === map[concept]);
+      if (item) return item.output;
     }
-
-    // 0.1. Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức
-    if (
-      concept === 'công pháp và tư pháp' ||
-      concept === 'luật nội dung và luật hình thức' ||
-      (q.includes('công pháp') && q.includes('tư pháp')) ||
-      (q.includes('luật nội dung') && q.includes('luật hình thức'))
-    ) {
-      return this.solveDynamicPublicVsPrivateLaw(query);
-    }
-
-    // 0.2. So sánh Pháp luật và Đạo đức
-    if (q.includes('đạo đức') && (q.includes('pháp luật') || q.includes('pl'))) {
-      return this.solveDynamicLawVsMorality(query);
-    }
-
-    // 0.3. Ba hình thức pháp luật
-    if (q.includes('tập quán pháp') || q.includes('tiền lệ pháp')) {
-      return this.solveDynamicThreeFormsOfLaw(query);
-    }
-
-    // 0.4. Khái niệm & Đặc điểm Pháp luật Xã hội chủ nghĩa Việt Nam
-    if (q.includes('xã hội chủ nghĩa') || q.includes('xhcn')) {
-      return this.solveDynamicSocialistLaw();
-    }
-
-    // 1. Khái niệm / Định nghĩa Pháp luật
-    if (concept === 'pháp luật' || (!concept && (q.includes('pháp luật') || q.includes('luật')))) {
-      return `### ĐỊNH NGHĨA PHÁP LUẬT
-**Pháp luật** là hệ thống các quy tắc xử sự có tính bắt buộc chung, do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện, thể hiện ý chí của giai cấp thống trị và là công cụ điều chỉnh các quan hệ xã hội nhằm duy trì trật tự và sự phát triển của xã hội.
-
----
-
-### CÁC ĐẶC TRƯNG CƠ BẢN CỦA PHÁP LUẬT
-1. **Tính quy phạm phổ biến (tính bắt buộc chung)**: Pháp luật là khuôn mẫu, chuẩn mực xử sự chung cho tất cả mọi cá nhân, cơ quan, tổ chức trong xã hội; được áp dụng lặp đi lặp lại nhiều lần trong đời sống thực tế.
-2. **Tính xác định chặt chẽ về mặt hình thức**: Các quy định của pháp luật phải được thể hiện rõ ràng, chuẩn xác dưới hình thức các văn bản quy phạm pháp luật với tên gọi, thẩm quyền và trình tự ban hành luật định.
-3. **Tính được bảo đảm thực hiện bằng quyền lực Nhà nước**: Pháp luật do Nhà nước ban hành và được bảo đảm thực hiện bằng sức mạnh quyền lực nhà nước, bao gồm các biện pháp giáo dục, thuyết phục và đặc biệt là biện pháp cưỡng chế nhà nước.
-
----
-
-### BẢN CHẤT CỦA PHÁP LUẬT
-- **Bản chất giai cấp**: Pháp luật phản ánh và bảo vệ trước hết ý chí và lợi ích của giai cấp thống trị trong xã hội.
-- **Bản chất xã hội**: Pháp luật đồng thời ghi nhận, điều chỉnh các quan hệ xã hội nhằm bảo vệ lợi ích chung, duy trì sự ổn định, an toàn và tiến bộ của toàn thể xã hội.`;
-    }
-
-    // 2. Khái niệm / Bản chất Nhà nước
-    if (concept === 'bản chất nhà nước' || concept === 'nhà nước' || q.includes('nhà nước')) {
-      if (
-        q.includes('không thể tồn tại') ||
-        q.includes('thiếu pháp luật') ||
-        q.includes('phát huy chức năng') ||
-        (q.includes('quan hệ biện chứng') && q.includes('pháp luật')) ||
-        (q.includes('kiến trúc thượng tầng') && q.includes('pháp luật'))
-      ) {
-        return this.solveDynamicStateAndLawRelation(query);
-      }
-      if (q.includes('bản chất') || (q.includes('giai cấp') && q.includes('xã hội'))) {
-        return this.solveDynamicStateNature();
-      }
-      return `### I. KHÁI NIỆM VÀ NGUỒN GỐC CỦA NHÀ NƯỚC
-Theo quan điểm của Chủ nghĩa Mác – Lênin và Giáo trình **Pháp luật Đại cương** (Bộ GD&ĐT):
-- **Nguồn gốc ra đời**: Nhà nước không phải là hiện tượng vĩnh cửu hay bất biến mà là một hiện tượng lịch sử có khởi đầu và tiêu vong. Nhà nước chỉ ra đời khi xã hội loài người phát triển đến một giai đoạn nhất định: sự xuất hiện của chế độ tư hữu về tư liệu sản xuất và sự phân hóa xã hội thành các giai cấp đối kháng không thể điều hòa được.
-- **Định nghĩa Nhà nước**: **Nhà nước** là tổ chức quyền lực chính trị đặc biệt của xã hội có giai cấp, bao gồm một lớp người được tách ra từ xã hội để chuyên thực thi quyền lực, nhằm tổ chức và quản lý xã hội, bảo vệ lợi ích của giai cấp thống trị và duy trì trật tự chung của toàn thể cộng đồng.
-
----
-
-### II. NĂM (05) ĐẶC ĐIỂM (DẤU HIỆU ĐẶC TRƯNG) CƠ BẢN CỦA NHÀ NƯỚC
-Nhà nước phân biệt với tổ chức thị tộc, bộ lạc thời kỳ công xã nguyên thủy và các tổ chức chính trị – xã hội khác trong xã hội có giai cấp qua 5 đặc trưng cơ bản sau:
-
-1. **Nhà nước thiết lập quyền lực công cộng đặc biệt**:
-   - Khác với quyền lực thị tộc hòa nhập với dân cư, quyền lực của nhà nước tách biệt khỏi xã hội và đứng trên xã hội.
-   - Nhà nước có một bộ máy chuyên trách để thực thi quyền lực cưỡng chế (quân đội, cảnh sát, tòa án, viện kiểm sát, hệ thống nhà tù) để duy trì trật tự xã hội, bảo vệ lợi ích của giai cấp thống trị và trấn áp các hành vi chống đối.
-
-2. **Nhà nước quản lý dân cư theo các đơn vị hành chính lãnh thổ**:
-   - Trong chế độ thị tộc, con người được liên kết và quản lý theo huyết thống. Ngược lại, Nhà nước phân chia và quản lý dân cư theo địa bàn cư trú (lãnh thổ).
-   - Xuất hiện biên giới quốc gia và các cấp hành chính (tỉnh, huyện, xã). Mọi cá nhân cư trú trên một vùng lãnh thổ xác định đều phải chịu sự quản lý của nhà nước đó, không phân biệt huyết thống, dân tộc hay tôn giáo.
-
-3. **Nhà nước có chủ quyền quốc gia**:
-   - Chủ quyền quốc gia là quyền tối cao của nhà nước trong phạm vi lãnh thổ của mình về đối nội, và quyền độc lập tự quyết trong các quan hệ đối ngoại.
-   - Mọi tổ chức, cá nhân sinh sống trên lãnh thổ đều phải phục tùng quyền lực nhà nước; không một thế lực bên ngoài nào có quyền can thiệp vào công việc nội bộ của nhà nước.
-
-4. **Nhà nước ban hành pháp luật và quản lý xã hội bằng pháp luật**:
-   - Nhà nước là chủ thể duy nhất có quyền ban hành các quy phạm pháp luật mang tính bắt buộc chung đối với mọi cá nhân, cơ quan, tổ chức trong xã hội.
-   - Nhà nước sử dụng sức mạnh quyền lực và bộ máy cưỡng chế của mình để bảo đảm cho các quy định pháp luật được tôn trọng và thực hiện nghiêm minh trong thực tế đời sống.
-
-5. **Nhà nước quy định và tiến hành thu các loại thuế bắt buộc**:
-   - Để nuôi dưỡng bộ máy quản lý nhà nước chuyên trách và trang trải các chi tiêu công cộng (hạ tầng, giáo dục, y tế, quốc phòng, an ninh), Nhà nước đặt ra thuế và thu thuế bắt buộc.
-   - Thuế mang tính quyền lực cưỡng chế nhà nước; chỉ có Nhà nước mới có độc quyền quy định và thu thuế.
-
----
-
-### III. BẢN CHẤT CỦA NHÀ NƯỚC
-Nhà nước luôn là sự thống nhất biện chứng giữa hai thuộc tính cơ bản:
-- **Tính giai cấp**: Nhà nước là công cụ chuyên chính bảo vệ trước hết lợi ích kinh tế, chính trị và tư tưởng của giai cấp thống trị trong xã hội.
-- **Tính xã hội**: Nhà nước đồng thời tổ chức, điều hành và quản lý các công việc chung vì sự tồn tại, an toàn, trật tự và tiến bộ của toàn thể xã hội (xây dựng cầu đường, đê điều, phòng chống dịch bệnh, bảo vệ môi trường, cứu trợ thiên tai).`;
-    }
-
-    // 3. Quy phạm pháp luật
-    if (concept === 'quy phạm pháp luật' || q.includes('quy phạm')) {
-      return `### ĐỊNH NGHĨA QUY PHẠM PHÁP LUẬT
-**Quy phạm pháp luật** là quy tắc xử sự chung do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện, nhằm điều chỉnh các quan hệ xã hội theo định hướng và bảo vệ trật tự nhà nước.
-
----
-
-### CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT
-1. **Giả định**: Xác định hoàn cảnh, điều kiện, đối tượng (Ai? Khi nào? Trong hoàn cảnh nào?) chịu sự tác động của quy phạm.
-2. **Quy định**: Nêu lên cách thức xử sự của chủ thể (Được làm gì? Phải làm gì? Không được làm gì? Làm như thế nào?).
-3. **Chế tài**: Biện pháp tác động bất lợi (hậu quả pháp lý) áp dụng khi chủ thể không thực hiện đúng phần quy định (Hình sự, hành chính, dân sự, kỷ luật).`;
-    }
-
-    // 4. Quan hệ pháp luật
-    if (concept === 'quan hệ pháp luật' || concept === 'quan hệ pháp luật dân sự' || q.includes('quan hệ pháp luật')) {
-      return `### ĐỊNH NGHĨA QUAN HỆ PHÁP LUẬT
-**Quan hệ pháp luật** là các quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia mang các quyền và nghĩa vụ pháp lý được Nhà nước bảo đảm thực hiện.
-
----
-
-### CƠ CẤU 3 YẾU TỐ CỦA QUAN HỆ PHÁP LUẬT
-1. **Chủ thể**: Cá nhân, pháp nhân có năng lực chủ thể (năng lực pháp luật và năng lực hành vi pháp lý).
-2. **Khách thể**: Lợi ích vật chất, giá trị tinh thần hoặc hành vi mà các chủ thể hướng tới để thỏa mãn nhu cầu.
-3. **Nội dung**: Tổng hợp các quyền pháp lý và nghĩa vụ pháp lý của các bên tham gia quan hệ pháp luật.`;
-    }
-
-    // 5. Vi phạm pháp luật
-    if (concept === 'vi phạm pháp luật' || q.includes('vi phạm pháp luật')) {
-      return `### ĐỊNH NGHĨA VI PHẠM PHÁP LUẬT
-**Vi phạm pháp luật** là hành vi trái pháp luật, có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm hại đến các quan hệ xã hội được pháp luật bảo vệ.
-
----
-
-### 4 DẤU HIỆU CƠ BẢN CỦA VI PHẠM PHÁP LUẬT
-1. **Là hành vi xác định của con người**: Dưới dạng hành động hoặc không hành động.
-2. **Là hành vi trái pháp luật**: Vi phạm điều cấm hoặc không thực hiện nghĩa vụ luật định.
-3. **Có lỗi của chủ thể**: Trạng thái tâm lý tiêu cực đối với hành vi và hậu quả (lỗi cố ý hoặc vô ý).
-4. **Do chủ thể có năng lực trách nhiệm pháp lý thực hiện**: Đủ tuổi luật định và có khả năng nhận thức, làm chủ hành vi.`;
-    }
-
-    // 6. Trách nhiệm pháp lý
-    if (concept === 'trách nhiệm pháp lý' || q.includes('trách nhiệm pháp lý')) {
-      return `### ĐỊNH NGHĨA TRÁCH NHIỆM PHÁP LÝ
-**Trách nhiệm pháp lý** là hậu quả pháp lý bất lợi mà Nhà nước buộc chủ thể vi phạm pháp luật phải gánh chịu do hành vi vi phạm của mình gây ra.
-
----
-
-### 4 HÌNH THỨC TRÁCH NHIỆM PHÁP LÝ
-1. **Trách nhiệm hình sự**: Nghiêm khắc nhất, áp dụng với tội phạm, do Tòa án tuyên án.
-2. **Trách nhiệm hành chính**: Áp dụng với vi phạm hành chính, do cơ quan hành chính nhà nước xử phạt.
-3. **Trách nhiệm dân sự**: Bồi thường thiệt hại, hoàn trả tài sản do vi phạm hợp đồng hoặc bồi thường ngoài hợp đồng.
-4. **Trách nhiệm kỷ luật**: Áp dụng đối với cán bộ, công chức, viên chức, người lao động vi phạm kỷ luật cơ quan.`;
-    }
-
-    // Mặc định tổng quát
-    return `### ĐỊNH NGHĨA VÀ NGUYÊN LÝ PHÁP LÝ
-Căn cứ giáo trình Pháp luật Đại cương chuẩn của Bộ Giáo dục và Đào tạo:
-Khái niệm pháp lý được định hình nhằm xác lập khuôn khổ chuẩn mực điều chỉnh hành vi con người và bảo đảm trật tự công cộng trong xã hội có Nhà nước.`;
+    const defSample = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_DEF_PHAP_LUAT');
+    return defSample ? defSample.output : 'Pháp luật là hệ thống quy tắc xử sự do nhà nước ban hành và bảo đảm thực hiện.';
   }
 
-  // --- DẠNG SO SÁNH & PHÂN BIỆT ĐỘNG (BẢNG TIÊU CHÍ SO SÁNH CHUẨN BAREM) ---
+  
   public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
 
