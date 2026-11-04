@@ -80,43 +80,10 @@ export class LlmService {
   }
 
   /**
-   * Khởi tạo và nạp toàn bộ ngân hàng câu hỏi SFT (340+ câu thi & 10,000+ câu tư vấn)
+   * Khởi tạo và nạp toàn bộ ngân hàng câu hỏi SFT (2,100+ câu thi & Barem chuẩn môn Pháp luật đại cương)
    */
   private static initCorpuses(): void {
-    if (this.isInitialized && this.examCorpus.length >= 340) return;
-
-    const examPaths = [
-      path.resolve(process.cwd(), 'data/processed/sft_vietlaw_master.json'),
-      path.resolve(process.cwd(), '../data/processed/sft_vietlaw_master.json'),
-      path.resolve(__dirname, '../../../data/processed/sft_vietlaw_master.json'),
-      path.resolve(process.cwd(), 'data/processed/sft_vietlaw_500.json'),
-      path.resolve(process.cwd(), '../data/processed/sft_vietlaw_500.json'),
-      path.resolve(__dirname, '../../../data/processed/sft_vietlaw_500.json')
-    ];
-
-    for (const p of examPaths) {
-      if (fs.existsSync(p)) {
-        try {
-          const raw = fs.readFileSync(p, 'utf-8');
-          const parsed = JSON.parse(raw) as SftSample[];
-          this.examCorpus = parsed.filter(
-            (item) => !this.isRawGuidanceNote(item.output) && !item.sample_id.startsWith('SFT_200Q')
-          );
-          this.examTokenSets = this.examCorpus.map((item) => {
-            const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
-            return new Set(this.normalize(textToUse));
-          });
-          this.examBigramSets = this.examCorpus.map((item) => {
-            const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
-            return this.getBigrams(this.normalize(textToUse));
-          });
-          console.log(`📚 [SFT Cache] Đã nạp ${this.examCorpus.length} đề thi & Barem chuẩn Bộ GD&ĐT từ: ${path.basename(p)}`);
-          break;
-        } catch (err) {
-          console.warn('⚠️ [SFT Cache] Lỗi đọc exam dataset:', err);
-        }
-      }
-    }
+    if (this.isInitialized && this.examCorpus.length >= 1000) return;
 
     const masterPaths = [
       path.resolve(process.cwd(), 'data/processed/sft_vietlaw_master.json'),
@@ -129,17 +96,23 @@ export class LlmService {
         try {
           const raw = fs.readFileSync(p, 'utf-8');
           const parsed = JSON.parse(raw) as SftSample[];
-          this.masterCorpus = parsed.filter(
+          const cleaned = parsed.filter(
             (item) => !this.isRawGuidanceNote(item.output) && !item.sample_id.startsWith('SFT_200Q')
           );
-          this.masterTokenSets = this.masterCorpus.map((item) => {
+
+          this.examCorpus = cleaned;
+          this.examTokenSets = this.examCorpus.map((item) => {
             const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
             return new Set(this.normalize(textToUse));
           });
-          this.masterBigramSets = this.masterCorpus.map((item) => {
+          this.examBigramSets = this.examCorpus.map((item) => {
             const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
             return this.getBigrams(this.normalize(textToUse));
           });
+
+          this.masterCorpus = cleaned;
+          this.masterTokenSets = this.examTokenSets;
+          this.masterBigramSets = this.examBigramSets;
           this.masterDocMeta = this.masterCorpus.map((item) => {
             const titleM = item.output.match(/"([^"]+)"/) || item.output.match(/“([^”]+)”/);
             const rawTitle = titleM ? titleM[1] : '';
@@ -166,10 +139,11 @@ export class LlmService {
 
             return { cleanTitle, rawCode, inputClean, outputClean };
           });
-          console.log(`📚 [SFT Cache] Đã nạp ${this.masterCorpus.length} dữ liệu tư vấn Master từ: ${path.basename(p)}`);
+
+          console.log(`📚 [SFT Cache] Đã nạp thành công ${this.examCorpus.length} mẫu đề thi & Barem chuẩn từ: ${path.basename(p)}`);
           break;
         } catch (err) {
-          console.warn('⚠️ [SFT Cache] Lỗi đọc master dataset:', err);
+          console.warn('⚠️ [SFT Cache] Lỗi đọc exam dataset:', err);
         }
       }
     }
