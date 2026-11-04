@@ -277,6 +277,10 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     return typeof window !== 'undefined' ? window.innerWidth >= 1024 : true;
   });
 
+  // Typing Animation: Hiệu ứng hoạt ảnh mô phỏng quá trình gõ chữ từng ký tự theo thời gian thực
+  const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
+  const typingIntervalRef = useRef<any>(null);
+
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -284,6 +288,13 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
   // Khóa lưu trữ cục bộ vĩnh viễn theo email / tên đăng nhập của tài khoản
   const userIdentifier = (user?.email || user?.username || user?.id || 'guest').toLowerCase().replace(/[^a-z0-9_]/g, '_');
   const storageKey = `vietlaw_chat_sessions_${userIdentifier}`;
+
+  // Dọn dẹp bộ đếm nhịp gõ chữ Typing Animation khi chuyển trang hoặc hủy component
+  useEffect(() => {
+    return () => {
+      if (typingIntervalRef.current) clearInterval(typingIntervalRef.current);
+    };
+  }, []);
 
   // 1. Tải và phục hồi toàn bộ các phiên chat đã lưu từ localStorage
   useEffect(() => {
@@ -611,18 +622,33 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     try {
       const res = await api.solveQuery(textToSend, selectedCategoryId);
       if (res.success) {
-        const botMsg: ChatMessage = {
-          id: 'bot-' + Date.now(),
+        setIsLoading(false);
+        const fullContent = res.response || '';
+        const botMsgId = 'bot-' + Date.now();
+
+        // Khởi tạo tin nhắn với nội dung rỗng để bắt đầu hiệu ứng gõ chữ
+        const initialBotMsg: ChatMessage = {
+          id: botMsgId,
           role: 'assistant',
-          content: res.response,
+          content: '',
           timestamp: Date.now(),
           data: res
         };
 
-        // Cập nhật messages và tự động lưu vào session tương ứng
-        setMessages((prev) => {
-          const updatedMessages = [...prev, botMsg];
+        setMessages((prev) => [...prev, initialBotMsg]);
+        setTypingMessageId(botMsgId);
 
+        // Hủy interval gõ chữ cũ nếu đang chạy
+        if (typingIntervalRef.current) {
+          clearInterval(typingIntervalRef.current);
+          typingIntervalRef.current = null;
+        }
+
+        // Tốc độ và bước nhảy thích ứng (Adaptive typing animation)
+        const step = fullContent.length > 2000 ? 10 : fullContent.length > 800 ? 6 : fullContent.length > 300 ? 4 : 2;
+        let charIndex = 0;
+
+        const updateSessionWithFinal = (finalMessages: ChatMessage[]) => {
           setSessions((prevSessions) => {
             let updatedList: ChatSession[];
             if (isBrandNewSession) {
@@ -631,7 +657,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                 title: textToSend.slice(0, 36) + (textToSend.length > 36 ? '...' : ''),
                 createdAt: Date.now(),
                 updatedAt: Date.now(),
-                messages: updatedMessages
+                messages: finalMessages
               };
               updatedList = [newSession, ...prevSessions.filter((s) => s.id !== currentSessionId)];
             } else {
@@ -640,7 +666,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                   ? {
                       ...s,
                       updatedAt: Date.now(),
-                      messages: updatedMessages
+                      messages: finalMessages
                     }
                   : s
               );
@@ -650,12 +676,35 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
             } catch {}
             return updatedList;
           });
+        };
 
-          return updatedMessages;
-        });
-
-        decrementQuota(res.remainingQuestions);
-        loadHistory();
+        typingIntervalRef.current = setInterval(() => {
+          charIndex += step;
+          if (charIndex >= fullContent.length) {
+            if (typingIntervalRef.current) {
+              clearInterval(typingIntervalRef.current);
+              typingIntervalRef.current = null;
+            }
+            setTypingMessageId(null);
+            setMessages((prev) => {
+              const completed = prev.map((m) =>
+                m.id === botMsgId ? { ...m, content: fullContent } : m
+              );
+              updateSessionWithFinal(completed);
+              return completed;
+            });
+            decrementQuota(res.remainingQuestions);
+            loadHistory();
+          } else {
+            const nextSlice = fullContent.slice(0, charIndex);
+            setMessages((prev) =>
+              prev.map((m) =>
+                m.id === botMsgId ? { ...m, content: nextSlice } : m
+              )
+            );
+            messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+          }
+        }, 16);
       } else {
         setErrorMessage(res.message || 'Không thể xử lý bài tập. Vui lòng thử lại.');
       }
@@ -718,6 +767,18 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         break;
       }
     }
+  };
+
+  // Bỏ qua hiệu ứng Typing Animation để hiển thị ngay toàn bộ nội dung
+  const handleSkipTyping = (msgId: string, fullText: string) => {
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+    setTypingMessageId(null);
+    setMessages((prev) =>
+      prev.map((m) => (m.id === msgId ? { ...m, content: fullText } : m))
+    );
   };
 
   // Speech Recognition (Voice input)
@@ -1194,10 +1255,33 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                         </div>
                       )}
 
-                      {/* Assistant Markdown Body */}
-                      <div className="font-chat text-[15px] sm:text-[15.5px] text-[#24272f] dark:text-[#f3f4f6] leading-[1.78] bg-white/98 dark:bg-[#181a22]/98 backdrop-blur-md p-6 sm:p-7 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.25)] space-y-3.5">
+                      {/* Assistant Markdown Body with Typing Animation Indicator */}
+                      <div className="font-chat text-[15px] sm:text-[15.5px] text-[#24272f] dark:text-[#f3f4f6] leading-[1.78] bg-white/98 dark:bg-[#181a22]/98 backdrop-blur-md p-6 sm:p-7 rounded-3xl border border-black/[0.06] dark:border-white/[0.08] shadow-[0_8px_30px_rgb(0,0,0,0.04)] dark:shadow-[0_8px_30px_rgb(0,0,0,0.25)] space-y-3.5 relative">
                         {formatMarkdown(msg.content)}
+                        {typingMessageId === msg.id && (
+                          <span className="inline-block w-2 h-4.5 bg-indigo-600 dark:bg-indigo-400 rounded-xs animate-pulse ml-1 align-middle" />
+                        )}
                       </div>
+
+                      {/* Mini Live Status Pill while Typing Animation is Active */}
+                      {typingMessageId === msg.id && (
+                        <div className="flex items-center justify-between text-xs text-indigo-600 dark:text-indigo-400 px-3 py-1.5 bg-indigo-50/80 dark:bg-indigo-950/40 rounded-xl border border-indigo-200/60 dark:border-indigo-800/60 animate-fadeIn">
+                          <span className="flex items-center gap-2 font-medium">
+                            <span className="relative flex h-2 w-2">
+                              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75"></span>
+                              <span className="relative inline-flex rounded-full h-2 w-2 bg-indigo-600"></span>
+                            </span>
+                            <span>Trợ lý AI đang gõ câu trả lời theo thời gian thực...</span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => handleSkipTyping(msg.id, msg.data?.response || msg.content)}
+                            className="text-[11px] font-bold underline hover:text-indigo-800 dark:hover:text-indigo-200 cursor-pointer transition-colors"
+                          >
+                            Hiện toàn bộ ngay ↵
+                          </button>
+                        </div>
+                      )}
 
                       {/* Collapsible Retrieved Law Articles */}
                       {msg.data?.retrievedArticles && msg.data.retrievedArticles.length > 0 && (
