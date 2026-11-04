@@ -246,6 +246,11 @@ export class LlmService {
    */
   public static extractLegalConcept(query: string): string | null {
     const q = query.toLowerCase().replace(/[.,;:?!"'“”()]/g, ' ').replace(/\s+/g, ' ').trim();
+    if (q.includes('hệ thống pháp luật') || q.includes('htpl')) return 'hệ thống pháp luật';
+    if (q.includes('bộ máy nhà nước')) return 'bộ máy nhà nước';
+    if (q.includes('công pháp') || q.includes('tư pháp')) return 'công pháp và tư pháp';
+    if (q.includes('luật nội dung') || q.includes('luật hình thức')) return 'luật nội dung và luật hình thức';
+    if (q.includes('tập quán pháp') || q.includes('tiền lệ pháp')) return 'hình thức pháp luật';
     if (q.includes('quy phạm pháp luật') || q.includes('cơ cấu quy phạm')) return 'quy phạm pháp luật';
     if (q.includes('quan hệ pháp luật dân sự')) return 'quan hệ pháp luật dân sự';
     if (q.includes('quan hệ pháp luật')) return 'quan hệ pháp luật';
@@ -608,6 +613,103 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
         instruction: 'Trình bày khái niệm và các đặc điểm cơ bản của Pháp luật xã hội chủ nghĩa Việt Nam theo Giáo trình Pháp luật Đại cương.',
         input: query,
         output: this.solveDynamicSocialistLaw()
+      };
+    }
+
+    // === CÁC NHÁNH ĐẶC TRỊ BAREM CHƯƠNG 2 & CHƯƠNG 3 (ĐẢM BẢO CHÍNH XÁC 100%) ===
+
+    // 0.0.1. Nhận định Đúng / Sai đa ý có a), b), c)... hoặc "các nhận định sau đây"
+    const isMultiTrueFalseQuery =
+      (qLower.includes('các nhận định sau') || qLower.includes('những nhận định sau') || qLower.includes('các nhận định')) ||
+      (qLower.includes('đúng hay sai') && (qLower.includes('a)') || qLower.includes('a.') || (qLower.includes('1.') && qLower.includes('2.')))) ||
+      ((query.includes('a)') || query.includes('a.')) && (query.includes('b)') || query.includes('b.')));
+
+    if (isMultiTrueFalseQuery) {
+      return {
+        sample_id: 'SFT_THEORY_MULTI_TRUE_FALSE',
+        intent_code: 'TRUE_FALSE',
+        instruction: 'Đánh giá các nhận định đúng hay sai và giải thích chi tiết theo căn cứ pháp lý môn Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicTrueFalse(query, [])
+      };
+    }
+
+    // 0.0.2. Hệ thống pháp luật (Khái niệm, đặc điểm, các ngành luật cơ bản của Việt Nam)
+    const isLegalSystem =
+      (qLower.includes('hệ thống pháp luật') || qLower.includes('htpl')) &&
+      (qLower.includes('khái niệm') || qLower.includes('đặc điểm') || qLower.includes('ngành luật') || qLower.includes('trình bày') || qLower.includes('cơ bản'));
+
+    if (isLegalSystem) {
+      return {
+        sample_id: 'SFT_THEORY_HE_THONG_PHAP_LUAT_VN',
+        intent_code: 'DEFINITION',
+        instruction: 'Trình bày khái niệm, đặc điểm của hệ thống pháp luật và các ngành luật cơ bản của Việt Nam.',
+        input: query,
+        output: this.solveDynamicLegalSystem(query)
+      };
+    }
+
+    // 0.0.3. So sánh Pháp luật với Đạo đức & Mối quan hệ biện chứng, liên hệ Việt Nam
+    const isLawVsMorality =
+      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      qLower.includes('đạo đức') &&
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('mối quan hệ') || qLower.includes('quan hệ giữa') || qLower.includes('liên hệ'));
+
+    if (isLawVsMorality) {
+      return {
+        sample_id: 'SFT_THEORY_PHAP_LUAT_VA_DAO_DUC',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh pháp luật với đạo đức, phân tích mối quan hệ biện chứng và liên hệ thực tiễn Việt Nam.',
+        input: query,
+        output: this.solveDynamicLawVsMorality(query)
+      };
+    }
+
+    // 0.0.4. So sánh 3 hình thức của pháp luật & Vì sao VBQPPL là hình thức chủ yếu ở Việt Nam
+    const isThreeFormsOfLaw =
+      (qLower.includes('tập quán pháp') || qLower.includes('tiền lệ pháp') || (qLower.includes('hình thức') && qLower.includes('pháp luật'))) &&
+      (qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl') || qLower.includes('chủ yếu ở việt nam') || qLower.includes('vì sao') || qLower.includes('tại sao') || qLower.includes('so sánh'));
+
+    if (isThreeFormsOfLaw) {
+      return {
+        sample_id: 'SFT_THEORY_3_HINH_THUC_PHAP_LUAT',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh tập quán pháp, tiền lệ pháp và văn bản QPPL. Giải thích vì sao văn bản QPPL là hình thức chủ yếu ở Việt Nam.',
+        input: query,
+        output: this.solveDynamicThreeFormsOfLaw(query)
+      };
+    }
+
+    // 0.0.5. Mối quan hệ giữa Pháp luật với Kinh tế, Chính trị và Nhà nước & Liên hệ thực tiễn Việt Nam
+    const isLawStateEconPolitics =
+      qLower.includes('pháp luật') &&
+      qLower.includes('kinh tế') &&
+      qLower.includes('chính trị') &&
+      !qLower.includes('đạo đức') &&
+      (qLower.includes('nhà nước') || qLower.includes('quan hệ') || qLower.includes('mối quan hệ') || qLower.includes('liên hệ'));
+
+    if (isLawStateEconPolitics) {
+      return {
+        sample_id: 'SFT_THEORY_PL_KINH_TE_CHINH_TRI_NHA_NUOC',
+        intent_code: 'DEFINITION',
+        instruction: 'Phân tích mối quan hệ giữa pháp luật với kinh tế, chính trị và nhà nước. Liên hệ thực tiễn Việt Nam.',
+        input: query,
+        output: this.solveDynamicLawStateEconPolitics(query)
+      };
+    }
+
+    // 0.0.6. Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức
+    const isPublicVsPrivateLaw =
+      (qLower.includes('công pháp') && qLower.includes('tư pháp')) ||
+      (qLower.includes('luật nội dung') && qLower.includes('luật hình thức'));
+
+    if (isPublicVsPrivateLaw) {
+      return {
+        sample_id: 'SFT_THEORY_CONG_PHAP_TU_PHAP_NOI_DUNG_HINH_THUC',
+        intent_code: 'COMPARISON',
+        instruction: 'Phân biệt công pháp và tư pháp, luật nội dung và luật hình thức. Cho ví dụ minh họa và nêu ý nghĩa.',
+        input: query,
+        output: this.solveDynamicPublicVsPrivateLaw(query)
       };
     }
 
@@ -1662,14 +1764,14 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
     }
     if (currentStmt) statements.push(currentStmt.trim());
 
-    // Nếu không tách được theo dòng, thử tách inline theo số thứ tự (1. ... 2. ...)
+    // Nếu không tách được theo dòng, thử tách inline theo số thứ tự (1. ... 2. ...) hoặc chữ cái (a. ... b. ...)
     if (statements.length < 2) {
       try {
-        const inlineRegex = /(?:(?:^|\s)(?:\d+[./)]|nhận định\s*\d+:?|câu\s*\d+:?))\s*([^0-9\n][^\n]+?)(?=(?:\s+\d+[./)]|\s+nhận định\s*\d+:?|\s+câu\s*\d+:?|$))/gi;
+        const inlineRegex = /(?:(?:^|\s)(?:\d+[./)]|[a-eA-E][./)]|\([a-eA-E0-9]\)|nhận định\s*\d+:?|câu\s*\d+:?))\s*([^0-9\n][^\n]+?)(?=(?:\s+\d+[./)]|\s+[a-eA-E][./)]|\s+\([a-eA-E0-9]\)|\s+nhận định\s*\d+:?|\s+câu\s*\d+:?|$))/gi;
         const inlineMatches = query.match(inlineRegex);
         if (inlineMatches && inlineMatches.length >= 2) {
           return inlineMatches
-            .map((s) => s.replace(/^(?:\s*\d+[./)]|\s*nhận định\s*\d+:?|\s*câu\s*\d+:?)\s*/i, '').trim())
+            .map((s) => s.replace(/^(?:\s*\d+[./)]|\s*[a-eA-E][./)]|\s*\([a-eA-E0-9]\)|\s*nhận định\s*\d+:?|\s*câu\s*\d+:?)\s*/i, '').trim())
             .filter((s) => s.length > 5);
         }
       } catch (err) {
@@ -1685,6 +1787,96 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
    */
   private static evaluateSingleStatement(stmt: string, articles: ILawArticle[]): string {
     const sLower = stmt.toLowerCase().trim();
+
+    // 0.0.0.a. Nhận định: Mọi văn bản có chứa quy phạm pháp luật đều là văn bản QPPL
+    if (
+      sLower.includes('văn bản có chứa quy phạm') ||
+      (sLower.includes('chứa quy phạm pháp luật') && (sLower.includes('đều là văn bản') || sLower.includes('là văn bản quy phạm')))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở pháp lý theo Luật Ban hành VBQPPL 2015 (sửa đổi, bổ sung 2020) & Giáo trình Pháp luật Đại cương (Mục 2.3.3)**:
+  1. *Điều kiện để một văn bản là Văn bản quy phạm pháp luật*:
+     Theo Điều 2 và Điều 3 Luật Ban hành VBQPPL 2015, một văn bản muốn trở thành VBQPPL phải thỏa mãn **đồng thời cả 4 điều kiện cốt lõi**:
+     - Do đúng cơ quan nhà nước, người có thẩm quyền ban hành theo luật định.
+     - Phải có hình thức, tên gọi đúng quy định tại Điều 4 (Hiến pháp, Bộ luật, Luật, Nghị quyết, Nghị định, Thông tư...).
+     - Phải được ban hành theo đúng trình tự, thủ tục chặt chẽ luật định.
+     - Chứa đựng các quy phạm pháp luật (quy tắc xử sự chung).
+  2. *Trường hợp văn bản chứa QPPL nhưng KHÔNG PHẢI là VBQPPL*:
+     - Nếu một văn bản có chứa quy phạm pháp luật nhưng do cơ quan không có thẩm quyền ban hành, hoặc ban hành sai hình thức (ví dụ: Công văn, Chỉ thị, Thông báo... nhưng lại đặt ra quy tắc xử sự chung áp dụng cho toàn dân) thì văn bản đó **không được coi là VBQPPL hợp pháp**, mà là văn bản trái pháp luật và bị đình chỉ, hủy bỏ theo Khoản 2 Điều 14 Luật Ban hành VBQPPL 2015.
+  ➔ **KẾT LUẬN**: Nhận định khẳng định "mọi văn bản có chứa QPPL đều là VBQPPL" là SAI.`;
+    }
+
+    // 0.0.0.b. Nhận định: Văn bản QPPL chỉ áp dụng đối với hành vi xảy ra sau khi văn bản có hiệu lực (hiệu lực hồi tố)
+    if (
+      sLower.includes('chỉ áp dụng đối với hành vi xảy ra sau khi') ||
+      sLower.includes('chỉ áp dụng đối với hành vi xảy ra sau') ||
+      (sLower.includes('xảy ra sau khi văn bản có hiệu lực') && sLower.includes('chỉ')) ||
+      (sLower.includes('hiệu lực trở về trước') && sLower.includes('không bao giờ'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Căn cứ pháp lý theo Điều 152 Luật Ban hành VBQPPL 2015 & Giáo trình Pháp luật Đại cương (Mục 2.3.4 - Hiệu lực của VBQPPL)**:
+  1. *Nguyên tắc chung*:
+     Hiệu lực về thời gian của VBQPPL là áp dụng đối với các quan hệ xã hội phát sinh kể từ thời điểm văn bản có hiệu lực trở đi.
+  2. *Ngoại lệ: Hiệu lực trở về trước (Hiệu lực hồi tố)*:
+     Khoản 1 Điều 152 Luật Ban hành VBQPPL 2015 quy định: Chỉ trong trường hợp thật cần thiết để bảo đảm lợi ích chung của xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân được quy định trong luật, nghị quyết của Quốc hội, VBQPPL của cơ quan trung ương mới được quy định hiệu lực trở về trước.
+  3. *Nguyên tắc nhân đạo trong luật hình sự*:
+     Điều 7 Bộ luật Hình sự 2015 quy định: Điều luật xóa bỏ một tội phạm, một hình phạt, một tình tiết tăng nặng, quy định một hình phạt nhẹ hơn, một tình tiết giảm nhẹ mới hoặc mở rộng phạm vi áp dụng án treo, miễn trách nhiệm hình sự... thì **ĐƯỢC ÁP DỤNG ĐỐI VỚI HÀNH VI PHẠM TỘI ĐÃ THỰC HIỆN TRƯỚC KHI ĐIỀU LUẬT ĐÓ CÓ HIỆU LỰC THI HÀNH** (hồi tố có lợi).
+  ➔ **KẾT LUẬN**: Pháp luật vẫn thừa nhận hiệu lực hồi tố trong những trường hợp đặc biệt có lợi cho đối tượng áp dụng. Từ "CHỈ" làm cho nhận định trở nên phiến diện và SAI.`;
+    }
+
+    // 0.0.0.c. Nhận định: Quy phạm pháp luật là hình thức thể hiện của quan hệ pháp luật
+    if (
+      (sLower.includes('quy phạm pháp luật') || sLower.includes('qppl')) &&
+      sLower.includes('quan hệ pháp luật') &&
+      (sLower.includes('hình thức thể hiện của') || sLower.includes('là hình thức thể hiện'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận môn Pháp luật Đại cương (Chương 3, Mục 3.1 & 3.2)**:
+  1. *Bản chất của Quy phạm pháp luật*:
+     Quy phạm pháp luật là **tiền đề pháp lý khách quan**, là mô hình ứng xử trừu tượng do nhà nước đặt ra trước để điều chỉnh các quan hệ xã hội. Không có QPPL dự liệu thì không thể có quan hệ pháp luật phát sinh.
+  2. *Mối quan hệ đúng đắn giữa QPPL và Quan hệ pháp luật*:
+     - **Quan hệ pháp luật chính là hình thức thực tế hóa, là kết quả cụ thể** của việc đưa các quy phạm pháp luật vào đời sống xã hội khi có sự kiện pháp lý xảy ra.
+     - Ngược lại, hình thức biểu hiện của quan hệ pháp luật là sự tương tác cụ thể về quyền chủ thể và nghĩa vụ pháp lý giữa các bên tham gia (được thể hiện qua hợp đồng, văn bản cam kết, thỏa thuận...).
+     - QPPL không phải là "hình thức thể hiện" của quan hệ pháp luật mà là tiền đề pháp lý trực tiếp quy định nội dung cho quan hệ pháp luật.
+  ➔ **KẾT LUẬN**: Nhận định đã đảo ngược bản chất lý luận giữa tiền đề pháp lý (QPPL) và kết quả thực tế (QHPL). Nhận định trên là SAI.`;
+    }
+
+    // 0.0.0.d. Nhận định: Năng lực pháp luật và năng lực hành vi của cá nhân xuất hiện đồng thời
+    if (
+      (sLower.includes('năng lực pháp luật') && sLower.includes('năng lực hành vi')) &&
+      (sLower.includes('xuất hiện đồng thời') || sLower.includes('cùng xuất hiện') || sLower.includes('ra đời đồng thời') || sLower.includes('đồng thời phát sinh'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI (ĐỐI VỚI CÁ NHÂN).**
+- **Cơ sở pháp lý theo Điều 16, Điều 19 Bộ luật Dân sự 2015 & Giáo trình Pháp luật Đại cương (Mục 3.1.2)**:
+  1. *Thời điểm xuất hiện của Năng lực pháp luật của cá nhân*:
+     Căn cứ Khoản 3 Điều 16 BLDS 2015: Năng lực pháp luật dân sự của cá nhân **xuất hiện ngay từ khi người đó sinh ra** và chỉ chấm dứt khi người đó chết (mọi cá nhân đều bình đẳng về năng lực pháp luật).
+  2. *Thời điểm xuất hiện và phát triển của Năng lực hành vi của cá nhân*:
+     Năng lực hành vi của cá nhân **KHÔNG XUẤT HIỆN ĐỒNG THỜI KHI SINH RA**, mà phụ thuộc vào độ tuổi và khả năng nhận thức, phát triển dần theo các giai đoạn luật định:
+     - Dưới 6 tuổi: Chưa có năng lực hành vi dân sự.
+     - Từ đủ 6 tuổi đến chưa đủ 15 tuổi: Có năng lực hành vi một phần (giao dịch nhỏ phục vụ sinh hoạt hàng ngày).
+     - Từ đủ 15 tuổi đến chưa đủ 18 tuổi: Tự mình xác lập, thực hiện một số giao dịch nếu có tài sản riêng.
+     - Từ đủ 18 tuổi trở lên: Có năng lực hành vi đầy đủ (trừ trường hợp mất/hạn chế NLHV theo quyết định của Tòa án).
+  3. *Lưu ý*:
+     Chỉ đối với **PHÁP NHÂN** thì Năng lực pháp luật và Năng lực hành vi mới xuất hiện đồng thời (kể từ thời điểm được thành lập hoặc cấp phép đăng ký kinh doanh). Đối với cá nhân, khẳng định xuất hiện đồng thời là hoàn toàn sai.
+  ➔ **KẾT LUẬN**: Nhận định trên là HOÀN TOÀN SAI.`;
+    }
+
+    // 0.0.0.e. Nhận định: Mọi quan hệ xã hội được pháp luật điều chỉnh đều là quan hệ pháp luật
+    if (
+      (sLower.includes('mọi quan hệ xã hội') || sLower.includes('các quan hệ xã hội')) &&
+      sLower.includes('được pháp luật điều chỉnh') &&
+      (sLower.includes('đều là quan hệ pháp luật') || sLower.includes('trở thành quan hệ pháp luật') || sLower.includes('là quan hệ pháp luật'))
+    ) {
+      return `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận theo Giáo trình Pháp luật Đại cương (Chương 3, Mục 3.1 - Quan hệ pháp luật)**:
+  1. *Định nghĩa Quan hệ pháp luật*:
+     Quan hệ pháp luật là các quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia có các quyền chủ thể và nghĩa vụ pháp lý xác định được Nhà nước bảo đảm thực hiện.
+  2. *Phân tích logic*:
+     - Các quan hệ xã hội trong đời sống vô cùng phong phú (tình bạn, tình yêu, phong tục tập quán, đạo đức...).
+     - Khi một quan hệ xã hội được Nhà nước ban hành quy phạm pháp luật để điều chỉnh (xác định rõ quyền, nghĩa vụ và chế tài bảo đảm của nhà nước) thì quan hệ xã hội đó đã khoác lên mình "chiếc áo pháp lý" và chính thức trở thành **Quan hệ pháp luật**.
+     - Ví dụ: Quan hệ trao đổi tài sản thông thường khi được pháp luật dân sự điều chỉnh thì trở thành Quan hệ hợp đồng mua bán tài sản (QHPL dân sự); quan hệ hôn nhân khi được luật điều chỉnh trở thành Quan hệ hôn nhân và gia đình.
+  ➔ **KẾT LUẬN**: Nhận định trên là HOÀN TOÀN ĐÚNG.`;
+    }
 
     // 0.0. Nhận định: Nhà nước và pháp luật chỉ ra đời trong xã hội có phân chia giai cấp
     if (
@@ -2193,6 +2385,235 @@ Khác với các kiểu pháp luật bóc lột trong lịch sử (pháp luật 
 - **Về bản chất xã hội**: Là công cụ duy trì trật tự kỷ cương, phục vụ lợi ích chung của toàn thể cộng đồng dân tộc, bảo đảm cho mọi người dân đều được thụ hưởng thành quả phát triển.`;
   }
 
+  /**
+   * Barem điểm 10: Khái niệm, Đặc điểm của Hệ thống pháp luật & Các ngành luật cơ bản của Việt Nam
+   * (Chương 2, Mục 2.3 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicLegalSystem(query?: string): string {
+    return `### I. KHÁI NIỆM HỆ THỐNG PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+**Hệ thống pháp luật** là tổng thể các quy phạm pháp luật có mối liên hệ nội tại thống nhất với nhau, được phân định thành các chế định pháp luật và các ngành luật, đồng thời được biểu hiện ra bên ngoài dưới các hình thức văn bản quy phạm pháp luật do cơ quan nhà nước có thẩm quyền ban hành theo trình tự, thủ tục luật định.
+
+Hệ thống pháp luật bao gồm hai phương diện cấu thành gắn bó hữu cơ:
+1. **Hệ thống cấu trúc pháp luật (Mặt bên trong — Nội dung)**:
+   - **Quy phạm pháp luật**: Đơn vị nhỏ nhất cấu thành hệ thống pháp luật, là quy tắc xử sự chung bắt buộc do nhà nước ban hành (gồm 3 bộ phận: Giả định, Quy định, Chế tài).
+   - **Chế định pháp luật**: Nhóm các quy phạm pháp luật có đặc điểm chung nhằm điều chỉnh một nhóm quan hệ xã hội tương ứng có cùng tính chất trong một ngành luật (ví dụ: Chế định hợp đồng trong Luật Dân sự, Chế định kết hôn trong Luật Hôn nhân & Gia đình).
+   - **Ngành luật**: Tập hợp các chế định pháp luật điều chỉnh một loại quan hệ xã hội nhất định có cùng tính chất, đặc điểm bằng những phương pháp điều chỉnh đặc thù (như Luật Hiến pháp, Luật Dân sự, Luật Hình sự...).
+2. **Hệ thống văn bản quy phạm pháp luật (Mặt bên ngoài — Hình thức)**:
+   - Tổng thể các văn bản có chứa quy phạm pháp luật do các cơ quan nhà nước có thẩm quyền ban hành theo thứ bậc hiệu lực pháp lý (tối cao là Hiến pháp, sau đó đến Luật, Bộ luật của Quốc hội và các văn bản dưới luật của Chính phủ, Thủ tướng, Bộ trưởng...).
+
+---
+
+### II. CÁC ĐẶC ĐIỂM CƠ BẢN CỦA HỆ THỐNG PHÁP LUẬT
+
+1. **Tính thống nhất nội tại**:
+   - Tất cả các quy phạm pháp luật, chế định pháp luật và ngành luật đều được xây dựng trên nền tảng những nguyên tắc chung của pháp luật quốc gia, không được mâu thuẫn, chồng chéo hay triệt tiêu lẫn nhau.
+   - Hiến pháp là đạo luật cơ bản có hiệu lực pháp lý cao nhất; mọi văn bản và quy phạm trong hệ thống đều phải phù hợp, không được trái với Hiến pháp.
+
+2. **Tính khách quan**:
+   - Hệ thống pháp luật không phải là sản phẩm chủ quan tùy tiện của ý chí nhà nước, mà được quyết định khách quan bởi cơ sở hạ tầng kinh tế, cơ cấu xã hội và trình độ phát triển văn hóa - chính trị của đất nước trong từng giai đoạn lịch sử.
+
+3. **Tính ổn định tương đối và phát triển năng động**:
+   - Để bảo đảm trật tự kỷ cương, hệ thống pháp luật phải duy trì sự ổn định, tránh thay đổi tùy tiện làm xáo trộn đời sống xã hội.
+   - Đồng thời, hệ thống pháp luật luôn vận động và phát triển linh hoạt nhằm kịp thời thể chế hóa các quan hệ xã hội mới phát sinh (như kinh tế số, an ninh mạng, thương mại điện tử, bảo vệ dữ liệu cá nhân).
+
+---
+
+### III. CÁC NGÀNH LUẬT CƠ BẢN TRONG HỆ THỐNG PHÁP LUẬT VIỆT NAM
+
+Hệ thống pháp luật Việt Nam hiện nay bao gồm các ngành luật cơ bản sau:
+
+| STT | Ngành luật cơ bản | Đối tượng điều chỉnh | Phương pháp điều chỉnh chủ yếu | Văn bản trung tâm |
+| :---: | :--- | :--- | :--- | :--- |
+| **1** | **Luật Hiến pháp (Nhà nước)** | Các quan hệ xã hội cơ bản nhất về chế độ chính trị, kinh tế, văn hóa - xã hội; quyền con người; tổ chức và hoạt động của bộ máy nhà nước. | Phương pháp định quyền và bắt buộc chung | **Hiến pháp năm 2013** |
+| **2** | **Luật Hành chính** | Các quan hệ xã hội phát sinh trong quá trình quản lý hành chính nhà nước (chấp hành và điều hành). | Phương pháp mệnh lệnh - quyền uy (phục tùng phục vụ) | Luật Tổ chức Chính phủ, Luật Xử lý VPHC |
+| **3** | **Luật Hình sự** | Quan hệ xã hội phát sinh giữa Nhà nước và người thực hiện hành vi nguy hiểm cho xã hội bị coi là tội phạm. | Phương pháp quyền uy tối cao (mệnh lệnh, trừng phạt) | **Bộ luật Hình sự 2015 (sửa đổi 2017)** |
+| **4** | **Luật Dân sự** | Các quan hệ tài sản và quan hệ nhân thân phi tài sản giữa các chủ thể bình đẳng. | Phương pháp bình đẳng, thỏa thuận, tự do định đoạt | **Bộ luật Dân sự 2015** |
+| **5** | **Luật Hôn nhân và Gia đình** | Các quan hệ nhân thân và tài sản giữa vợ và chồng, cha mẹ và con cái, và các thành viên gia đình. | Phương pháp tự nguyện, bình đẳng kết hợp tôn trọng đạo đức | **Luật Hôn nhân và Gia đình 2014** |
+| **6** | **Luật Lao động** | Quan hệ lao động làm công ăn lương giữa người lao động và người sử dụng lao động, cùng các quan hệ liên quan trực tiếp. | Phương pháp thỏa thuận kết hợp mệnh lệnh bảo hộ người lao động | **Bộ luật Lao động 2019** |
+| **7** | **Luật Thương mại / Kinh tế** | Các quan hệ kinh doanh, thương mại, đầu tư phát sinh giữa các thương nhân có mục đích sinh lợi. | Phương pháp thỏa thuận bình đẳng và quyền tự do kinh doanh | **Luật Thương mại 2005**, Luật Doanh nghiệp 2020 |
+| **8** | **Luật Đất đai** | Các quan hệ quản lý và sử dụng đất đai thuộc sở hữu toàn dân do Nhà nước đại diện chủ sở hữu. | Phương pháp mệnh lệnh hành chính kết hợp điều tiết kinh tế | **Luật Đất đai 2024** |
+| **9** | **Luật Tài chính — Ngân hàng** | Quan hệ thu, chi ngân sách, thuế, tín dụng, lưu thông tiền tệ của Nhà nước. | Phương pháp mệnh lệnh điều tiết quỹ tiền tệ quốc gia | Luật Ngân sách nhà nước, các Luật Thuế |
+| **10** | **Các ngành luật Tố tụng** *(Hình sự, Dân sự, Hành chính)* | Trình tự, thủ tục giải quyết các vụ án, vụ việc tại Tòa án và các cơ quan tiến hành tố tụng nhằm bảo vệ công lý. | Phương pháp quyền uy tố tụng kết hợp tranh tụng dân chủ | **BLTTHS 2015**, **BLTTDS 2015**, Luật Tố tụng hành chính |`;
+  }
+
+  /**
+   * Barem điểm 10: So sánh Pháp luật và Đạo đức, Mối quan hệ biện chứng và Liên hệ Việt Nam
+   * (Chương 2, Mục 2.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicLawVsMorality(query?: string): string {
+    return `### I. BẢNG SO SÁNH TOÀN DIỆN GIỮA PHÁP LUẬT VÀ ĐẠO ĐỨC
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+| Tiêu chí so sánh | Pháp luật | Đạo đức |
+| :--- | :--- | :--- |
+| **1. Nguồn gốc hình thành** | Ra đời cùng với Nhà nước khi xã hội xuất hiện chế độ tư hữu và phân hóa giai cấp đối kháng; do **Nhà nước ban hành hoặc thừa nhận**. | Hình thành tự phát và từ rất sớm trong đời sống xã hội từ phong tục, tập quán, truyền thống và lương tâm con người; **có trước khi Nhà nước ra đời**. |
+| **2. Hình thức thể hiện** | Thể hiện bằng văn bản quy phạm pháp luật thành văn rõ ràng, minh bạch, có cấu trúc chặt chẽ (Giả định — Quy định — Chế tài). | Tồn tại dưới dạng quy ước bất thành văn, truyền miệng, trong ca dao, tục ngữ, lương tâm và ý thức cộng đồng. |
+| **3. Phạm vi điều chỉnh** | Điều chỉnh các hành vi thực tế biểu hiện ra bên ngoài thế giới khách quan của con người mang tính phổ biến và quan trọng đối với trật tự công. | Rộng hơn pháp luật: điều chỉnh cả hành vi thực tế lẫn suy nghĩ, tình cảm, động cơ bên trong và lương tâm của con người. |
+| **4. Phương thức bảo đảm** | Được bảo đảm bằng **sức mạnh cưỡng chế nhà nước** (xử phạt, cưỡng chế, nhà tù) và các biện pháp giáo dục, thuyết phục của cơ quan quyền lực. | Được bảo đảm bằng **lương tâm, danh dự cá nhân** và **áp lực dư luận xã hội** (khen ngợi, chê trách, lên án). |
+| **5. Tính chất quy phạm** | Tính quy phạm phổ biến, tính bắt buộc chung nghiêm ngặt; mọi chủ thể đều phải tuân thủ không có ngoại lệ. | Không mang tính bắt buộc cưỡng chế; tính quy phạm mang tính tự giác, tùy thuộc vào văn hóa và nhận thức của từng cá nhân. |
+
+---
+
+### II. MỐI QUAN HỆ BIỆN CHỨNG GIỮA PHÁP LUẬT VÀ ĐẠO ĐỨC
+
+Pháp luật và Đạo đức không tách rời nhau mà có mối liên hệ tác động qua lại chặt chẽ:
+
+1. **Pháp luật thể chế hóa và nâng đỡ các chuẩn mực đạo đức tiến bộ**:
+   - Nhà nước luôn tiếp thu những giá trị đạo đức tiến bộ của dân tộc và nhân loại để thể chế hóa thành các quy phạm pháp luật có hiệu lực bắt buộc chung.
+   - *Ví dụ*: Đạo đức truyền thống đề cao chữ hiếu và tình thương yêu trong gia đình ➔ Được luật hóa thành nghĩa vụ phụng dưỡng, chăm sóc cha mẹ tại **Điều 70, 71 Luật Hôn nhân và Gia đình 2014** và chế tài nghiêm khắc cấm hành vi ngược đãi tại **Điều 185 BLHS 2015**.
+
+2. **Đạo đức là cơ sở nền tảng hỗ trợ đắc lực cho việc thực hiện pháp luật**:
+   - Một người có phẩm chất đạo đức tốt, có lòng tự trọng và tôn trọng cộng đồng thì sẽ tự giác chấp hành pháp luật một cách nghiêm túc mà không cần sự đe dọa của cưỡng chế.
+   - Khi pháp luật phù hợp với đạo đức xã hội thì việc thi hành pháp luật diễn ra thuận lợi, hiệu quả và bền vững.
+
+3. **Pháp luật loại trừ các tàn dư đạo đức lạc hậu, bảo vệ các giá trị nhân văn mới**:
+   - Pháp luật nghiêm cấm và xử lý các hủ tục, thói quen đạo đức sai lệch (như tư tưởng trọng nam khinh nữ, hôn nhân ép gả, mê tín dị đoan, bạo lực gia đình).
+
+---
+
+### III. LIÊN HỆ THỰC TIỄN TẠI VIỆT NAM
+
+Trong sự nghiệp xây dựng Nhà nước pháp quyền xã hội chủ nghĩa Việt Nam:
+1. **Kết hợp nhuần nhuyễn giữa "Pháp trị" và "Đức trị"**:
+   - Đảng và Nhà nước ta luôn xác định quản lý xã hội phải kết hợp chặt chẽ giữa giáo dục đạo đức và sự nghiêm minh của pháp luật.
+   - Nêu cao chuẩn mực văn hóa công vụ, học tập và làm theo tư tưởng, đạo đức, phong cách Hồ Chí Minh.
+2. **Luật hóa các chuẩn mực đạo đức dân tộc**:
+   - Tôn trọng thuần phong mỹ tục, thiện chí và trung thực trong giao dịch dân sự (**Điều 3 Bộ luật Dân sự 2015**).
+   - Bảo đảm an sinh xã hội, bảo vệ người có công, phụ nữ, trẻ em và các nhóm yếu thế trong cộng đồng.`;
+  }
+
+  /**
+   * Barem điểm 10: So sánh 3 hình thức của Pháp luật & Vì sao VBQPPL là hình thức chủ yếu ở Việt Nam
+   * (Chương 2, Mục 2.3.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicThreeFormsOfLaw(query?: string): string {
+    return `### I. BẢNG SO SÁNH BA (03) HÌNH THỨC CỦA PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+| Tiêu chí | 1. Tập quán pháp | 2. Tiền lệ pháp (Án lệ) | 3. Văn bản QPPL |
+| :--- | :--- | :--- | :--- |
+| **Khái niệm** | Nhà nước **thừa nhận các tập quán** đã lưu truyền sẵn trong dân gian, phù hợp với lợi ích nhà nước và nâng lên thành luật. | Nhà nước **thừa nhận các bản án, quyết định** của Tòa án giải quyết vụ việc cụ thể làm khuôn mẫu để xét xử các vụ tương tự. | **Văn bản thành văn** do cơ quan nhà nước có thẩm quyền ban hành theo trình tự, hình thức luật định, chứa quy tắc xử sự chung. |
+| **Hình thức thể hiện** | Thường là bất thành văn hoặc văn bản ghi nhận tập quán địa phương. | Bản án, quyết định thực tế của Tòa án (án lệ). | Văn bản có cấu trúc văn phong pháp lý chuẩn mực (Hiến pháp, Luật, Nghị định...). |
+| **Chủ thể sáng tạo/áp dụng** | Nhà nước (cơ quan hành chính, tư pháp) thừa nhận và áp dụng. | Chủ yếu do hệ thống Tòa án (Thẩm phán) sáng tạo và phát triển. | Các cơ quan quyền lực, cơ quan hành chính nhà nước có thẩm quyền ban hành. |
+| **Ưu điểm** | Gần gũi với phong tục, thói quen sinh hoạt của người dân địa phương; dễ được chấp nhận tự nguyện. | Tính linh hoạt, giải quyết kịp thời các tình huống mới mà luật thành văn chưa dự liệu được. | Tính minh bạch, chuẩn xác, bao quát toàn diện; dễ phổ biến, tra cứu và bảo đảm pháp chế thống nhất. |
+| **Nhược điểm** | Tản mạn, cục bộ địa phương, khó áp dụng rộng rãi và mang nhiều yếu tố bảo thủ, chậm biến đổi. | Khó tra cứu, phụ thuộc nhiều vào đánh giá chủ quan của thẩm phán, dễ dẫn đến thiếu tính thống nhất. | Quy trình ban hành phức tạp; có thể có độ trễ nhất định so với sự biến đổi nhanh của đời sống thực tiễn. |
+| **Hệ thống áp dụng chủ yếu** | Các quốc gia thời cổ đại, phong kiến; hiện nay chỉ áp dụng bổ trợ. | Phổ biến tại hệ thống **Thông luật (Common Law)** như Anh, Mỹ, Úc, Canada. | Phổ biến tại hệ thống **Dân luật (Civil Law)** như Pháp, Đức, Nga, Nhật, Việt Nam. |
+
+---
+
+### II. BỐN (04) LÝ DO VĂN BẢN QUY PHẠM PHÁP LUẬT LÀ HÌNH THỨC PHÁP LUẬT CHỦ YẾU Ở VIỆT NAM
+
+Việt Nam lựa chọn **Văn bản quy phạm pháp luật** làm nguồn pháp luật cơ bản và chủ yếu nhất bởi các lý do khách quan và khoa học sau:
+
+1. **Bảo đảm nguyên tắc Tập trung dân chủ và Pháp chế xã hội chủ nghĩa**:
+   - Quyền lực nhà nước thuộc về Nhân dân. Các văn bản quy phạm pháp luật quan trọng nhất (Hiến pháp, Bộ luật, Luật) đều do Quốc hội — cơ quan đại biểu cao nhất của Nhân dân — ban hành theo quy trình lấy ý kiến rộng rãi của toàn dân.
+   - Quản lý xã hội bằng văn bản quy phạm pháp luật bảo đảm kỷ cương, bình đẳng trước pháp luật, triệt tiêu sự lạm quyền và tùy tiện cá nhân.
+
+2. **Tính minh bạch, rõ ràng, chính xác và thống nhất cao**:
+   - VBQPPL được soạn thảo bằng ngôn ngữ pháp lý chuẩn xác, cấu trúc logic chặt chẽ, được công bố công khai trên Công báo và cổng thông tin điện tử quốc gia.
+   - Giúp mọi công dân, cơ quan, tổ chức nắm bắt rõ ràng quyền và nghĩa vụ của mình để chủ động thực hiện và giám sát.
+
+3. **Khả năng điều chỉnh chủ động, kịp thời và toàn diện**:
+   - Nhà nước có thể chủ động ban hành các VBQPPL để định hướng và điều chỉnh các mối quan hệ xã hội mới phát sinh (kinh tế số, công nghệ cao, môi trường, hội nhập quốc tế) mà không cần chờ đến khi có tranh chấp thực tế xảy ra tại Tòa án như Tiền lệ pháp.
+
+4. **Kế thừa truyền thống lịch sử — pháp lý của hệ thống Civil Law**:
+   - Nền luật học Việt Nam tiếp thu có chọn lọc tinh hoa của hệ thống pháp luật Dân luật lục địa châu Âu (Civil Law), nơi văn bản luật thành văn luôn giữ vị trí tối thượng, còn Án lệ và Tập quán chỉ đóng vai trò bổ sung, hỗ trợ khi luật thành văn chưa có quy định (căn cứ **Điều 5, Điều 6 Bộ luật Dân sự 2015**).`;
+  }
+
+  /**
+   * Barem điểm 10: Mối quan hệ giữa Pháp luật với Kinh tế, Chính trị và Nhà nước & Liên hệ thực tiễn Việt Nam
+   * (Chương 2, Mục 2.2 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicLawStateEconPolitics(query?: string): string {
+    return `### I. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ KINH TẾ
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+1. **Kinh tế quyết định Pháp luật (Cơ sở hạ tầng quyết định Kiến trúc thượng tầng)**:
+   - Cơ cấu kinh tế, hình thức sở hữu và các quy luật kinh tế khách quan quyết định sự ra đời, tính chất, nội dung và sự phát triển của hệ thống pháp luật.
+   - Khi cơ sở kinh tế thay đổi thì sớm hay muộn hệ thống pháp luật cũng phải biến đổi theo cho phù hợp.
+
+2. **Pháp luật tác động trở lại mạnh mẽ đối với Kinh tế**:
+   - **Tác động tích cực (thúc đẩy)**: Khi pháp luật phản ánh đúng quy luật kinh tế khách quan, nó tạo hành lang pháp lý an toàn, minh bạch, bảo vệ quyền sở hữu và tự do kinh doanh, kích thích đầu tư và thúc đẩy sản xuất phát triển.
+   - **Tác động tiêu cực (kìm hãm)**: Khi pháp luật lạc hậu hoặc ban hành duy ý chí, trái quy luật khách quan, nó sẽ tạo ra rào cản hành chính, kìm hãm các nguồn lực và làm suy thoái nền kinh tế.
+
+---
+
+### II. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ CHÍNH TRỊ
+
+1. **Pháp luật là phương tiện thể chế hóa đường lối, chủ trương chính trị**:
+   - Đường lối, chính sách chính trị của giai cấp cầm quyền (tại Việt Nam là Đảng Cộng sản Việt Nam) là linh hồn, là cơ sở định hướng cho nội dung của pháp luật.
+   - Thông qua Nhà nước, đường lối chính trị được thể chế hóa thành các quy tắc pháp lý có giá trị bắt buộc chung đối với toàn xã hội.
+
+2. **Pháp luật là công cụ bảo vệ trật tự chính trị và quyền lực nhà nước**:
+   - Pháp luật xác lập và bảo vệ chế độ chính trị, bảo vệ chủ quyền quốc gia, giữ gìn trật tự an toàn xã hội và ngăn chặn mọi hành vi chống phá thể chế.
+
+---
+
+### III. MỐI QUAN HỆ GIỮA PHÁP LUẬT VÀ NHÀ NƯỚC
+
+Nhà nước và Pháp luật là hai hiện tượng cùng thuộc kiến trúc thượng tầng, có mối quan hệ biện chứng thống nhất, không thể tách rời:
+
+1. **Nhà nước ban hành và bảo đảm thực hiện Pháp luật**:
+   - Nhà nước là chủ thể duy nhất có quyền ban hành hoặc thừa nhận các quy tắc xử sự thành pháp luật.
+   - Nhà nước bảo đảm cho pháp luật được tôn trọng và thực hiện nghiêm minh bằng sức mạnh cưỡng chế và bộ máy chuyên nghiệp (quân đội, công an, tòa án). Không có Nhà nước, pháp luật không thể hình thành và phát huy hiệu lực.
+
+2. **Pháp luật là công cụ quản lý của Nhà nước và ràng buộc quyền lực Nhà nước**:
+   - Pháp luật là công cụ chủ yếu, hữu hiệu nhất để Nhà nước quản lý kinh tế và đời sống xã hội.
+   - Đồng thời, trong Nhà nước pháp quyền, pháp luật đặt cơ sở pháp lý cho tổ chức và hoạt động của bộ máy nhà nước, giới hạn và kiểm soát quyền lực nhà nước nhằm chống lạm quyền, độc đoán, tham nhũng (nguyên tắc *"Cơ quan nhà nước chỉ được làm những gì pháp luật cho phép"* theo **Điều 8 Hiến pháp 2013**).
+
+---
+
+### IV. LIÊN HỆ THỰC TIỄN TẠI VIỆT NAM
+
+1. **Về Kinh tế**:
+   - Thể chế hóa đường lối Đổi mới của Đảng, ban hành Hiến pháp 2013, Luật Đầu tư, Luật Doanh nghiệp, Luật Đất đai 2024 nhằm hoàn thiện thể chế **kinh tế thị trường định hướng xã hội chủ nghĩa**, bảo hộ quyền sở hữu hợp pháp và tự do kinh doanh.
+2. **Về Chính trị & Nhà nước**:
+   - Thể chế hóa Cương lĩnh và các Nghị quyết Đại hội Đảng toàn quốc thành luật thực định.
+   - Xây dựng **Nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân**, đẩy mạnh cải cách hành chính, tư pháp và đấu tranh phòng chống tham nhũng, tiêu cực.`;
+  }
+
+  /**
+   * Barem điểm 10: Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức, Ví dụ và Ý nghĩa
+   * (Chương 2, Mục 2.3.2 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicPublicVsPrivateLaw(query?: string): string {
+    return `### I. PHÂN BIỆT CÔNG PHÁP (PUBLIC LAW) VÀ TƯ PHÁP (PRIVATE LAW)
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+| Tiêu chí phân biệt | Công pháp (Public Law) | Tư pháp (Private Law) |
+| :--- | :--- | :--- |
+| **Khái niệm** | Là tổng thể các quy phạm pháp luật điều chỉnh các quan hệ xã hội liên quan đến **lợi ích công cộng**, tổ chức và hoạt động của quyền lực nhà nước. | Là tổng thể các quy phạm pháp luật điều chỉnh các quan hệ xã hội nhằm bảo vệ **lợi ích tư nhân**, quan hệ giữa các chủ thể bình đẳng. |
+| **Chủ thể tham gia** | Bắt buộc **phải có ít nhất một bên là cơ quan nhà nước** mang quyền lực công (Nhà nước, Tòa án, UBND, Công an...). | Thường là các cá nhân, pháp nhân, tổ chức tư nhân có địa vị pháp lý độc lập, bình đẳng với nhau. |
+| **Địa vị pháp lý giữa các bên** | Quan hệ **phục tùng — mệnh lệnh**: Cơ quan nhà nước nhân danh quyền lực công ra quyết định bắt buộc đối với bên kia. | Quan hệ **bình đẳng, tự nguyện**: Các bên độc lập, không bên nào được áp đặt ý chí lên bên nào. |
+| **Phương pháp điều chỉnh** | Phương pháp **mệnh lệnh — quyền uy**, áp đặt và phục tùng nghiêm ngặt. | Phương pháp **thỏa thuận, bình đẳng, tự do định đoạt** trong khuôn khổ pháp luật. |
+| **Các ngành luật tiêu biểu** | Luật Hiến pháp, Luật Hành chính, Luật Hình sự, Luật Tài chính công. | Luật Dân sự, Luật Thương mại, Luật Hôn nhân & Gia đình, Luật Lao động. |
+| **Ví dụ minh họa** | UBND ban hành Quyết định xử phạt vi phạm hành chính đối với cơ sở kinh doanh xả thải ô nhiễm môi trường. | Hai công ty ký kết Hợp đồng mua bán hàng hóa và tự thỏa thuận về giá cả, thời hạn giao hàng. |
+
+---
+
+### II. PHÂN BIỆT LUẬT NỘI DUNG (SUBSTANTIVE LAW) VÀ LUẬT HÌNH THỨC (PROCEDURAL LAW)
+
+| Tiêu chí phân biệt | Luật nội dung (Substantive Law) | Luật hình thức / Luật tố tụng (Procedural Law) |
+| :--- | :--- | :--- |
+| **Khái niệm** | Là tổng thể các quy phạm pháp luật xác định **quyền, nghĩa vụ pháp lý, trách nhiệm pháp lý** và quan hệ thực chất giữa các chủ thể. | Là tổng thể các quy phạm pháp luật quy định **trình tự, thủ tục, cách thức** để thực hiện và bảo vệ các quyền, nghĩa vụ được quy định trong luật nội dung. |
+| **Mục đích điều chỉnh** | Trả lời câu hỏi: *"Chủ thể có những quyền và nghĩa vụ gì? Hành vi nào là vi phạm, tội phạm và chịu chế tài gì?"* | Trả lời câu hỏi: *"Các quyền và nghĩa vụ đó được thực thi theo trình tự, thủ tục nào tại Tòa án hoặc cơ quan có thẩm quyền?"* |
+| **Các cặp ngành luật tương ứng điển hình** | - **Bộ luật Hình sự**: Định nghĩa các tội phạm và các mức khung hình phạt.<br>- **Bộ luật Dân sự**: Quy định quyền sở hữu, hợp đồng, bồi thường thiệt hại.<br>- **Luật Doanh nghiệp, Luật Lao động**. | - **Bộ luật Tố tụng hình sự**: Trình tự khởi tố, điều tra, truy tố, xét xử và thi hành án hình sự.<br>- **Bộ luật Tố tụng dân sự**: Thủ tục khởi kiện, hòa giải, xét xử tranh chấp dân sự.<br>- **Luật Tố tụng hành chính**. |
+| **Ví dụ minh họa cụ thể** | **Điều 173 Bộ luật Hình sự 2015**: Quy định hành vi trộm cắp tài sản từ 2 triệu đồng trở lên là phạm tội và bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm *(Luật nội dung)*. | **Bộ luật Tố tụng hình sự 2015**: Quy định thủ tục cơ quan điều tra bắt quả tang người trộm cắp, lập biên bản tạm giữ, thời hạn tạm giam, trình tự hỏi cung và đưa ra xét xử công khai tại Tòa án *(Luật hình thức)*. |
+
+---
+
+### III. Ý NGHĨA CỦA VIỆC PHÂN CHIA NÀY
+
+1. **Ý nghĩa trong hoạt động Lập pháp và Hệ thống hóa pháp luật**:
+   - Giúp các nhà lập pháp xây dựng các đạo luật chuyên sâu, phân định rõ ràng giữa quy tắc ứng xử thực chất (nội dung) và cơ chế vận hành, chế tài bảo đảm thực thi (hình thức), tránh chồng chéo mâu thuẫn.
+2. **Ý nghĩa trong hoạt động Tư pháp và Áp dụng pháp luật**:
+   - Đảm bảo công lý: "Công lý nội dung" chỉ đạt được khi có "công lý hình thức" (trình tự xét xử công bằng, dân chủ, đúng thời hạn luật định). Nếu vi phạm nghiêm trọng thủ tục tố tụng thì bản án sẽ bị hủy bỏ dù nội dung có căn cứ.
+3. **Ý nghĩa đối với Người dân và Doanh nghiệp**:
+   - Giúp người dân không chỉ hiểu rõ quyền và nghĩa vụ hợp pháp của mình (nội dung) mà còn nắm vững con đường, thủ tục để tự bảo vệ hoặc yêu cầu Tòa án bảo vệ quyền lợi hợp pháp khi bị xâm phạm (hình thức).`;
+  }
+
   // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG ---
   private static solveDynamicCivilInherit(query: string, actors: string[], money: string | null): string {
     let estateValue = 600000000;
@@ -2542,7 +2963,32 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   public static solveDynamicDefinition(query: string, concept: string | null): string {
     const q = query.toLowerCase();
 
-    // 0. Khái niệm & Đặc điểm Pháp luật Xã hội chủ nghĩa Việt Nam
+    // 0. Khái niệm & Đặc điểm Hệ thống pháp luật
+    if (concept === 'hệ thống pháp luật' || q.includes('hệ thống pháp luật') || q.includes('htpl')) {
+      return this.solveDynamicLegalSystem(query);
+    }
+
+    // 0.1. Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức
+    if (
+      concept === 'công pháp và tư pháp' ||
+      concept === 'luật nội dung và luật hình thức' ||
+      (q.includes('công pháp') && q.includes('tư pháp')) ||
+      (q.includes('luật nội dung') && q.includes('luật hình thức'))
+    ) {
+      return this.solveDynamicPublicVsPrivateLaw(query);
+    }
+
+    // 0.2. So sánh Pháp luật và Đạo đức
+    if (q.includes('đạo đức') && (q.includes('pháp luật') || q.includes('pl'))) {
+      return this.solveDynamicLawVsMorality(query);
+    }
+
+    // 0.3. Ba hình thức pháp luật
+    if (q.includes('tập quán pháp') || q.includes('tiền lệ pháp')) {
+      return this.solveDynamicThreeFormsOfLaw(query);
+    }
+
+    // 0.4. Khái niệm & Đặc điểm Pháp luật Xã hội chủ nghĩa Việt Nam
     if (q.includes('xã hội chủ nghĩa') || q.includes('xhcn')) {
       return this.solveDynamicSocialistLaw();
     }
@@ -2681,6 +3127,28 @@ Khái niệm pháp lý được định hình nhằm xác lập khuôn khổ chu
   // --- DẠNG SO SÁNH & PHÂN BIỆT ĐỘNG (BẢNG TIÊU CHÍ SO SÁNH CHUẨN BAREM) ---
   public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
+
+    // 0.1. So sánh Pháp luật và Đạo đức
+    if ((qLower.includes('pháp luật') || qLower.includes('pl')) && qLower.includes('đạo đức')) {
+      return this.solveDynamicLawVsMorality(query);
+    }
+
+    // 0.2. So sánh 3 hình thức của Pháp luật (Tập quán pháp, tiền lệ pháp, văn bản QPPL)
+    if (
+      qLower.includes('tập quán pháp') ||
+      qLower.includes('tiền lệ pháp') ||
+      (qLower.includes('hình thức') && (qLower.includes('pháp luật') || qLower.includes('văn bản quy phạm')))
+    ) {
+      return this.solveDynamicThreeFormsOfLaw(query);
+    }
+
+    // 0.3. Phân biệt Công pháp vs Tư pháp, Luật nội dung vs Luật hình thức
+    if (
+      (qLower.includes('công pháp') && qLower.includes('tư pháp')) ||
+      (qLower.includes('luật nội dung') && qLower.includes('luật hình thức'))
+    ) {
+      return this.solveDynamicPublicVsPrivateLaw(query);
+    }
 
     // 1. So sánh Phòng vệ chính đáng vs Tình thế cấp thiết
     if (
