@@ -1210,10 +1210,17 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     // BƯỚC 0: ƯU TIÊN SỐ 1: BỘ DỮ LIỆU ĐÃ TRAIN (SFT MASTER CORPUS) KẾT HỢP RAG GIÁO TRÌNH
     const sftMatch = this.matchSftSample(query, intentCode);
     if (sftMatch) {
-      const topTb = TextbookKnowledgeService.searchTopChunks(query + ' ' + (sftMatch.instruction || ''), 1);
+      const hasCitation =
+        sftMatch.output.includes('CĂN CỨ GIÁO TRÌNH') ||
+        sftMatch.output.includes('GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG');
+
+      const topTb = !hasCitation
+        ? TextbookKnowledgeService.searchTopChunks(query + ' ' + (sftMatch.instruction || ''), 1)
+        : [];
+
       const tbCitation =
         topTb.length > 0 && topTb[0].score >= 8
-          ? TextbookKnowledgeService.buildDetailedCitation(topTb[0].chunk, retrievedArticles)
+          ? TextbookKnowledgeService.buildCompactCitation(topTb[0].chunk)
           : '';
 
       console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);

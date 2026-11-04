@@ -791,6 +791,18 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         finalScore -= 30;
       }
 
+      // F. Nếu hỏi về "hình thức pháp luật", "hình thức thể hiện của pháp luật", "hình thức của pháp luật", "đặc điểm pháp luật" -> Ưu tiên Chương 2, PHẠT NẶNG Chương 1 (Hình thức nhà nước)
+      if (
+        (rawQueryText.includes('hình thức') || rawQueryText.includes('đặc điểm') || rawQueryText.includes('đặc trưng')) &&
+        rawQueryText.includes('pháp luật') &&
+        !rawQueryText.includes('hình thức nhà nước') &&
+        !rawQueryText.includes('chính thể') &&
+        !rawQueryText.includes('cấu trúc nhà nước')
+      ) {
+        if (c.chapterNumber === 1) finalScore -= 40;
+        if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.3'))) finalScore += 50;
+      }
+
       return { chunk: c, score: finalScore };
     });
 
@@ -913,6 +925,18 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
     }
 
     return lines.join('\n');
+  }
+
+  /**
+   * Tạo trích dẫn học liệu ngắn gọn (Tên sách, Chương, Mục, Trang) khi bài giải đã có nội dung đầy đủ
+   */
+  public static buildCompactCitation(chunk: TextbookChunk): string {
+    const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
+    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
+* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
+* **Tên Chương học phần**: **${chunk.chapterTitle}**
+* **Mục & Tiết bài học**: **Mục ${chunk.sectionCode}: ${chunk.sectionTitle}**
+* **Vị trí học liệu trong sách**: **Trang ${pages}**`;
   }
 
   /**
