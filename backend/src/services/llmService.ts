@@ -62,6 +62,24 @@ export class LlmService {
   }
 
   /**
+   * Bộ lọc loại bỏ các ghi chú barem/prompt thô chưa hoàn thiện
+   */
+  public static isRawGuidanceNote(output: string): boolean {
+    if (!output) return true;
+    const lower = output.toLowerCase().replace(/\s+/g, ' ');
+    return (
+      lower.includes('câu mở rộng được biên soạn') ||
+      lower.includes('khi thi nên trình bày') ||
+      lower.includes('khi thi, triển khai theo') ||
+      lower.includes('khi thi triển khai theo') ||
+      lower.includes('khi làm bài phải tách') ||
+      lower.includes('điểm cần nhớ: khi đề yêu cầu') ||
+      lower.includes('điểm cần nhớ:') ||
+      lower.includes('khung chấm:')
+    );
+  }
+
+  /**
    * Khởi tạo và nạp toàn bộ ngân hàng câu hỏi SFT (340+ câu thi & 10,000+ câu tư vấn)
    */
   private static initCorpuses(): void {
@@ -80,7 +98,10 @@ export class LlmService {
       if (fs.existsSync(p)) {
         try {
           const raw = fs.readFileSync(p, 'utf-8');
-          this.examCorpus = JSON.parse(raw) as SftSample[];
+          const parsed = JSON.parse(raw) as SftSample[];
+          this.examCorpus = parsed.filter(
+            (item) => !this.isRawGuidanceNote(item.output) && !item.sample_id.startsWith('SFT_200Q')
+          );
           this.examTokenSets = this.examCorpus.map((item) => {
             const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
             return new Set(this.normalize(textToUse));
@@ -107,7 +128,10 @@ export class LlmService {
       if (fs.existsSync(p)) {
         try {
           const raw = fs.readFileSync(p, 'utf-8');
-          this.masterCorpus = JSON.parse(raw) as SftSample[];
+          const parsed = JSON.parse(raw) as SftSample[];
+          this.masterCorpus = parsed.filter(
+            (item) => !this.isRawGuidanceNote(item.output) && !item.sample_id.startsWith('SFT_200Q')
+          );
           this.masterTokenSets = this.masterCorpus.map((item) => {
             const textToUse = item.input && item.input.length > 20 ? item.input : `${item.instruction} ${item.input}`;
             return new Set(this.normalize(textToUse));
@@ -566,6 +590,7 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
         // Tìm xem trong examCorpus có mẫu SFT định nghĩa riêng không
         for (let i = 0; i < this.examCorpus.length; i++) {
           const item = this.examCorpus[i];
+          if (this.isRawGuidanceNote(item.output)) continue;
           if (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE') continue;
           const instNorm = (item.instruction + ' ' + item.input).toLowerCase();
           if (instNorm.includes(`định nghĩa ${concept}`) || instNorm.includes(`khái niệm ${concept}`)) {
@@ -862,6 +887,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
       for (let i = 0; i < this.examCorpus.length; i++) {
         const item = this.examCorpus[i];
+        if (this.isRawGuidanceNote(item.output)) continue;
         if (item.intent_code !== 'TRUE_FALSE') continue;
         const rawCombined = `${item.instruction} ${item.input}`;
         const itemCleanStmt = cleanStatement(rawCombined);
@@ -1038,6 +1064,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
       for (let i = 0; i < this.masterCorpus.length; i++) {
         const item = this.masterCorpus[i];
+        if (this.isRawGuidanceNote(item.output)) continue;
         const meta = this.masterDocMeta[i];
         if (!meta) continue;
 
@@ -1094,6 +1121,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
       for (let i = 0; i < this.masterCorpus.length; i++) {
         const item = this.masterCorpus[i];
+        if (this.isRawGuidanceNote(item.output)) continue;
         if (!this.matchFactGuard(query, item)) continue;
 
         // BẢO VỆ CHẶT CHẼ THEO INTENT CODE (Archetype Isolation)
@@ -2405,17 +2433,42 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       if (q.includes('bản chất') || (q.includes('giai cấp') && q.includes('xã hội'))) {
         return this.solveDynamicStateNature();
       }
-      return `### ĐỊNH NGHĨA NHÀ NƯỚC
-**Nhà nước** là tổ chức quyền lực chính trị đặc biệt của xã hội có giai cấp, bao gồm một lớp người được tách ra từ xã hội để chuyên thực thi quyền lực, nhằm tổ chức và quản lý xã hội, bảo vệ lợi ích của giai cấp thống trị và duy trì trật tự chung của toàn xã hội.
+      return `### I. KHÁI NIỆM VÀ NGUỒN GỐC CỦA NHÀ NƯỚC
+Theo quan điểm của Chủ nghĩa Mác – Lênin và Giáo trình **Pháp luật Đại cương** (Bộ GD&ĐT):
+- **Nguồn gốc ra đời**: Nhà nước không phải là hiện tượng vĩnh cửu hay bất biến mà là một hiện tượng lịch sử có khởi đầu và tiêu vong. Nhà nước chỉ ra đời khi xã hội loài người phát triển đến một giai đoạn nhất định: sự xuất hiện của chế độ tư hữu về tư liệu sản xuất và sự phân hóa xã hội thành các giai cấp đối kháng không thể điều hòa được.
+- **Định nghĩa Nhà nước**: **Nhà nước** là tổ chức quyền lực chính trị đặc biệt của xã hội có giai cấp, bao gồm một lớp người được tách ra từ xã hội để chuyên thực thi quyền lực, nhằm tổ chức và quản lý xã hội, bảo vệ lợi ích của giai cấp thống trị và duy trì trật tự chung của toàn thể cộng đồng.
 
 ---
 
-### 5 DẤU HIỆU ĐẶC TRƯNG CỦA NHÀ NƯỚC
-1. **Thiết lập quyền lực công cộng đặc biệt**: Có bộ máy chuyên trách để cưỡng chế và quản lý (quân đội, cảnh sát, tòa án, nhà tù).
-2. **Phân chia dân cư và quản lý lãnh thổ**: Quản lý xã hội theo các đơn vị hành chính lãnh thổ, không phân biệt huyết thống hay tôn giáo.
-3. **Có chủ quyền quốc gia**: Nắm quyền tối cao trong quan hệ đối nội và độc lập tự quyết trong quan hệ đối ngoại.
-4. **Ban hành pháp luật và quản lý bằng pháp luật**: Pháp luật có tính bắt buộc chung đối với toàn xã hội.
-5. **Quy định và thu các loại thuế bắt buộc**: Nhằm duy trì và nuôi dưỡng bộ máy nhà nước.`;
+### II. NĂM (05) ĐẶC ĐIỂM (DẤU HIỆU ĐẶC TRƯNG) CƠ BẢN CỦA NHÀ NƯỚC
+Nhà nước phân biệt với tổ chức thị tộc, bộ lạc thời kỳ công xã nguyên thủy và các tổ chức chính trị – xã hội khác trong xã hội có giai cấp qua 5 đặc trưng cơ bản sau:
+
+1. **Nhà nước thiết lập quyền lực công cộng đặc biệt**:
+   - Khác với quyền lực thị tộc hòa nhập với dân cư, quyền lực của nhà nước tách biệt khỏi xã hội và đứng trên xã hội.
+   - Nhà nước có một bộ máy chuyên trách để thực thi quyền lực cưỡng chế (quân đội, cảnh sát, tòa án, viện kiểm sát, hệ thống nhà tù) để duy trì trật tự xã hội, bảo vệ lợi ích của giai cấp thống trị và trấn áp các hành vi chống đối.
+
+2. **Nhà nước quản lý dân cư theo các đơn vị hành chính lãnh thổ**:
+   - Trong chế độ thị tộc, con người được liên kết và quản lý theo huyết thống. Ngược lại, Nhà nước phân chia và quản lý dân cư theo địa bàn cư trú (lãnh thổ).
+   - Xuất hiện biên giới quốc gia và các cấp hành chính (tỉnh, huyện, xã). Mọi cá nhân cư trú trên một vùng lãnh thổ xác định đều phải chịu sự quản lý của nhà nước đó, không phân biệt huyết thống, dân tộc hay tôn giáo.
+
+3. **Nhà nước có chủ quyền quốc gia**:
+   - Chủ quyền quốc gia là quyền tối cao của nhà nước trong phạm vi lãnh thổ của mình về đối nội, và quyền độc lập tự quyết trong các quan hệ đối ngoại.
+   - Mọi tổ chức, cá nhân sinh sống trên lãnh thổ đều phải phục tùng quyền lực nhà nước; không một thế lực bên ngoài nào có quyền can thiệp vào công việc nội bộ của nhà nước.
+
+4. **Nhà nước ban hành pháp luật và quản lý xã hội bằng pháp luật**:
+   - Nhà nước là chủ thể duy nhất có quyền ban hành các quy phạm pháp luật mang tính bắt buộc chung đối với mọi cá nhân, cơ quan, tổ chức trong xã hội.
+   - Nhà nước sử dụng sức mạnh quyền lực và bộ máy cưỡng chế của mình để bảo đảm cho các quy định pháp luật được tôn trọng và thực hiện nghiêm minh trong thực tế đời sống.
+
+5. **Nhà nước quy định và tiến hành thu các loại thuế bắt buộc**:
+   - Để nuôi dưỡng bộ máy quản lý nhà nước chuyên trách và trang trải các chi tiêu công cộng (hạ tầng, giáo dục, y tế, quốc phòng, an ninh), Nhà nước đặt ra thuế và thu thuế bắt buộc.
+   - Thuế mang tính quyền lực cưỡng chế nhà nước; chỉ có Nhà nước mới có độc quyền quy định và thu thuế.
+
+---
+
+### III. BẢN CHẤT CỦA NHÀ NƯỚC
+Nhà nước luôn là sự thống nhất biện chứng giữa hai thuộc tính cơ bản:
+- **Tính giai cấp**: Nhà nước là công cụ chuyên chính bảo vệ trước hết lợi ích kinh tế, chính trị và tư tưởng của giai cấp thống trị trong xã hội.
+- **Tính xã hội**: Nhà nước đồng thời tổ chức, điều hành và quản lý các công việc chung vì sự tồn tại, an toàn, trật tự và tiến bộ của toàn thể xã hội (xây dựng cầu đường, đê điều, phòng chống dịch bệnh, bảo vệ môi trường, cứu trợ thiên tai).`;
     }
 
     // 3. Quy phạm pháp luật
