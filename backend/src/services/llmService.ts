@@ -334,10 +334,10 @@ export class LlmService {
 
     const isOnlyDef =
       (qNorm.includes('định nghĩa') ||
-       qNorm.includes('khái niệm') ||
-       qNorm.includes('là gì') ||
-       qNorm.includes('thế nào là') ||
-       qNorm.includes('hiểu thế nào')) &&
+        qNorm.includes('khái niệm') ||
+        qNorm.includes('là gì') ||
+        qNorm.includes('thế nào là') ||
+        qNorm.includes('hiểu thế nào')) &&
       !hasOtherAspects;
 
     if (isOnlyDef && rawOutput.includes('1. ') && rawOutput.includes('2. ')) {
@@ -783,12 +783,12 @@ Căn cứ các tình tiết trong vụ việc, xem xét tính chất hành vi c�
       qLower.includes('nhà nước') &&
       qLower.includes('pháp luật') &&
       (qLower.includes('thiếu pháp luật') ||
-       qLower.includes('không thể tồn tại') ||
-       qLower.includes('phát huy chức năng') ||
-       qLower.includes('không có pháp luật') ||
-       qLower.includes('quan hệ biện chứng') ||
-       qLower.includes('kiến trúc thượng tầng') ||
-       qLower.includes('tại sao nhà nước'));
+        qLower.includes('không thể tồn tại') ||
+        qLower.includes('phát huy chức năng') ||
+        qLower.includes('không có pháp luật') ||
+        qLower.includes('quan hệ biện chứng') ||
+        qLower.includes('kiến trúc thượng tầng') ||
+        qLower.includes('tại sao nhà nước'));
     if (isStateAndLawWhy && !qLower.includes('chỉ ra đời trong')) {
       return {
         sample_id: 'SFT_THEORY_STATE_AND_LAW_RELATION',
@@ -3334,11 +3334,11 @@ ${contextContent ? `\n---\n**TÀI LIỆU GIÁO TRÌNH THAM CHIẾU**:\n${context
       qLower.includes('nhà nước') &&
       qLower.includes('pháp luật') &&
       (qLower.includes('thiếu pháp luật') ||
-       qLower.includes('không thể tồn tại') ||
-       qLower.includes('phát huy chức năng') ||
-       qLower.includes('quan hệ biện chứng') ||
-       qLower.includes('kiến trúc thượng tầng') ||
-       qLower.includes('tại sao nhà nước')) &&
+        qLower.includes('không thể tồn tại') ||
+        qLower.includes('phát huy chức năng') ||
+        qLower.includes('quan hệ biện chứng') ||
+        qLower.includes('kiến trúc thượng tầng') ||
+        qLower.includes('tại sao nhà nước')) &&
       !qLower.includes('chỉ ra đời trong')
     ) {
       return this.solveDynamicStateAndLawRelation(query);
