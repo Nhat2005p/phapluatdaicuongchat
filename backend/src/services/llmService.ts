@@ -222,6 +222,12 @@ export class LlmService {
    */
   public static cleanRubricText(text: string): string {
     const cleaned = text
+      .replace(/(?:^|\n)\s*Ý\s*chính\s*\n[\s\S]*?(?:Trả\s*lời\s*chi\s*tiết\s*Thu\s*gọn\s*tất\s*cả|Trả\s*lời\s*chi\s*tiết|Thu\s*gọn\s*tất\s*cả|Thu\s*gọn)[^\n]*\n?/gi, '\n')
+      .replace(/Trả\s*lời\s*chi\s*tiết\s*Thu\s*gọn\s*tất\s*cả/gi, '')
+      .replace(/Trả\s*lời\s*chi\s*tiết/gi, '')
+      .replace(/Thu\s*gọn\s*tất\s*cả/gi, '')
+      .replace(/Thu\s*gọn/gi, '')
+      .replace(/(?:^|\n)\s*Ý\s*chính\s*(?::|\n)/gi, '\n')
       .replace(/\(Thang điểm:\s*[\d.]+\s*điểm\)/gi, '')
       .replace(/\(\s*[\d.]+\s*điểm\s*\)/gi, '')
       .replace(/Thang điểm:\s*[\d.]+\s*điểm/gi, '')
@@ -1419,7 +1425,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
       console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
       return {
-        text: sftMatch.output + tbCitation,
+        text: this.cleanRubricText(sftMatch.output) + tbCitation,
         latencyMs: Date.now() - startTime
       };
     }
