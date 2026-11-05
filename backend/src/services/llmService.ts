@@ -177,6 +177,40 @@ export class LlmService {
       }
     }
 
+    // Bảo vệ cách ly: Câu hỏi lý thuyết thuần túy tuyệt đối KHÔNG khớp bài tập tình huống thực tế
+    const qLower = query.toLowerCase();
+    const isScenarioQuery =
+      qLower.includes('tình huống') ||
+      qLower.includes('vụ việc') ||
+      qLower.includes('vụ án') ||
+      qLower.includes('vụ tai nạn') ||
+      qLower.includes('tai nạn') ||
+      qLower.includes('xả thải') ||
+      qLower.includes('đập phá') ||
+      qLower.includes('ném đá') ||
+      qLower.includes('hàng xóm') ||
+      qLower.includes('ông ') ||
+      qLower.includes('bà ') ||
+      qLower.includes('anh ') ||
+      qLower.includes('chị ') ||
+      qLower.includes('công ty ');
+
+    const sLower = sText.toLowerCase();
+    const isScenarioSample =
+      sample.intent_code === 'CASE_ANALYSIS' ||
+      sample.sample_id.includes('CASE') ||
+      sLower.includes('tình huống') ||
+      sLower.includes('vụ việc') ||
+      sLower.includes('vụ án') ||
+      sLower.includes('công ty tnhh') ||
+      sLower.includes('xả thải') ||
+      sLower.includes('vedan') ||
+      Boolean(sample.output && (sample.output.includes('hành vi của Công ty') || sample.output.includes('hành vi của anh ') || sample.output.includes('hành vi của ông ')));
+
+    if (!isScenarioQuery && isScenarioSample) {
+      return false;
+    }
+
     return true;
   }
 
@@ -229,6 +263,11 @@ export class LlmService {
     if (q.includes('quy phạm pháp luật') || q.includes('cơ cấu quy phạm')) return 'quy phạm pháp luật';
     if (q.includes('quan hệ pháp luật dân sự')) return 'quan hệ pháp luật dân sự';
     if (q.includes('quan hệ pháp luật')) return 'quan hệ pháp luật';
+    if (q.includes('luật hình sự') || q.includes('pháp luật hình sự')) return 'luật hình sự';
+    if (q.includes('tội phạm') && !q.includes('vi phạm')) return 'tội phạm';
+    if (q.includes('đồng phạm')) return 'đồng phạm';
+    if (q.includes('luật dân sự') || q.includes('pháp luật dân sự')) return 'luật dân sự';
+    if (q.includes('luật hành chính') || q.includes('pháp luật hành chính')) return 'luật hành chính';
     if (q.includes('vi phạm pháp luật') || q.includes('cấu thành vi phạm')) return 'vi phạm pháp luật';
     if (q.includes('trách nhiệm pháp lý')) return 'trách nhiệm pháp lý';
     if (q.includes('sự kiện pháp lý')) return 'sự kiện pháp lý';
@@ -237,7 +276,7 @@ export class LlmService {
     if (q.includes('hình thức pháp luật') || q.includes('nguồn của pháp luật')) return 'hình thức pháp luật';
     if (q.includes('bản chất của nhà nước') || q.includes('bản chất nhà nước') || (q.includes('nhà nước') && q.includes('giai cấp') && q.includes('xã hội'))) return 'bản chất nhà nước';
     if (q.includes('nhà nước')) return 'nhà nước';
-    if (q.includes('pháp luật')) return 'pháp luật';
+    if (q.includes('pháp luật') && !q.includes('hình sự') && !q.includes('dân sự') && !q.includes('hành chính')) return 'pháp luật';
     return null;
   }
 
@@ -423,8 +462,121 @@ Nhà nước ban hành pháp luật để quản lý xã hội; pháp luật t�
   public static solveDynamicPropertyDestructionCase(query: string): string {
     const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_CASE_PROPERTY_DESTRUCTION');
     if (item) return item.output;
-    return `### XÁC ĐỊNH VI PHẠM PHÁP LUẬT VỀ HỦY HOẠI HOẶC CỐ Ý LÀM HƯ HỎNG TÀI SẢN
+    return `### XÁC ĐĂNG VI PHẠM PHÁP LUẬT VỀ HỦY HOẠI HOẶC CỐ Ý LÀM HƯ HỎNG TÀI SẢN
 Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật Dân sự 2015, hành vi cố ý đập phá làm hư hỏng tài sản của người khác phải chịu trách nhiệm hình sự nếu thiệt hại từ 2 triệu đồng trở lên, và phải bồi thường toàn bộ thiệt hại thực tế.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt Chương 7: Lý luận cơ bản về Luật Hình sự, các nguyên tắc và nguồn
+   */
+  public static solveDynamicCriminalLawTheory(query?: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_THEORY_LUAT_HINH_SU_7_1');
+    if (item) return item.output;
+
+    return `### LÝ LUẬN CƠ BẢN VỀ LUẬT HÌNH SỰ VIỆT NAM
+*(Theo Giáo trình Pháp luật Đại cương — Trường Đại học Thương Mại 2021 & Bộ Giáo dục và Đào tạo)*
+
+---
+
+#### I. KHÁI NIỆM, ĐỐI TƯỢNG VÀ PHƯƠNG PHÁP ĐIỀU CHỈNH CỦA LUẬT HÌNH SỰ
+1. **Khái niệm Luật Hình sự**:
+   - Luật Hình sự là một ngành luật độc lập trong hệ thống pháp luật Việt Nam, bao gồm hệ thống các quy phạm pháp luật do Nhà nước ban hành, xác định những hành vi nguy hiểm cho xã hội nào là tội phạm, đồng thời quy định các loại và biện pháp hình phạt, biện pháp tư pháp áp dụng đối với người hoặc pháp nhân thương mại thực hiện tội phạm đó.
+2. **Đối tượng điều chỉnh của Luật Hình sự**:
+   - Là các **quan hệ xã hội phát sinh giữa Nhà nước** (thông qua các cơ quan tiến hành tố tụng: Cơ quan điều tra, Viện kiểm sát, Tòa án) **và người phạm tội** (hoặc pháp nhân thương mại phạm tội) khi có hành vi phạm tội xảy ra trên thực tế.
+   - Vị thế pháp lý của các bên trong quan hệ:
+     + *Nhà nước*: Có quyền và nghĩa vụ truy tố, xét xử, áp dụng hình phạt và các biện pháp cưỡng chế hình sự tương xứng đối với chủ thể phạm tội.
+     + *Người phạm tội*: Có nghĩa vụ chấp hành sự cưỡng chế và hình phạt do Tòa án tuyên, đồng thời được pháp luật bảo đảm các quyền tố tụng chính đáng (quyền bào chữa, nguyên tắc suy đoán vô tội).
+3. **Phương pháp điều chỉnh của Luật Hình sự**:
+   - Sử dụng **phương pháp quyền uy - mệnh lệnh (phục tùng)** mang tính cưỡng chế nhà nước nghiêm ngặt và triệt để nhất. Nhà nước đơn phương quy định tội danh và mức hình phạt trong Bộ luật Hình sự; các chủ thể bắt buộc phải phục tùng mà không có sự bình đẳng hay tự do thỏa thuận như trong quan hệ pháp luật dân sự.
+
+---
+
+#### II. CÁC NGUYÊN TẮC PHÁP LÝ CƠ BẢN CỦA LUẬT HÌNH SỰ (ĐIỀU 2, 3 BỘ LUẬT HÌNH SỰ 2015)
+1. **Nguyên tắc pháp chế xã hội chủ nghĩa**:
+   - Thể hiện qua châm ngôn pháp lý: *"Không có tội phạm, không có hình phạt nếu luật không quy định"* (*Nullum crimen, nulla poena sine lege* — Điều 2 BLHS 2015).
+   - Chỉ hành vi nào được quy định cụ thể, rõ ràng trong Bộ luật Hình sự mới bị coi là tội phạm và chỉ được áp dụng các hình phạt do Bộ luật Hình sự quy định.
+2. **Nguyên tắc bình đẳng của mọi công dân trước pháp luật hình sự**:
+   - Mọi người phạm tội đều bình đẳng trước pháp luật, không phân biệt giới tính, dân tộc, tín ngưỡng, tôn giáo, thành phần, địa vị xã hội (Điều 3 BLHS 2015).
+3. **Nguyên tắc nhân đạo xã hội chủ nghĩa**:
+   - Thể hiện sự khoan hồng đối với người tự thú, đầu thú, thành khẩn khai báo, ăn năn hối cải, lập công chuộc tội.
+   - Không áp dụng hình phạt tử hình đối với người dưới 18 tuổi khi phạm tội, phụ nữ có thai hoặc đang nuôi con dưới 36 tháng tuổi, người từ đủ 75 tuổi trở lên khi phạm tội hoặc khi xét xử (Điều 40 BLHS 2015).
+4. **Nguyên tắc có lỗi**:
+   - Một người chỉ phải chịu trách nhiệm hình sự khi có lỗi (cố ý hoặc vô ý). Không truy cứu trách nhiệm hình sự trong trường hợp sự kiện bất ngờ hoặc mất khả năng nhận thức và điều khiển hành vi.
+5. **Nguyên tắc kết hợp giữa trừng trị nghiêm khắc và khoan hồng, giáo dục, cải tạo**:
+   - Nghiêm trị kẻ chủ mưu, cầm đầu, ngoan cố, côn đồ, tái phạm nguy hiểm; đồng thời lấy việc giáo dục, cải tạo làm mục đích căn bản để người phạm tội nhận rõ sai lầm, hoàn lương trở thành công dân có ích.
+6. **Nguyên tắc phân hóa và cá thể hóa trách nhiệm hình sự**:
+   - Phân hóa tội phạm thành 4 loại (Điều 9 BLHS 2015); Tòa án căn cứ vào tính chất, mức độ nguy hiểm của hành vi, nhân thân và tình tiết giảm nhẹ, tăng nặng để tuyên mức án phù hợp nhất đối với từng cá nhân phạm tội.
+
+---
+
+#### III. NGUỒN CỦA PHÁP LUẬT HÌNH SỰ Ở VIỆT NAM HIỆN NAY
+1. **Hiến pháp năm 2013**:
+   - Là đạo luật cơ bản, có hiệu lực pháp lý cao nhất của Nhà nước, đặt nền tảng hiến định cho việc bảo vệ quyền con người, quyền công dân và nguyên tắc tư pháp tối cao (Điều 31: *Người bị buộc tội được coi là không có tội cho đến khi được chứng minh theo trình tự luật định và có bản án kết tội của Tòa án đã có hiệu lực pháp luật*).
+2. **Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)**:
+   - Là nguồn **cơ bản, chủ yếu và trực tiếp duy nhất** quy định về tội phạm và hình phạt tại nước CHXHCN Việt Nam. Mọi tội danh và hình phạt bắt buộc phải được quy định tập trung trong văn bản này.
+3. **Án lệ của Hội đồng Thẩm phán Tòa án nhân dân Tối cao**:
+   - Các án lệ hình sự được Chánh án TANDTC công bố nhằm định hướng, làm rõ các quy định còn có cách hiểu khác nhau và hướng dẫn áp dụng thống nhất pháp luật trong xét xử các vụ án có tình tiết tương tự.
+4. **Các Nghị quyết hướng dẫn của Hội đồng Thẩm phán TAND Tối cao**:
+   - Hướng dẫn áp dụng thống nhất các điều khoản cụ thể của Bộ luật Hình sự trong thực tiễn công tác điều tra, truy tố, xét xử.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt Chương 5: Phân tích 4 yếu tố cấu thành Vi phạm pháp luật
+   */
+  public static solveDynamicVpplTheory(query?: string): string {
+    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_THEORY_VPPL_4_ELEMENTS');
+    if (item) return item.output;
+
+    return `### PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT
+*(Theo Barem chuẩn Giáo trình Pháp luật Đại cương — Bộ Giáo dục và Đào tạo)*
+
+---
+
+#### 1. MẶT KHÁCH QUAN CỦA VI PHẠM PHÁP LUẬT
+Mặt khách quan là những biểu hiện ra bên ngoài thế giới khách quan của vi phạm pháp luật mà con người có thể nhận thức được trực tiếp, bao gồm:
+- **Hành vi trái pháp luật**:
+  + Là hành vi xác định của con người thể hiện dưới dạng **hành động** (làm điều pháp luật cấm) hoặc **không hành động** (không làm điều pháp luật bắt buộc phải làm).
+  + *Lưu ý*: Ý nghĩ, tư tưởng dù xấu xa đến đâu nếu chưa thể hiện ra thành hành vi thì không thể bị coi là vi phạm pháp luật. Hành vi trái pháp luật là **dấu hiệu bắt buộc duy nhất** trong mặt khách quan của mọi vi phạm pháp luật.
+- **Hậu quả thiệt hại cho xã hội**:
+  + Là những tổn thất thực tế hoặc nguy cơ đe dọa thực tế gây ra cho các quan hệ xã hội được pháp luật bảo vệ (thiệt hại về tính mạng, sức khỏe, tài sản, danh dự, nhân phẩm hoặc trật tự quản lý công cộng).
+  + *Lưu ý*: Hậu quả thiệt hại là dấu hiệu bắt buộc đối với *cấu thành vật chất*, nhưng **không phải là dấu hiệu bắt buộc** đối với *cấu thành hình thức* (ví dụ: tội tàng trữ ma túy, cướp tài sản, vượt đèn đỏ).
+- **Mối quan hệ nhân quả giữa hành vi và hậu quả thiệt hại**:
+  + Hành vi trái pháp luật phải xảy ra trước và là nguyên nhân trực tiếp phát sinh hậu quả nguy hại cho xã hội.
+- **Các yếu tố khách quan khác**: Thời gian, địa điểm, công cụ, phương tiện và phương thức thực hiện hành vi vi phạm (có thể là tình tiết định tội hoặc định khung hình phạt).
+
+---
+
+#### 2. MẶT CHỦ QUAN CỦA VI PHẠM PHÁP LUẬT
+Mặt chủ quan là trạng thái tâm lý nội tâm bên trong của chủ thể đối với hành vi trái pháp luật và hậu quả do hành vi đó gây ra, bao gồm:
+- **Lỗi của chủ thể**: Là thái độ tâm lý tiêu cực của chủ thể, phản ánh khả năng nhận thức và điều khiển hành vi của mình. Được phân thành **4 hình thức lỗi cơ bản**:
+  1. *Lỗi cố ý trực tiếp*: Nhận thức rõ hành vi nguy hiểm, thấy trước hậu quả và mong muốn hậu quả xảy ra.
+  2. *Lỗi cố ý gián tiếp*: Nhận thức rõ hành vi nguy hiểm, thấy trước hậu quả có thể xảy ra, tuy không mong muốn nhưng có ý thức để mặc hậu quả xảy ra.
+  3. *Lỗi vô ý do quá tự tin*: Thấy trước hậu quả nguy hại có thể xảy ra, nhưng tin tưởng hậu quả sẽ không xảy ra hoặc có thể ngăn ngừa được.
+  4. *Lỗi vô ý do cẩu thả*: Không thấy trước hậu quả nguy hại, mặc dù pháp luật bắt buộc phải thấy trước và có đủ điều kiện thấy trước.
+- **Động cơ vi phạm**: Là động lực tâm lý thúc đẩy chủ thể thực hiện hành vi vi phạm pháp luật (ví dụ: vì vụ lợi, vì thù hận, vì ghen tuông).
+- **Mục đích vi phạm**: Là kết quả cuối cùng trong nhận thức mà chủ thể mong muốn đạt được khi thực hiện hành vi vi phạm.
+
+---
+
+#### 3. KHÁCH THỂ CỦA VI PHẠM PHÁP LUẬT
+- **Khái niệm**: Khách thể là những **quan hệ xã hội được pháp luật xác lập và bảo vệ**, nhưng bị hành vi vi phạm pháp luật xâm hại, làm thay đổi hoặc gây thiệt hại (hoặc đe dọa gây thiệt hại).
+- **Ví dụ**: Quan hệ sở hữu tài sản; quyền bất khả xâm phạm về tính mạng, sức khỏe, nhân phẩm con người; trật tự an toàn giao thông đường bộ; chế độ quản lý hành chính nhà nước.
+- *Lưu ý*: Cần phân biệt giữa *Khách thể* (quan hệ xã hội vô hình được luật bảo vệ) và *Đối tượng tác động* (vật thể vật chất, người hoặc tài sản cụ thể chịu sự tác động trực tiếp của hành vi).
+
+---
+
+#### 4. CHỦ THỂ CỦA VI PHẠM PHÁP LUẬT
+- **Khái niệm**: Là cá nhân hoặc cơ quan, tổ chức có **năng lực trách nhiệm pháp lý** đã thực hiện hành vi vi phạm pháp luật.
+- **Đối với cá nhân**:
+  + *Độ tuổi*: Phải đạt độ tuổi luật định theo từng ngành luật (ví dụ: từ đủ 14 tuổi chịu TNHS về tội rất nghiêm trọng, đặc biệt nghiêm trọng; từ đủ 16 tuổi chịu TNHS về mọi tội phạm theo Điều 12 BLHS 2015; từ đủ 14 hoặc 16 tuổi chịu trách nhiệm hành chính theo Luật XLVPHC 2012).
+  + *Khả năng nhận thức*: Phải có năng lực lý trí và ý chí bình thường, không mắc bệnh tâm thần hoặc bệnh khác làm mất khả năng nhận thức hoặc khả năng điều khiển hành vi.
+- **Đối với tổ chức / pháp nhân**:
+  + Phải là chủ thể được thành lập hợp pháp theo quy định của pháp luật và có năng lực gánh chịu trách nhiệm pháp lý (ví dụ: pháp nhân thương mại phạm tội theo Bộ luật Hình sự 2015; tổ chức vi phạm hành chính theo Luật XLVPHC 2012).
+
+---
+
+⚖️ **Ý NGHĨA PHÁP LÝ**:
+Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thành** nêu trên thì một hành vi thực tế mới bị kết luận là Vi phạm pháp luật và chủ thể mới phải gánh chịu trách nhiệm pháp lý tương ứng trước Nhà nước.`;
   }
 
   
@@ -579,6 +731,49 @@ Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật D�
         instruction: 'Phân biệt công pháp và tư pháp, luật nội dung và luật hình thức. Cho ví dụ minh họa và nêu ý nghĩa.',
         input: query,
         output: this.solveDynamicPublicVsPrivateLaw(query)
+      };
+    }
+
+    // 0.0.7. Phân tích 4 yếu tố cấu thành Vi phạm pháp luật (Chương 5 - Lý luận chung)
+    const isVpplTheory =
+      (qLower.includes('vi phạm pháp luật') || qLower.includes('vppl') || qLower.includes('cấu thành vi phạm')) &&
+      (qLower.includes('4 yếu tố') || qLower.includes('các yếu tố') || qLower.includes('cấu thành') || qLower.includes('bộ phận')) &&
+      !qLower.includes('tình huống') &&
+      !qLower.includes('vụ án') &&
+      !qLower.includes('vụ việc') &&
+      !qLower.includes('vedan') &&
+      !qLower.includes('xả thải') &&
+      !qLower.includes('ném đá') &&
+      !qLower.includes('đập phá') &&
+      !qLower.includes('tai nạn') &&
+      !qLower.includes('ông ') &&
+      !qLower.includes('bà ') &&
+      !qLower.includes('anh ') &&
+      !qLower.includes('chị ') &&
+      !qLower.includes('công ty ');
+
+    if (isVpplTheory) {
+      return {
+        sample_id: 'SFT_THEORY_VPPL_4_ELEMENTS',
+        intent_code: 'VPPL_4_ELEMENTS',
+        instruction: 'Phân tích 4 yếu tố cấu thành Vi phạm pháp luật theo chuẩn Barem Giáo trình Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicVpplTheory(query)
+      };
+    }
+
+    // 0.0.8. Khái niệm Luật Hình sự, Các nguyên tắc cơ bản và Nguồn của Luật Hình sự (Chương 7)
+    const isCriminalLawTheory =
+      (qLower.includes('luật hình sự') || qLower.includes('pháp luật hình sự')) &&
+      (qLower.includes('khái niệm') || qLower.includes('nguyên tắc') || qLower.includes('nguồn') || qLower.includes('đối tượng') || qLower.includes('phương pháp') || qLower.includes('trình bày'));
+
+    if (isCriminalLawTheory) {
+      return {
+        sample_id: 'SFT_THEORY_LUAT_HINH_SU_7_1',
+        intent_code: 'DEFINITION',
+        instruction: 'Trình bày khái niệm về luật hình sự, các nguyên tắc pháp lý cơ bản của luật hình sự và nguồn pháp luật hình sự ở Việt Nam hiện nay theo Giáo trình Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicCriminalLawTheory(query)
       };
     }
 
@@ -2285,17 +2480,50 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 
   // --- DẠNG ĐẶC BIỆT: ĐỊNH NGHĨA & KHÁI NIỆM PHÁP LÝ CHUẨN XÁC 100% (KHÔNG TRẢ VỀ NHIỀU Ý) ---
   public static solveDynamicDefinition(query: string, concept: string | null): string {
+    const qLower = query.toLowerCase();
+    if (
+      concept === 'luật hình sự' ||
+      qLower.includes('luật hình sự') ||
+      qLower.includes('pháp luật hình sự') ||
+      (qLower.includes('hình sự') && (qLower.includes('nguyên tắc') || qLower.includes('nguồn') || qLower.includes('khái niệm')))
+    ) {
+      return this.solveDynamicCriminalLawTheory(query);
+    }
+
+    if (
+      concept === 'vi phạm pháp luật' &&
+      (qLower.includes('4 yếu tố') || qLower.includes('cấu thành') || qLower.includes('yếu tố cấu thành'))
+    ) {
+      return this.solveDynamicVpplTheory(query);
+    }
+
+    const normalizedConcept = (concept || '').toLowerCase().replace(/\s+/g, '_');
     const map: Record<string, string> = {
+      pháp_luật: 'SFT_LLM_DEF_PHAP_LUAT',
       phap_luat: 'SFT_LLM_DEF_PHAP_LUAT',
+      'pháp luật': 'SFT_LLM_DEF_PHAP_LUAT',
+      nhà_nước: 'SFT_LLM_DEF_NHA_NUOC',
       nha_nuoc: 'SFT_LLM_DEF_NHA_NUOC',
+      'nhà nước': 'SFT_LLM_DEF_NHA_NUOC',
+      quy_phạm_pháp_luật: 'SFT_LLM_DEF_QPPL',
       quy_pham_phap_luat: 'SFT_LLM_DEF_QPPL',
+      'quy phạm pháp luật': 'SFT_LLM_DEF_QPPL',
+      quan_hệ_pháp_luật: 'SFT_LLM_DEF_QHPL',
       quan_he_phap_luat: 'SFT_LLM_DEF_QHPL',
+      'quan hệ pháp luật': 'SFT_LLM_DEF_QHPL',
+      vi_phạm_pháp_luật: 'SFT_LLM_DEF_VPPL',
       vi_pham_phap_luat: 'SFT_LLM_DEF_VPPL',
+      'vi phạm pháp luật': 'SFT_LLM_DEF_VPPL',
+      trách_nhiệm_pháp_lý: 'SFT_LLM_DEF_TNPL',
       trach_nhiem_phap_ly: 'SFT_LLM_DEF_TNPL',
+      'trách nhiệm pháp lý': 'SFT_LLM_DEF_TNPL',
+      tài_sản: 'SFT_LLM_DEF_TAI_SAN',
       tai_san: 'SFT_LLM_DEF_TAI_SAN',
+      'tài sản': 'SFT_LLM_DEF_TAI_SAN',
     };
-    if (concept && map[concept]) {
-      const item = this.masterCorpus.find((s) => s.sample_id === map[concept]);
+    const targetKey = map[normalizedConcept] || (concept ? map[concept] : undefined);
+    if (targetKey) {
+      const item = this.masterCorpus.find((s) => s.sample_id === targetKey);
       if (item) return item.output;
     }
     const defSample = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_DEF_PHAP_LUAT');

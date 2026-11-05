@@ -481,6 +481,55 @@ II. CHẾ ĐỊNH THỪA KẾ (CHƯƠNG XXII - XXIII BLDS 2015):
     {
       chapterNumber: 7,
       chapterTitle: 'Chương 7: Một số nội dung cơ bản của Luật Hình sự',
+      sectionCode: '7.1',
+      sectionTitle: 'Khái niệm, Đối tượng và Phương pháp điều chỉnh, Các nguyên tắc cơ bản và Nguồn của Luật Hình sự',
+      pageRange: 'tr. 148 - 159',
+      keywords: [
+        'luật hình sự',
+        'khái niệm luật hình sự',
+        'đối tượng điều chỉnh luật hình sự',
+        'phương pháp điều chỉnh luật hình sự',
+        'nguyên tắc của luật hình sự',
+        'nguyên tắc pháp lý cơ bản của luật hình sự',
+        'nguyên tắc pháp chế',
+        'nguồn của luật hình sự',
+        'nguồn pháp luật hình sự',
+        'nguồn luật hình sự việt nam'
+      ],
+      summary: 'Khái niệm Luật Hình sự, đối tượng điều chỉnh giữa Nhà nước và người phạm tội, phương pháp mệnh lệnh - quyền uy nghiêm ngặt; 6 nguyên tắc cơ bản; các nguồn của Luật Hình sự (Hiến pháp 2013, BLHS 2015 sửa đổi 2017, Án lệ).',
+      legalBasis: [
+        'Hiến pháp nước Cộng hòa xã hội chủ nghĩa Việt Nam năm 2013 (Điều 14, 19, 31)',
+        'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017) Điều 1, 2, 3, 8',
+        'Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 148 - 159)'
+      ],
+      baremContent: `I. KHÁI NIỆM, ĐỐI TƯỢNG VÀ PHƯƠNG PHÁP ĐIỀU CHỈNH CỦA LUẬT HÌNH SỰ:
+1. Khái niệm Luật Hình sự:
+   - Luật Hình sự là một ngành luật độc lập trong hệ thống pháp luật Việt Nam, bao gồm hệ thống các quy phạm pháp luật do Nhà nước ban hành, xác định những hành vi nguy hiểm cho xã hội nào là tội phạm, đồng thời quy định các loại và biện pháp hình phạt, biện pháp tư pháp áp dụng đối với người hoặc pháp nhân thương mại thực hiện tội phạm đó.
+2. Đối tượng điều chỉnh của Luật Hình sự:
+   - Là các quan hệ xã hội phát sinh giữa Nhà nước (thông qua cơ quan tiến hành tố tụng: Cơ quan điều tra, Viện kiểm sát, Tòa án) và người phạm tội (hoặc pháp nhân thương mại phạm tội) khi có hành vi phạm tội xảy ra trên thực tế.
+   - Vị thế các bên trong quan hệ:
+     + Nhà nước có quyền và nghĩa vụ truy tố, xét xử, áp dụng hình phạt và các biện pháp cưỡng chế hình sự tương xứng đối với chủ thể phạm tội.
+     + Người/pháp nhân phạm tội có nghĩa vụ chấp hành sự cưỡng chế và hình phạt do Tòa án tuyên, đồng thời được pháp luật bảo đảm các quyền tố tụng chính đáng (quyền bào chữa, suy đoán vô tội).
+3. Phương pháp điều chỉnh của Luật Hình sự:
+   - Sử dụng **phương pháp quyền uy - mệnh lệnh (phục tùng)** mang tính cưỡng chế nhà nước nghiêm ngặt và triệt để nhất. Nhà nước đơn phương quy định tội danh và mức hình phạt trong Bộ luật Hình sự, các chủ thể bắt buộc phải phục tùng mà không có sự bình đẳng, thỏa thuận như trong luật dân sự.
+
+II. CÁC NGUYÊN TẮC PHÁP LÝ CƠ BẢN CỦA LUẬT HÌNH SỰ VIỆT NAM (ĐIỀU 2, 3 BLHS 2015):
+1. Nguyên tắc pháp chế XHCN: "Không có tội phạm, không có hình phạt nếu luật không quy định" (Nullum crimen, nulla poena sine lege). Chỉ hành vi nào được quy định trong Bộ luật Hình sự mới cấu thành tội phạm và chỉ được áp dụng các hình phạt do BLHS quy định.
+2. Nguyên tắc bình đẳng trước pháp luật: Mọi người phạm tội đều bình đẳng trước pháp luật hình sự, không phân biệt giới tính, dân tộc, tín ngưỡng, tôn giáo, thành phần, địa vị xã hội.
+3. Nguyên tắc nhân đạo XHCN: Khoan hồng đối với người tự thú, đầu thú, thành khẩn khai báo, ăn năn hối cải, lập công chuộc tội; không áp dụng tử hình đối với người dưới 18 tuổi, phụ nữ có thai/nuôi con nhỏ dưới 36 tháng, người từ đủ 75 tuổi trở lên khi phạm tội hoặc khi xét xử.
+4. Nguyên tắc có lỗi: Chỉ truy cứu trách nhiệm hình sự đối với người thực hiện hành vi nguy hiểm cho xã hội khi họ có lỗi (cố ý hoặc vô ý). Không truy cứu trách nhiệm hình sự khi có sự kiện bất ngờ.
+5. Nguyên tắc kết hợp giữa trừng trị nghiêm khắc và khoan hồng, giáo dục, cải tạo: Nghiêm trị kẻ chủ mưu, cầm đầu, tái phạm nguy hiểm; đồng thời lấy việc cảm hóa, giáo dục, hoàn lương làm mục tiêu hàng đầu.
+6. Nguyên tắc phân hóa và cá thể hóa trách nhiệm hình sự: Tòa án căn cứ vào tính chất, mức độ nguy hiểm của hành vi, nhân thân người phạm tội, các tình tiết giảm nhẹ và tăng nặng để quyết định một hình phạt thích đáng đối với từng cá nhân cụ thể.
+
+III. NGUỒN CỦA PHÁP LUẬT HÌNH SỰ Ở VIỆT NAM HIỆN NAY:
+1. Hiến pháp năm 2013: Là đạo luật gốc có giá trị pháp lý cao nhất, quy định các quyền con người bất khả xâm phạm và nguyên tắc tư pháp tối cao (nguyên tắc suy đoán vô tội tại Điều 31).
+2. Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017): Là nguồn **cơ bản, chủ yếu và trực tiếp duy nhất** quy định về tội phạm và hình phạt tại Việt Nam.
+3. Án lệ của Hội đồng Thẩm phán TAND Tối cao: Các bản án, quyết định hình sự có tính chuẩn mực được công bố để các Tòa án nghiên cứu, áp dụng thống nhất trong xét xử các vụ việc tương tự.
+4. Các Nghị quyết của Hội đồng Thẩm phán TAND Tối cao: Văn bản hướng dẫn áp dụng thống nhất các quy định của Bộ luật Hình sự trong thực tiễn xét xử.`
+    },
+    {
+      chapterNumber: 7,
+      chapterTitle: 'Chương 7: Một số nội dung cơ bản của Luật Hình sự',
       sectionCode: '7.2_7.3',
       sectionTitle: 'Tội phạm, Đồng phạm, Phòng vệ chính đáng, Tình thế cấp thiết và Hệ thống hình phạt',
       pageRange: 'tr. 160 - 180',
