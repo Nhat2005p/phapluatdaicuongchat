@@ -818,8 +818,19 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       }
     }
 
-    // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Định nghĩa / Khái niệm lý thuyết)
-    if (intentCode === 'DEFINITION') {
+    // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Chỉ áp dụng khi hỏi định nghĩa ngắn gọn, KHÔNG phải câu hỏi tự luận phân tích/cơ cấu/ví dụ)
+    const isAnalyticalQuery =
+      qLower.includes('phân tích') ||
+      qLower.includes('cấu trúc') ||
+      qLower.includes('cơ cấu') ||
+      qLower.includes('bộ phận') ||
+      qLower.includes('ví dụ') ||
+      qLower.includes('đặc điểm') ||
+      qLower.includes('nguồn gốc') ||
+      qLower.includes('bản chất') ||
+      qLower.length > 45;
+
+    if (intentCode === 'DEFINITION' && !isAnalyticalQuery) {
       const concept = this.extractLegalConcept(query);
       if (concept) {
         // Tìm xem trong examCorpus có mẫu SFT định nghĩa riêng không
@@ -1271,6 +1282,17 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       if (bestExam) {
         const sliced = this.sliceSingleItemIfApplicable(query, bestExam);
         if (sliced) return sliced;
+      } else if (intentCode === 'DEFINITION') {
+        const concept = this.extractLegalConcept(query);
+        if (concept) {
+          return {
+            sample_id: `DEF_${concept.toUpperCase().replace(/\s+/g, '_')}`,
+            intent_code: 'DEFINITION',
+            instruction: query,
+            input: '',
+            output: this.solveDynamicDefinition(query, concept)
+          };
+        }
       }
     }
 
