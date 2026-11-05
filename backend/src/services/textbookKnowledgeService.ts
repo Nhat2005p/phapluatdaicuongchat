@@ -447,7 +447,39 @@ II. LUẬN CỨ GIẢI THÍCH LÝ LUẬN VÀ THỰC TIỄN:
     // =========================================================================
     // CHƯƠNG 6: MỘT SỐ NỘI DUNG CƠ BẢN CỦA LUẬT DÂN SỰ (tr. 117 - 147)
     // =========================================================================
-    {
+        {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự',
+      sectionCode: '6.2_6.3',
+      sectionTitle: 'Giao dịch dân sự, Điều kiện có hiệu lực và Hợp đồng dân sự vô hiệu',
+      pageRange: 'tr. 145 - 158',
+      keywords: ['giao dịch dân sự', 'hợp đồng dân sự', 'điều kiện có hiệu lực', 'giao dịch vô hiệu', 'hợp đồng vô hiệu', 'điều 117 blds', 'điều 122 blds', 'lừa dối đe dọa', 'hình thức giao dịch', 'hậu quả vô hiệu'],
+      summary: 'Quy định về khái niệm giao dịch dân sự, 4 điều kiện có hiệu lực theo Điều 117 BLDS 2015 và các trường hợp giao dịch dân sự vô hiệu cùng hậu quả pháp lý.',
+      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 116, Điều 117, Điều 122 - 133, Điều 385, Điều 407, Điều 408)'],
+      baremContent: `I. KHÁI NIỆM VÀ ĐIỀU KIỆN CÓ HIỆU LỰC CỦA GIAO DỊCH DÂN SỰ (ĐIỀU 116, 117 BLDS 2015):
+1. Khái niệm: Giao dịch dân sự là hợp đồng hoặc hành vi pháp lý đơn phương làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ dân sự.
+2. Bốn điều kiện có hiệu lực (Điều 117 BLDS 2015):
+- Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch dân sự được xác lập.
+- Chủ thể tham gia giao dịch dân sự hoàn toàn tự nguyện.
+- Mục đích và nội dung của giao dịch dân sự không vi phạm điều cấm của luật, không trái đạo đức xã hội.
+- Hình thức của giao dịch dân sự là điều kiện có hiệu lực trong trường hợp luật có quy định (bằng văn bản, công chứng, chứng thực, đăng ký).
+
+II. CÁC TRƯỜNG HỢP GIAO DỊCH DÂN SỰ VÔ HIỆU (ĐIỀU 122 - 129 BLDS 2015):
+1. Vô hiệu do vi phạm điều cấm của luật, trái đạo đức xã hội (Điều 123).
+2. Vô hiệu do giả tạo (Điều 124): Xác lập giao dịch nhằm che giấu một giao dịch khác hoặc trốn tránh nghĩa vụ.
+3. Vô hiệu do người chưa thành niên, người mất NLHVDS, người có khó khăn trong nhận thức xác lập (Điều 125).
+4. Vô hiệu do nhầm lẫn (Điều 126).
+5. Vô hiệu do bị lừa dối, đe dọa, cưỡng ép (Điều 127).
+6. Vô hiệu do người xác lập không nhận thức và làm chủ được hành vi của mình (Điều 128).
+7. Vô hiệu do không tuân thủ quy định về hình thức (Điều 129).
+
+III. HẬU QUẢ PHÁP LÝ CỦA GIAO DỊCH DÂN SỰ VÔ HIỆU (ĐIỀU 131 BLDS 2015):
+- Không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự của các bên từ thời điểm giao dịch được xác lập.
+- Các bên khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận; nếu không hoàn trả được bằng hiện vật thì trị giá thành tiền để hoàn trả.
+- Bên ngay tình trong việc thu hoa lợi, lợi tức không phải hoàn trả hoa lợi, lợi tức đó.
+- Bên có lỗi gây thiệt hại thì phải bồi thường.`
+    },
+{
       chapterNumber: 6,
       chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự',
       sectionCode: '6.4_6.5',
@@ -526,6 +558,27 @@ III. NGUỒN CỦA PHÁP LUẬT HÌNH SỰ Ở VIỆT NAM HIỆN NAY:
 2. Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017): Là nguồn **cơ bản, chủ yếu và trực tiếp duy nhất** quy định về tội phạm và hình phạt tại Việt Nam.
 3. Án lệ của Hội đồng Thẩm phán TAND Tối cao: Các bản án, quyết định hình sự có tính chuẩn mực được công bố để các Tòa án nghiên cứu, áp dụng thống nhất trong xét xử các vụ việc tương tự.
 4. Các Nghị quyết của Hội đồng Thẩm phán TAND Tối cao: Văn bản hướng dẫn áp dụng thống nhất các quy định của Bộ luật Hình sự trong thực tiễn xét xử.`
+    },
+    {
+      chapterNumber: 7,
+      chapterTitle: 'Chương 7: Một số nội dung cơ bản của Luật Hình sự',
+      sectionCode: '7.2',
+      sectionTitle: 'Khái niệm tội phạm và Bốn yếu tố cấu thành tội phạm',
+      pageRange: 'tr. 165 - 175',
+      keywords: ['tội phạm', 'khái niệm tội phạm', 'cấu thành tội phạm', 'dấu hiệu tội phạm', 'mặt khách quan tội phạm', 'mặt chủ quan tội phạm', 'chủ thể tội phạm', 'khách thể tội phạm', 'điều 8 blhs', 'phân loại tội phạm'],
+      summary: 'Khái niệm tội phạm theo Điều 8 BLHS 2015, phân loại 4 mức độ tội phạm và phân tích chi tiết 4 yếu tố cấu thành tội phạm trong luật hình sự.',
+      legalBasis: ['Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017) - Điều 8, Điều 9, Điều 10, Điều 11, Điều 12'],
+      baremContent: `I. KHÁI NIỆM VÀ ĐẶC ĐIỂM CỦA TỘI PHẠM (ĐIỀU 8 BLHS 2015):
+Tội phạm là hành vi nguy hiểm cho xã hội được quy định trong Bộ luật hình sự, do người có năng lực trách nhiệm hình sự hoặc pháp nhân thương mại thực hiện một cách có lỗi, cố ý hoặc vô ý, xâm phạm độc lập, chủ quyền, thống nhất, toàn vẹn lãnh thổ Tổ quốc, xâm phạm chế độ chính trị, chế độ kinh tế, trật tự, an toàn xã hội, tính mạng, sức khỏe, danh dự, nhân phẩm của công dân.
+- Phân loại tội phạm (Điều 9 BLHS): Tội phạm ít nghiêm trọng (phạt tù đến 3 năm); Tội phạm nghiêm trọng (từ trên 3 năm đến 7 năm); Tội phạm rất nghiêm trọng (từ trên 7 năm đến 15 năm); Tội phạm đặc biệt nghiêm trọng (từ trên 15 năm đến 20 năm, tù chung thân hoặc tử hình).
+
+II. BỐN YẾU TỐ CẤU THÀNH TỘI PHẠM:
+1. Khách thể của tội phạm: Là quan hệ xã hội được luật hình sự bảo vệ và bị tội phạm xâm hại hoặc đe dọa xâm hại gây thiệt hại.
+2. Mặt khách quan của tội phạm: Gồm hành vi nguy hiểm cho xã hội (hành động phạm tội hoặc không hành động phạm tội), hậu quả nguy hại cho xã hội, mối quan hệ nhân quả giữa hành vi và hậu quả, cùng điều kiện thời gian, địa điểm, phương tiện phạm tội.
+3. Mặt chủ quan của tội phạm: Trạng thái tâm lý bên trong của chủ thể khi thực hiện hành vi phạm tội gồm:
+- Lỗi: Lỗi cố ý trực tiếp, Lỗi cố ý gián tiếp, Lỗi vô ý do quá tự tin, Lỗi vô ý do cẩu thả.
+- Động cơ và Mục đích phạm tội (dấu hiệu bắt buộc trong một số cấu thành tội phạm cụ thể).
+4. Chủ thể của tội phạm: Cá nhân có năng lực trách nhiệm hình sự và đạt độ tuổi luật định (từ đủ 16 tuổi chịu TNHS về mọi tội phạm; từ đủ 14 đến dưới 16 tuổi chịu TNHS về tội rất nghiêm trọng, đặc biệt nghiêm trọng do cố ý theo Điều 12 BLHS) hoặc pháp nhân thương mại phạm tội theo luật định.`
     },
     {
       chapterNumber: 7,
@@ -624,6 +677,128 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       .split(/\s+/)
       .filter((w) => w.length > 1);
   }
+
+  /**
+   * =========================================================================
+   * MỤC 2.2.1: MÃ HÓA VĂN BẢN (VECTOR EMBEDDING / VECTOR SPACE) & INDEXING
+   * Tài liệu giáo trình được chia thành các khối (chunks), tính toán độ dài,
+   * tần suất từ TF, nghịch đảo tần suất tài liệu IDF và sinh vector TF-IDF.
+   * =========================================================================
+   */
+  private static isIndexed = false;
+  private static chunkTokens: string[][] = [];
+  private static chunkTermFreqs: Map<string, number>[] = [];
+  private static chunkDocLengths: number[] = [];
+  private static avgDocLength = 0;
+  private static docFreq: Map<string, number> = new Map();
+  private static idfMap: Map<string, number> = new Map();
+  private static chunkTfidfVectors: Map<string, number>[] = [];
+  private static chunkVectorNorms: number[] = [];
+
+  private static buildIndex(): void {
+    if (this.isIndexed) return;
+    const N = this.CHUNKS.length;
+    let totalLen = 0;
+
+    this.chunkTokens = this.CHUNKS.map((c) => {
+      const fullText = `${c.chapterTitle} ${c.sectionTitle} ${c.keywords.join(' ')} ${c.summary} ${c.baremContent}`;
+      return this.normalizeWords(fullText);
+    });
+
+    this.chunkDocLengths = this.chunkTokens.map((tokens) => tokens.length);
+    totalLen = this.chunkDocLengths.reduce((acc, len) => acc + len, 0);
+    this.avgDocLength = totalLen / Math.max(N, 1);
+
+    this.docFreq = new Map();
+    this.chunkTermFreqs = this.chunkTokens.map((tokens) => {
+      const tf = new Map<string, number>();
+      const seen = new Set<string>();
+      for (const t of tokens) {
+        tf.set(t, (tf.get(t) || 0) + 1);
+        if (!seen.has(t)) {
+          seen.add(t);
+          this.docFreq.set(t, (this.docFreq.get(t) || 0) + 1);
+        }
+      }
+      return tf;
+    });
+
+    // Tính toán IDF theo chuẩn Okapi BM25
+    this.idfMap = new Map();
+    this.docFreq.forEach((df, term) => {
+      const idf = Math.log(1 + (N - df + 0.5) / (df + 0.5));
+      this.idfMap.set(term, Math.max(idf, 0.1));
+    });
+
+    // Xây dựng Vector TF-IDF chuẩn hóa phục vụ Cosine Similarity
+    this.chunkTfidfVectors = this.chunkTermFreqs.map((tfMap) => {
+      const vec = new Map<string, number>();
+      let sumSq = 0;
+      tfMap.forEach((count, term) => {
+        const idf = this.idfMap.get(term) || 0.1;
+        const weight = (1 + Math.log(count)) * idf;
+        vec.set(term, weight);
+        sumSq += weight * weight;
+      });
+      return vec;
+    });
+
+    this.chunkVectorNorms = this.chunkTfidfVectors.map((vec) => {
+      let sumSq = 0;
+      vec.forEach((w) => {
+        sumSq += w * w;
+      });
+      return Math.sqrt(sumSq) || 1;
+    });
+
+    this.isIndexed = true;
+  }
+
+  /**
+   * MỤC 2.2.2: ĐỘ TƯƠNG TỰ COSIN (Cosine similarity)
+   * Tính góc cosin giữa vector truy vấn Q và vector đoạn văn bản D trong không gian nhiều chiều.
+   */
+  private static computeCosineSimilarity(qVec: Map<string, number>, qNorm: number, chunkIdx: number): number {
+    if (qNorm === 0) return 0;
+    const dVec = this.chunkTfidfVectors[chunkIdx];
+    const dNorm = this.chunkVectorNorms[chunkIdx];
+    if (!dVec || dNorm === 0) return 0;
+
+    let dot = 0;
+    qVec.forEach((qWeight, term) => {
+      const dWeight = dVec.get(term);
+      if (dWeight) {
+        dot += qWeight * dWeight;
+      }
+    });
+
+    return dot / (qNorm * dNorm);
+  }
+
+  /**
+   * MỤC 2.2.2: PHƯƠNG PHÁP BM25 (Okapi BM25)
+   * Thuật toán xác suất tính độ liên quan dựa trên tần suất từ, độ dài đoạn văn và tính bão hòa.
+   */
+  private static computeBm25(qMeaningful: string[], chunkIdx: number): number {
+    const k1 = 1.5;
+    const b = 0.75;
+    const tfMap = this.chunkTermFreqs[chunkIdx];
+    const docLen = this.chunkDocLengths[chunkIdx];
+    if (!tfMap || docLen === 0) return 0;
+
+    let bm25Score = 0;
+    for (const term of qMeaningful) {
+      const tf = tfMap.get(term) || 0;
+      if (tf > 0) {
+        const idf = this.idfMap.get(term) || 0.1;
+        const numerator = tf * (k1 + 1);
+        const denominator = tf + k1 * (1 - b + b * (docLen / this.avgDocLength));
+        bm25Score += idf * (numerator / denominator);
+      }
+    }
+    return bm25Score;
+  }
+
 
   /**
    * =========================================================================
@@ -756,43 +931,63 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
     const qText = expandedQuery.toLowerCase();
     const rawQueryText = query.toLowerCase();
 
-    // STAGE 1: COARSE SCORING TRÊN TOÀN BỘ CHUNK
-    const candidates = this.CHUNKS.map((chunk) => {
-      let score = 0;
+    // Khởi tạo chỉ mục Vector & BM25 nếu chưa nạp (Mục 2.2: Indexing)
+    this.buildIndex();
 
-      // 1. Khớp từ khóa chủ đề chính (Keywords match)
+    // Sinh Vector truy vấn cho Cosine Similarity (Mục 2.2.1 & 2.2.2)
+    const qTf = new Map<string, number>();
+    for (const t of qMeaningful) {
+      qTf.set(t, (qTf.get(t) || 0) + 1);
+    }
+    const qVec = new Map<string, number>();
+    let qSumSq = 0;
+    qTf.forEach((count, term) => {
+      const idf = this.idfMap.get(term) || 0.5;
+      const w = (1 + Math.log(count)) * idf;
+      qVec.set(term, w);
+      qSumSq += w * w;
+    });
+    const qNorm = Math.sqrt(qSumSq) || 1;
+
+    // =========================================================================
+    // MỤC 2.2.2: TRÍCH XUẤT ĐOẠN VĂN (PASSAGE RETRIEVAL) KẾT HỢP BM25 + COSINE SIMILARITY
+    // =========================================================================
+    const candidates = this.CHUNKS.map((chunk, idx) => {
+      // 1. Điểm BM25 (xác suất theo tần suất từ và độ dài tài liệu)
+      const bm25Score = this.computeBm25(qMeaningful, idx);
+
+      // 2. Điểm Cosine Similarity (góc tương đồng giữa 2 vector TF-IDF)
+      const cosineScore = this.computeCosineSimilarity(qVec, qNorm, idx);
+
+      // 3. Khớp từ khóa chủ đề (Keywords boost)
+      let kwScore = 0;
       for (const kw of chunk.keywords) {
         if (qText.includes(kw)) {
-          score += 25;
+          kwScore += 25;
         } else {
           const kwWords = kw.split(' ');
           const kwMeaningful = kwWords.filter((w) => !STOP_WORDS.has(w));
           if (kwMeaningful.length > 0) {
             const matchCount = kwMeaningful.filter((w) => qMeaningful.includes(w)).length;
             if (matchCount === kwMeaningful.length) {
-              score += 14;
+              kwScore += 14;
             } else if (kwMeaningful.length >= 3 && matchCount / kwMeaningful.length >= 0.75) {
-              score += 7;
+              kwScore += 7;
             }
           }
         }
       }
 
-      // 2. Khớp từ vựng trong nội dung (BM25 / Overlap trên từ khóa có ý nghĩa)
-      const chunkWords = new Set(this.normalizeWords(`${chunk.sectionTitle} ${chunk.summary} ${chunk.baremContent}`));
-      let overlap = 0;
-      for (const w of qMeaningful) {
-        if (chunkWords.has(w)) overlap++;
-      }
-      const overlapRatio = qMeaningful.length > 0 ? overlap / qMeaningful.length : 0;
-      score += overlapRatio * 25;
-
-      // 3. Khớp số chương nếu người dùng ghi rõ
+      // 4. Khớp số chương nếu người dùng ghi rõ
+      let chapterScore = 0;
       if (qText.includes(`chương ${chunk.chapterNumber}`) || qText.includes(`chương ${chunk.chapterNumber}:`)) {
-        score += 30;
+        chapterScore += 30;
       }
 
-      return { chunk, score };
+      // Hợp nhất điểm Retrieval sơ bộ (Hybrid Retrieval)
+      const score = (bm25Score * 2.5) + (cosineScore * 35) + kwScore + chapterScore;
+
+      return { chunk, score, bm25Score, cosineScore };
     });
 
     // STAGE 2: RERANKER (Sắp xếp lại candidate theo độ liên quan mục tiêu)
