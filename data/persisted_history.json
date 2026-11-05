@@ -1,5 +1,84 @@
 [
   {
+    "_id": "6aebeb6ded8fa69e671be103",
+    "userId": "6aebe7110df2510804940777",
+    "userEmail": "longvu24112005@gmail.com",
+    "query": "Phân tích các dấu hiệu cấu thành của vi phạm hành chính?",
+    "intentCode": "GENERAL_THEORY",
+    "response": "I. KHÁI NIỆM VI PHẠM HÀNH CHÍNH (KHOẢN 1 ĐIỀU 2 LUẬT XLVPHC 2012):\nVi phạm hành chính là hành vi có lỗi do cá nhân, tổ chức thực hiện, vi phạm quy định của pháp luật về quản lý nhà nước mà không phải là tội phạm và theo quy định của pháp luật phải bị xử phạt vi phạm hành chính.\n\nII. BỐN YẾU TỐ CẤU THÀNH VI PHẠM HÀNH CHÍNH:\n1. Mặt khách quan: Hành vi xâm phạm các quy tắc quản lý nhà nước bị pháp luật hành chính nghiêm cấm (hành động hoặc không hành động).\n2. Mặt chủ quan: Lỗi của chủ thể (cố ý hoặc vô ý).\n3. Khách thể: Trật tự quản lý hành chính nhà nước trên các lĩnh vực (giao thông, trật tự đô thị, kinh doanh, môi trường...).\n4. Chủ thể: Cá nhân hoặc tổ chức có năng lực trách nhiệm hành chính (cá nhân từ đủ 14 đến dưới 16 tuổi chịu phạt khi cố ý; từ đủ 16 tuổi trở lên chịu phạt về mọi vi phạm).\n\nIII. PHÂN BIỆT VI PHẠM HÀNH CHÍNH VÀ TỘI PHẠM HÌNH SỰ:\n- Mức độ nguy hiểm: Tội phạm có mức độ nguy hiểm cao độ cho xã hội; vi phạm hành chính có mức độ nguy hiểm thấp hơn.\n- Chế tài áp dụng: Tội phạm bị áp dụng hình phạt theo BLHS do Tòa án quyết định; vi phạm hành chính bị áp dụng các hình thức xử phạt hành chính (phạt tiền, tịch thu...) do cơ quan hành chính nhà nước quyết định.\n- Hậu quả pháp lý: Tội phạm để lại án tích; vi phạm hành chính không để lại án tích (chỉ coi là chưa bị xử lý sau 1 năm nếu không tái phạm).\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n* **Tên Chương học phần**: **Chương 8: Một số nội dung cơ bản của Luật Hành chính**\n* **Mục & Tiết bài học**: **Mục 8.1_8.3: Quản lý hành chính nhà nước, Vi phạm hành chính và Xử phạt VPHC**\n* **Vị trí học liệu trong sách**: **Trang 181 - 201**",
+    "activityType": "solver",
+    "isBookmarked": false,
+    "bookmarkNote": "",
+    "reviewMetadata": {},
+    "citations": [
+      {
+        "rawText": "KHOẢN 1 ĐIỀU 2 LUẬT XLVPHC 2012):",
+        "lawCode": "BLHS2015",
+        "articleNumber": 2,
+        "clauseNumber": 1,
+        "verified": false,
+        "lawTitle": "Chưa tìm thấy trong CSDL thực định",
+        "_id": "6aebeb6ded8fa69e671be104"
+      }
+    ],
+    "verifiedCitationsCount": 0,
+    "tier": "Tier 4 - Fine-tuned LoRA",
+    "latencyMs": 37,
+    "createdAt": "2026-11-05T02:35:25.002Z"
+  },
+  {
+    "_id": "6aebeb5aed8fa69e671be0f5",
+    "userId": "6aebe7110df2510804940777",
+    "userEmail": "longvu24112005@gmail.com",
+    "query": "Phân tích các dấu hiệu của vi phạm hành chính",
+    "intentCode": "GENERAL_THEORY",
+    "response": "### 1. Khái quát \nĐể xácđịnh một hành vi trong thực tiễn có phải là vi phạm hành chính hay không, cần căn cứ \nvào các dấu hiệu pháp lý của các yếu tố cấu thành. Giống như các loại vi phạm pháp luật \nkhác, vi phạm hành chínhđược cấu thành bởi bốn yếu tố: mặt khách quan, mặt chủ quan, chủ \nthể và khách thể. \n\n### 2. Mặt khách quan \n–Dấu hiệu bắt buộc là hành vi vi phạm hành chính: hành vi xâm phạm các quy tắc quản lý \nnhà nước vàđã bị pháp luật hành chính ngăn cấm. Việc ngăn cấm thể hiện rõ trong các văn \nbản quyđịnh về xử phạt vi phạm hành chính, theođó hành vi sẽ bị xử phạt bằng các hình \nthức xử phạt hành chính. \n–Khi kết luận một hành vi là vi phạm hành chính, phải có căn cứ pháp lý rõ ràng xácđịnh \nhành viđó bị xử phạt; tránháp dụng suyđoán hoặcáp dụng tương tự pháp luật. \n–Ngoài hành vi, mặt khách quan còn có thể có các dấu hiệu khác như hậu quả, thời gian, địađiểm, công cụ, phương tiện vi phạm. Các dấu hiệu này cóý nghĩa bắt buộc trong một số \ntrường hợp pháp luật quyđịnh, đồng thời là căn cứ xácđịnh mứcđộ xử phạt. Ví dụ, hành vi \ngây tiếngồn trong khu dân cư vào khung giờ nghỉ ngơi banđêm chỉ bị xử phạt khi xảy ra \ntrong khoảng thời gian luậtđịnh. \n\n### 3. Mặt chủ quan \n–Dấu hiệu bắt buộc là lỗi của chủ thể vi phạm, thể hiện dưới hình thức cốý hoặc vôý. Người \nthực hiện hành vi phảiở trạng thái cóđầyđủ khả năng nhận thức vàđiều khiển hành vi, \nnhưngđã thiếu thận trọng mà không nhận thứcđược tính trái pháp luật của hành vi (vôý), \nhoặc nhận thứcđược nhưng vẫn cố tình thực hiện (cốý). \n–Nếu chủ thể thực hiện hành vi khi không có khả năng nhận thức hoặc khả năngđiều khiển \nhành vi thì không có vi phạm hành chính. \n–Đối với tổ chức, lỗiđược xácđịnh thông qua lỗi của ngườiđại diện, người có trách nhiệm \ncủa tổ chức khi thực hiện nhiệm vụđược giao. \n\n### 4. Chủ thể \n–Chủ thể vi phạm hành chính là cá nhân, tổ chức có năng lực trách nhiệm hành chính theo \nquyđịnh của pháp luật. \n–Cá nhân phải không mắc bệnh tâm thần hoặc bệnh khác làm mất khả năng nhận thức, điều \nkhiển hành vi vàđủđộ tuổi: người từđủ 14 tuổiđến dưới 16 tuổi là chủ thể của vi phạm hành \nchính khi thực hiện với lỗi cốý; người từđủ 16 tuổi trở lên là chủ thể của vi phạm hành chính \ntrong mọi trường hợp (Điều 5 Luật Xử lý vi phạm hành chính). \n–Tổ chức gồm cơ quan nhà nước (khi thực hiện hành vi vi phạm mà hành viđó không thuộc \nnhiệm vụ quản lý nhà nướcđược giao), tổ chức xã hội, đơn vị kinh tế, đơn vị sự nghiệp... bị \nxử phạt về mọi vi phạm hành chính do mình gây ra. \n–Cá nhân, tổ chức nước ngoài vi phạm hành chính trong phạm vi lãnh thổ Việt Nam cũng bị \nxử phạt theo pháp luật Việt Nam, trừ trường hợpđiềuước quốc tế mà Việt Nam là thành viên \ncó quyđịnh khác. \n\n### 5. Khách thể \n–Khách thể của vi phạm hành chính là trật tự quản lý hành chính nhà nướcđược pháp luật \nhành chính quyđịnh và bảo vệ. Tùy từng lĩnh vực, khách thể cụ thể có thể là trật tự an toàn \ngiao thông, trật tự quản lýđấtđai, xây dựng, thuế, bảo vệ môi trường... \n\n### 6. Ví dụ minh họa \n–Công ty X xả nước thải chưa qua xử lý ra môi trường vượt quy chuẩn kỹ thuật nhưng chưađến mức cấu thành tội phạm: mặt khách quan là hành vi xả thải vượt quy chuẩn bị pháp luật \ncấm; mặt chủ quan là lỗi của công ty (cốý hoặc vôý); chủ thể là tổ chức có năng lực trách \nnhiệm hành chính; khách thể là trật tự quản lý nhà nước về bảo vệ môi trường. \n→Chỉ khi hành vi thỏa mãnđầyđủ bốn yếu tố cấu thành, chủ thể mới bị xácđịnh là vi phạm \nhành chính và bị truy cứu trách nhiệm hành chính.\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n* **Tên Chương học phần**: **Chương 8: Một số nội dung cơ bản của Luật Hành chính**\n* **Mục & Tiết bài học**: **Mục 8.1_8.3: Quản lý hành chính nhà nước, Vi phạm hành chính và Xử phạt VPHC**\n* **Vị trí học liệu trong sách**: **Trang 181 - 201**",
+    "activityType": "solver",
+    "isBookmarked": false,
+    "bookmarkNote": "",
+    "reviewMetadata": {},
+    "citations": [
+      {
+        "rawText": "Điều 5 Luật Xử lý vi phạm hành chính)",
+        "lawCode": "BLHS2015",
+        "articleNumber": 5,
+        "verified": false,
+        "lawTitle": "Chưa tìm thấy trong CSDL thực định",
+        "_id": "6aebeb5aed8fa69e671be0f6"
+      }
+    ],
+    "verifiedCitationsCount": 0,
+    "tier": "Tier 4 - Fine-tuned LoRA",
+    "latencyMs": 439,
+    "createdAt": "2026-11-05T02:35:06.508Z"
+  },
+  {
+    "_id": "6aebeb12ed8fa69e671be0e8",
+    "userId": "6aebe7110df2510804940777",
+    "userEmail": "longvu24112005@gmail.com",
+    "query": "2Phân tích các dấu hiệu của vi phạm hành chính",
+    "intentCode": "GENERAL_THEORY",
+    "response": "### 1. Khái quát \nĐể xácđịnh một hành vi trong thực tiễn có phải là vi phạm hành chính hay không, cần căn cứ \nvào các dấu hiệu pháp lý của các yếu tố cấu thành. Giống như các loại vi phạm pháp luật \nkhác, vi phạm hành chínhđược cấu thành bởi bốn yếu tố: mặt khách quan, mặt chủ quan, chủ \nthể và khách thể. \n\n### 2. Mặt khách quan \n–Dấu hiệu bắt buộc là hành vi vi phạm hành chính: hành vi xâm phạm các quy tắc quản lý \nnhà nước vàđã bị pháp luật hành chính ngăn cấm. Việc ngăn cấm thể hiện rõ trong các văn \nbản quyđịnh về xử phạt vi phạm hành chính, theođó hành vi sẽ bị xử phạt bằng các hình \nthức xử phạt hành chính. \n–Khi kết luận một hành vi là vi phạm hành chính, phải có căn cứ pháp lý rõ ràng xácđịnh \nhành viđó bị xử phạt; tránháp dụng suyđoán hoặcáp dụng tương tự pháp luật. \n–Ngoài hành vi, mặt khách quan còn có thể có các dấu hiệu khác như hậu quả, thời gian, địađiểm, công cụ, phương tiện vi phạm. Các dấu hiệu này cóý nghĩa bắt buộc trong một số \ntrường hợp pháp luật quyđịnh, đồng thời là căn cứ xácđịnh mứcđộ xử phạt. Ví dụ, hành vi \ngây tiếngồn trong khu dân cư vào khung giờ nghỉ ngơi banđêm chỉ bị xử phạt khi xảy ra \ntrong khoảng thời gian luậtđịnh. \n\n### 3. Mặt chủ quan \n–Dấu hiệu bắt buộc là lỗi của chủ thể vi phạm, thể hiện dưới hình thức cốý hoặc vôý. Người \nthực hiện hành vi phảiở trạng thái cóđầyđủ khả năng nhận thức vàđiều khiển hành vi, \nnhưngđã thiếu thận trọng mà không nhận thứcđược tính trái pháp luật của hành vi (vôý), \nhoặc nhận thứcđược nhưng vẫn cố tình thực hiện (cốý). \n–Nếu chủ thể thực hiện hành vi khi không có khả năng nhận thức hoặc khả năngđiều khiển \nhành vi thì không có vi phạm hành chính. \n–Đối với tổ chức, lỗiđược xácđịnh thông qua lỗi của ngườiđại diện, người có trách nhiệm \ncủa tổ chức khi thực hiện nhiệm vụđược giao. \n\n### 4. Chủ thể \n–Chủ thể vi phạm hành chính là cá nhân, tổ chức có năng lực trách nhiệm hành chính theo \nquyđịnh của pháp luật. \n–Cá nhân phải không mắc bệnh tâm thần hoặc bệnh khác làm mất khả năng nhận thức, điều \nkhiển hành vi vàđủđộ tuổi: người từđủ 14 tuổiđến dưới 16 tuổi là chủ thể của vi phạm hành \nchính khi thực hiện với lỗi cốý; người từđủ 16 tuổi trở lên là chủ thể của vi phạm hành chính \ntrong mọi trường hợp (Điều 5 Luật Xử lý vi phạm hành chính). \n–Tổ chức gồm cơ quan nhà nước (khi thực hiện hành vi vi phạm mà hành viđó không thuộc \nnhiệm vụ quản lý nhà nướcđược giao), tổ chức xã hội, đơn vị kinh tế, đơn vị sự nghiệp... bị \nxử phạt về mọi vi phạm hành chính do mình gây ra. \n–Cá nhân, tổ chức nước ngoài vi phạm hành chính trong phạm vi lãnh thổ Việt Nam cũng bị \nxử phạt theo pháp luật Việt Nam, trừ trường hợpđiềuước quốc tế mà Việt Nam là thành viên \ncó quyđịnh khác. \n\n### 5. Khách thể \n–Khách thể của vi phạm hành chính là trật tự quản lý hành chính nhà nướcđược pháp luật \nhành chính quyđịnh và bảo vệ. Tùy từng lĩnh vực, khách thể cụ thể có thể là trật tự an toàn \ngiao thông, trật tự quản lýđấtđai, xây dựng, thuế, bảo vệ môi trường... \n\n### 6. Ví dụ minh họa \n–Công ty X xả nước thải chưa qua xử lý ra môi trường vượt quy chuẩn kỹ thuật nhưng chưađến mức cấu thành tội phạm: mặt khách quan là hành vi xả thải vượt quy chuẩn bị pháp luật \ncấm; mặt chủ quan là lỗi của công ty (cốý hoặc vôý); chủ thể là tổ chức có năng lực trách \nnhiệm hành chính; khách thể là trật tự quản lý nhà nước về bảo vệ môi trường. \n→Chỉ khi hành vi thỏa mãnđầyđủ bốn yếu tố cấu thành, chủ thể mới bị xácđịnh là vi phạm \nhành chính và bị truy cứu trách nhiệm hành chính.\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n* **Tên Chương học phần**: **Chương 8: Một số nội dung cơ bản của Luật Hành chính**\n* **Mục & Tiết bài học**: **Mục 8.1_8.3: Quản lý hành chính nhà nước, Vi phạm hành chính và Xử phạt VPHC**\n* **Vị trí học liệu trong sách**: **Trang 181 - 201**",
+    "activityType": "solver",
+    "isBookmarked": false,
+    "bookmarkNote": "",
+    "reviewMetadata": {},
+    "citations": [
+      {
+        "rawText": "Điều 5 Luật Xử lý vi phạm hành chính)",
+        "lawCode": "BLHS2015",
+        "articleNumber": 5,
+        "verified": false,
+        "lawTitle": "Chưa tìm thấy trong CSDL thực định",
+        "_id": "6aebeb12ed8fa69e671be0e9"
+      }
+    ],
+    "verifiedCitationsCount": 0,
+    "tier": "Tier 4 - Fine-tuned LoRA",
+    "latencyMs": 2603,
+    "createdAt": "2026-11-05T02:33:54.727Z"
+  },
+  {
     "_id": "6aebe5f8815a213a95ad0547",
     "userId": "6aebe4ca7b636156283ad6f5",
     "userEmail": "longvu24112005@gmail.com",

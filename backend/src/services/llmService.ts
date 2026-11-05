@@ -786,6 +786,38 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
+    // 0.0.9. Các dấu hiệu của vi phạm hành chính (Dấu hiệu bản chất - Chương 8)
+    const isVphcSigns =
+      (qLower.includes('vi phạm hành chính') || qLower.includes('vphc')) &&
+      qLower.includes('dấu hiệu') &&
+      !qLower.includes('cấu thành') &&
+      !qLower.includes('4 yếu tố') &&
+      !qLower.includes('bốn yếu tố') &&
+      !qLower.includes('các yếu tố');
+
+    if (isVphcSigns) {
+      const matchDauhieu =
+        this.masterCorpus.find((m) => m.sample_id === 'SFT_LUAT_CH8_HANHCHINH_DAUHIEU') ||
+        this.masterCorpus.find((m) => m.sample_id === 'SFT_LUAT_CH8_HANHCHINH_C1');
+      if (matchDauhieu) {
+        return matchDauhieu;
+      }
+    }
+
+    // 0.0.10. Phân tích các dấu hiệu cấu thành / 4 yếu tố cấu thành vi phạm hành chính (Chương 8)
+    const isVphcElements =
+      (qLower.includes('vi phạm hành chính') || qLower.includes('vphc')) &&
+      (qLower.includes('cấu thành') || qLower.includes('4 yếu tố') || qLower.includes('bốn yếu tố') || qLower.includes('các yếu tố')) &&
+      !qLower.includes('phân biệt') &&
+      !qLower.includes('so sánh');
+
+    if (isVphcElements) {
+      const matchCauthanh = this.masterCorpus.find((m) => m.sample_id === 'SFT_LUAT_CH8_HANHCHINH_C2');
+      if (matchCauthanh) {
+        return matchCauthanh;
+      }
+    }
+
     // 0. Nhánh chuyên biệt: Dạng câu hỏi DEFINITION (Định nghĩa / Khái niệm lý thuyết)
     if (intentCode === 'DEFINITION') {
       const concept = this.extractLegalConcept(query);
@@ -1203,9 +1235,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
         // Khớp chuỗi trực tiếp nếu chứa nhau >= 25 ký tự
         if (qRawNorm.length >= 25 && (itemRawNorm.includes(qRawNorm) || qRawNorm.includes(itemRawNorm))) {
-          const sliced = this.sliceSingleItemIfApplicable(query, item);
-          if (sliced) return sliced;
-          continue;
+          const lenRatio = qRawNorm.length / Math.max(itemRawNorm.length, 1);
+          if (lenRatio >= 0.6 || itemRawNorm.length <= qRawNorm.length + 30) {
+            const sliced = this.sliceSingleItemIfApplicable(query, item);
+            if (sliced) return sliced;
+            return item;
+          }
         }
 
         const tokenSet = this.examTokenSets[i];
