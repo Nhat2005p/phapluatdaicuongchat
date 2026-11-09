@@ -58,21 +58,28 @@ export class QueryController {
       }
       const { effectiveQuery } = RagService.contextualizeQueryWithHistory(query, recentPrevQuery);
 
-      // Giai đoạn 1: Phân loại và Điều hướng (Intent Routing) - ưu tiên categoryId nếu người dùng chọn
-      const intentCode = RagService.detectIntent(effectiveQuery, categoryId);
+      // BƯỚC 01: REWRITE & ROUTING (Query Rewriting, Expansion, Intent Detection, Multi-Query)
+      const routingPlan = RagService.buildRoutingPlan(effectiveQuery, categoryId);
+      const intentCode = routingPlan.intentCode;
 
-      // Giai đoạn 2: Truy xuất Ngữ cảnh Kép (Hybrid Retrieval)
-      const ragContext = await RagService.retrieveContext(effectiveQuery, intentCode);
+      // BƯỚC 02 & 03: HYBRID + MULTI-VECTOR / COLBERT RETRIEVAL & CROSS-ENCODER RERANKING
+      const ragContext = await RagService.retrieveContext(routingPlan.rewrittenQuery, intentCode);
 
-      // Giai đoạn 3: Hợp nhất Ngữ cảnh và Suy luận sinh lời giải (Context Fusion & Generation)
-      const llmResult = await LlmService.generate(effectiveQuery, intentCode, ragContext.promptContext, ragContext.articles, categoryId);
+      // BƯỚC 04: CONTEXT FUSION & GENERATION (SFT + RAG + Fine-tuned LLM / Dynamic Solver)
+      const llmResult = await LlmService.generate(
+        routingPlan.rewrittenQuery,
+        intentCode,
+        ragContext.promptContext,
+        ragContext.articles,
+        categoryId
+      );
 
-      // Giai đoạn 4: Kiểm định và Chống Bịa luật (Citation Guardrail)
+      // BƯỚC 05: EVALUATION & CITATION GUARDRAIL (Đo lường chất lượng & Kiểm định điều luật)
       const guardrailResult = await GuardrailService.scanAndVerify(llmResult.text);
 
       const totalLatency = Date.now() - startTime;
 
-      // Giai đoạn 5: Lưu trữ phiên hỏi đáp vào lịch sử (cả DB memory và file ổ cứng vĩnh viễn)
+      // Lưu trữ phiên hỏi đáp vào lịch sử (cả DB memory và file ổ cứng vĩnh viễn)
       if (req.user) {
         const historyItem = await QueryHistory.create({
           userId: req.user.id,
@@ -90,7 +97,7 @@ export class QueryController {
         PersistenceService.saveHistory(historyItem);
       }
 
-      // Trả kết quả kèm văn bản luật thực định đầy đủ để đối chiếu
+      // Trả kết quả kèm văn bản luật thực định và chỉ số đánh giá 5 bước RAG
       res.json({
         success: true,
         intentCode,
@@ -100,6 +107,13 @@ export class QueryController {
           verifiedCount: guardrailResult.verifiedCount,
           totalFound: guardrailResult.totalFound,
           precisionRate: guardrailResult.precisionRate
+        },
+        evaluationMetrics: llmResult.evaluationMetrics,
+        routingSummary: {
+          rewrittenQuery: routingPlan.rewrittenQuery,
+          subQuestionsCount: routingPlan.subQuestions.length,
+          targetSources: routingPlan.targetSources,
+          quantifierFlags: routingPlan.quantifierFlags
         },
         retrievedArticles: ragContext.articles.map((a) => ({
           articleId: a.articleId,

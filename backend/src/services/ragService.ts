@@ -16,7 +16,208 @@ export type ExamArchetype =
   | 'COMPARISON'
   | 'OUT_OF_SCOPE';
 
+export interface QuantifierPolarityFlags {
+  hasUniversalQuantifier: boolean; // mọi, tất cả, luôn, luôn luôn, đều, bất kỳ
+  hasRestrictiveQuantifier: boolean; // chỉ, duy nhất, bắt buộc phải
+  hasNegation: boolean; // không, chưa, chẳng, không bao giờ, không cần
+  hasPossibility: boolean; // có thể, đôi khi
+  matchedQuantifiers: string[];
+}
+
+export interface QueryRoutingPlan {
+  originalQuery: string;
+  rewrittenQuery: string;
+  expandedQuery: string;
+  multiQueryVariants: string[];
+  subQuestions: string[];
+  intentCode: ExamArchetype;
+  targetSources: Array<'SFT_EXAM_CORPUS' | 'TEXTBOOK_KNOWLEDGE' | 'STATUTORY_LAWS' | 'DYNAMIC_CASE_SOLVER'>;
+  quantifierFlags: QuantifierPolarityFlags;
+}
+
 export class RagService {
+  /**
+   * =========================================================================
+   * STAGE 01: QUERY REWRITING — CHUẨN HÓA VIẾT TẮT, SỬA LỖI OCR & KHỬ NHIỄU
+   * Biến câu hỏi viết tắt/đời thường thành truy vấn pháp lý chuẩn xác hơn.
+   * =========================================================================
+   */
+  public static rewriteLegalQuery(query: string): string {
+    if (!query) return '';
+    let res = query;
+
+    // 1. Sửa các lỗi OCR dính chữ 'đ' phổ biến trong đề thi (ví dụ: "quânđ ội" -> "quân đội", "quanđ ến" -> "quan đến", "quyếtđ ịnh" -> "quyết định")
+    const vnLower = 'a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ';
+    const vnUpper = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+    const shiftedDRe = new RegExp(`([${vnLower}${vnUpper}])([đĐ])\\s+(ội|ến|ịnh|ồng|ầu|ược|ây|ó|iều|úng|ối|ơn|ộ|ộc|ạo|ất|ảm|áng)\\b`, 'gi');
+    res = res.replace(shiftedDRe, '$1 $2$3');
+
+    // 2. Mở rộng các từ viết tắt chuyên ngành Pháp luật Đại cương (dùng ranh giới từ hỗ trợ tiếng Việt có dấu)
+    const wbLeft = '(?:^|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
+    const wbRight = '(?=$|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
+    const abbrevPairs: Array<[string, string]> = [
+      ['qppl', 'quy phạm pháp luật'],
+      ['qhpl', 'quan hệ pháp luật'],
+      ['qhxh', 'quan hệ xã hội'],
+      ['vppl', 'vi phạm pháp luật'],
+      ['tnpl', 'trách nhiệm pháp lý'],
+      ['vbqppl', 'văn bản quy phạm pháp luật'],
+      ['adpl', 'áp dụng pháp luật'],
+      ['thpl', 'thực hiện pháp luật'],
+      ['skpl', 'sự kiện pháp lý'],
+      ['nlplds', 'năng lực pháp luật dân sự'],
+      ['nlhvds', 'năng lực hành vi dân sự'],
+      ['nlpl', 'năng lực pháp luật'],
+      ['nlhv', 'năng lực hành vi'],
+      ['gdds', 'giao dịch dân sự'],
+      ['btth', 'bồi thường thiệt hại'],
+      ['vphc', 'vi phạm hành chính'],
+      ['tnhs', 'trách nhiệm hình sự'],
+      ['tnds', 'trách nhiệm dân sự'],
+      ['tnhc', 'trách nhiệm hành chính'],
+      ['tnkl', 'trách nhiệm kỷ luật'],
+      ['pvcđ', 'phòng vệ chính đáng'],
+      ['pvcd', 'phòng vệ chính đáng'],
+      ['ttct', 'tình thế cấp thiết'],
+      ['htpl', 'hệ thống pháp luật'],
+      ['bmnn', 'bộ máy nhà nước'],
+      ['qlnn', 'quản lý nhà nước'],
+      ['pctnh', 'phòng chống tham nhũng'],
+      ['xhcn', 'xã hội chủ nghĩa'],
+      ['plđc', 'pháp luật đại cương'],
+      ['pldc', 'pháp luật đại cương']
+    ];
+
+    for (const [abbr, expansion] of abbrevPairs) {
+      const rx = new RegExp(`(${wbLeft})${abbr}${wbRight}`, 'gi');
+      res = res.replace(rx, `$1${expansion}`);
+    }
+
+    // 3. Khử nhiễu điểm số trong câu đơn (ví dụ "(1,0 điểm)", "(2,0 điểm)")
+    res = res.replace(/\(\s*\d+(?:[.,]\d+)?\s*điểm\s*\)/gi, ' ').replace(/\s{2,}/g, ' ').trim();
+
+    return res;
+  }
+
+  /**
+   * =========================================================================
+   * STAGE 01: QUANTIFIER & POLARITY EXTRACTION (BẮT CHI TIẾT LƯỢNG TỪ HẠN ĐỊNH)
+   * Phục vụ ColBERT Fine-grained Matching & Cross-Encoder Reranking ở câu Đúng/Sai
+   * =========================================================================
+   */
+  public static extractQuantifierAndPolarityFlags(query: string): QuantifierPolarityFlags {
+    const q = ` ${query.toLowerCase().replace(/[.,;:?!"'“”()\[\]\-–—_/\\]/g, ' ').replace(/\s+/g, ' ')} `;
+    const matchedQuantifiers: string[] = [];
+
+    const universalTerms = [' mọi ', ' tất cả ', ' bất kỳ ', ' bất cứ ', ' luôn ', ' luôn luôn ', ' đều ', ' bao giờ cũng '];
+    const restrictiveTerms = [' chỉ ', ' duy nhất ', ' bắt buộc phải ', ' hoàn toàn không '];
+    const negationTerms = [' không ', ' chưa ', ' chẳng ', ' không phải ', ' không bao giờ ', ' không cần ', ' không thể '];
+    const possibilityTerms = [' có thể ', ' đôi khi ', ' thông thường ', ' nhìn chung '];
+
+    let hasUniversalQuantifier = false;
+    for (const t of universalTerms) {
+      if (q.includes(t)) {
+        hasUniversalQuantifier = true;
+        matchedQuantifiers.push(t.trim());
+      }
+    }
+
+    let hasRestrictiveQuantifier = false;
+    for (const t of restrictiveTerms) {
+      if (q.includes(t)) {
+        hasRestrictiveQuantifier = true;
+        matchedQuantifiers.push(t.trim());
+      }
+    }
+
+    let hasNegation = false;
+    for (const t of negationTerms) {
+      if (q.includes(t)) {
+        hasNegation = true;
+        matchedQuantifiers.push(t.trim());
+      }
+    }
+
+    let hasPossibility = false;
+    for (const t of possibilityTerms) {
+      if (q.includes(t)) {
+        hasPossibility = true;
+        matchedQuantifiers.push(t.trim());
+      }
+    }
+
+    return {
+      hasUniversalQuantifier,
+      hasRestrictiveQuantifier,
+      hasNegation,
+      hasPossibility,
+      matchedQuantifiers
+    };
+  }
+
+  /**
+   * =========================================================================
+   * STAGE 01: MULTI-QUERY GENERATION — TẠO NHIỀU BIẾN THỂ TRUY VẤN
+   * Tăng khả năng tìm đúng (Recall) cho cả SFT Corpus và Giáo trình RAG
+   * =========================================================================
+   */
+  public static generateMultiQueryVariants(query: string): string[] {
+    const rewritten = this.rewriteLegalQuery(query);
+    const expanded = TextbookKnowledgeService.rewriteAndExpandQuery(rewritten);
+    const coreStatement = rewritten
+      .replace(/^(?:câu\s*\d+\s*[:.)]?\s*|nhận\s*định\s*\d*\s*[:.)]?\s*)/i, '')
+      .replace(/(?:nhận định này|nhận định trên|nhận định sau)?\s*đúng hay sai\??.*$/i, '')
+      .replace(/giải thích vì sao\.?$/i, '')
+      .replace(/^["“”'\[]+|["“”'\]]+$/g, '')
+      .trim();
+
+    const variants = new Set<string>();
+    if (rewritten) variants.add(rewritten);
+    if (coreStatement && coreStatement.length >= 10) variants.add(coreStatement);
+    if (expanded && expanded !== rewritten) variants.add(expanded);
+
+    return Array.from(variants);
+  }
+
+  /**
+   * =========================================================================
+   * STAGE 01: BUILD ROUTING PLAN (REWRITE + EXPAND + INTENT + ROUTING + MULTI-QUERY)
+   * =========================================================================
+   */
+  public static buildRoutingPlan(query: string, forcedCategory?: string | null): QueryRoutingPlan {
+    const rewrittenQuery = this.rewriteLegalQuery(query);
+    const expandedQuery = TextbookKnowledgeService.rewriteAndExpandQuery(rewrittenQuery);
+    const multiQueryVariants = this.generateMultiQueryVariants(query);
+    const subQuestions = this.splitMultiQuestions(rewrittenQuery);
+    const intentCode = this.detectIntent(rewrittenQuery, forcedCategory);
+    const quantifierFlags = this.extractQuantifierAndPolarityFlags(rewrittenQuery);
+
+    const targetSources: Array<'SFT_EXAM_CORPUS' | 'TEXTBOOK_KNOWLEDGE' | 'STATUTORY_LAWS' | 'DYNAMIC_CASE_SOLVER'> = [];
+    if (intentCode !== 'OUT_OF_SCOPE') {
+      targetSources.push('SFT_EXAM_CORPUS', 'TEXTBOOK_KNOWLEDGE', 'STATUTORY_LAWS');
+      if (
+        intentCode === 'CASE_ANALYSIS' ||
+        intentCode === 'CIVIL_CONTRACT' ||
+        intentCode === 'CIVIL_INHERIT' ||
+        intentCode === 'CRIMINAL_AGE' ||
+        intentCode === 'FAMILY_LAW' ||
+        intentCode === 'QPPL_STRUCT'
+      ) {
+        targetSources.push('DYNAMIC_CASE_SOLVER');
+      }
+    }
+
+    return {
+      originalQuery: query,
+      rewrittenQuery,
+      expandedQuery,
+      multiQueryVariants,
+      subQuestions,
+      intentCode,
+      targetSources,
+      quantifierFlags
+    };
+  }
   /**
    * Nhận diện câu hỏi danh tính / mô hình của Chatbot
    */
@@ -50,7 +251,8 @@ export class RagService {
   public static isLegalQuery(query: string, forcedCategory?: string | null): boolean {
     if (forcedCategory && forcedCategory.trim()) return true;
 
-    const q = (query || '')
+    const rewritten = this.rewriteLegalQuery(query || '');
+    const q = rewritten
       .toLowerCase()
       .replace(/[.,;:?!"'“”()\-–—_/\\]/g, ' ')
       .replace(/\s+/g, ' ')
@@ -127,7 +329,7 @@ export class RagService {
       return 'OUT_OF_SCOPE';
     }
 
-    const q = query.toLowerCase().trim();
+    const q = this.rewriteLegalQuery(query).toLowerCase().trim();
 
     // 0. BẮT BUỘC ĐIỀU HƯỚNG NẾU NGƯỜI DÙNG CHỌN DANH MỤC CỤ THỂ
     if (forcedCategory) {
