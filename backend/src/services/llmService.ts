@@ -180,11 +180,8 @@ export class LlmService {
 
     const masterPaths = [
       path.resolve(process.cwd(), 'data/processed/sft_vietlaw_master.json'),
-      path.resolve(process.cwd(), 'data/processed/sft-vietlaw-master.json'),
       path.resolve(process.cwd(), '../data/processed/sft_vietlaw_master.json'),
-      path.resolve(process.cwd(), '../data/processed/sft-vietlaw-master.json'),
-      path.resolve(__dirname, '../../../data/processed/sft_vietlaw_master.json'),
-      path.resolve(__dirname, '../../../data/processed/sft-vietlaw-master.json')
+      path.resolve(__dirname, '../../../data/processed/sft_vietlaw_master.json')
     ];
 
     for (const p of masterPaths) {

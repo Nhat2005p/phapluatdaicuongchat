@@ -1,3 +1,4 @@
+
 # -*- coding: utf-8 -*-
 import json
 import math
@@ -8,7 +9,6 @@ from collections import Counter
 sys.stdout.reconfigure(encoding='utf-8')
 
 MASTER_PATH = 'data/processed/sft_vietlaw_master.json'
-HYPHEN_PATH = 'data/processed/sft-vietlaw-master.json'
 
 VOWELS_LOWER = 'aàáảãạăằắẳẵặâầấẩẫậeèéẻẽẹêềếểễệiìíỉĩịoòóỏõọôồốổỗộơờớởỡợuùúủũụưừứửữựyỳýỷỹỵ'
 VOWELS_UPPER = 'AÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬEÈÉẺẼẸÊỀẾỂỄỆIÌÍỈĨỊOÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢUÙÚỦŨỤƯỪỨỬỮỰYỲÝỶỸỴ'
@@ -309,9 +309,7 @@ def main():
 
     with open(MASTER_PATH, 'w', encoding='utf-8') as f:
         json.dump(processed, f, ensure_ascii=False, indent=2)
-    with open(HYPHEN_PATH, 'w', encoding='utf-8') as f:
-        json.dump(processed, f, ensure_ascii=False, indent=2)
-    print("-> Đã lưu đồng bộ vào cả 2 file master json.")
+    print("-> Đã lưu vào file master json.")
 
 if __name__ == '__main__':
     main()
