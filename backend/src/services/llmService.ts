@@ -76,7 +76,10 @@ export class LlmService {
       lower.includes('khi làm bài phải tách') ||
       lower.includes('điểm cần nhớ: khi đề yêu cầu') ||
       lower.includes('điểm cần nhớ:') ||
-      lower.includes('khung chấm:')
+      lower.includes('khung chấm:') ||
+      lower.includes('1. lỗi trong nhận định:') ||
+      lower.includes('không chỉ sửa giọng văn') ||
+      lower.includes('người học phải gắn từng dữ kiện')
     );
   }
 
@@ -633,19 +636,23 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
 
     // === CÁC NHÁNH ĐẶC TRỊ BAREM CHƯƠNG 2 & CHƯƠNG 3 (ĐẢM BẢO CHÍNH XÁC 100%) ===
 
-    // 0.0.0. Cơ cấu 3 bộ phận Quy phạm pháp luật (Giả định, Quy định, Chế tài và cách thể hiện)
-    const isQpplQuery =
-      qLower.includes('giả định') ||
-      qLower.includes('chế tài') ||
-      qLower.includes('cơ cấu quy phạm') ||
-      qLower.includes('cơ cấu của quy phạm') ||
-      qLower.includes('cách thể hiện của từng quy phạm') ||
-      qLower.includes('cách thể hiện của quy phạm');
+    // 0.0.0. Cơ cấu 3 bộ phận Quy phạm pháp luật (Bài tập xác định Giả định, Quy định, Chế tài trong các điều luật cụ thể)
+    const isTrueFalseCue =
+      qLower.includes('đúng hay sai') ||
+      qLower.includes('đúng/sai') ||
+      qLower.includes('nhận định') ||
+      qLower.includes('mọi quy phạm pháp luật đều') ||
+      qLower.includes('trong cùng một điều luật');
 
-    if (
-      isQpplQuery &&
-      (qLower.includes('quy phạm') || qLower.includes('điều luật') || qLower.includes('hiến pháp') || qLower.includes('bộ luật') || qLower.includes('xác định'))
-    ) {
+    const isQpplQuery =
+      !isTrueFalseCue &&
+      (
+        qLower.includes('cách thể hiện của từng quy phạm') ||
+        qLower.includes('cách thể hiện của quy phạm') ||
+        (qLower.includes('giả định') && qLower.includes('chế tài') && (qLower.includes('điều 39') || qLower.includes('điều 207') || qLower.includes('nhận xét')))
+      );
+
+    if (isQpplQuery) {
       return {
         sample_id: 'SFT_THEORY_QPPL_STRUCT_IDENTIFY',
         intent_code: 'QPPL_STRUCT',
@@ -727,14 +734,67 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       return {
         sample_id: 'SFT_THEORY_4_HINH_THUC_THUC_HIEN_PL',
         intent_code: 'COMPARISON',
-        instruction: 'Phân biệt các hình thức thực hiện pháp luật (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật): Khái niệm, Đặc điểm và Ví dụ minh họa.',
+        instruction: 'Phân biệt các hình thức thực hiện pháp luật (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật): Khái niệm, Đặc điểm, Chủ thể thực hiện và Ví dụ minh họa.',
         input: query,
         output: this.solveDynamicFourFormsOfLawImplementation(query)
       };
     }
 
-    // 0.0.3c. Bài tập xác định Chủ thể, Nội dung, Khách thể, Sự kiện pháp lý của Quan hệ pháp luật cụ thể
+    // 0.0.3d. Phân tích các dấu hiệu cơ bản của vi phạm pháp luật + Quan hệ giữa các dấu hiệu + Ví dụ minh họa (Câu 7)
+    const isVpplBasicSigns =
+      (qLower.includes('dấu hiệu cơ bản của vi phạm pháp luật') ||
+        (qLower.includes('dấu hiệu') && qLower.includes('vi phạm pháp luật') && (qLower.includes('hành vi xác định') || qLower.includes('trái pháp luật') || qLower.includes('năng lực trách nhiệm pháp lý')))) &&
+      !qLower.includes('đúng hay sai') &&
+      !qLower.includes('vượt đèn đỏ');
+
+    if (isVpplBasicSigns) {
+      return {
+        sample_id: 'SFT_THEORY_DAU_HIEU_CO_BAN_VPPL',
+        intent_code: 'VPPL_4_ELEMENTS',
+        instruction: 'Phân tích các dấu hiệu cơ bản của vi phạm pháp luật, mối quan hệ giữa các dấu hiệu và cho 01 ví dụ minh họa.',
+        input: query,
+        output: this.solveDynamicVpplSigns(query)
+      };
+    }
+
+    // 0.0.3e. Tình huống va chạm giao thông vượt đèn đỏ + dùng gậy đánh người gây thương tích (Câu 10)
+    const isTrafficAndAssaultCase =
+      qLower.includes('vượt đèn đỏ') &&
+      qLower.includes('va chạm') &&
+      (qLower.includes('gậy') || qLower.includes('đánh')) &&
+      (qLower.includes('bị thương') || qLower.includes('thương tích'));
+
+    if (isTrafficAndAssaultCase) {
+      return {
+        sample_id: 'SFT_CASE_TRAFFIC_COLLISION_AND_ASSAULT',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải quyết tình huống vượt đèn đỏ gây va chạm giao thông và hành vi dùng gậy đánh người gây thương tích (a, b, c, d).',
+        input: query,
+        output: this.solveDynamicTrafficAndAssaultCase(query)
+      };
+    }
+
+    // 0.0.3f. Tình huống người chưa thành niên (6 đến dưới 15 tuổi, ví dụ M 14 tuổi) tự ý xác lập giao dịch giá trị lớn (mua điện thoại 30 triệu) (Câu 11)
+    const isMinorTransactionCase =
+      (qLower.includes('14 tuổi') || qLower.includes('13 tuổi') || qLower.includes('12 tuổi') || qLower.includes('chưa thành niên')) &&
+      (qLower.includes('cha mẹ') || qLower.includes('đại diện theo pháp luật')) &&
+      (qLower.includes('hiệu lực') || qLower.includes('điều kiện có hiệu lực') || qLower.includes('hậu quả pháp lý'));
+
+    if (isMinorTransactionCase) {
+      return {
+        sample_id: 'SFT_CASE_MINOR_14YO_TRANSACTION_VALIDITY',
+        intent_code: 'CIVIL_CONTRACT',
+        instruction: 'Phân tích tư cách chủ thể, năng lực hành vi dân sự của người chưa thành niên (14 tuổi), điều kiện có hiệu lực của giao dịch dân sự và hậu quả pháp lý.',
+        input: query,
+        output: this.solveDynamicMinorTransactionCase(query)
+      };
+    }
+
+    // 0.0.3c. Bài tập xác định Chủ thể, Nội dung, Khách thể, Sự kiện pháp lý của Quan hệ pháp luật cụ thể (Câu 9)
     const isLegalRelationCase =
+      !isMinorTransactionCase &&
+      !qLower.includes('điều kiện có hiệu lực') &&
+      !qLower.includes('hậu quả pháp lý') &&
       (qLower.includes('chủ thể của quan hệ pháp luật') || (qLower.includes('chủ thể') && qLower.includes('khách thể') && qLower.includes('nội dung'))) &&
       (qLower.includes('sự kiện pháp lý') || qLower.includes('ký hợp đồng') || qLower.includes('hãy xác định') || (/\ba[.)]\s+/i.test(query) && /\bb[.)]\s+/i.test(query)));
 
@@ -2395,18 +2455,133 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
   private static matchCoreExamTrueFalse(query: string): SftSample | null {
     const q = query.toLowerCase().replace(/\s+/g, ' ').trim();
 
-    // Không áp dụng nếu đây là câu hỏi tự luận phân biệt / so sánh / tình huống
+    // Không áp dụng nếu đây là câu hỏi tự luận phân biệt / so sánh / tình huống / phân tích lý thuyết
     if (
-      q.includes('hãy phân biệt') ||
+      q.includes('phân biệt') ||
       q.includes('so sánh') ||
-      q.includes('hãy xác định') ||
+      q.includes('4 hình thức') ||
+      q.includes('bốn hình thức') ||
+      q.includes('các hình thức thực hiện') ||
+      q.includes('trong bài làm cần trình bày') ||
+      q.includes('yêu cầu trình bày') ||
       q.includes('ký hợp đồng') ||
-      q.includes('là gì?')
+      q.includes('là gì?') ||
+      (/\ba[.)]\s+/i.test(query) && /\bb[.)]\s+/i.test(query))
     ) {
       return null;
     }
 
-    // Câu 1: Nhà nước xuất hiện khi xã hội có sự phân chia giai cấp và mâu thuẫn giai cấp không thể điều hòa được
+    // 1. Đề 2 - Câu 1: Pháp luật chỉ được Nhà nước bảo đảm thực hiện bằng biện pháp cưỡng chế Nhà nước
+    if (
+      q.includes('pháp luật') &&
+      q.includes('bảo đảm thực hiện') &&
+      q.includes('cưỡng chế') &&
+      (q.includes('chỉ được') || q.includes('chỉ bằng') || q.includes('duy nhất'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_201_COERCION_ONLY',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ lý luận Nhà nước và Pháp luật (Chương 2, Mục 2.1 — Giáo trình Pháp luật Đại cương), để bảo đảm pháp luật được thực hiện nghiêm chỉnh trong đời sống, Nhà nước kết hợp đồng bộ nhiều biện pháp khác nhau: tuyên truyền, phổ biến, giáo dục ý thức pháp luật, thuyết phục, tổ chức thực hiện, khen thưởng, khuyến khích lợi ích vật chất/tinh thần. **Biện pháp cưỡng chế nhà nước** chỉ là công cụ đặc thù mang tính răn đe, trừng phạt sau cùng khi các biện pháp khác không đạt hiệu quả hoặc khi có hành vi vi phạm pháp luật xảy ra.`
+      };
+    }
+
+    // 2. Đề 2 - Câu 2: Mọi quy phạm pháp luật đều phải có đầy đủ ba bộ phận: giả định, quy định và chế tài trong cùng một điều luật
+    if (
+      q.includes('quy phạm pháp luật') &&
+      (q.includes('ba bộ phận') || q.includes('3 bộ phận') || (q.includes('giả định') && q.includes('chế tài'))) &&
+      (q.includes('trong cùng một điều luật') || q.includes('đều phải có đầy đủ') || q.includes('luôn phải có đủ'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_202_QPPL_3_PARTS_IN_ONE_ARTICLE',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:**
+  1. Về mặt cấu trúc logic lý luận (Chương 3, Mục 3.1.2 — Giáo trình Pháp luật Đại cương), một quy phạm pháp luật thường gồm 3 bộ phận: *Giả định, Quy định* và *Chế tài*. Tuy nhiên, **khi thể hiện trong văn bản quy phạm pháp luật, một quy phạm pháp luật KHÔNG bắt buộc phải có đầy đủ cả ba bộ phận trong cùng một điều luật**.
+  2. Để đảm bảo tính cô đọng, ngắn gọn và tránh trùng lặp trong kỹ thuật lập pháp, nhà làm luật thường trình bày theo các phương thức:
+     - **Khuyết hoặc ẩn một bộ phận trực tiếp**: Ví dụ các quy phạm hiến định/trao quyền thường chỉ có *Giả định* và *Quy định* (như Điều 39 Hiến pháp năm 2013: *"Công dân có quyền và nghĩa vụ học tập"*); các quy phạm hình sự tại Phần các tội phạm cụ thể trong Bộ luật Hình sự thường chỉ nêu *Giả định* và *Chế tài*, còn bộ phận *Quy định* (mệnh lệnh cấm) được ẩn ngầm (như Khoản 1 Điều 207 Bộ luật Hình sự năm 2015).
+     - **Phương thức dẫn chiếu**: Bộ phận *Giả định*, *Quy định* được đặt ở một điều luật này, còn bộ phận *Chế tài* nằm ở một điều luật khác hoặc trong văn bản quy phạm pháp luật chuyên ngành khác (không nằm chung trong cùng một điều luật).`
+      };
+    }
+
+    // 3. Đề 2 - Câu 3: Tuân thủ pháp luật là hình thức thực hiện pháp luật trong đó chủ thể pháp luật thực hiện những nghĩa vụ mà pháp luật bắt buộc phải thực hiện
+    if (
+      q.includes('tuân thủ pháp luật') &&
+      q.includes('thực hiện những nghĩa vụ') &&
+      q.includes('bắt buộc') &&
+      !q.includes('thi hành pháp luật')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_203_TUAN_THU_VS_THI_HANH',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ lý luận về 4 hình thức thực hiện pháp luật (Chương 3, Mục 3.2.1 — Giáo trình Pháp luật Đại cương):
+  1. **Tuân thủ pháp luật (Tuân theo pháp luật)** là hình thức thực hiện pháp luật trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm** (thể hiện dưới dạng hành vi thụ động / *không hành động*, tương ứng với các quy phạm cấm đoán — ví dụ: không vượt đèn đỏ, không tàng trữ trái phép chất ma túy).
+  2. Còn hình thức thực hiện pháp luật trong đó chủ thể chủ động **thực hiện những nghĩa vụ mà pháp luật bắt buộc phải thực hiện** bằng hành vi tích cực (*hành động*, tương ứng với quy phạm bắt buộc — ví dụ: đóng thuế, thực hiện nghĩa vụ quân sự) là hình thức **Thi hành pháp luật (Chấp hành pháp luật)**, không phải là Tuân thủ pháp luật.`
+      };
+    }
+
+    // 4. Đề 2 - Câu 4: Người từ đủ 15 tuổi đến chưa đủ 18 tuổi có năng lực hành vi dân sự đầy đủ như người từ đủ 18 tuổi trở lên
+    if (
+      q.includes('15 tuổi') &&
+      q.includes('18 tuổi') &&
+      q.includes('năng lực hành vi dân sự đầy đủ')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_204_AGE_15_TO_18_CAPACITY',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ theo quy định tại **Điều 20 và Điều 21 Bộ luật Dân sự năm 2015**:
+  1. Theo **Điều 20 Bộ luật Dân sự 2015**: Chỉ **người thành niên (từ đủ 18 tuổi trở lên)** mới là người có **năng lực hành vi dân sự đầy đủ** (trừ trường hợp bị Tòa án tuyên mất, hạn chế năng lực hành vi dân sự hoặc có khó khăn trong nhận thức, làm chủ hành vi theo Điều 22, 23, 24 BLDS 2015).
+  2. Theo **Khoản 1 và Khoản 4 Điều 21 Bộ luật Dân sự 2015**: **Người từ đủ 15 tuổi đến chưa đủ 18 tuổi** vẫn là **người chưa thành niên** và chỉ có **năng lực hành vi dân sự một phần (chưa đầy đủ)**. Cụ thể, người từ đủ 15 tuổi đến chưa đủ 18 tuổi được tự mình xác lập, thực hiện giao dịch dân sự, **TRỪ** giao dịch dân sự liên quan đến **bất động sản**, **động sản phải đăng ký** (như nhà ở, quyền sử dụng đất, xe máy, ô tô) và giao dịch dân sự khác theo quy định của luật phải được **người đại diện theo pháp luật đồng ý**. Do đó, người từ đủ 15 tuổi đến chưa đủ 18 tuổi không có năng lực hành vi dân sự đầy đủ như người từ đủ 18 tuổi trở lên.`
+      };
+    }
+
+    // 5. Đề 2 - Câu 5 & Đề 1 - Câu 3: Vi phạm pháp luật luôn phải có thiệt hại thực tế xảy ra / Thiệt hại thực tế là dấu hiệu bắt buộc trong mặt khách quan của mọi VPPL
+    if (
+      q.includes('thiệt hại thực tế') &&
+      (q.includes('dấu hiệu bắt buộc') || q.includes('luôn phải có') || q.includes('mới được xác định là vi phạm'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_03_ACTUAL_DAMAGE',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ lý luận về Mặt khách quan của vi phạm pháp luật (Chương 5, Mục 5.1.2 — Giáo trình Pháp luật Đại cương):
+  1. Mặt khách quan của vi phạm pháp luật bao gồm các yếu tố: *Hành vi trái pháp luật, Hậu quả thiệt hại thực tế cho xã hội, Mối quan hệ nhân quả giữa hành vi và hậu quả, cùng thời gian, địa điểm, công cụ, phương tiện vi phạm*.
+  2. Trong các yếu tố trên, chỉ có duy nhất **Hành vi trái pháp luật** là **dấu hiệu bắt buộc đối với mọi vi phạm pháp luật** (không có hành vi trái pháp luật biểu hiện ra thế giới khách quan thì không có vi phạm pháp luật).
+  3. Yếu tố **Thiệt hại thực tế xảy ra KHÔNG PHẢI là dấu hiệu bắt buộc trong mọi vi phạm pháp luật**, bởi vì:
+     - Chỉ đối với các vi phạm có **cấu thành vật chất** mới đòi hỏi bắt buộc phải có thiệt hại thực tế xảy ra (Ví dụ: Tội trộm cắp tài sản theo Khoản 1 Điều 173 BLHS 2015 đòi hỏi tài sản chiếm đoạt từ 2 triệu đồng trở lên; trách nhiệm bồi thường thiệt hại ngoài hợp đồng theo Điều 584 BLDS 2015).
+     - Đối với các vi phạm có **cấu thành hình thức**, vi phạm pháp luật được xác định là hoàn thành ngay khi chủ thể thực hiện hành vi nguy hiểm trái pháp luật mà **không bắt buộc phải có thiệt hại thực tế xảy ra** (Ví dụ: hành vi vượt đèn đỏ hoặc không đội mũ bảo hiểm đã cấu thành vi phạm hành chính dù chưa gây tai nạn; Tội cướp tài sản theo Điều 168 BLHS 2015; Tội tàng trữ trái phép vũ khí quân dụng theo Điều 304 BLHS 2015).`
+      };
+    }
+
+    // 6. Đề 2 - Câu 6: Áp dụng pháp luật là hoạt động mang tính quyền lực Nhà nước nhằm cá biệt hóa quy phạm pháp luật vào trường hợp cụ thể
+    if (
+      q.includes('áp dụng pháp luật') &&
+      q.includes('quyền lực nhà nước') &&
+      q.includes('cá biệt hóa')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_206_AP_DUNG_PHAP_LUAT_CA_BIET_HOA',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **Kết luận:** **ĐÚNG.**
+- **Giải thích:** Áp dụng pháp luật là hình thức thực hiện pháp luật mang tính quyền lực nhà nước, chỉ do cơ quan nhà nước, người có thẩm quyền (hoặc tổ chức được Nhà nước trao quyền) tiến hành theo trình tự, thủ tục luật định. Mục đích của hoạt động này là ban hành các văn bản áp dụng pháp luật (quyết định cá biệt) nhằm **cá biệt hóa các quy tắc xử sự chung** trong quy phạm pháp luật vào từng vụ việc, trường hợp cụ thể đối với các cá nhân, tổ chức xác định.`
+      };
+    }
+
+    // 7. Đề 1 - Câu 1: Nhà nước xuất hiện khi xã hội có sự phân chia giai cấp và mâu thuẫn giai cấp không thể điều hòa được
     if (
       q.includes('nhà nước') &&
       (q.includes('phân chia giai cấp') || q.includes('mâu thuẫn giai cấp')) &&
@@ -2418,16 +2593,16 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
         intent_code: 'TRUE_FALSE',
         instruction: query,
         input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận & Giải thích chi tiết (Chương 1, Mục 1.1.1 — Giáo trình Pháp luật Đại cương)**:
-  1. Theo học thuyết Mác – Lênin về nguồn gốc Nhà nước (tác phẩm *Nguồn gốc của gia đình, của chế độ tư hữu và của nhà nước* của Ph.Ăngghen), Nhà nước không phải là hiện tượng vĩnh cửu, bất biến mà là một phạm trù lịch sử chỉ ra đời khi xã hội loài người phát triển đến một giai đoạn nhất định.
+        output: `- **Kết luận:** **ĐÚNG.**
+- **Giải thích:** Căn cứ Chương 1, Mục 1.1.1 — Giáo trình Pháp luật Đại cương:
+  1. Theo học thuyết Mác – Lênin về nguồn gốc Nhà nước, Nhà nước là một phạm trù lịch sử chỉ ra đời khi xã hội loài người phát triển đến một giai đoạn nhất định.
   2. Nhà nước xuất hiện trực tiếp từ **hai tiền đề khách quan**:
      - **Tiền đề kinh tế**: Ba lần phân công lao động xã hội lớn làm năng suất lao động tăng cao, tạo ra của cải dư thừa và dẫn đến sự hình thành **chế độ tư hữu** về tư liệu sản xuất.
-     - **Tiền đề xã hội**: Xã hội phân hóa thành các giai cấp đối kháng (chủ nô và nô lệ) có lợi ích mâu thuẫn gay gắt đến mức **không thể điều hòa được**. Để giữ cho cuộc đấu tranh giai cấp không dẫn đến chỗ tiêu diệt lẫn nhau và tiêu diệt luôn cả xã hội, một tổ chức quyền lực công đặc biệt đã ra đời để thiết lập "trật tự" — đó chính là **Nhà nước**.`
+     - **Tiền đề xã hội**: Xã hội phân hóa thành các giai cấp đối kháng có lợi ích mâu thuẫn gay gắt đến mức **không thể điều hòa được**. Để giữ cho cuộc đấu tranh giai cấp không dẫn đến chỗ tiêu diệt lẫn nhau và tiêu diệt luôn cả xã hội, một tổ chức quyền lực công đặc biệt đã ra đời để thiết lập "trật tự" — đó chính là **Nhà nước**.`
       };
     }
 
-    // Câu 2: Mọi quy tắc xử sự tồn tại trong xã hội đều là quy phạm pháp luật
+    // 8. Đề 1 - Câu 2: Mọi quy tắc xử sự tồn tại trong xã hội đều là quy phạm pháp luật
     if (
       q.includes('mọi quy tắc xử sự') &&
       (q.includes('đều là quy phạm pháp luật') || q.includes('đều là pháp luật'))
@@ -2437,38 +2612,14 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
         intent_code: 'TRUE_FALSE',
         instruction: query,
         input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận & Giải thích chi tiết (Chương 3, Mục 3.1.1 — Giáo trình Pháp luật Đại cương)**:
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ Chương 3, Mục 3.1.1 — Giáo trình Pháp luật Đại cương:
   1. Trong đời sống xã hội, hành vi xử sự của con người được điều chỉnh bởi một hệ thống đa dạng các **quy phạm xã hội** bao gồm: *Quy phạm pháp luật, Quy phạm đạo đức, Phong tục tập quán, Tín điều tôn giáo* và *Quy tắc của các tổ chức chính trị – xã hội*.
-  2. **Quy phạm pháp luật** chỉ là một bộ phận đặc biệt trong hệ thống các quy tắc xử sự xã hội, mang hai dấu hiệu đặc thù mà các quy tắc xử sự khác không có:
-     - **Thứ nhất**: Chỉ do **Nhà nước ban hành hoặc thừa nhận** theo trình tự, thủ tục và hình thức pháp lý xác định.
-     - **Thứ nhất / Thứ hai**: Được **Nhà nước bảo đảm thực hiện bằng sức mạnh cưỡng chế nhà nước** (thông qua hệ thống chế tài hình sự, hành chính, dân sự, kỷ luật).
-  3. Các quy tắc xử sự khác (như đạo đức, tập quán, tôn giáo) hình thành tự phát hoặc do tổ chức xã hội đặt ra và chỉ được bảo đảm bằng thói quen, lương tâm, niềm tin tôn giáo hoặc dư luận xã hội chứ không phải là quy phạm pháp luật.`
+  2. **Quy phạm pháp luật** chỉ là một bộ phận đặc biệt trong hệ thống các quy tắc xử sự xã hội, mang hai dấu hiệu đặc thù mà các quy tắc xử sự khác không có: chỉ do **Nhà nước ban hành hoặc thừa nhận** và được **Nhà nước bảo đảm thực hiện bằng sức mạnh cưỡng chế nhà nước**.`
       };
     }
 
-    // Câu 3: Thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của mọi vi phạm pháp luật
-    if (
-      q.includes('thiệt hại thực tế') &&
-      q.includes('dấu hiệu bắt buộc') &&
-      q.includes('mặt khách quan')
-    ) {
-      return {
-        sample_id: 'SFT_CORE_TF_03_ACTUAL_DAMAGE',
-        intent_code: 'TRUE_FALSE',
-        instruction: query,
-        input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Cơ sở lý luận & Giải thích chi tiết (Chương 5, Mục 5.1.2 — Giáo trình Pháp luật Đại cương)**:
-  1. Mặt khách quan của vi phạm pháp luật bao gồm các yếu tố: *Hành vi trái pháp luật, Hậu quả thiệt hại thực tế cho xã hội, Mối quan hệ nhân quả giữa hành vi và hậu quả, cùng thời gian, địa điểm, công cụ, phương tiện vi phạm*.
-  2. Trong các yếu tố trên, chỉ có duy nhất **Hành vi trái pháp luật** là **dấu hiệu bắt buộc đối với mọi vi phạm pháp luật** (không có hành vi trái pháp luật biểu hiện ra thế giới khách quan thì không thể có vi phạm pháp luật).
-  3. Yếu tố **Thiệt hại thực tế xảy ra cho xã hội KHÔNG PHẢI là dấu hiệu bắt buộc trong mọi vi phạm pháp luật**, bởi vì:
-     - Chỉ đối với các vi phạm có **cấu thành vật chất** mới đòi hỏi bắt buộc phải có thiệt hại thực tế xảy ra (Ví dụ: Tội trộm cắp tài sản theo Khoản 1 Điều 173 BLHS 2015 đòi hỏi tài sản chiếm đoạt trị giá từ 2 triệu đồng trở lên; trách nhiệm bồi thường thiệt hại ngoài hợp đồng theo Điều 584 BLDS 2015).
-     - Đối với các vi phạm có **cấu thành hình thức**, vi phạm pháp luật hoàn thành ngay từ thời điểm chủ thể thực hiện hành vi nguy hiểm trái pháp luật mà **không bắt buộc phải có thiệt hại thực tế xảy ra** (Ví dụ: Tội cướp tài sản theo Điều 168 BLHS 2015, Tội tàng trữ trái phép chất ma túy theo Điều 249 BLHS 2015, hoặc hành vi vượt đèn đỏ trong giao thông đường bộ).`
-      };
-    }
-
-    // Câu 4: Người đủ 18 tuổi trở lên có năng lực hành vi đầy đủ và là chủ thể của mọi quan hệ pháp luật
+    // 9. Đề 1 - Câu 4: Người đủ 18 tuổi trở lên có năng lực hành vi đầy đủ và là chủ thể của mọi quan hệ pháp luật
     if (
       q.includes('18 tuổi') &&
       q.includes('năng lực hành vi') &&
@@ -2479,19 +2630,14 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
         intent_code: 'TRUE_FALSE',
         instruction: query,
         input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
-- **Căn cứ pháp lý & Giải thích chi tiết (Chương 4, Mục 4.2.1 — Giáo trình Pháp luật Đại cương & Bộ luật Dân sự 2015)**:
-  Nhận định trên sai ở cả hai khía cạnh pháp lý:
-  1. **Thứ nhất — Không phải mọi người từ đủ 18 tuổi trở lên đều có năng lực hành vi đầy đủ**:
-     - Căn cứ **Điều 20, Điều 22, Điều 23 và Điều 24 Bộ luật Dân sự năm 2015**: Người thành niên (từ đủ 18 tuổi trở lên) chỉ có năng lực hành vi dân sự đầy đủ **trừ trường hợp** bị Tòa án ra quyết định tuyên bố **mất năng lực hành vi dân sự** (do mắc bệnh tâm thần hoặc bệnh khác mà không thể nhận thức, làm chủ hành vi), người **có khó khăn trong nhận thức, làm chủ hành vi**, hoặc người bị **hạn chế năng lực hành vi dân sự** (do nghiện ma túy, chất kích thích khác dẫn đến phá tán tài sản của gia đình).
-  2. **Thứ hai — Người từ đủ 18 tuổi có năng lực hành vi đầy đủ cũng KHÔNG THỂ là chủ thể của MỌI quan hệ pháp luật**:
-     - Để trở thành chủ thể của nhiều quan hệ pháp luật chuyên biệt, ngoài độ tuổi 18 và năng lực hành vi dân sự, pháp luật còn đòi hỏi những **điều kiện chủ thể đặc biệt** khác:
-       + *Về độ tuổi chuyên ngành*: Trong quan hệ kết hôn theo **Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình năm 2014**, nam phải từ **đủ 20 tuổi trở lên** mới đủ điều kiện kết hôn (nam 18–19 tuổi chưa thể là chủ thể của quan hệ hôn nhân). Trong bầu cử theo **Điều 27 Hiến pháp năm 2013**, công dân phải đủ **21 tuổi trở lên** mới có quyền ứng cử vào Quốc hội, Hội đồng nhân dân.
-       + *Về thẩm quyền công vụ*: Trong các quan hệ pháp luật hành chính, tố tụng hình sự hoặc áp dụng pháp luật, một bên chủ thể bắt buộc phải là **cơ quan nhà nước hoặc người có thẩm quyền mang quyền lực nhà nước** (cá nhân thông thường dù đủ 18 tuổi cũng không thể là chủ thể ra quyết định xử phạt hay xét xử).`
+        output: `- **Kết luận:** **SAI.**
+- **Giải thích:** Căn cứ Chương 4, Mục 4.2.1 — Giáo trình Pháp luật Đại cương & Bộ luật Dân sự 2015:
+  1. **Không phải mọi người từ đủ 18 tuổi trở lên đều có năng lực hành vi đầy đủ**: Theo **Điều 20, Điều 22, Điều 23 và Điều 24 Bộ luật Dân sự năm 2015**, người thành niên từ đủ 18 tuổi trở lên bị Tòa án tuyên bố **mất năng lực hành vi dân sự**, **có khó khăn trong nhận thức, làm chủ hành vi**, hoặc bị **hạn chế năng lực hành vi dân sự** thì không có năng lực hành vi dân sự đầy đủ.
+  2. **Người từ đủ 18 tuổi có năng lực hành vi đầy đủ cũng KHÔNG THỂ là chủ thể của MỌI quan hệ pháp luật**: Nhiều quan hệ pháp luật đòi hỏi điều kiện chủ thể đặc biệt về độ tuổi hoặc thẩm quyền (ví dụ: nam kết hôn phải từ **đủ 20 tuổi trở lên** theo Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình 2014; công dân ứng cử đại biểu Quốc hội, HĐND phải đủ **21 tuổi trở lên** theo Điều 27 Hiến pháp 2013; chủ thể áp dụng pháp luật phải là cơ quan nhà nước hoặc người có thẩm quyền).`
       };
     }
 
-    // Câu 5: Áp dụng pháp luật là hình thức thực hiện pháp luật trong đó chủ thể thực hiện pháp luật phải là cơ quan nhà nước hoặc người có thẩm quyền
+    // 10. Đề 1 - Câu 5: Áp dụng pháp luật là hình thức thực hiện pháp luật trong đó chủ thể thực hiện pháp luật phải là cơ quan nhà nước hoặc người có thẩm quyền
     if (
       q.includes('áp dụng pháp luật') &&
       q.includes('hình thức thực hiện pháp luật') &&
@@ -2502,17 +2648,14 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
         intent_code: 'TRUE_FALSE',
         instruction: query,
         input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận & Giải thích chi tiết (Chương 3, Mục 3.2.2 — Giáo trình Pháp luật Đại cương)**:
+        output: `- **Kết luận:** **ĐÚNG.**
+- **Giải thích:** Căn cứ Chương 3, Mục 3.2.2 — Giáo trình Pháp luật Đại cương:
   1. Khoa học pháp lý phân chia thực hiện pháp luật thành **4 hình thức**: *Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật* và *Áp dụng pháp luật*.
-  2. Trong khi 3 hình thức đầu (*Tuân thủ, Thi hành, Sử dụng pháp luật*) có thể do **mọi cá nhân, tổ chức** trong xã hội tự mình thực hiện, thì **Áp dụng pháp luật** là hình thức thực hiện pháp luật đặc biệt, vừa là một hình thức thực hiện pháp luật vừa là hoạt động **mang tính tổ chức – quyền lực nhà nước**.
-  3. **Đặc điểm về chủ thể của Áp dụng pháp luật**:
-     - Chủ thể tiến hành áp dụng pháp luật **bắt buộc phải là các cơ quan nhà nước có thẩm quyền, nhà chức trách (cán bộ, công chức được trao quyền)** hoặc các tổ chức xã hội được Nhà nước ủy quyền/trao quyền thực hiện chức năng quản lý nhà nước trong những trường hợp cụ thể do pháp luật quy định.
-     - Công dân hay cá nhân thông thường không mang quyền lực nhà nước nên **không thể là chủ thể tiến hành áp dụng pháp luật** (ví dụ: chỉ Tòa án mới có thẩm quyền ra bản án kết tội; chỉ Cảnh sát giao thông/Chủ tịch UBND mới có thẩm quyền ra quyết định xử phạt vi phạm hành chính).`
+  2. Trong khi 3 hình thức đầu có thể do **mọi cá nhân, tổ chức** tự mình thực hiện, thì **Áp dụng pháp luật** là hoạt động **mang tính tổ chức – quyền lực nhà nước**, chủ thể tiến hành bắt buộc phải là **cơ quan nhà nước có thẩm quyền, người có thẩm quyền** (hoặc tổ chức xã hội được Nhà nước trao quyền theo quy định của pháp luật).`
       };
     }
 
-    // Câu 6: Trách nhiệm pháp lý chỉ phát sinh khi có hành vi vi phạm pháp luật
+    // 11. Đề 1 - Câu 6: Trách nhiệm pháp lý chỉ phát sinh khi có hành vi vi phạm pháp luật
     if (
       q.includes('trách nhiệm pháp lý') &&
       (q.includes('chỉ phát sinh khi') || q.includes('phát sinh khi có')) &&
@@ -2524,12 +2667,10 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
         intent_code: 'TRUE_FALSE',
         instruction: query,
         input: query,
-        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
-- **Cơ sở lý luận & Giải thích chi tiết (Chương 5, Mục 5.2.1 & 5.2.2 — Giáo trình Pháp luật Đại cương)**:
-  1. **Khái niệm Trách nhiệm pháp lý**: Theo nghĩa tích cực trong khoa học pháp lý đại cương, trách nhiệm pháp lý là hậu quả pháp lý bất lợi (sự phản ứng tiêu cực và trừng phạt của Nhà nước) mà chủ thể phải gánh chịu thông qua việc cơ quan nhà nước có thẩm quyền áp dụng các biện pháp cưỡng chế nhà nước được quy định trong phần chế tài của quy phạm pháp luật.
-  2. **Cơ sở thực tiễn phát sinh trách nhiệm pháp lý**:
-     - Trách nhiệm pháp lý **chỉ phát sinh khi trên thực tế có hành vi vi phạm pháp luật xảy ra** (hành vi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại đến quan hệ xã hội được pháp luật bảo vệ).
-     - **Vi phạm pháp luật là cơ sở thực tế (tiền đề bắt buộc) của trách nhiệm pháp lý**: Không có hành vi vi phạm pháp luật thì tuyệt đối không phát sinh trách nhiệm pháp lý và không ai bị áp dụng chế tài cưỡng chế nhà nước (đảm bảo nguyên tắc pháp chế xã hội chủ nghĩa và nguyên tắc có lỗi).`
+        output: `- **Kết luận:** **ĐÚNG.**
+- **Giải thích:** Căn cứ Chương 5, Mục 5.2.1 & 5.2.2 — Giáo trình Pháp luật Đại cương:
+  1. **Trách nhiệm pháp lý** là hậu quả pháp lý bất lợi (sự phản ứng tiêu cực và trừng phạt của Nhà nước) mà chủ thể phải gánh chịu thông qua việc cơ quan nhà nước có thẩm quyền áp dụng các biện pháp cưỡng chế nhà nước quy định trong phần chế tài của quy phạm pháp luật.
+  2. **Vi phạm pháp luật là cơ sở thực tế (tiền đề bắt buộc) để truy cứu trách nhiệm pháp lý**: Trách nhiệm pháp lý chỉ phát sinh khi trên thực tế có hành vi vi phạm pháp luật xảy ra (hành vi xác định, trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện).`
       };
     }
 
@@ -2537,82 +2678,244 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
   }
 
   /**
-   * Bộ giải chuẩn mực Câu 8: Phân biệt 4 hình thức thực hiện pháp luật
-   * (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật)
-   * Đáp ứng đầy đủ: Khái niệm, Đặc điểm và Ví dụ minh họa cho từng hình thức + Bảng so sánh tổng hợp.
+   * Bộ giải chuẩn mực Câu 7 (Đề 2): Phân tích các dấu hiệu cơ bản của vi phạm pháp luật + Mối quan hệ + Ví dụ minh họa
    */
-  public static solveDynamicFourFormsOfLawImplementation(query?: string): string {
-    return `### I. KHÁI NIỆM CHUNG VỀ THỰC HIỆN PHÁP LUẬT
-*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*
+  public static solveDynamicVpplSigns(query?: string): string {
+    return `### I. KHÁI NIỆM VI PHẠM PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 5, Mục 5.1.1, tr. 104 – 106)*
 
-**Thực hiện pháp luật** là một quá trình hoạt động có mục đích, làm cho những quy định của pháp luật đi vào cuộc sống, trở thành những hành vi thực tế hợp pháp của các chủ thể pháp luật. Căn cứ vào tính chất của hoạt động thực hiện pháp luật, khoa học pháp lý phân chia thành **04 hình thức thực hiện pháp luật**:
+**Vi phạm pháp luật** là hành vi xác định của con người (hành động hoặc không hành động), trái với các quy định của pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm hại hoặc đe dọa xâm hại đến các quan hệ xã hội được pháp luật xác lập và bảo vệ.
 
 ---
 
-### II. PHÂN TÍCH CHI TIẾT 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT (KHÁI NIỆM – ĐẶC ĐIỂM – VÍ DỤ)
+### II. PHÂN TÍCH 04 DẤU HIỆU CƠ BẢN CỦA VI PHẠM PHÁP LUẬT
+
+#### 1. Là hành vi xác định của con người
+- Vi phạm pháp luật trước hết phải là **hành vi thực tế, cụ thể của con người** được biểu hiện ra thế giới khách quan dưới dạng **hành động** (làm việc bị cấm) hoặc **không hành động** (không làm việc pháp luật bắt buộc phải làm) và nằm dưới sự kiểm soát của ý thức, ý chí con người.
+- Pháp luật chỉ điều chỉnh hành vi thực tế đã bộc lộ ra bên ngoài; **mọi suy nghĩ, tư tưởng, thái độ hay dự định trong nội tâm** dù xấu xa hoặc tiêu cực đến đâu nhưng chưa biểu hiện thành hành vi thực tế thì **không bị coi là vi phạm pháp luật**.
+
+#### 2. Hành vi có tính trái pháp luật
+- Hành vi xác định đó phải **trái với các yêu cầu, quy tắc xử sự nêu trong quy phạm pháp luật hiện hành**, xâm hại tới các quan hệ xã hội được Nhà nước xác lập và bảo vệ.
+- Tính trái pháp luật biểu hiện dưới 3 dạng:
+  + Thực hiện những hành vi mà pháp luật **nghiêm cấm** (vi phạm quy phạm cấm đoán).
+  + Không thực hiện hoặc thực hiện không đầy đủ những nghĩa vụ mà pháp luật **bắt buộc phải làm** (vi phạm quy phạm bắt buộc).
+  + Thực hiện hành vi **vượt quá giới hạn, thẩm quyền** mà pháp luật cho phép.
+
+#### 3. Có lỗi của chủ thể thực hiện hành vi
+- **Lỗi** là trạng thái tâm lý chủ quan bên trong của chủ thể đối với hành vi trái pháp luật của mình và đối với hậu quả do hành vi đó gây ra (bao gồm **lỗi cố ý trực tiếp, lỗi cố ý gián tiếp, lỗi vô ý vì quá tự tin** và **lỗi vô ý do cẩu thả**).
+- Nếu một hành vi tuy gây thiệt hại hoặc trái với quy định pháp luật nhưng được thực hiện trong hoàn cảnh chủ thể không có khả năng nhận thức hoặc không thể lựa chọn cách xử sự khác (ví dụ: *sự kiện bất ngờ, sự kiện bất khả kháng, phòng vệ chính đáng, tình thế cấp thiết*) thì chủ thể **không có lỗi**, do đó không cấu thành vi phạm pháp luật.
+
+#### 4. Chủ thể thực hiện hành vi phải có năng lực trách nhiệm pháp lý
+- **Năng lực trách nhiệm pháp lý** là khả năng của chủ thể (cá nhân hoặc pháp nhân) tự mình gánh chịu hậu quả pháp lý bất lợi do hành vi trái pháp luật của mình gây ra.
+- Đối với cá nhân, năng lực trách nhiệm pháp lý được xác định dựa trên hai tiêu chuẩn:
+  + **Đạt độ tuổi do pháp luật quy định** trong từng lĩnh vực pháp luật (ví dụ: từ đủ 16 tuổi chịu trách nhiệm hình sự về mọi tội phạm, từ đủ 14 đến dưới 16 tuổi chịu TNHS về tội rất nghiêm trọng, đặc biệt nghiêm trọng theo Điều 12 BLHS 2015; từ đủ 16 tuổi chịu trách nhiệm hành chính về mọi vi phạm hành chính theo Điều 5 Luật XLVPHC 2012).
+  + **Có khả năng nhận thức và điều khiển hành vi bình thường** (không mắc bệnh tâm thần hoặc bệnh khác làm mất khả năng nhận thức hoặc khả năng làm chủ hành vi tại thời điểm thực hiện hành vi).
+
+---
+
+### III. QUAN HỆ GIỮA CÁC DẤU HIỆU TRÊN TRONG VIỆC XÁC ĐỊNH MỘT HÀNH VI VI PHẠM PHÁP LUẬT
+- Bốn dấu hiệu cơ bản nêu trên có **mối quan hệ biện chứng, thống nhất hữu cơ, gắn bó chặt chẽ và không thể tách rời nhau**, tạo thành hệ thống **điều kiện cần và đủ** để xác định một hiện tượng thực tế có phải là vi phạm pháp luật hay không:
+  1. **Dấu hiệu hành vi xác định và tính trái pháp luật** là tiền đề khách quan bên ngoài: Không có hành vi xác định trái pháp luật thì không có đối tượng để xem xét lỗi hay năng lực trách nhiệm pháp lý.
+  2. **Dấu hiệu có lỗi và năng lực trách nhiệm pháp lý** là tiền đề chủ quan bên trong: Một hành vi dù trái pháp luật và gây thiệt hại cho xã hội nhưng do người chưa đủ tuổi luật định hoặc người mắc bệnh tâm thần thực hiện (không có năng lực trách nhiệm pháp lý), hoặc thực hiện trong tình thế không có lỗi, thì cũng **không phải là vi phạm pháp luật**.
+- **Kết luận nguyên tắc**: Một hành vi **chỉ bị coi là vi phạm pháp luật khi hội tụ đầy đủ đồng thời cả 04 dấu hiệu trên**; nếu thiếu bất kỳ một dấu hiệu nào thì hành vi đó không cấu thành vi phạm pháp luật và không thể truy cứu trách nhiệm pháp lý.
+
+---
+
+### IV. VÍ DỤ MINH HỌA CỤ THỂ
+- **Tình huống minh họa**: **Anh K (25 tuổi, có đầy đủ nhận thức và năng lực hành vi), điều khiển xe máy vượt đèn đỏ tại ngã tư.**
+- **Phân tích đối chiếu 04 dấu hiệu cấu thành vi phạm pháp luật**:
+  1. **Hành vi xác định**: Hành động điều khiển xe máy chạy qua giao lộ khi đèn tín hiệu giao thông đã chuyển sang màu đỏ.
+  2. **Tính trái pháp luật**: Vi phạm quy tắc giao thông đường bộ được pháp luật quy định (hành vi vượt đèn đỏ bị pháp luật giao thông đường bộ nghiêm cấm).
+  3. **Có lỗi**: **Lỗi cố ý trực tiếp** (Anh K nhìn thấy rõ đèn tín hiệu màu đỏ là cấm đi nhưng vẫn chủ động tăng ga điều khiển xe vượt qua).
+  4. **Năng lực trách nhiệm pháp lý**: Anh K đã đạt độ tuổi theo luật định (**25 tuổi** — trên 16 tuổi theo Điều 5 Luật Xử lý vi phạm hành chính năm 2012) và hoàn toàn tỉnh táo, không mắc bệnh tâm thần hay bệnh khác làm mất khả năng nhận thức và điều khiển hành vi.
+  ➔ Hội tụ đủ 4 dấu hiệu nên hành vi của anh K được xác định là **vi phạm pháp luật** (vi phạm pháp luật hành chính).`;
+  }
+
+  /**
+   * Bộ giải chuẩn mực Câu 8: Phân biệt 4 hình thức thực hiện pháp luật
+   * (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật)
+   * Đáp ứng đầy đủ 4 tiêu chí: Khái niệm, Đặc điểm biểu hiện, Chủ thể thực hiện và Ví dụ minh họa.
+   */
+  public static solveDynamicFourFormsOfLawImplementation(query?: string): string {
+    return `### I. BẢNG PHÂN BIỆT CHUẨN 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*
+
+| Tiêu chí | Tuân thủ pháp luật | Thi hành pháp luật | Sử dụng pháp luật | Áp dụng pháp luật |
+| :--- | :--- | :--- | :--- | :--- |
+| **Khái niệm** | Chủ thể kiềm chế không thực hiện những điều pháp luật cấm. | Chủ thể chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm. | Chủ thể thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép. | Cơ quan, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể. |
+| **Đặc điểm biểu hiện** | Dạng **không hành động** (thụ động) — tương ứng với quy phạm cấm đoán. | Dạng **hành động** (tích cực, chủ động) — tương ứng với quy phạm bắt buộc. | Dạng **hành động hoặc không hành động** (tùy nghi quyết định theo ý chí) — tương ứng với quy phạm trao quyền. | Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, trình tự thủ tục chặt chẽ, ban hành văn bản cá biệt. |
+| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Cơ quan nhà nước, người có thẩm quyền hoặc tổ chức được Nhà nước ủy quyền/trao quyền. |
+| **Ví dụ minh họa** | Không chở hàng cấm, không vượt đèn đỏ, không tàng trữ chất ma túy. | Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi đi xe máy. | Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc. | Tòa án tuyên án phạt tù; CSGT lập biên bản ra quyết định xử phạt hành chính; UBND cấp Giấy chứng nhận kết hôn. |
+
+---
+
+### II. PHÂN TÍCH CHI TIẾT TỪNG HÌNH THỨC THỰC HIỆN PHÁP LUẬT
 
 #### 1. Tuân thủ pháp luật (Tuân theo pháp luật)
 - **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm**.
-- **Đặc điểm**:
-  + *Dạng thức hành vi*: Thể hiện dưới dạng **hành vi thụ động (không hành động)** — chủ thể tự giác không làm điều bị cấm.
-  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật cấm đoán** (chứa các từ *"nghiêm cấm"*, *"không được"*).
-  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức trong xã hội.
-- **Ví dụ minh họa**:
-  + Công dân tham gia giao thông kiềm chế **không vượt đèn đỏ**, không đi vào đường ngược chiều; công dân không tàng trữ, mua bán trái phép chất ma túy (theo Điều 249, 251 BLHS 2015); cán bộ, công chức không nhận hối lộ.
+- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **không hành động (thụ động)**; tương ứng với các quy phạm pháp luật cấm đoán (chứa từ *"nghiêm cấm", "không được"*).
+- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức trong xã hội.
+- **Ví dụ minh họa**: Không chở hàng cấm, không vượt đèn đỏ, không nhận hối lộ.
 
 #### 2. Thi hành pháp luật (Chấp hành pháp luật)
-- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện nghĩa vụ pháp lý của mình bằng những hành động tích cực** mà pháp luật bắt buộc phải làm.
-- **Đặc điểm**:
-  + *Dạng thức hành vi*: Thể hiện dưới dạng **hành vi hành động tích cực, chủ động** nhằm hoàn thành nghĩa vụ bắt buộc.
-  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật bắt buộc** (chứa các từ *"phải"*, *"có nghĩa vụ"*, *"có trách nhiệm"*).
-  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.
-- **Ví dụ minh họa**:
-  + Công dân nam đủ độ tuổi thực hiện **nghĩa vụ quân sự** bắt buộc; doanh nghiệp và cá nhân kinh doanh chủ động kê khai và **nộp thuế đầy đủ, đúng hạn** vào ngân sách nhà nước; người điều khiển xe mô tô **đội mũ bảo hiểm** đạt chuẩn theo quy định.
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm**.
+- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động (tích cực)**; tương ứng với các quy phạm pháp luật bắt buộc (chứa từ *"phải", "có nghĩa vụ"*).
+- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.
+- **Ví dụ minh họa**: Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm đạt chuẩn khi tham gia giao thông.
 
 #### 3. Sử dụng pháp luật (Vận dụng pháp luật)
-- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện quyền chủ thể của mình** (thực hiện những hành vi mà pháp luật cho phép làm).
-- **Đặc điểm**:
-  + *Dạng thức hành vi*: Mang **tính tự do ý chí, tùy nghi lựa chọn** (chủ thể có thể lựa chọn thực hiện dưới dạng **hành động** hoặc **không hành động** — thực hiện hoặc từ bỏ quyền hợp pháp của mình mà không bị coi là vi phạm pháp luật).
-  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật trao quyền / cho phép** (chứa các từ *"có quyền"*, *"được"*, *"được phép"*).
-  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức có quyền hợp pháp.
-- **Ví dụ minh họa**:
-  + Công dân thực hiện quyền tự do kinh doanh thành lập doanh nghiệp; nam nữ đủ điều kiện tự nguyện đi **đăng ký kết hôn**; cá nhân thực hiện quyền **lập di chúc** định đoạt tài sản của mình (Điều 624 BLDS 2015) hoặc thực hiện quyền khiếu nại, khởi kiện ra Tòa án.
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép**.
+- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động hoặc không hành động (tùy nghi quyết định)** — chủ thể có thể lựa chọn thực hiện hoặc không thực hiện quyền của mình mà không bị coi là vi phạm pháp luật; tương ứng với quy phạm trao quyền.
+- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức có quyền hợp pháp.
+- **Ví dụ minh họa**: Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc định đoạt tài sản (Điều 624 BLDS 2015).
 
 #### 4. Áp dụng pháp luật
-- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **Nhà nước thông qua các cơ quan nhà nước hoặc người có thẩm quyền** tổ chức cho các chủ thể pháp luật thực hiện những quy định của pháp luật, hoặc tự mình căn cứ vào các quy định của pháp luật để **ban hành các quyết định cá biệt** làm phát sinh, thay đổi, đình chỉ hoặc chấm dứt một quan hệ pháp luật cụ thể.
-- **Đặc điểm**:
-  + *Tính quyền lực nhà nước*: Là hoạt động mang tính **tổ chức – quyền lực nhà nước**, chỉ do cơ quan nhà nước, người có thẩm quyền (hoặc tổ chức được Nhà nước trao quyền) tiến hành.
-  + *Tính thủ tục chặt chẽ*: Phải được tiến hành theo đúng trình tự, thủ tục, thẩm quyền do pháp luật quy định.
-  + *Tính cá biệt, cụ thể*: Kết quả của hoạt động áp dụng pháp luật luôn được thể hiện bằng một **Văn bản áp dụng pháp luật (văn bản cá biệt)** áp dụng một lần đối với cá nhân, tổ chức xác định.
-  + *Tính sáng tạo*: Đòi hỏi người có thẩm quyền phải phân tích đúng sự thật khách quan của vụ việc để lựa chọn quy phạm phù hợp nhất.
-- **Ví dụ minh họa**:
-  + **Tòa án nhân dân** xét xử và tuyên **Bản án hình sự** phạt tù đối với bị cáo phạm tội trộm cắp tài sản; **Chiến sĩ Cảnh sát giao thông** lập biên bản và ra **Quyết định xử phạt vi phạm hành chính** đối với người vượt đèn đỏ; **Ủy ban nhân dân cấp xã** cấp **Giấy chứng nhận kết hôn** cho công dân.
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **cơ quan nhà nước, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể** nhằm làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ pháp lý của các chủ thể cụ thể.
+- **Đặc điểm biểu hiện**: Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, tuân theo trình tự thủ tục chặt chẽ do luật định và kết thúc bằng việc ban hành một **Văn bản áp dụng pháp luật (quyết định cá biệt)**.
+- **Chủ thể thực hiện**: Chỉ cơ quan nhà nước, người có thẩm quyền hoặc tổ chức xã hội được Nhà nước ủy quyền.
+- **Ví dụ minh họa**: Tòa án tuyên án phạt tù đối với bị cáo; Cảnh sát giao thông lập biên bản và ra quyết định xử phạt vi phạm hành chính.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt Câu 10 (Đề 2): Tình huống va chạm giao thông vượt đèn đỏ & dùng gậy đánh người gây thương tích
+   */
+  public static solveDynamicTrafficAndAssaultCase(query: string): string {
+    return `### GIẢI QUYẾT TÌNH HUỐNG PHÁP LÝ (VI PHẠM GIAO THÔNG & XÂM PHẠM SỨC KHỎE)
+*(Theo Giáo trình **Pháp luật Đại cương** — Chương 5 & **Bộ luật Dân sự 2015, Bộ luật Hình sự 2015, Luật XLVPHC 2012**)*
 
 ---
 
-### III. BẢNG PHÂN BIỆT TỔNG HỢP 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT
+#### a) Hành vi vượt đèn đỏ của A có phải là vi phạm pháp luật không? Phân tích 4 yếu tố cấu thành vi phạm pháp luật
+- **Kết luận**: Hành vi điều khiển xe máy vượt đèn đỏ gây va chạm của A **LÀ VI PHẠM PHÁP LUẬT** (vi phạm pháp luật hành chính và dân sự).
+- **Phân tích 04 yếu tố cấu thành vi phạm pháp luật trong hành vi của A**:
+  1. **Chủ thể**: **Anh A (20 tuổi)** — là cá nhân đã thành niên, đạt độ tuổi chịu trách nhiệm pháp lý theo luật định (trên 16 tuổi theo Điều 5 Luật Xử lý vi phạm hành chính 2012 và đủ 18 tuổi trở lên theo Điều 20 Bộ luật Dân sự 2015), có đầy đủ khả năng nhận thức và điều khiển hành vi.
+  2. **Khách thể**: Xâm phạm đồng thời **trật tự, an toàn giao thông đường bộ** (được pháp luật hành chính bảo vệ) và **quyền sở hữu tài sản hợp pháp của B** (được pháp luật dân sự bảo vệ).
+  3. **Mặt khách quan**:
+     - *Hành vi trái pháp luật*: Hành động điều khiển xe máy vượt qua vạch dừng tại ngã tư khi đèn tín hiệu giao thông đang màu đỏ và thiếu chú ý quan sát.
+     - *Hậu quả thiệt hại thực tế*: Gây va chạm làm xe máy của B (người đang đi đúng tín hiệu giao thông) bị hư hỏng, thiệt hại tài sản thực tế là **6 triệu đồng** chi phí sửa chữa.
+     - *Mối quan hệ nhân quả*: Hành vi vượt đèn đỏ và không chú ý quan sát của A là nguyên nhân trực tiếp dẫn đến vụ va chạm và gây thiệt hại 6 triệu đồng cho xe của B.
+  4. **Mặt chủ quan**: Thể hiện qua trạng thái tâm lý có **lỗi của A** khi thực hiện hành vi và đối với hậu quả xảy ra *(phân tích chi tiết tại câu b)*.
 
-| Tiêu chí phân biệt | 1. Tuân thủ pháp luật | 2. Thi hành pháp luật | 3. Sử dụng pháp luật | 4. Áp dụng pháp luật |
-| :--- | :--- | :--- | :--- | :--- |
-| **Bản chất nội dung** | Kiềm chế **không làm** những điều pháp luật cấm. | Chủ động **phải làm** những nghĩa vụ pháp luật bắt buộc. | Tự do lựa chọn **làm hoặc không làm** điều pháp luật cho phép (quyền). | Cơ quan có thẩm quyền **cá biệt hóa** quy phạm pháp luật vào vụ việc cụ thể. |
-| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | **Chỉ cơ quan nhà nước, người có thẩm quyền** (hoặc tổ chức được trao quyền). |
-| **Hình thức hành vi** | **Không hành động** (Thụ động). | **Hành động** tích cực (Chủ động). | **Hành động** hoặc **Không hành động** (Tùy nghi theo ý chí). | **Hành động** mang tính quyền lực nhà nước (ban hành văn bản cá biệt). |
-| **Loại quy phạm tương ứng** | Quy phạm **cấm đoán**. | Quy phạm **bắt buộc**. | Quy phạm **trao quyền (tùy nghi)**. | Mọi loại quy phạm cần sự can thiệp của quyền lực nhà nước. |
-| **Ví dụ điển hình** | Không vượt đèn đỏ; không buôn bán hàng cấm. | Nộp thuế; đi nghĩa vụ quân sự; đội mũ bảo hiểm. | Lập di chúc; đăng ký kết hôn; khiếu nại. | Tòa án tuyên bản án; UBND cấp Giấy khai sinh; CSGT ra quyết định xử phạt. |`;
+---
+
+#### b) Xác định lỗi của A trong tình huống trên và giải thích
+Trong khoa học pháp lý, cần phân tích thái độ tâm lý của A đối với **hành vi vi phạm quy tắc giao thông** và đối với **hậu quả thiệt hại thực tế**:
+1. **Đối với hành vi vượt đèn đỏ — Lỗi cố ý trực tiếp**:
+   - A hoàn toàn nhận thức rõ đèn tín hiệu giao thông đang màu đỏ là lệnh cấm đi qua ngã tư, nhưng A vẫn chủ động lựa chọn điều khiển xe vượt qua.
+2. **Đối với hậu quả va chạm và làm hư hỏng tài sản của B — Lỗi vô ý do cẩu thả**:
+   - Do **không chú ý quan sát**, A đã không thấy trước hành vi của mình có thể gây ra va chạm làm hư hỏng xe của B, mặc dù theo quy tắc an toàn giao thông đường bộ A **bắt buộc phải thấy trước và hoàn toàn có điều kiện thấy trước** hậu quả đó nếu quan sát cẩn thận.
+
+---
+
+#### c) Hành vi B dùng gậy đánh A có phải là vi phạm pháp luật không? Phân tích các dấu hiệu cần xem xét
+- **Kết luận**: Hành vi B dùng gậy đánh A nhiều lần khiến A bị thương **LÀ VI PHẠM PHÁP LUẬT** (xâm phạm trái pháp luật đến tính mạng, sức khỏe của người khác).
+- **Phân tích các dấu hiệu cần xem xét**:
+  1. **Hành vi xác định và tính trái pháp luật**: B đã có hành động dùng chiếc gậy đánh A nhiều lần gây thương tích. Đây là hành vi trái pháp luật xâm phạm quyền bất khả xâm phạm về sức khỏe của công dân.
+  2. **Có lỗi**: B thực hiện hành vi với **lỗi cố ý trực tiếp** (B nhận thức rõ việc dùng gậy đánh người nhiều lần là nguy hiểm, gây thương tích cho A nhưng do tức giận vẫn cố tình thực hiện và mong muốn gây tổn hại sức khỏe cho A).
+  3. **Năng lực trách nhiệm pháp lý**: B là người điều khiển xe máy tham gia giao thông, nếu có năng lực nhận thức và làm chủ hành vi bình thường, đủ tuổi luật định thì có đầy đủ năng lực trách nhiệm pháp lý.
+  4. **Lưu ý loại trừ Phòng vệ chính đáng (Điều 22 Bộ luật Hình sự 2015)**: Hành vi của B **KHÔNG phải là phòng vệ chính đáng**, bởi vì vụ va chạm giao thông đã kết thúc, A hoàn toàn không có hành vi tấn công hay đe dọa vũ lực ngay tức khắc nào đối với B. Việc B dùng gậy đánh A xuất phát từ sự tức giận sau tranh cãi, mang tính chất trả thù và cố ý gây thương tích.
+
+---
+
+#### d) Các loại trách nhiệm pháp lý có thể phát sinh đối với A và B & Các căn cứ xác định cụ thể
+1. **Trách nhiệm pháp lý phát sinh đối với A**:
+   - **Trách nhiệm hành chính**: Bị xử phạt vi phạm hành chính (phạt tiền và trừ điểm / tước quyền sử dụng giấy phép lái xe) theo quy định pháp luật về trật tự, an toàn giao thông đường bộ đối với hành vi không chấp hành hiệu lệnh của đèn tín hiệu giao thông gây tai nạn giao thông.
+   - **Trách nhiệm dân sự**: Có nghĩa vụ bồi thường thiệt hại ngoài hợp đồng cho B khoản chi phí sửa chữa xe hợp lý là **6 triệu đồng** (căn cứ **Điều 584, Điều 589 và Điều 601 Bộ luật Dân sự năm 2015**).
+2. **Trách nhiệm pháp lý phát sinh đối với B**:
+   - **Trách nhiệm dân sự**: Phải bồi thường toàn bộ thiệt hại do sức khỏe bị xâm phạm cho A, bao gồm chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe, thu nhập thực tế bị mất hoặc bị giảm sút và khoản tiền bù đắp tổn thất về tinh thần (căn cứ **Điều 584 và Điều 590 Bộ luật Dân sự năm 2015**).
+   - **Trách nhiệm hành chính hoặc Trách nhiệm hình sự**:
+     + *Trách nhiệm hành chính*: Nếu thương tích của A ở mức nhẹ và hành vi chưa đủ yếu tố cấu thành tội phạm thì B bị xử phạt vi phạm hành chính về hành vi cố ý gây thương tích cho người khác.
+     + *Trách nhiệm hình sự*: Nếu tỷ lệ tổn thương cơ thể của A từ **11% trở lên**, HOẶC **dưới 11% nhưng chiếc gậy B sử dụng được xác định là "hung khí nguy hiểm"** (theo **Điểm a Khoản 1 Điều 134 Bộ luật Hình sự năm 2015**) hoặc hành vi có **tính chất côn đồ** (Điểm i Khoản 1 Điều 134 BLHS 2015), thì B sẽ bị truy cứu trách nhiệm hình sự về **Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác**.
+3. **Việc xác định trách nhiệm pháp lý cụ thể cần dựa vào các yếu tố/căn cứ sau**:
+   - **Kết luận giám định pháp y về tỷ lệ tổn thương cơ thể (%)** của A do hành vi đánh của B gây ra.
+   - **Tính chất của công cụ phạm tội**: Kết luận giám định xem chiếc gậy B dùng đánh A có phải là **hung khí nguy hiểm** hay không, vị trí đánh trên cơ thể và cường độ tấn công.
+   - **Mức độ thiệt hại thực tế về tài sản và sức khỏe**: Hóa đơn, chứng từ sửa xe của B (6 triệu đồng) và hóa đơn viện phí, chi phí điều trị thực tế của A.
+   - **Độ tuổi và năng lực trách nhiệm pháp lý cụ thể của B** tại thời điểm thực hiện hành vi cùng yêu cầu khởi tố của người bị hại (A) trong trường hợp thương tích dưới 11% thuộc Khoản 1 Điều 134 BLHS 2015.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt Câu 11 (Đề 2): Tình huống M (14 tuổi) tự ý dùng 30 triệu đồng của cha mẹ mua điện thoại cao cấp
+   */
+  public static solveDynamicMinorTransactionCase(query: string): string {
+    return `### PHÂN TÍCH TƯ CÁCH CHỦ THỂ, NĂNG LỰC HÀNH VI DÂN SỰ VÀ HIỆU LỰC GIAO DỊCH CỦA NGƯỜI CHƯA THÀNH NIÊN (M — 14 TUỔI)
+*(Theo Giáo trình **Pháp luật Đại cương** — Chương 4 & Chương 6; **Bộ luật Dân sự năm 2015**)*
+
+---
+
+#### 1. M có phải là chủ thể của quan hệ pháp luật hay không?
+- **Kết luận**: **M VẪN LÀ CHỦ THỂ của quan hệ pháp luật dân sự**, bởi vì M là cá nhân có tư cách công dân, có **năng lực pháp luật dân sự** đầy đủ từ khi sinh ra và đã có **một phần năng lực hành vi dân sự** theo độ tuổi.
+- Tuy nhiên, vì M mới **14 tuổi** (người chưa thành niên từ đủ 6 tuổi đến chưa đủ 15 tuổi) nên năng lực hành vi dân sự của M **chưa đầy đủ**: M chỉ được tự mình trở thành chủ thể độc lập trong các giao dịch dân sự nhỏ lẻ phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi; đối với các giao dịch có giá trị lớn (như mua điện thoại 30 triệu đồng), M không được tự mình xác lập nếu không có sự đồng ý của người đại diện theo pháp luật (cha, mẹ).
+
+---
+
+#### 2. Phân tích năng lực pháp luật dân sự và năng lực hành vi dân sự của M
+1. **Về năng lực pháp luật dân sự của M (Điều 16 và Điều 17 Bộ luật Dân sự năm 2015)**:
+   - Năng lực pháp luật dân sự của cá nhân là khả năng của cá nhân có quyền dân sự và nghĩa vụ dân sự.
+   - Mọi cá nhân đều có năng lực pháp luật dân sự như nhau và **có từ khi người đó sinh ra** cho đến khi chết. Do đó, M (14 tuổi) có đầy đủ năng lực pháp luật dân sự để hưởng các quyền về tài sản và nhân thân theo luật định.
+2. **Về năng lực hành vi dân sự của M (Điều 19 và Khoản 3 Điều 21 Bộ luật Dân sự năm 2015)**:
+   - Căn cứ **Khoản 1 Điều 21 BLDS 2015**: Người chưa đủ 18 tuổi là **người chưa thành niên**.
+   - Căn cứ **Khoản 3 Điều 21 BLDS 2015**: M **14 tuổi** thuộc nhóm **người từ đủ 06 tuổi đến chưa đủ 15 tuổi** (chỉ có năng lực hành vi dân sự một phần / chưa đầy đủ).
+   - Quy định pháp luật đối với độ tuổi này: Khi xác lập, thực hiện giao dịch dân sự **phải được người đại diện theo pháp luật (cha, mẹ) đồng ý**, **TRỪ** giao dịch dân sự phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi (ví dụ: mua đồ ăn sáng, dụng cụ học tập nhỏ lẻ).
+
+---
+
+#### 3. Giao dịch giữa M và cửa hàng X có đương nhiên có hiệu lực hay không?
+- **Kết luận**: Giao dịch mua bán điện thoại giữa M và cửa hàng X **KHÔNG đương nhiên có hiệu lực** (thuộc trường hợp giao dịch dân sự vô hiệu do người chưa thành niên xác lập theo Điều 125 BLDS 2015).
+- **Bác bỏ lập luận của cửa hàng X**: Lý lẽ của cửa hàng X (*“M đã tự nguyện mua và đã ký hợp đồng nên hợp đồng phải có hiệu lực”*) là **HOÀN TOÀN SAI PHÁP LUẬT**, bởi vì:
+  1. Sự tự nguyện và việc ký tên chỉ là một phần điều kiện; để hợp đồng có hiệu lực thì người ký kết trước hết phải có **năng lực hành vi dân sự phù hợp với giao dịch được xác lập** (Điểm a Khoản 1 Điều 117 BLDS 2015).
+  2. Chiếc điện thoại cao cấp trị giá **30 triệu đồng** là tài sản có giá trị lớn, **vượt xa phạm vi nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi** của một học sinh 14 tuổi.
+  3. M tự ý lấy 30 triệu đồng của cha mẹ và tự mình ký giấy mua bán mà **không có sự đồng ý của cha mẹ (người đại diện theo pháp luật)**, sau đó cha mẹ M biết chuyện đã phản đối và yêu cầu trả lại, nên giao dịch này vi phạm điều kiện bắt buộc về chủ thể.
+
+---
+
+#### 4. Phân tích các điều kiện có hiệu lực của giao dịch dân sự (Điều 117 Bộ luật Dân sự năm 2015)
+Căn cứ **Điều 117 Bộ luật Dân sự năm 2015**, một giao dịch dân sự chỉ có hiệu lực khi đáp ứng đủ 04 điều kiện sau. Đối chiếu với giao dịch của M:
+1. **Điều kiện về chủ thể (Điểm a Khoản 1 Điều 117)**: *"Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch dân sự được xác lập"*
+   ➔ **VI PHẠM**: M (14 tuổi) không có năng lực hành vi dân sự phù hợp để tự mình xác lập giao dịch mua tài sản trị giá 30 triệu đồng khi chưa có sự đồng ý của cha mẹ (vi phạm Khoản 3 Điều 21 BLDS 2015).
+2. **Điều kiện về ý chí tự nguyện (Điểm b Khoản 1 Điều 117)**: *"Chủ thể tham gia giao dịch dân sự hoàn toàn tự nguyện"*
+   ➔ Mặc dù M không bị cửa hàng ép buộc, nhưng do M chưa thành niên (14 tuổi), nhận thức chưa hoàn thiện nên pháp luật quy định ý chí của M trong giao dịch giá trị lớn bắt buộc phải đặt dưới sự giám hộ và đồng ý của cha mẹ.
+3. **Điều kiện về mục đích và nội dung (Điểm c Khoản 1 Điều 117)**: *"Mục đích và nội dung của giao dịch dân sự không vi phạm điều cấm của luật, không trái đạo đức xã hội"*
+   ➔ Hoạt động mua bán điện thoại tự thân không vi phạm điều cấm hay đạo đức xã hội.
+4. **Điều kiện về hình thức (Khoản 2 Điều 117)**: *"Hình thức của giao dịch dân sự là điều kiện có hiệu lực của giao dịch dân sự trong trường hợp luật có quy định"*
+   ➔ Hợp đồng mua bán điện thoại không bắt buộc công chứng/chứng thực, nhưng **do đã vi phạm điều kiện tiên quyết về năng lực hành vi dân sự của chủ thể (Điểm a Khoản 1 Điều 117)** nên giao dịch không đủ điều kiện có hiệu lực.
+
+---
+
+#### 5. Hậu quả pháp lý xảy ra khi giao dịch không đáp ứng điều kiện luật định (Điều 125 và Điều 131 Bộ luật Dân sự năm 2015)
+1. **Giao dịch dân sự bị tuyên bố vô hiệu (Khoản 1 Điều 125 Bộ luật Dân sự năm 2015)**:
+   - Khi giao dịch dân sự do người chưa thành niên xác lập, thực hiện mà theo quy định của luật phải do người đại diện theo pháp luật xác lập, thực hiện hoặc đồng ý, thì **theo yêu cầu của người đại diện của người đó (cha mẹ M), Tòa án tuyên bố giao dịch dân sự đó vô hiệu**.
+2. **Giải quyết hậu quả pháp lý của giao dịch dân sự vô hiệu (Điều 131 Bộ luật Dân sự năm 2015)**:
+   - **Không làm phát sinh hiệu lực pháp lý (Khoản 1 Điều 131)**: Giao dịch dân sự vô hiệu không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự của các bên kể từ thời điểm giao dịch được xác lập.
+   - **Khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận (Khoản 2 Điều 131)**:
+     + **Gia đình M (cha mẹ M)** có nghĩa vụ hoàn trả lại chiếc điện thoại cao cấp cho cửa hàng X.
+     + **Cửa hàng X** bắt buộc phải nhận lại chiếc điện thoại và **hoàn trả lại đầy đủ số tiền 30 triệu đồng** cho cha mẹ M.
+   - **Trách nhiệm bồi thường thiệt hại (Khoản 4 Điều 131)**: Bên nào có lỗi gây thiệt hại (ví dụ cửa hàng X biết rõ M là trẻ em 14 tuổi không có người lớn đi kèm nhưng vẫn bán tài sản giá trị lớn, hoặc nếu điện thoại bị hư hỏng giảm giá trị do lỗi của bên nào) thì phải bồi thường tương ứng theo mức độ lỗi.`;
   }
 
   /**
    * Bộ giải chuyên biệt Câu 9: Bài tập xác định Chủ thể, Nội dung, Khách thể và Sự kiện pháp lý của Quan hệ pháp luật
    */
   public static solveDynamicLegalRelationshipCase(query: string): string {
-    const actors = this.extractActors(query);
     const money = this.extractMoney(query) || '25 triệu đồng';
     const ageInfo = this.extractAge(query);
-
-    const personActor = actors.find((a) => !/công ty|doanh nghiệp|cửa hàng/i.test(a)) || 'Anh A';
-    const companyMatch = query.match(/((?:Công ty|Doanh nghiệp|Cửa hàng)\s+[A-ZÀ-Ỹa-z0-9]+)/i);
-    const orgActor = companyMatch ? companyMatch[1] : actors.find((a) => a !== personActor) || 'Công ty X';
     const ageVal = ageInfo.age || 22;
+
+    // Trích xuất chính xác Họ và tên đầy đủ của cá nhân (ví dụ: "Nguyễn Văn A", "Trần Thị B", "Anh A", "Chị B")
+    const fullPersonMatch =
+      query.match(/((?:Anh|Chị|Ông|Bà)\s+[A-ZÀ-Ỹ][a-zà-ỹ]*(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]*)*)/) ||
+      query.match(/([A-ZÀ-Ỹ][a-zà-ỹ]+(?:\s+[A-ZÀ-Ỹ][a-zà-ỹ]*){1,3})(?=\s*,\s*\d{1,2}\s*tuổi|\s+\(\d{1,2}\s*tuổi\))/);
+    const actors = this.extractActors(query);
+    const personActor = fullPersonMatch
+      ? fullPersonMatch[1].trim()
+      : actors.find((a) => !/công ty|doanh nghiệp|cửa hàng/i.test(a)) || 'Anh A';
+
+    // Trích xuất chính xác tên Tổ chức / Công ty / Cửa hàng (ví dụ: "cửa hàng điện máy X", "Công ty X", "Cửa hàng X")
+    const companyMatch = query.match(
+      /((?:Công\s+ty(?:\s+TNHH|\s+Cổ\s+phần)?|Doanh\s+nghiệp|Cửa\s+hàng(?:\s+điện\s+máy|\s+xe\s+máy|\s+máy\s+tính)?)\s+[A-ZÀ-Ỹ0-9][A-Za-zÀ-ỹ0-9]*)/i
+    );
+    const orgActor = companyMatch
+      ? companyMatch[1].trim()
+      : actors.find((a) => a !== personActor) || 'Công ty X';
 
     const itemBought = query.toLowerCase().includes('laptop')
       ? 'chiếc máy tính xách tay (laptop)'
@@ -2634,8 +2937,8 @@ Chủ thể của quan hệ pháp luật trên gồm **hai bên chủ thể** c�
    - **Về năng lực pháp luật dân sự**: Có khả năng hưởng quyền và gánh vác nghĩa vụ dân sự kể từ khi sinh ra (**Điều 16 BLDS 2015**).
    - **Về năng lực hành vi dân sự**: ${personActor} đã **${ageVal} tuổi** (người thành niên từ đủ 18 tuổi trở lên theo **Điều 20 BLDS 2015**), có trí tuệ phát triển bình thường nên có **năng lực hành vi dân sự đầy đủ**, được toàn quyền tự mình xác lập và thực hiện hợp đồng mua bán tài sản (**Điều 19, Điều 20 BLDS 2015**).
 2. **Bên bán — ${orgActor}**:
-   - Là **tổ chức kinh tế có tư cách Pháp nhân thương mại** (căn cứ **Điều 74 và Điều 75 Bộ luật Dân sự năm 2015**).
-   - ${orgActor} đáp ứng đầy đủ 4 điều kiện của một pháp nhân: được thành lập hợp pháp, có cơ cấu tổ chức chặt chẽ, có tài sản độc lập với cá nhân/pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình, nhân danh mình tham gia quan hệ hợp đồng mua bán một cách độc lập thông qua người đại diện hợp pháp.
+   - Là **tổ chức kinh tế / đơn vị kinh doanh hợp pháp** (căn cứ **Điều 74 và Điều 75 Bộ luật Dân sự năm 2015**).
+   - ${orgActor} có đầy đủ năng lực pháp luật và năng lực hành vi dân sự của chủ thể kinh doanh: được thành lập hợp pháp, có tài sản độc lập và tham gia quan hệ hợp đồng mua bán thông qua người đại diện hợp pháp.
 
 ---
 
@@ -2644,7 +2947,7 @@ Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ th
 
 1. **Quyền và nghĩa vụ pháp lý của ${personActor} (Bên mua)**:
    - **Quyền chủ thể**:
-     + Có quyền yêu cầu ${orgActor} giao ${itemBought} đúng mẫu mã, chủng loại, chất lượng và đúng thời hạn như đã thỏa thuận trong hợp đồng.
+     + Có quyền yêu cầu ${orgActor} giao đúng ${itemBought}, đúng mẫu mã, chủng loại, chất lượng và đúng thời hạn như đã thỏa thuận trong hợp đồng.
      + Có quyền nhận tài sản, xác lập quyền sở hữu hợp pháp đối với ${itemBought} và yêu cầu bảo hành theo quy định.
    - **Nghĩa vụ pháp lý**:
      + Có nghĩa vụ **thanh toán đầy đủ số tiền ${money}** cho ${orgActor} theo đúng thời hạn, địa điểm và phương thức đã cam kết (**Khoản 1 Điều 440 BLDS 2015**).
@@ -2654,7 +2957,7 @@ Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ th
    - **Quyền chủ thể**:
      + Có quyền yêu cầu ${personActor} thanh toán đầy đủ và đúng hạn số tiền **${money}** theo hợp đồng.
    - **Nghĩa vụ pháp lý**:
-     + Có nghĩa vụ **bàn giao ${itemBought} đúng mẫu mã, chất lượng, thông số kỹ thuật và đúng thời hạn** đã thỏa thuận cho ${personActor}; chuyển giao quyền sở hữu tài sản và cung cấp hóa đơn, chứng từ, nghĩa vụ bảo hành đối với tài sản bán (**Điều 430, Điều 445 BLDS 2015**).
+     + Có nghĩa vụ **bàn giao đúng ${itemBought}, đúng chất lượng, thông số kỹ thuật và đúng thời hạn** đã thỏa thuận cho ${personActor}; chuyển giao quyền sở hữu tài sản và thực hiện nghĩa vụ bảo hành đối với tài sản bán (**Điều 430, Điều 445 BLDS 2015**).
 
 ---
 
@@ -2669,7 +2972,7 @@ Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ th
 #### d) Sự kiện pháp lý làm phát sinh quan hệ pháp luật
 - **Khái niệm**: Sự kiện pháp lý là những tình huống, hiện tượng, hành vi xảy ra trong thực tế đời sống mà sự xuất hiện của chúng được quy phạm pháp luật gắn với việc làm phát sinh, thay đổi hoặc chấm dứt quan hệ pháp luật.
 - **Sự kiện pháp lý cụ thể trong tình huống**:
-  + Chính là sự kiện **${personActor} và ${orgActor} ký kết (giao kết) hợp đồng mua bán ${itemBought} với giá ${money}**.
+  + Chính là sự kiện **${personActor} và ${orgActor} ký kết (giao kết) hợp đồng mua bán ${itemBought} trị giá ${money}**.
 - **Phân loại sự kiện pháp lý**:
   + Đây là **Hành vi pháp lý** (thuộc nhóm *Sự kiện pháp lý là hành vi có ý chí, hợp pháp* của các chủ thể trực tiếp hướng tới việc làm phát sinh quyền và nghĩa vụ dân sự theo **Điều 116 và Điều 385 Bộ luật Dân sự năm 2015**).`;
   }

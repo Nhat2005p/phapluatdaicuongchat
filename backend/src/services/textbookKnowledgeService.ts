@@ -1051,7 +1051,7 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         !rawQueryText.includes('cấu trúc nhà nước')
       ) {
         if (c.chapterNumber === 1) finalScore -= 40;
-        if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.3'))) finalScore += 50;
+        if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.4'))) finalScore += 50;
       }
 
       // H. Nếu hỏi về Quan hệ pháp luật (Chủ thể, Khách thể, Nội dung, Sự kiện pháp lý) -> Ưu tiên tuyệt đối Chương 4 (Mục 4.1_4.2)
@@ -1065,13 +1065,51 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         if (c.chapterNumber === 9) finalScore -= 50;
       }
 
+      // I. Nếu hỏi về bảo đảm thực hiện pháp luật / biện pháp cưỡng chế nhà nước -> Ưu tiên Chương 2 Mục 2.1.1_2.1.3 (Thuộc tính của Pháp luật)
+      if (
+        rawQueryText.includes('bảo đảm thực hiện') &&
+        rawQueryText.includes('cưỡng chế')
+      ) {
+        if (c.sectionCode.includes('2.1.1_2.1.4')) finalScore += 70;
+        if (c.sectionCode.includes('2.2.1_2.2.2')) finalScore -= 40;
+      }
+
+      // J. Nếu hỏi về điều kiện có hiệu lực của giao dịch dân sự / giao dịch dân sự vô hiệu / người chưa thành niên xác lập giao dịch
+      if (
+        rawQueryText.includes('điều kiện có hiệu lực') ||
+        rawQueryText.includes('giao dịch dân sự') ||
+        (rawQueryText.includes('hiệu lực') && (rawQueryText.includes('14 tuổi') || rawQueryText.includes('chưa thành niên') || rawQueryText.includes('cha mẹ')))
+      ) {
+        if (c.sectionCode.includes('6.2_6.3')) finalScore += 85;
+      }
+
+      // K. Nếu là bài tập tình huống phân tích 4 yếu tố cấu thành VPPL và các loại trách nhiệm pháp lý phát sinh (Câu 10)
+      if (
+        rawQueryText.includes('4 yếu tố cấu thành') ||
+        rawQueryText.includes('trách nhiệm pháp lý có thể phát sinh') ||
+        rawQueryText.includes('dùng gậy')
+      ) {
+        if (c.sectionCode.includes('5.1_5.2')) finalScore += 75;
+        if (c.sectionCode.includes('5.4')) finalScore -= 30;
+      }
+
+      // K. Nếu là bài tập tình huống phân tích 4 yếu tố cấu thành VPPL và các loại trách nhiệm pháp lý phát sinh (Câu 10)
+      if (
+        rawQueryText.includes('4 yếu tố cấu thành') ||
+        rawQueryText.includes('trách nhiệm pháp lý có thể phát sinh') ||
+        rawQueryText.includes('dùng gậy')
+      ) {
+        if (c.sectionCode.includes('5.1_5.2')) finalScore += 75;
+        if (c.sectionCode.includes('5.4')) finalScore -= 30;
+      }
+
       // G. Nếu hỏi về "pháp luật xã hội chủ nghĩa", "pháp luật xhcn" -> Ưu tiên Mục 2.1.1_2.1.3 (Khái niệm, Bản chất và Đặc trưng của Pháp luật)
       if (
         rawQueryText.includes('pháp luật') &&
         (rawQueryText.includes('xã hội chủ nghĩa') || rawQueryText.includes('xhcn'))
       ) {
         if (c.chapterNumber === 1) finalScore -= 40;
-        if (c.sectionCode.includes('2.1.1_2.1.3')) finalScore += 55;
+        if (c.sectionCode.includes('2.1.1_2.1.4')) finalScore += 55;
       }
 
       return { chunk: c, score: finalScore };

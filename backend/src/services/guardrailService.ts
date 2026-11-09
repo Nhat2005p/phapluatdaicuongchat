@@ -82,6 +82,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     5: 'Áp dụng tập quán',
     6: 'Áp dụng tương tự pháp luật',
     16: 'Năng lực pháp luật dân sự của cá nhân',
+    17: 'Nội dung năng lực pháp luật dân sự của cá nhân',
     19: 'Năng lực hành vi dân sự của cá nhân',
     20: 'Người thành niên',
     21: 'Người chưa thành niên',

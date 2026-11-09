@@ -486,9 +486,13 @@ export class RagService {
       ) || /^phần\s+(?:[ivx]+|\d+)\b/i.test(line.trim());
     };
 
-    // Hàm nhận diện dòng chỉ chứa điểm số (ví dụ: "3,0 điểm – 6 câu × 0,5 điểm", "2,0 điểm", "1,0 điểm")
+    // Hàm nhận diện dòng chỉ chứa điểm số hoặc ghi chú phụ đề của phần thi (ví dụ: "3,0 điểm – 6 câu × 0,5 điểm", "2,0 điểm", "1,0 điểm", "Có thể dùng để luyện đề khó")
     const isPureScoreLine = (line: string): boolean => {
-      return /^\(?\d+(?:[.,]\d+)?\s*điểm(?:\s*[-–—×x].*)?\)?$/i.test(line.trim());
+      const t = line.trim();
+      return (
+        /^\(?\d+(?:[.,]\d+)?\s*điểm(?:\s*[-–—×x].*)?\)?$/i.test(t) ||
+        /^có\s+thể\s+dùng\s+để\s+luyện\s+đề/i.test(t)
+      );
     };
 
     // Hàm xóa tiền tố điểm số ở đầu câu hỏi (ví dụ: "1,0 điểm Hãy phân biệt..." -> "Hãy phân biệt...")
@@ -967,7 +971,7 @@ export class RagService {
       }
       if (qLower.includes('tâm thần') || qLower.includes('mất nhận thức')) dynamicConditions.push({ articleId: 'BLHS2015_D21' });
       if (qLower.includes('tuổi') || qLower.includes('thành niên')) dynamicConditions.push({ articleId: 'BLHS2015_D12' }, { articleId: 'BLHS2015_D9' });
-      if (qLower.includes('mượn') || qLower.includes('làm rơi') || qLower.includes('rơi vỡ') || (qLower.includes('laptop') && (qLower.includes('rơi') || qLower.includes('vỡ') || qLower.includes('hỏng')))) {
+      if (qLower.includes('mượn') || qLower.includes('làm rơi') || qLower.includes('rơi vỡ')) {
         dynamicConditions.push(
           { articleId: 'BLDS2015_D494' },
           { articleId: 'BLDS2015_D496' },
