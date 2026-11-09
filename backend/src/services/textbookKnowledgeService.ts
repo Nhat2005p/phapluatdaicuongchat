@@ -309,8 +309,9 @@ II. ĐẶC ĐIỂM CỦA ÁP DỤNG PHÁP LUẬT:
       keywords: ['quan hệ pháp luật', 'cơ cấu quan hệ pháp luật', 'chủ thể', 'khách thể', 'nội dung', 'năng lực pháp luật', 'năng lực hành vi', 'pháp nhân điều 74'],
       summary: 'Cơ cấu 3 yếu tố: Chủ thể (năng lực pháp luật, năng lực hành vi, 4 điều kiện pháp nhân Điều 74 BLDS), Khách thể và Nội dung (Quyền & Nghĩa vụ).',
       legalBasis: ['Bộ luật Dân sự 2015 (Điều 16, 19, 74, 105)'],
-      baremContent: `I. KHÁI NIỆM QUAN HỆ PHÁP LUẬT:
-Quan hệ pháp luật là quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia thực hiện các quyền và nghĩa vụ pháp lý cụ thể do Nhà nước quy định và bảo đảm thực hiện.
+      baremContent: `I. KHÁI NIỆM QUAN HỆ PHÁP LUẬT & MỐI QUAN HỆ VỚI QUAN HỆ XÃ HỘI:
+- Định nghĩa: Quan hệ pháp luật là những quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia có các quyền chủ thể và nghĩa vụ pháp lý cụ thể được Nhà nước quy định và bảo đảm thực hiện bằng sức mạnh cưỡng chế.
+- Phân biệt Quan hệ xã hội và Quan hệ pháp luật: Không phải mọi quan hệ xã hội đều được điều chỉnh bằng pháp luật. Pháp luật chỉ điều chỉnh những quan hệ xã hội phổ biến, điển hình, quan trọng gắn liền với lợi ích nhà nước và trật tự công cộng; các quan hệ xã hội khác (như tình bạn, tình yêu, giao tiếp đạo đức, tín ngưỡng tôn giáo thuần túy) do các quy phạm xã hội khác (đạo đức, tập quán, tín điều tôn giáo) điều chỉnh.
 
 II. CƠ CẤU 3 YẾU TỐ CỦA QUAN HỆ PHÁP LUẬT:
 1. Chủ thể: Các bên tham gia quan hệ có năng lực chủ thể gồm:
@@ -1181,15 +1182,37 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   }
 
   /**
-   * Tạo trích dẫn học liệu ngắn gọn (Tên sách, Chương, Mục, Trang) khi bài giải đã có nội dung đầy đủ
+   * Chuẩn hóa nội dung học liệu giáo trình sang dạng danh sách phân cấp rõ ràng, dễ đọc trên UI
    */
-  public static buildCompactCitation(chunk: TextbookChunk): string {
-    const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
-    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
-* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-* **Tên Chương học phần**: **${chunk.chapterTitle}**
-* **Mục & Tiết bài học**: **Mục ${chunk.sectionCode}: ${chunk.sectionTitle}**
-* **Vị trí học liệu trong sách**: **Trang ${pages}**`;
+  public static formatCleanTextbookContent(rawContent: string): string {
+    if (!rawContent) return '';
+    return rawContent
+      .split('\n')
+      .map((line) => {
+        const trimmed = line.trim();
+        if (!trimmed) return '';
+        // Chuyển tiêu đề La Mã "I. ...", "II. ..." thành subheading H3 gọn đẹp (tránh banner MỤC I quá lớn)
+        const romanMatch = trimmed.match(/^(I|II|III|IV|V|VI)\.\s*(.+)$/i);
+        if (romanMatch) {
+          return `### 🔹 ${romanMatch[1].toUpperCase()}. ${romanMatch[2].replace(/:$/, '')}`;
+        }
+        // Chuyển dòng thụt lề "   - ..." thành sub-bullet "+ ..."
+        if (/^\s{2,}[-•*]\s+/.test(line)) {
+          return `+ ${trimmed.replace(/^[-•*]\s+/, '')}`;
+        }
+        return trimmed;
+      })
+      .join('\n');
+  }
+
+  /**
+   * Tạo khối trích dẫn & phân tích học liệu RAG rõ ràng, đầy đủ (Tên sách, Chương, Mục, Trang, Tóm tắt, Nội dung giáo trình & Căn cứ pháp lý)
+   */
+  public static buildCompactCitation(
+    chunk: TextbookChunk,
+    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
+  ): string {
+    return this.buildDetailedCitation(chunk, extraArticles);
   }
 
   /**
@@ -1201,17 +1224,19 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
     extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
   ): string {
     const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
+    const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
     const detailedLaws = this.formatDetailedLaws(chunk.legalBasis, extraArticles);
+    const formattedContent = this.formatCleanTextbookContent(chunk.baremContent);
 
-    return `\n\n---\n\n### 📚 CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
-* **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-* **Tên Chương học phần**: **${chunk.chapterTitle}**
-* **Mục & Tiết bài học**: **Mục ${chunk.sectionCode}: ${chunk.sectionTitle}**
-* **Vị trí học liệu trong sách**: **Trang ${pages}**
-* **Nội dung giáo trình tại các trang này (Trích lục học liệu chi tiết)**:
-${chunk.baremContent}
+    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
+- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
+- **Tên Chương học phần**: **${chunk.chapterTitle}**
+- **Mục & Tiết bài học**: **Mục ${cleanSectionCode}: ${chunk.sectionTitle}**
+- **Vị trí học liệu trong sách**: **Trang ${pages}**
+- **Trọng tâm lý luận**: ${chunk.summary}
 
----
+### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG ${pages}):
+${formattedContent}
 
 ### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:
 ${detailedLaws}`;

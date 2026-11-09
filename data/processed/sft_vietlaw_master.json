@@ -12659,14 +12659,14 @@
     "sample_id": "SFT_196Q_ND_001",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Vi phạm pháp luật hình sự là hành vi chỉ có thể được thực hiện bởi cá nhân có năng lực trách nhiệm hình sự.\"",
     "input": "Vi phạm pháp luật hình sự là hành vi chỉ có thể được thực hiện bởi cá nhân có năng lực trách nhiệm hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì theo quy định tại Bộ luật hình sự năm 2015 Vi phạm pháp luật hình sự là hành vi có thể được thực hiện bởi cá nhân hoặc pháp nhân có năng lực trách nhiệm hình sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại Điều 2 và Điều 8 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017), chủ thể của tội phạm (vi phạm pháp luật hình sự) không chỉ là cá nhân có năng lực trách nhiệm hình sự và đạt độ tuổi luật định, mà còn bao gồm cả pháp nhân thương mại phạm tội theo các điều kiện quy định tại Điều 75 và Điều 76 Bộ luật Hình sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_002",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tòa án quân sự các cấp chỉ có thẩm quyền xét xử đối với những vụ án có đối tượng thực hiện thuộc lực lượng vũ trang nhân dân.\"",
     "input": "Tòa án quân sự các cấp chỉ có thẩm quyền xét xử đối với những vụ án có đối tượng thực hiện thuộc lực lượng vũ trang nhân dân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì lực lượng vũ trang bao gồm công an và quân đội, toà án quân sự chỉ có thể xét xử các đối tượng liên quan đến quân nhân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Lực lượng vũ trang nhân dân bao gồm Quân đội nhân dân, Công an nhân dân và Dân quân tự vệ. Theo Luật Tổ chức Tòa án nhân dân và Bộ luật Tố tụng hình sự, Tòa án quân sự các cấp chỉ có thẩm quyền xét xử các vụ án hình sự mà bị cáo là quân nhân tại ngũ, công chức, công nhân, viên chức quốc phòng hoặc các vụ án liên quan đến bí mật quân sự, gây thiệt hại cho Quân đội; không xét xử mọi đối tượng thuộc lực lượng Công an nhân dân nếu không liên quan đến bí mật quân sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
@@ -12680,42 +12680,42 @@
     "sample_id": "SFT_196Q_ND_004",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tòa án thực hiện chế độ hai cấp xét xử là cấp sơ thẩm và cấp giám đốc thẩm.\"",
     "input": "Tòa án thực hiện chế độ hai cấp xét xử là cấp sơ thẩm và cấp giám đốc thẩm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì theo Bộ luật tố tụng hình sự năm 2015 thì 2 cấp xét xử là cấp sơ thẩm và phúc thẩm; giám đốc thẩm không phải là một cấp xét xử.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại Điều 27 Bộ luật Tố tụng hình sự năm 2015 và Luật Tổ chức Tòa án nhân dân, Tòa án thực hiện chế độ hai cấp xét xử là xét xử sơ thẩm và xét xử phúc thẩm. Giám đốc thẩm và tái thẩm là thủ tục đặc biệt nhằm xét lại bản án, quyết định của Tòa án đã có hiệu lực pháp luật nhưng bị kháng nghị, không phải là một cấp xét xử.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_005",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi quy tắc xử sự tồn tại trong xã hội có nhà nước là quy phạm pháp luật.\"",
     "input": "Mọi quy tắc xử sự tồn tại trong xã hội có nhà nước là quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì ngoài quy phạm pháp luật thì quy tắc xử sự tồn tại trong xã hội có nhà nước còn có Các quy tắc xử sự khác là các tập quán pháp, tiền lệ pháp, hương ước,…là những quan điểm, chuẩn mực đối với đời sống tinh thần, tinh thần, tình cảm của con người.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì ngoài quy phạm pháp luật thì quy tắc xử sự tồn tại trong xã hội có nhà nước còn có Các quy tắc xử sự khác là các tập quán pháp, tiền lệ pháp, hương ước,…là những quan điểm, chuẩn mực đối với đời sống tinh thần, tình cảm của con người.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_006",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Án treo là một loại hình phạt.\"",
     "input": "Án treo là một loại hình phạt.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì án treo không phải là một loại hình phạt; án treo là biện pháp miễn chấp hành hình phạt tù có điều kiện.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại Điều 32 và Điều 65 Bộ luật Hình sự năm 2015, án treo không nằm trong hệ thống các loại hình phạt (hình phạt chính và hình phạt bổ sung). Án treo là một biện pháp miễn chấp hành hình phạt tù có điều kiện, được Tòa án áp dụng đối với người bị xử phạt tù không quá 03 năm, căn cứ vào nhân thân của người phạm tội và các tình tiết giảm nhẹ, nếu xét thấy không cần phải bắt chấp hành hình phạt tù.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_007",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ủy ban thường vụ Quốc hội có quyền công bố Hiến pháp, luật, Pháp lệnh.\"",
     "input": "Ủy ban thường vụ Quốc hội có quyền công bố Hiến pháp, luật, Pháp lệnh.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì Chủ tịch nước mới có quyền công bố hiến pháp, luật và pháp lệnh.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại khoản 1 Điều 88 Hiến pháp năm 2013, thẩm quyền công bố Hiến pháp, luật và pháp lệnh thuộc về Chủ tịch nước (chứ không phải Ủy ban Thường vụ Quốc hội).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_008",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Giả định là bộ phận không thể thiếu trong mỗi một quy phạm pháp luật.\"",
     "input": "Giả định là bộ phận không thể thiếu trong mỗi một quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì có những quy phạm pháp luật không có giả định mà chỉ có mô tả hành vi vi phạm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trong kỹ thuật lập pháp, một quy phạm pháp luật trong điều luật cụ thể không phải lúc nào cũng thể hiện đầy đủ cả ba bộ phận (giả định, quy định, chế tài) mà có thể bị ẩn hoặc khuyết một bộ phận (được dẫn chiếu sang điều luật hoặc văn bản khác) nhằm bảo đảm tính ngắn gọn, súc tích của văn bản quy phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_009",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi quan hệ xã hội đều được điều chỉnh bằng pháp luật.\"",
     "input": "Mọi quan hệ xã hội đều được điều chỉnh bằng pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bởi vì không phải mọi quan hệ xã hội đều có pháp luật điều chỉnh.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Không phải mọi quan hệ xã hội đều được điều chỉnh bằng pháp luật. Pháp luật chỉ điều chỉnh những quan hệ xã hội phổ biến, điển hình, quan trọng, gắn liền với lợi ích nhà nước, trật tự công cộng và quyền, lợi ích hợp pháp của các chủ thể (khi được quy phạm pháp luật điều chỉnh thì mới trở thành quan hệ pháp luật). Các quan hệ xã hội khác như tình bạn, tình yêu, giao tiếp đạo đức hay tín ngưỡng tôn giáo thuần túy được điều chỉnh bởi các quy phạm xã hội khác như đạo đức, tập quán, hương ước hoặc tín điều tôn giáo.",
     "intent_code": "TRUE_FALSE"
   },
   {
@@ -12729,1281 +12729,1281 @@
     "sample_id": "SFT_196Q_ND_011",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người uống rượu bia say là người bị hạn chế năng lực hành vi dân sự.\"",
     "input": "Người uống rượu bia say là người bị hạn chế năng lực hành vi dân sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Điều 24, Bộ luật dân sự 2015 quy định “Người nghiện ma túy, nghiện các chất kích thích khác dẫn đến phá tán tài sản của gia đình thì theo yêu cầu của người có quyền, lợi ích liên quan hoặc của cơ quan, tổ chức hữu quan, Tòa án có thể ra quyết định tuyên bố người này là người bị hạn chế năng lực hành vi dân sự. Tòa án quyết định người đại diện theo pháp luật của người bị hạn chế năng lực hành vi dân sự và phạm vi đại diện.”.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Điều 24, Bộ luật dân sự 2015 quy định “Người nghiện ma túy, nghiện các chất kích thích khác dẫn đến phá tán tài sản của gia đình thì theo yêu cầu của người có quyền, lợi ích liên quan hoặc của cơ quan, tổ chức hữu quan, Tòa án có thể ra quyết định tuyên bố người này là người bị hạn chế năng lực hành vi dân sự. Tòa án quyết định người đại diện theo pháp luật của người bị hạn chế năng lực hành vi dân sự và phạm vi đại diện.”.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_012",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người từ đủ 18 tuổi trở lên bị bệnh tâm thần là người không có năng lực hành vi dân sự.\"",
     "input": "Người từ đủ 18 tuổi trở lên bị bệnh tâm thần là người không có năng lực hành vi dân sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người dưới 6 tuổi là người không có năng lực hành vi dân sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo Điều 21 và Điều 22 Bộ luật Dân sự năm 2015, người dưới 06 tuổi mới là người không có năng lực hành vi dân sự. Còn người từ đủ 18 tuổi trở lên bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi thì khi có yêu cầu của người có quyền, lợi ích liên quan, Tòa án sẽ ra quyết định tuyên bố người này là người mất năng lực hành vi dân sự trên cơ sở kết luận giám định pháp y tâm thần.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_013",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tư cách pháp nhân là tư cách con người theo quy định pháp luật của mọi tổ chức được thành lập trên lãnh thổ Việt Nam.\"",
     "input": "Tư cách pháp nhân là tư cách con người theo quy định pháp luật của mọi tổ chức được thành lập trên lãnh thổ Việt Nam.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có tổ chức đủ 4 điều kiện theo quy định tại Điều 74, Bộ luật dân sự 2015 mới có tư cách pháp nhân. Theo đó: Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây:\n- Được thành lập theo quy định của Bộ luật này, luật khác có liên quan;\n- Có cơ cấu tổ chức theo quy định tại Điều 83 của Bộ luật này;\n- Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình;\n- Nhân danh mình tham gia quan hệ pháp luật một cách độc lập.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có tổ chức đủ 4 điều kiện theo quy định tại Điều 74, Bộ luật dân sự 2015 mới có tư cách pháp nhân. Theo đó: Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây:\n- Được thành lập theo quy định của Bộ luật này, luật khác có liên quan;\n- Có cơ cấu tổ chức theo quy định tại Điều 83 của Bộ luật này;\n- Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình;\n- Nhân danh mình tham gia quan hệ pháp luật một cách độc lập.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_014",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tổ chức được thành lập hợp pháp là tổ chức có tư cách pháp nhân.\"",
     "input": "Tổ chức được thành lập hợp pháp là tổ chức có tư cách pháp nhân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có tổ chức đủ 4 điều kiện theo quy định tại Điều 74, Bộ luật dân sự 2015 mới có tư cách pháp nhân. Theo đó: Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây:\n- Được thành lập theo quy định của Bộ luật này, luật khác có liên quan;\n- Có cơ cấu tổ chức theo quy định tại Điều 83 của Bộ luật này;\n- Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình;\n- Nhân danh mình tham gia quan hệ pháp luật một cách độc lập. Trường hợp tổ chức thành lập hợp pháp nhưng không đáp ứng được 1 trong các điều kiện trên thì không phải là pháp nhân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có tổ chức đủ 4 điều kiện theo quy định tại Điều 74, Bộ luật dân sự 2015 mới có tư cách pháp nhân. Theo đó: Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây:\n- Được thành lập theo quy định của Bộ luật này, luật khác có liên quan;\n- Có cơ cấu tổ chức theo quy định tại Điều 83 của Bộ luật này;\n- Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình;\n- Nhân danh mình tham gia quan hệ pháp luật một cách độc lập. Trường hợp tổ chức thành lập hợp pháp nhưng không đáp ứng được 1 trong các điều kiện trên thì không phải là pháp nhân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_015",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ tổ chức có tư cách pháp nhân mới được tham gia các quan hệ pháp luật một cách độc lập.\"",
     "input": "Chỉ tổ chức có tư cách pháp nhân mới được tham gia các quan hệ pháp luật một cách độc lập.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các tổ chức khác cũng được tham gia các quan hệ pháp luật một cách độc lập (Doanh nghiệp tư nhân, Hộ gia đình, tổ hợp tác…).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ngoài cá nhân và các tổ chức có tư cách pháp nhân, các chủ thể khác không có tư cách pháp nhân (hoặc tham gia thông qua người đại diện/thành viên theo quy định pháp luật chuyên ngành như hộ gia đình, tổ hợp tác, doanh nghiệp tư nhân do chủ doanh nghiệp làm đại diện) vẫn có thể tham gia vào các quan hệ pháp luật nhất định theo quy định tại Điều 101 Bộ luật Dân sự năm 2015.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_016",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Khi tham gia quan hệ pháp luật, Nhà nước bình đẳng với các chủ thể khác về quyền và nghĩa vụ.\"",
     "input": "Khi tham gia quan hệ pháp luật, Nhà nước bình đẳng với các chủ thể khác về quyền và nghĩa vụ.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Trong qu an hệ pháp luật hình sự, hành chính, nhà nước là một bên sử dụng quyền lực nhà nước để quản lý xã hội bằng phương pháp quyền uy phục tùng.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nhà nước là chủ thể đặc biệt của quan hệ pháp luật. Trong các quan hệ pháp luật công (như quan hệ pháp luật hình sự, quan hệ pháp luật hành chính), Nhà nước tham gia với tư cách là chủ thể mang quyền lực công cộng, sử dụng phương pháp mệnh lệnh – quyền uy (phục tùng) để quản lý xã hội và xử lý vi phạm, nên không có sự bình đẳng về địa vị pháp lý với bên bị quản lý. Chỉ trong quan hệ pháp luật dân sự (Điều 97 Bộ luật Dân sự 2015), Nhà nước mới bình đẳng với các chủ thể khác.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_017",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Trong tất cả các quan hệ pháp luật mà Nhà nước tham gia, Nhà nước có địa vị pháp lý bình đẳng với các chủ thể khác.\"",
     "input": "Trong tất cả các quan hệ pháp luật mà Nhà nước tham gia, Nhà nước có địa vị pháp lý bình đẳng với các chủ thể khác.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Trong quan hệ pháp luật hình sự, hành chính, nhà nước là một bên sử dụng quyền lực nhà nước để quản lý xã hội bằng phương pháp quyền uy phục tùng.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trong các quan hệ pháp luật thuộc ngành luật công (như Luật Hành chính, Luật Hình sự, Luật Hiến pháp), Nhà nước tham gia với tư cách là người nắm giữ quyền lực nhà nước và điều chỉnh bằng phương pháp quyền uy – phục tùng, không bình đẳng về địa vị pháp lý với các chủ thể khác. Nhà nước chỉ bình đẳng với các chủ thể khác khi tham gia vào các quan hệ pháp luật dân sự, kinh tế – thương mại.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_018",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Trong quan hệ pháp luật dân sự, Nhà nước và các chủ thể khác bình đẳng với nhau về quyền và nghĩa vụ pháp lý.\"",
     "input": "Trong quan hệ pháp luật dân sự, Nhà nước và các chủ thể khác bình đẳng với nhau về quyền và nghĩa vụ pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Theo quy định tại Điều 97, Bộ luật dân sự 2015 thì: “Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam, cơ quan nhà nước ở Trung ương, ở địa phương trong quan hệ dân sự Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam, cơ quan nhà nước ở Trung ương, ở địa phương khi tham gia quan hệ dân sự thì bình đẳng với các chủ thể khác và chịu trách nhiệm dân sự theo quy định tại Điều 99 và Điều 100 của Bộ luật này.”.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Theo quy định tại Điều 97, Bộ luật dân sự 2015 thì: “Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam, cơ quan nhà nước ở Trung ương, ở địa phương trong quan hệ dân sự Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam, cơ quan nhà nước ở Trung ương, ở địa phương khi tham gia quan hệ dân sự thì bình đẳng với các chủ thể khác và chịu trách nhiệm dân sự theo quy định tại Điều 99 và Điều 100 của Bộ luật này.”.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_019",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ở nước ta, sự kiện pháp lý làm phát sinh quan hệ hôn nhân là sự kiện đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền và tổ chức lễ cưới tại gia đình.\"",
     "input": "Ở nước ta, sự kiện pháp lý làm phát sinh quan hệ hôn nhân là sự kiện đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền và tổ chức lễ cưới tại gia đình.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Sự kiện pháp lý làm phát sinh quan hệ hôn nhân là sự kiện đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền. Việc tổ chức lễ cưới tại gia đình không làm phát sinh quan hệ hôn nhân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Sự kiện pháp lý làm phát sinh quan hệ hôn nhân là sự kiện đăng ký kết hôn tại cơ quan nhà nước có thẩm quyền. Việc tổ chức lễ cưới tại gia đình không làm phát sinh quan hệ hôn nhân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_020",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ở nước ta, sự kiện pháp lý làm chấm dứt quan hệ hôn nhân là sự kiện Tòa án ra bản án, quyết định chấp nhận cho hai bên ly hôn.\"",
     "input": "Ở nước ta, sự kiện pháp lý làm chấm dứt quan hệ hôn nhân là sự kiện Tòa án ra bản án, quyết định chấp nhận cho hai bên ly hôn.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Bản án, quyết định phải có hiệu lực pháp luật (bản án sơ thẩm thì phải chờ 15 ngày để kháng cáo, kháng nghị). Theo đó, quan hệ hôn nhân chấm dứt kể từ ngày bản án, quyết định ly hôn của Tòa án có hiệu lực pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Bản án, quyết định phải có hiệu lực pháp luật (bản án sơ thẩm thì phải chờ 15 ngày để kháng cáo, kháng nghị). Theo đó, quan hệ hôn nhân chấm dứt kể từ ngày bản án, quyết định ly hôn của Tòa án có hiệu lực pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_021",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Anh A đốt nến, lửa bắt vào rèm cửa gây cháy nhà anh A và một số nhà hàng xóm là sự biến pháp lý.\"",
     "input": "Anh A đốt nến, lửa bắt vào rèm cửa gây cháy nhà anh A và một số nhà hàng xóm là sự biến pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Sự biến pháp lý là hiện tượng xảy ra không phụ thuộc vào ý chí của con người.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Sự biến pháp lý là những hiện tượng tự nhiên hoặc khách quan xảy ra hoàn toàn không phụ thuộc vào ý chí của con người (như thiên tai, bão lụt, hạn hán). Việc anh A đốt nến làm lửa bắt vào rèm cửa gây cháy xuất phát từ hành vi của con người (lỗi vô ý của anh A), do đó đây là hành vi pháp lý bất hợp pháp chứ không phải là sự biến pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_022",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hỏa hoạn, lũ lụt là sự biến pháp lý.\"",
     "input": "Hỏa hoạn, lũ lụt là sự biến pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nếu hỏa hoạn, lũ lụt là sự việc do con người gây ra thì không phải là sự biến pháp lý. Ví dụ: Chủ thể gây ra cháy rừng là con người, chỉ khi việc cháy rừng không do con người gây ra thì mới là sự biến pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nếu hỏa hoạn, lũ lụt là sự việc do con người gây ra thì không phải là sự biến pháp lý. Ví dụ: Chủ thể gây ra cháy rừng là con người, chỉ khi việc cháy rừng không do con người gây ra thì mới là sự biến pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_023",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mưa, gió, sấm, chớp là sự biến pháp lý.\"",
     "input": "Mưa, gió, sấm, chớp là sự biến pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vì sự biến pháp lý là hiện tượng xảy ra không phụ thuộc vào ý chí của con người.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Mưa, gió, sấm, chớp là những hiện tượng tự nhiên xảy ra một cách khách quan, hoàn toàn không phụ thuộc vào ý chí của con người; khi các hiện tượng này được pháp luật gắn với việc làm phát sinh, thay đổi hoặc chấm dứt một quan hệ pháp luật cụ thể (ví dụ: sét đánh làm hư hỏng tài sản được bảo hiểm) thì chúng là sự biến pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_024",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Cháy rừng là sự biến pháp lý.\"",
     "input": "Cháy rừng là sự biến pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nếu cháy rừng do con người tạo ra thì không phải là sự biến pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Cháy rừng không phải lúc nào cũng là sự biến pháp lý. Chỉ khi đám cháy rừng xảy ra hoàn toàn do nguyên nhân tự nhiên (như sét đánh, nắng nóng tự bốc cháy) nằm ngoài ý chí con người thì mới là sự biến pháp lý; nếu cháy rừng do con người đốt lửa hoặc vô ý gây cháy thì đó là hành vi pháp lý (hành vi vi phạm pháp luật).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_025",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi trái pháp luật là hành vi vi phạm pháp luật.\"",
     "input": "Hành vi trái pháp luật là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hành vi vi phạm pháp luật phải có đủ các điều kiện: Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ. Trường hợp hành vi trái pháp luật nhưng không có lỗi của chủ thể thì không phải là hành vi vi phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hành vi vi phạm pháp luật phải có đủ các điều kiện: Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ. Trường hợp hành vi trái pháp luật nhưng không có lỗi của chủ thể thì không phải là hành vi vi phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_026",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi vi phạm pháp luật là hành vi trái pháp luật.\"",
     "input": "Hành vi vi phạm pháp luật là hành vi trái pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_027",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Thiệt hại do hành vi vi phạm pháp luật gây ra phải là thiệt hại về vật chất.\"",
     "input": "Thiệt hại do hành vi vi phạm pháp luật gây ra phải là thiệt hại về vật chất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Thiệt hại do hành vi vi phạm pháp luật gây ra phải là thiệt hại về vật chất và tinh thần.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hậu quả thiệt hại do hành vi vi phạm pháp luật gây ra cho xã hội không chỉ bao gồm thiệt hại về vật chất (tài sản, chi phí cứu chữa) mà còn có thể là thiệt hại về thể chất (tính mạng, sức khỏe), thiệt hại về tinh thần (danh dự, nhân phẩm, uy tín) hoặc những tổn hại khác đối với trật tự quản lý xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_028",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi trái với đạo đức, chuẩn mực thông thường trong xã hội là hành vi vi phạm pháp luật.\"",
     "input": "Hành vi trái với đạo đức, chuẩn mực thông thường trong xã hội là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_029",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ thể có năng lực trách nhiệm pháp lý mà thực hiện hành vi trái pháp luật thì vi phạm pháp luật.\"",
     "input": "Chủ thể có năng lực trách nhiệm pháp lý mà thực hiện hành vi trái pháp luật thì vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Vi phạm pháp luật là hành vi (hành động hoặc không hành động) trái pháp luật và có lỗi do chủ thể có năng lực trách nhiệm pháp lý thực hiện, xâm phạm đến các quan hệ xã hội được nhà nước xác lập và bảo vệ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_030",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Cấu thành của vi phạm pháp luật bao gồm mặt chủ thể, mặt chủ quan, chủ thể và khách thể của vi phạm pháp luật.\"",
     "input": "Cấu thành của vi phạm pháp luật bao gồm mặt chủ thể, mặt chủ quan, chủ thể và khách thể của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Cấu thành vi phạm pháp luật gồm: chủ thể, mặt chủ quan, khách thể.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Cấu thành của vi phạm pháp luật bao gồm 04 yếu tố bắt buộc là: Mặt khách quan, Mặt chủ quan, Chủ thể và Khách thể của vi phạm pháp luật (không có yếu tố nào gọi là \"mặt chủ thể\").",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_031",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Không biết trước hành vi của mình là nguy hiểm cho xã hội thì không được coi là có lỗi.\"",
     "input": "Không biết trước hành vi của mình là nguy hiểm cho xã hội thì không được coi là có lỗi.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Không thấy trước hành vi có thể gây ra hậu quả mặc dù phải thấy trước và có thể thấy trước (Lỗi vô ý vì cẩu thả).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trong trường hợp chủ thể không thấy trước hành vi của mình có thể gây ra hậu quả nguy hại cho xã hội, nhưng theo quy định pháp luật và điều kiện thực tế thì người đó bắt buộc phải thấy trước và hoàn toàn có điều kiện để thấy trước hậu quả đó, thì chủ thể vẫn bị coi là có lỗi (thuộc hình thức lỗi vô ý do cẩu thả theo khoản 2 Điều 11 Bộ luật Hình sự năm 2015).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_032",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A đánh B gây thương tích thì khách thể bị xâm hại là B.\"",
     "input": "A đánh B gây thương tích thì khách thể bị xâm hại là B.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Khách thể bị xâm phạm là sức khỏe của B.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Cần phân biệt rõ giữa Khách thể của vi phạm pháp luật và Đối tượng tác động. Khi A đánh B gây thương tích, B (cơ thể của B) là đối tượng tác động của hành vi vi phạm, còn khách thể bị xâm hại là quyền được pháp luật bảo hộ về sức khỏe của B.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_033",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A có hành vi trộm cắp máy laptop của B thì khách thể bị xâm hại là cái máy laptop.\"",
     "input": "A có hành vi trộm cắp máy laptop của B thì khách thể bị xâm hại là cái máy laptop.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Khách thể bị xâm hại là tài sản (laptop là đối tượng bị xâm hại).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chiếc máy laptop chỉ là đối tượng tác động vật chất của hành vi trộm cắp, còn khách thể bị xâm hại là quan hệ sở hữu tài sản của B được pháp luật bảo vệ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_034",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"C (tâm thần) dùng gậy đánh nhiều nhát vào người D là hành vi vi phạm pháp luật.\"",
     "input": "C (tâm thần) dùng gậy đánh nhiều nhát vào người D là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Vì C không có năng lực trách nhiệm hình sự (bị mất năng lực hành vi) nên hành vi của C không là hành vi vi phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo lý luận về cấu thành vi phạm pháp luật và Điều 21 Bộ luật Hình sự năm 2015, người thực hiện hành vi nguy hiểm trong khi đang mắc bệnh tâm thần làm mất khả năng nhận thức hoặc khả năng điều khiển hành vi của mình thì không có lỗi và không có năng lực trách nhiệm pháp lý. Do đó, hành vi của C không cấu thành vi phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_035",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"N (13 tuổi) có hành vi trộm cắp tài sản (trị giá 250 triệu đồng) của gia đình ông P là hành vi vi phạm pháp luật hình sự.\"",
     "input": "N (13 tuổi) có hành vi trộm cắp tài sản (trị giá 250 triệu đồng) của gia đình ông P là hành vi vi phạm pháp luật hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: N không thỏa điều kiện về độ tuổi chịu trách nhiệm hình sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ Điều 12 Bộ luật Hình sự năm 2015, độ tuổi tối thiểu phải chịu trách nhiệm hình sự là từ đủ 14 tuổi trở lên (đối với một số tội phạm rất nghiêm trọng hoặc đặc biệt nghiêm trọng do cố ý). Do N mới 13 tuổi (chưa đủ 14 tuổi) nên N chưa đủ tuổi chịu trách nhiệm hình sự, hành vi của N không phải là vi phạm pháp luật hình sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_036",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"M (15 tuổi) có hành vi trộm cắp tài sản (trị giá 50 triệu đồng) của gia đình ông Q là hành vi vi phạm pháp luật.\"",
     "input": "M (15 tuổi) có hành vi trộm cắp tài sản (trị giá 50 triệu đồng) của gia đình ông Q là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vì hành vi của M đã cấu thành tội phạm hình sự thỏa điều kiện về độ tuổi chịu trách nhiệm hình sự và giá trị tài sản bị trộm cắp.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Vì hành vi của M đã cấu thành tội phạm hình sự thỏa điều kiện về độ tuổi chịu trách nhiệm hình sự và giá trị tài sản bị trộm cắp.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_037",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"M (15 tuổi) có hành vi trộm cắp tài sản (trị giá 50 triệu đồng) của gia đình ông Q là hành vi vi phạm pháp luật hình sự.\"",
     "input": "M (15 tuổi) có hành vi trộm cắp tài sản (trị giá 50 triệu đồng) của gia đình ông Q là hành vi vi phạm pháp luật hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Bởi vì M thỏa mãn điều kiện về độ tuổi chịu trách nhiệm hình sự và giá trị tài sản bị trộm cắp.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Bởi vì M thỏa mãn điều kiện về độ tuổi chịu trách nhiệm hình sự và giá trị tài sản bị trộm cắp.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_038",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi trộm cắp tài sản là hành vi vi phạm pháp luật hình sự.\"",
     "input": "Hành vi trộm cắp tài sản là hành vi vi phạm pháp luật hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Điều 173 Bộ luật hình sự 2015 quy định về tội Trộm cắp tài sản thì: “Người nào trộm cắp tài sản của người khác trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 2.000.000 đồng nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm:.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Điều 173 Bộ luật hình sự 2015 quy định về tội Trộm cắp tài sản thì: “Người nào trộm cắp tài sản của người khác trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 2.000.000 đồng nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm:.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_039",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hậu quả là yếu tố bắt buộc phải có đối với các hành vi vi phạm pháp luật.\"",
     "input": "Hậu quả là yếu tố bắt buộc phải có đối với các hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Đối với tội phạm có cấu thành tội phạm hình thức thì không cần hậu quả.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Đối với tội phạm có cấu thành tội phạm hình thức thì không cần hậu quả.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_040",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A (15 tuổi) đánh B gây tổn hại 5 % sức khỏe của B là hành vi vi phạm pháp luật.\"",
     "input": "A (15 tuổi) đánh B gây tổn hại 5 % sức khỏe của B là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Xem xét vi phạm pháp luật hành chính.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Xem xét vi phạm pháp luật hành chính.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_041",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A (13 tuổi) đánh B gây tổn hại Nhận định 50% sức khỏe của B là hành vi vi phạm pháp luật.\"",
     "input": "A (13 tuổi) đánh B gây tổn hại Nhận định 50% sức khỏe của B là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: A không có năng lực trách nhiệm pháp lý (độ tuổi chưa đáp ứng điều kiện).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** A không có năng lực trách nhiệm pháp lý (độ tuổi chưa đáp ứng điều kiện).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_042",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A (18 tuổi) đánh B gây tổn hại 5% sức khỏe của B là hành vi vi phạm pháp luật.\"",
     "input": "A (18 tuổi) đánh B gây tổn hại 5% sức khỏe của B là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Có thể bị xem xét hành vi vi phạm pháp luật hành chính.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Có thể bị xem xét hành vi vi phạm pháp luật hành chính.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_043",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"A (18 tuổi) đánh B gây tổn hại 5% sức khỏe của B là hành vi vi phạm pháp luật hình sự.\"",
     "input": "A (18 tuổi) đánh B gây tổn hại 5% sức khỏe của B là hành vi vi phạm pháp luật hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Căn cứ theo quy định tại Điều 134 Bộ luật hình sự 2015 quy định về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác thì: “Người nào cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30% hoặc dưới 11% nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm”. Do đó cần phải đáp ứng thêm 1 số điều kiện nhất định thì hành vi gây tổn hại 5% sức khỏe của người khác (dưới 11%) mới vi phạm pháp luật hình sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ theo quy định tại Điều 134 Bộ luật hình sự 2015 quy định về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác thì: “Người nào cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30% hoặc dưới 11% nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm”. Do đó cần phải đáp ứng thêm 1 số điều kiện nhất định thì hành vi gây tổn hại 5% sức khỏe của người khác (dưới 11%) mới vi phạm pháp luật hình sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_044",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi cố ý đánh người gây thương tích là hành vi vi phạm pháp luật hình sự.\"",
     "input": "Hành vi cố ý đánh người gây thương tích là hành vi vi phạm pháp luật hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Căn cứ theo quy định tại Điều 134 Bộ luật hình sự 2015 quy định về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác thì: “Người nào cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30% hoặc dưới 11% nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm”. Theo đó, người cố ý đánh người khác gây thương tích nhưng thương tích không đáng kể không đủ định lượng truy cứu trách nhiệm hình sự thì hành vi trên không vi phạm pháp luật hình sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ theo quy định tại Điều 134 Bộ luật hình sự 2015 quy định về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác thì: “Người nào cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30% hoặc dưới 11% nhưng thuộc một trong các trường hợp sau đây, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm”. Theo đó, người cố ý đánh người khác gây thương tích nhưng thương tích không đáng kể không đủ định lượng truy cứu trách nhiệm hình sự thì hành vi trên không vi phạm pháp luật hình sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_045",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mỗi hành vi vi phạm pháp luật chỉ phải chịu một loại trách nhiệm pháp lý.\"",
     "input": "Mỗi hành vi vi phạm pháp luật chỉ phải chịu một loại trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Trong một số trường hợp, một hành vi vi phạm pháp luật phải chịu 02 trách nhiệm là trách nhiệm hình sự và trách nhiệm dân sự. Ví dụ, A trộm cắp 01 chiếc xe mô tô trị giá 20 triệu đồng của B nhưng A đã bán xe mô tô trộm cắp được và tiêu xài hết. Do đó, ngoài việc phải chịu trách nhiệm hình sự về hành vi trộm cắp tài sản thì A còn phải chịu trách nhiệm dân sự, bồi thường giá trị xe mô tô bị trộm cắp cho bị hại B.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trong một số trường hợp, một hành vi vi phạm pháp luật phải chịu 02 trách nhiệm là trách nhiệm hình sự và trách nhiệm dân sự. Ví dụ, A trộm cắp 01 chiếc xe mô tô trị giá 20 triệu đồng của B nhưng A đã bán xe mô tô trộm cắp được và tiêu xài hết. Do đó, ngoài việc phải chịu trách nhiệm hình sự về hành vi trộm cắp tài sản thì A còn phải chịu trách nhiệm dân sự, bồi thường giá trị xe mô tô bị trộm cắp cho bị hại B.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_046",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Trách nhiệm hình sự là loại trách nhiệm pháp lý nghiêm khắc nhất.\"",
     "input": "Trách nhiệm hình sự là loại trách nhiệm pháp lý nghiêm khắc nhất.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Hình phạt là biện pháp cưỡng chế nghiêm khắc nhất của nhà nước. Do đó, trách nhiệm hình sự là loại trách nhiệm pháp lý nghiêm khắc nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Hình phạt là biện pháp cưỡng chế nghiêm khắc nhất của nhà nước. Do đó, trách nhiệm hình sự là loại trách nhiệm pháp lý nghiêm khắc nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_047",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Một hành vi vi phạm pháp luật có thể phải chịu đồng thời nhiều loại trách nhiệm pháp lý khác nhau.\"",
     "input": "Một hành vi vi phạm pháp luật có thể phải chịu đồng thời nhiều loại trách nhiệm pháp lý khác nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Trong một số trường hợp, một hành vi vi phạm pháp luật phải chịu 02 trách nhiệm là trách nhiệm hình sự và trách nhiệm dân sự. Ví dụ, A trộm cắp 01 chiếc xe mô tô trị giá 20 triệu đồng của B nhưng A đã bán xe mô tô trộm cắp được và tiêu xài hết. Do đó, ngoài việc phải chịu trách nhiệm hình sự về hành vi trộm cắp tài sản thì A còn phải chịu trách nhiệm dân sự, bồi thường giá trị xe mô tô bị trộm cắp cho bị hại B.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Trong một số trường hợp, một hành vi vi phạm pháp luật phải chịu 02 trách nhiệm là trách nhiệm hình sự và trách nhiệm dân sự. Ví dụ, A trộm cắp 01 chiếc xe mô tô trị giá 20 triệu đồng của B nhưng A đã bán xe mô tô trộm cắp được và tiêu xài hết. Do đó, ngoài việc phải chịu trách nhiệm hình sự về hành vi trộm cắp tài sản thì A còn phải chịu trách nhiệm dân sự, bồi thường giá trị xe mô tô bị trộm cắp cho bị hại B.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_048",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Một hành vi vi phạm pháp luật có thể phải chịu đồng thời trách nhiệm pháp lý hình sự và hành chính.\"",
     "input": "Một hành vi vi phạm pháp luật có thể phải chịu đồng thời trách nhiệm pháp lý hình sự và hành chính.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nếu hành vi vi phạm pháp luật không đủ yếu tố cấu thành tội phạm thì chỉ bị xử phạt vi phạm hành chính. Ví dụ: Nguyễn Văn A tham gia đánh bạc nhưng số tiền A sử dụng để đánh bạc dưới 5.000.000 đồng nên hành vi của A không đủ định lượng cấu thành tội phạm. Do đó, A chỉ bị xử phạt hành chính về hành vi đánh bạc. Ngược lại, nếu hành vi đã cấu thành tội phạm thì người thực hiện hành vi không bị xử phạt vi phạm hành chính nữa (một hành vi không bị xử lý 02 lần).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nếu hành vi vi phạm pháp luật không đủ yếu tố cấu thành tội phạm thì chỉ bị xử phạt vi phạm hành chính. Ví dụ: Nguyễn Văn A tham gia đánh bạc nhưng số tiền A sử dụng để đánh bạc dưới 5.000.000 đồng nên hành vi của A không đủ định lượng cấu thành tội phạm. Do đó, A chỉ bị xử phạt hành chính về hành vi đánh bạc. Ngược lại, nếu hành vi đã cấu thành tội phạm thì người thực hiện hành vi không bị xử phạt vi phạm hành chính nữa (một hành vi không bị xử lý 02 lần).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_049",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm pháp lý.\"",
     "input": "Mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ trường hợp chủ thể có năng lực trách nhiệm pháp lý thì mới phải chịu trách nhiệm pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ trường hợp chủ thể có năng lực trách nhiệm pháp lý thì mới phải chịu trách nhiệm pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_050",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Toà án là cơ quan duy nhất có thẩm quyền truy cứu trách nhiệm pháp lý đối với các hành vi vi phạm pháp luật.\"",
     "input": "Toà án là cơ quan duy nhất có thẩm quyền truy cứu trách nhiệm pháp lý đối với các hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tòa án là cơ quan thực hiện quyền xét xử.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tòa án là cơ quan thực hiện quyền xét xử.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_051",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hiến pháp là văn bản pháp luật có hiệu lực pháp lý tối cao trên lãnh thổ mỗi quốc gia.\"",
     "input": "Hiến pháp là văn bản pháp luật có hiệu lực pháp lý tối cao trên lãnh thổ mỗi quốc gia.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Hiến pháp là đạo luật gốc, đạo luật cơ bản của một nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Hiến pháp là đạo luật gốc, đạo luật cơ bản của một nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_052",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người làm việc trong cơ quan nhà nước là cán bộ, công chức nhà nước.\"",
     "input": "Người làm việc trong cơ quan nhà nước là cán bộ, công chức nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ngoài cán bộ, công chức thì người làm việc trong cơ quan nhà nước còn có cả người lao động.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ngoài cán bộ, công chức thì người làm việc trong cơ quan nhà nước còn có cả người lao động.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_053",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nếu xác định một hành vi vi phạm pháp luật là hành vi vi phạm pháp luật hành chính thì không được áp dụng hình phạt đối với người vi phạm.\"",
     "input": "Nếu xác định một hành vi vi phạm pháp luật là hành vi vi phạm pháp luật hành chính thì không được áp dụng hình phạt đối với người vi phạm.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Hình phạt chỉ áp dụng với người thực hiện hành vi vi phạm pháp luật hình sự.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Hình phạt chỉ áp dụng với người thực hiện hành vi vi phạm pháp luật hình sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_054",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ chủ sở hữu tài sản mới có quyền chiếm hữu, sử dụng, định đoạt tài sản.\"",
     "input": "Chỉ chủ sở hữu tài sản mới có quyền chiếm hữu, sử dụng, định đoạt tài sản.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Những người được chủ sở hữu giao quyền/ủy quyền/chuyển nhượng quyền cũng được quyền chiếm hữu, sử dụng, định đoạt tài sản.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Những người được chủ sở hữu giao quyền/ủy quyền/chuyển nhượng quyền cũng được quyền chiếm hữu, sử dụng, định đoạt tài sản.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_055",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ có cha, mẹ đẻ, con đẻ của người để lại di sản mới được hưởng thừa kế của người đó theo quy định của pháp luật.\"",
     "input": "Chỉ có cha, mẹ đẻ, con đẻ của người để lại di sản mới được hưởng thừa kế của người đó theo quy định của pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Con nuôi, cha mẹ nuôi cũng thuộc hàng thừa kế thứ nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Con nuôi, cha mẹ nuôi cũng thuộc hàng thừa kế thứ nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_056",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Con được hưởng thừa kế của cha mẹ phải là con của người vợ, người chồng hợp pháp.\"",
     "input": "Con được hưởng thừa kế của cha mẹ phải là con của người vợ, người chồng hợp pháp.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Con đẻ ở hàng thừa kế thứ nhất, không phân biệt con trong giá thú hay ngoài giá thú, không phân biệt là con ruột hay con nuôi.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Con đẻ ở hàng thừa kế thứ nhất, không phân biệt con trong giá thú hay ngoài giá thú, không phân biệt là con ruột hay con nuôi.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_057",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Cha, mẹ không được hưởng thừa kế của con nếu đã cho con làm con nuôi của người khác.\"",
     "input": "Cha, mẹ không được hưởng thừa kế của con nếu đã cho con làm con nuôi của người khác.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo di chúc thì được hưởng theoý chí của con. Theo pháp luật thì cha mẹ đẻ là người thừa kế ở hàng thừa kế thứ nhất. Việc cho con đi làm con nuôi không đồng thời tước bỏ quyền được hưởng thừa kế của cha mẹ ruột đối với di sản của con nuôi.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo di chúc thì được hưởng theo ý chí của con. Theo pháp luật thì cha mẹ đẻ là người thừa kế ở hàng thừa kế thứ nhất. Việc cho con đi làm con nuôi không đồng thời tước bỏ quyền được hưởng thừa kế của cha mẹ ruột đối với di sản của con nuôi.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_058",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Đứa trẻ đã được người khác nhận làm con nuôi theo đúng quy định của pháp luật thì không được hưởng thừa kế từ di sản do cha mẹ đẻ của mình để lại.\"",
     "input": "Đứa trẻ đã được người khác nhận làm con nuôi theo đúng quy định của pháp luật thì không được hưởng thừa kế từ di sản do cha mẹ đẻ của mình để lại.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Trường hợp đứa trẻ được cha mẹ ruột để lại tài sản theo di chúc thì vẫn được hưởng theoý chí của cha mẹ đẻ. Kể cả trường hợp theo pháp luật thì con đẻ là người thừa kế ở hàng thừa kế thứ nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trường hợp đứa trẻ được cha mẹ ruột để lại tài sản theo di chúc thì vẫn được hưởng theo ý chí của cha mẹ đẻ. Kể cả trường hợp theo pháp luật thì con đẻ là người thừa kế ở hàng thừa kế thứ nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_059",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người thừa kế chỉ có thể là cá nhân.\"",
     "input": "Người thừa kế chỉ có thể là cá nhân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người thừa kế theo di chúc có thể là bất kỳ cá nhân, tổ chức nào theoý chí của người để lại thừa kế.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người thừa kế theo di chúc có thể là bất kỳ cá nhân, tổ chức nào theo ý chí của người để lại thừa kế.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_060",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Thời hiệu khởi kiện về thừa kế là 10 năm kể từ thời điểm người để lại di sản chết.\"",
     "input": "Thời hiệu khởi kiện về thừa kế là 10 năm kể từ thời điểm người để lại di sản chết.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tùy trường hợp mà thời hiệu khởi kiện về thừa kế có thể đến 10 năm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tùy trường hợp mà thời hiệu khởi kiện về thừa kế có thể đến 10 năm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_061",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người có tài sản không được lập di chúc để lại tài sản của mình cho người không có mối quan hệ huyết thống hoặc quan hệ hôn nhân.\"",
     "input": "Người có tài sản không được lập di chúc để lại tài sản của mình cho người không có mối quan hệ huyết thống hoặc quan hệ hôn nhân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người thừa kế theo di chúc có thể là bất kỳ cá nhân, tổ chức nào theoý chí của người để lại thừa kế. Người không có mối quan hệ huyết thống hoặc quan hệ hôn nhân chỉ không được nhận di sản thừa kế theo pháp luật. Tuy nhiên, người không mối quan hệ huyết thống hoặc quan hệ hôn nhân (như quan hệ nuôi con nuôi) thì vẫn được hưởng di sản thừa kế theo pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người thừa kế theo di chúc có thể là bất kỳ cá nhân, tổ chức nào theo ý chí của người để lại thừa kế. Người không có mối quan hệ huyết thống hoặc quan hệ hôn nhân chỉ không được nhận di sản thừa kế theo pháp luật. Tuy nhiên, người không mối quan hệ huyết thống hoặc quan hệ hôn nhân (như quan hệ nuôi con nuôi) thì vẫn được hưởng di sản thừa kế theo pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_062",
-    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ông A bị tai nạn giao thông ngày 01/4/2017. Ngày 02/5/2017, ông A có di chúc miệng hợp pháp để lại toàn bộ tài sản cho bà B. Ngày 05/8/2017 ông A chết. Trong trường hợp này, di sản củaông A được chia theo di chúc miệng ngày 02/5/2017.\"",
-    "input": "Ông A bị tai nạn giao thông ngày 01/4/2017. Ngày 02/5/2017, ông A có di chúc miệng hợp pháp để lại toàn bộ tài sản cho bà B. Ngày 05/8/2017 ông A chết. Trong trường hợp này, di sản củaông A được chia theo di chúc miệng ngày 02/5/2017.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Sau 03 tháng di chúc miệng người để lại di chúc còn sống, minh mẫn, sáng suốt thì di chúc miệng mặc nhiên bị hủy bỏ. Di sản thừa kế trong trường hợp này sẽ chia theo Di chúc bằng văn bản (nếu có) hoặc chia theo pháp luật (nếu không có di chúc).",
+    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ông A bị tai nạn giao thông ngày 01/4/2017. Ngày 02/5/2017, ông A có di chúc miệng hợp pháp để lại toàn bộ tài sản cho bà B. Ngày 05/8/2017 ông A chết. Trong trường hợp này, di sản của ông A được chia theo di chúc miệng ngày 02/5/2017.\"",
+    "input": "Ông A bị tai nạn giao thông ngày 01/4/2017. Ngày 02/5/2017, ông A có di chúc miệng hợp pháp để lại toàn bộ tài sản cho bà B. Ngày 05/8/2017 ông A chết. Trong trường hợp này, di sản của ông A được chia theo di chúc miệng ngày 02/5/2017.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Sau 03 tháng di chúc miệng người để lại di chúc còn sống, minh mẫn, sáng suốt thì di chúc miệng mặc nhiên bị hủy bỏ. Di sản thừa kế trong trường hợp này sẽ chia theo Di chúc bằng văn bản (nếu có) hoặc chia theo pháp luật (nếu không có di chúc).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_063",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Độ tuổi để được kết hôn theo quy định của Luật Hôn nhân gia đình 2014 là nam, nữ phải từ 18 tuổi trở lên.\"",
     "input": "Độ tuổi để được kết hôn theo quy định của Luật Hôn nhân gia đình 2014 là nam, nữ phải từ 18 tuổi trở lên.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Độ tuổi để được kết hôn của nữ là từ đủ 18, còn đối với nam là từ đủ 20 tuổi trở lên.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Độ tuổi để được kết hôn của nữ là từ đủ 18, còn đối với nam là từ đủ 20 tuổi trở lên.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_064",
-    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Luật Hôn nhân g ia đình Việt Nam cấm kết hôn giữa những người đồng giới.\"",
-    "input": "Luật Hôn nhân g ia đình Việt Nam cấm kết hôn giữa những người đồng giới.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Luật Hôn nhân gia đình năm 2014 không thừa nhận hôn nhân giữa những người đồng giới chứ không cấm kết hôn giữa những người đồng giới.",
+    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Luật Hôn nhân gia đình Việt Nam cấm kết hôn giữa những người đồng giới.\"",
+    "input": "Luật Hôn nhân gia đình Việt Nam cấm kết hôn giữa những người đồng giới.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Luật Hôn nhân gia đình năm 2014 không thừa nhận hôn nhân giữa những người đồng giới chứ không cấm kết hôn giữa những người đồng giới.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_065",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tất cả các tài sản có được trong quá trình hôn nhân là tài sản chung của vợ chồng.\"",
     "input": "Tất cả các tài sản có được trong quá trình hôn nhân là tài sản chung của vợ chồng.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Những tài sản được xác định là tài sản riêng và các tài sản mà vợ chồng thỏa thuận là tài sản riêng thì là tài sản riêng của một bên vợ hoặc chồng.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Những tài sản được xác định là tài sản riêng và các tài sản mà vợ chồng thỏa thuận là tài sản riêng thì là tài sản riêng của một bên vợ hoặc chồng.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_066",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nếu người vợ mang thai hoặc nuôi con dưới 36 tháng tuổi thì chồng không được quyền yêu cầu ly hôn.\"",
     "input": "Nếu người vợ mang thai hoặc nuôi con dưới 36 tháng tuổi thì chồng không được quyền yêu cầu ly hôn.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo quy định tại khoản 3 Điều 51 Luật Hôn nhân gia đình năm 2014 thì: Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi. Theo đó, trường hợp vợ đang nuôi con từ đủ 12 tháng tuổi đến dưới 36 tháng tuổi vẫn có quyền yêu cầu ly hôn.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại khoản 3 Điều 51 Luật Hôn nhân gia đình năm 2014 thì: Chồng không có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi. Theo đó, trường hợp vợ đang nuôi con từ đủ 12 tháng tuổi đến dưới 36 tháng tuổi vẫn có quyền yêu cầu ly hôn.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_067",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Khi vợ chồng ly hôn, việc giao nuôi dưỡng con chung sẽ được thực hiện theo nguyên tắc: con dưới 36 tháng tuổi sẽ được giao cho mẹ nuôi dưỡng, con trên 7 tuổi trở lên phải theoý nguyện của con.\"",
     "input": "Khi vợ chồng ly hôn, việc giao nuôi dưỡng con chung sẽ được thực hiện theo nguyên tắc: con dưới 36 tháng tuổi sẽ được giao cho mẹ nuôi dưỡng, con trên 7 tuổi trở lên phải theoý nguyện của con.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo quy định tại khoản 2 Điều 81 Luật Hôn nhân gia đình năm 2014 thì: Khi ly hôn, vợ, chồng tự thỏa thuận về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con; nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con. Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con. Do đó, ý nguyện của con chỉ là một căn cứ để Tòa án xem xét quyết định giao con cho vợ hoặc chồng.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại khoản 2 Điều 81 Luật Hôn nhân gia đình năm 2014 thì: Khi ly hôn, vợ, chồng tự thỏa thuận về người trực tiếp nuôi con, nghĩa vụ, quyền của mỗi bên sau khi ly hôn đối với con; trường hợp không thỏa thuận được thì Tòa án quyết định giao con cho một bên trực tiếp nuôi căn cứ vào quyền lợi về mọi mặt của con; nếu con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con. Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện để trực tiếp trông nom, chăm sóc, nuôi dưỡng, giáo dục con hoặc cha mẹ có thỏa thuận khác phù hợp với lợi ích của con. Do đó, ý nguyện của con chỉ là một căn cứ để Tòa án xem xét quyết định giao con cho vợ hoặc chồng.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_068",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Con được sinh ra sau khi hai vợ chồng đã ly hôn thì không được coi là con chung của vợ chồng.\"",
     "input": "Con được sinh ra sau khi hai vợ chồng đã ly hôn thì không được coi là con chung của vợ chồng.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo quy định tại khoản 1 Điều 88 Luật Hôn nhân gia đình năm 2014 thì: “Con được sinh ra trong thời hạn 300 ngày kể từ thời điểm chấm dứt hôn nhân được coi là con do người vợ có thai trong thời kỳ hôn nhân”.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại khoản 1 Điều 88 Luật Hôn nhân gia đình năm 2014 thì: “Con được sinh ra trong thời hạn 300 ngày kể từ thời điểm chấm dứt hôn nhân được coi là con do người vợ có thai trong thời kỳ hôn nhân”.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_069",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Con được sinh ra trong thời kỳ hôn nhân mặc nhiên được thừa nhận là con chung của vợ chồng.\"",
     "input": "Con được sinh ra trong thời kỳ hôn nhân mặc nhiên được thừa nhận là con chung của vợ chồng.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Trong trường hợp cha mẹ không thừa nhận con thì theo xác định của Tòa án. Hoặc trường hợp mang thai hộ thì con được sinh ra trong thời kỳ hôn nhân của người mẹ là người nhận mang thai hộ thì không phải là con chung của vợ chồng người nhận mang thai hộ mà là con của vợ chồng – người nhờ mang thai hộ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trong trường hợp cha mẹ không thừa nhận con thì theo xác định của Tòa án. Hoặc trường hợp mang thai hộ thì con được sinh ra trong thời kỳ hôn nhân của người mẹ là người nhận mang thai hộ thì không phải là con chung của vợ chồng người nhận mang thai hộ mà là con của vợ chồng – người nhờ mang thai hộ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_070",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi công dân đều có quyền bầu cử Quốc hội và Hội đồng nhân dân các cấp.\"",
     "input": "Mọi công dân đều có quyền bầu cử Quốc hội và Hội đồng nhân dân các cấp.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người từ đủ 18 tuổi mới có quyền bầu cử.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người từ đủ 18 tuổi mới có quyền bầu cử.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_071",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người từ đủ 18 tuổi trở lên có thể ứng cử làm Đại biểu Quốc hội.\"",
     "input": "Người từ đủ 18 tuổi trở lên có thể ứng cử làm Đại biểu Quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người từ đủ 21 tuổi trở lên mới có thể ứng cử làm Đại biểu Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người từ đủ 21 tuổi trở lên mới có thể ứng cử làm Đại biểu Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_072",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tất cả mọi người từ đủ 18 tuổi trở lên có quyền đi bầu cử đại biểu Quốc hội.\"",
     "input": "Tất cả mọi người từ đủ 18 tuổi trở lên có quyền đi bầu cử đại biểu Quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Những người bị tước một số quyền công dân không có quyền đi bầu cử.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Những người bị tước một số quyền công dân không có quyền đi bầu cử.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_073",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Đoàn Thanh niên cộng sản Hồ Chí Minh, Đảng Cộng sản Việt Nam là các cơ quan nhà nước.\"",
     "input": "Đoàn Thanh niên cộng sản Hồ Chí Minh, Đảng Cộng sản Việt Nam là các cơ quan nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Đảng Cộng sản Việt Nam là tổ chức chính trị, Đoàn Thanh niên Cộng sản Hồ Chí Minh là tổ chức chính trị xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Đảng Cộng sản Việt Nam là tổ chức chính trị, Đoàn Thanh niên Cộng sản Hồ Chí Minh là tổ chức chính trị xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_074",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan quyền lực nhà nước cao nhất, đại diện cho ý chí và nguyện vọng của người dân cả nước, nắm trong tay quyền lập pháp, hành pháp và tư pháp.\"",
     "input": "Quốc hội là cơ quan quyền lực nhà nước cao nhất, đại diện cho ý chí và nguyện vọng của người dân cả nước, nắm trong tay quyền lập pháp, hành pháp và tư pháp.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Quốc hội là cơ quan quyền lực nhà nước cao nhất nhưng chỉ nắm quyền lập hiến, lập pháp, giám sát tối cao… Còn quyền hành pháp thuộc về Chính phủ, quyền tư pháp thuộc về Tòa án nhân dân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Quốc hội là cơ quan quyền lực nhà nước cao nhất nhưng chỉ nắm quyền lập hiến, lập pháp, giám sát tối cao… Còn quyền hành pháp thuộc về Chính phủ, quyền tư pháp thuộc về Tòa án nhân dân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_075",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội và Hội đồng nhân dân các cấp là cơ quan quyền lực nhà nước cao nhất, đại diện cho ý chí và nguyện vọng của người dân cả nước.\"",
     "input": "Quốc hội và Hội đồng nhân dân các cấp là cơ quan quyền lực nhà nước cao nhất, đại diện cho ý chí và nguyện vọng của người dân cả nước.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có Quốc hội và Hội đồng nhân dân các cấp là cơ quan quyền lực nhà nước cao nhất. Còn Hội đồng nhân dân là cơ quan Quyền lực nhà nước ở địa phương, đại diện cho ý chí, nguyện vọng của người dân địa phương.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có Quốc hội và Hội đồng nhân dân các cấp là cơ quan quyền lực nhà nước cao nhất. Còn Hội đồng nhân dân là cơ quan Quyền lực nhà nước ở địa phương, đại diện cho ý chí, nguyện vọng của người dân địa phương.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_076",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan hành chính cao nhất của nước ta.\"",
     "input": "Quốc hội là cơ quan hành chính cao nhất của nước ta.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chính phủ là cơ quan hành chính cao nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chính phủ là cơ quan hành chính cao nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_077",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chính phủ là cơ quan hành chính nhà nước cao nhất, đại diện cho ý chí, nguyện vọng của nhân dân cả nước.\"",
     "input": "Chính phủ là cơ quan hành chính nhà nước cao nhất, đại diện cho ý chí, nguyện vọng của nhân dân cả nước.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chính phủ là cơ quan hành chính nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội. Chính phủ chịu trách nhiệm trước Quốc hội và báo cáo công tác trước Quốc hội, Ủy ban thường vụ Quốc hội, Chủ tịch nước.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chính phủ là cơ quan hành chính nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội. Chính phủ chịu trách nhiệm trước Quốc hội và báo cáo công tác trước Quốc hội, Ủy ban thường vụ Quốc hội, Chủ tịch nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_078",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người đứng đầu Chính phủ là người có quyền lực nhà nước cao nhất.\"",
     "input": "Người đứng đầu Chính phủ là người có quyền lực nhà nước cao nhất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_079",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ tịch Quốc hội là người có quyền lực nhà nước cao nhất.\"",
     "input": "Chủ tịch Quốc hội là người có quyền lực nhà nước cao nhất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_080",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chính phủ là cơ quan hành chính nhà nước cao nhất.\"",
     "input": "Chính phủ là cơ quan hành chính nhà nước cao nhất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo Điều 94, Hiến pháp 2013 thì “Chính phủ là cơ quan hành chính nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội. Chính phủ chịu trách nhiệm trước Quốc hội và báo cáo công tác trước Quốc hội, Ủy ban thường vụ Quốc hội, Chủ tịch nước.”.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Theo quy định tại Điều 94 Hiến pháp năm 2013: “Chính phủ là cơ quan hành chính nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội.”",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_081",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Các thành viên Chính phủ do Quốc hội bầu, miễn nhiệm, bãi nhiệm.\"",
     "input": "Các thành viên Chính phủ do Quốc hội bầu, miễn nhiệm, bãi nhiệm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Không phải mọi thành viên Chính phủ do Quốc hội bầu, miễn nhiệm, bãi nhiệm. Ví dụ: Phó thủ tướng do Quốc hội phê chuẩn, Chủ tịch nước bổ nhiệm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Không phải mọi thành viên Chính phủ do Quốc hội bầu, miễn nhiệm, bãi nhiệm. Ví dụ: Phó thủ tướng do Quốc hội phê chuẩn, Chủ tịch nước bổ nhiệm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_082",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ tịch nước phải là đại biểu Quốc hội.\"",
     "input": "Chủ tịch nước phải là đại biểu Quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Điều 87 Hiến pháp 2013 quy định: Chủ tịch nước do Quốc hội bầu trong số đại biểu Quốc hội. Chủ tịch nước chịu trách nhiệm và báo cáo công tác trước Quốc hội. Nhiệm kỳ của Chủ tịch nước theo nhiệm kỳ của Quốc hội. Khi Quốc hội hết nhiệm kỳ, Chủ tịch nước tiếp tục làm nhiệm vụ cho đến khi Quốc hội khóa mới bầu ra Chủ tịch nước. Do đó, bắt buộc Chủ tịch nước phải là đại biểu Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Điều 87 Hiến pháp 2013 quy định: Chủ tịch nước do Quốc hội bầu trong số đại biểu Quốc hội. Chủ tịch nước chịu trách nhiệm và báo cáo công tác trước Quốc hội. Nhiệm kỳ của Chủ tịch nước theo nhiệm kỳ của Quốc hội. Khi Quốc hội hết nhiệm kỳ, Chủ tịch nước tiếp tục làm nhiệm vụ cho đến khi Quốc hội khóa mới bầu ra Chủ tịch nước. Do đó, bắt buộc Chủ tịch nước phải là đại biểu Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_083",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Các thành viên Chính phủ đều phải là đại biểu Quốc hội.\"",
     "input": "Các thành viên Chính phủ đều phải là đại biểu Quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Phó thủ tướng, bộ trưởng không cần phải là đại biểu Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Phó thủ tướng, bộ trưởng không cần phải là đại biểu Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_084",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ tịch nước là người có quyền lực nhà nước cao nhất.\"",
     "input": "Chủ tịch nước là người có quyền lực nhà nước cao nhất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Quốc hội là cơ quan quyền lực nhà nước cao nhất.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_085",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Thủ tướng Chính phủ do Chủ tịch nước bổ nhiệm, miễn nhiệm, bãi nhiệm.\"",
     "input": "Thủ tướng Chính phủ do Chủ tịch nước bổ nhiệm, miễn nhiệm, bãi nhiệm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Thủ tướng do Quốc hội bầu, miễn nhiệm, bãi nhiệm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Thủ tướng do Quốc hội bầu, miễn nhiệm, bãi nhiệm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_086",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chánh án Tòa án nhân dân tối cao, Viện trưởng Viện kiểm sát nhân dân tối cao được Chủ tịch nước bổ nhiệm.\"",
     "input": "Chánh án Tòa án nhân dân tối cao, Viện trưởng Viện kiểm sát nhân dân tối cao được Chủ tịch nước bổ nhiệm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chánh án Tòa án nhân dân tối cao và Viện trưởng Viện kiểm sát nhân dân tối cao là do Quốc hội bầu, miễn nhiệm, bãi nhiệm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chánh án Tòa án nhân dân tối cao và Viện trưởng Viện kiểm sát nhân dân tối cao là do Quốc hội bầu, miễn nhiệm, bãi nhiệm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_087",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Theo quy định của Hiến pháp 2013, trong cơ cấu tổ chức của Chính phủ thì chỉ duy nhất Thủ tướng chính phủ mới được là đại biểu Quốc hội.\"",
     "input": "Theo quy định của Hiến pháp 2013, trong cơ cấu tổ chức của Chính phủ thì chỉ duy nhất Thủ tướng chính phủ mới được là đại biểu Quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các phó thủ tướng cũng có thể là đại biểu Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các phó thủ tướng cũng có thể là đại biểu Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_088",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố.\"",
     "input": "Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Điều 107, hiến pháp 2013 quy định: “Viện kiểm sát nhân dân thực hành quyền công tố, kiểm sát hoạt động tư pháp”. Ngoài Viện kiểm sát, không có cơ quan khác giữ chức năng thực hành quyền công tố tại Tòa án.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Điều 107, hiến pháp 2013 quy định: “Viện kiểm sát nhân dân thực hành quyền công tố, kiểm sát hoạt động tư pháp”. Ngoài Viện kiểm sát, không có cơ quan khác giữ chức năng thực hành quyền công tố tại Tòa án.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_089",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố và xét xử các vụ án hình sự.\"",
     "input": "Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố và xét xử các vụ án hình sự.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố nhưng không có chức năng xét xử. Chức năng xét xử thuộc Tòa án nhân dân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Viện kiểm sát nhân dân là cơ quan duy nhất có chức năng thực hành quyền công tố nhưng không có chức năng xét xử. Chức năng xét xử thuộc Tòa án nhân dân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_090",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử.\"",
     "input": "Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Căn cứ theo Điều 102, Hiến pháp 2013 quy định chức năng của Tòa án thì: “Tòa án nhân dân là cơ quan xét xử của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền tư pháp”.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Căn cứ theo Điều 102, Hiến pháp 2013 quy định chức năng của Tòa án thì: “Tòa án nhân dân là cơ quan xét xử của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền tư pháp”.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_091",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử và thi hành bản án, quyết định do mình ban hành.\"",
     "input": "Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử và thi hành bản án, quyết định do mình ban hành.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo Điều 102, Hiến pháp 2013 quy định “Tòa án nhân dân là cơ quan xét xử của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền tư pháp”. Đối với việc thi hành án hình sự thì có Cơ quan thi hành án hình sự (trại giam,…) thi hành,… còn thi hành án dân sự thì có Cơ quan thi hành án dân sự (Chi cục, cục thi hành án dân sự) thi hành.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo Điều 102, Hiến pháp 2013 quy định “Tòa án nhân dân là cơ quan xét xử của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền tư pháp”. Đối với việc thi hành án hình sự thì có Cơ quan thi hành án hình sự (trại giam,…) thi hành,… còn thi hành án dân sự thì có Cơ quan thi hành án dân sự (Chi cục, cục thi hành án dân sự) thi hành.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_092",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hội đồng nhân dân do nhân dân bầu ra và chịu trách nhiệm trước nhân dân.\"",
     "input": "Hội đồng nhân dân do nhân dân bầu ra và chịu trách nhiệm trước nhân dân.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Bởi vì Hội đồng nhân dân là Cơ quan quyền lực nhà nước ở địa phương nên mang đầy đủ các đặc điểm của cơ quan quyền lực nhà nước. Theo đó, các đại biểu của Hội đồng nhân dân đều do nhân dân bầu ra.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Bởi vì Hội đồng nhân dân là Cơ quan quyền lực nhà nước ở địa phương nên mang đầy đủ các đặc điểm của cơ quan quyền lực nhà nước. Theo đó, các đại biểu của Hội đồng nhân dân đều do nhân dân bầu ra.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_093",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hội đồng nhân dân là cơ quan hành chính nhà nước, do nhân dân bầu ra và chịu trách nhiệm trước nhân dân.\"",
     "input": "Hội đồng nhân dân là cơ quan hành chính nhà nước, do nhân dân bầu ra và chịu trách nhiệm trước nhân dân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hội đồng nhân dân là cơ quan quyền lực nhà nước ở địa phương.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hội đồng nhân dân là cơ quan quyền lực nhà nước ở địa phương.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_094",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ủy ban nhân dân là cơ quan quyền lực nhà nước ở địa phương.\"",
     "input": "Ủy ban nhân dân là cơ quan quyền lực nhà nước ở địa phương.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Uỷ ban nhân dân là cơ quan hành chính nhà nước ở địa phương.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Uỷ ban nhân dân là cơ quan hành chính nhà nước ở địa phương.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_095",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ủy ban nhân dân các cấp là cơ quan có quyền quyết định mọi vấn đề quan trọng nảy sinh tại địa phương cấp đó.\"",
     "input": "Ủy ban nhân dân các cấp là cơ quan có quyền quyết định mọi vấn đề quan trọng nảy sinh tại địa phương cấp đó.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Thẩm quyền này thuộc về Hội đồng nhân dân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Thẩm quyền này thuộc về Hội đồng nhân dân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_096",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nguồn gốc ra đời của pháp luật và nhà nước là giống nhau.\"",
     "input": "Nguồn gốc ra đời của pháp luật và nhà nước là giống nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Nguồn gốc ra đời của pháp luật và nhà nước đều là tư hữu và giai cấp. Pháp luật là công cụ mà nhà nước tạo ra để bảo vệ nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Nguồn gốc ra đời của pháp luật và nhà nước đều là tư hữu và giai cấp. Pháp luật là công cụ mà nhà nước tạo ra để bảo vệ nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_097",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Pháp luật và nhà nước ra đời cùng một thời điểm.\"",
     "input": "Pháp luật và nhà nước ra đời cùng một thời điểm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nhà nước hình thành trước, pháp luật là công cụ điều chỉnh xã hội của nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nhà nước hình thành trước, pháp luật là công cụ điều chỉnh xã hội của nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_098",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Pháp luật chỉ ra đời khi xã hội có sự tư hữu, phân hóa giai cấp và đấu tranh giai cấp.\"",
     "input": "Pháp luật chỉ ra đời khi xã hội có sự tư hữu, phân hóa giai cấp và đấu tranh giai cấp.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Cũng giống nguồn gốc ra đời của nhà nước thì nguồn gốc ra đời của pháp luật từ tư hữu và phân chia giai cấp.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Cũng giống nguồn gốc ra đời của nhà nước thì nguồn gốc ra đời của pháp luật từ tư hữu và phân chia giai cấp.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_099",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Pháp luật tồn tại song hành với sự tồn tại của nhà nước.\"",
     "input": "Pháp luật tồn tại song hành với sự tồn tại của nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Pháp luật là công cụ quản lý xã hội của nhà nước và chỉ có nhà nước mới có thẩm quyền ban hành pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Pháp luật là công cụ quản lý xã hội của nhà nước và chỉ có nhà nước mới có thẩm quyền ban hành pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_100",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ pháp luật mới mang tính quy phạm.\"",
     "input": "Chỉ pháp luật mới mang tính quy phạm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Không chỉ pháp luật mà tôn giáo, đạo đức,… cũng có quy phạm. Các quy phạm này được gọi là các quy phạm tôn giáo, quy phạm đạo đức,….",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Không chỉ pháp luật mà tôn giáo, đạo đức,… cũng có quy phạm. Các quy phạm này được gọi là các quy phạm tôn giáo, quy phạm đạo đức,….",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_101",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ pháp luật mới mang tính cưỡng chế.\"",
     "input": "Chỉ pháp luật mới mang tính cưỡng chế.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Pháp luật có tính cưỡng chế mang bản chất quyền lực chính trị.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Pháp luật có tính cưỡng chế mang bản chất quyền lực chính trị.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_102",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ pháp luật mới mang tính cưỡng chế nhà nước.\"",
     "input": "Chỉ pháp luật mới mang tính cưỡng chế nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Pháp luật do nhà nước ban hành và đảm bảo thực hiện bằng quyền lực nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Pháp luật do nhà nước ban hành và đảm bảo thực hiện bằng quyền lực nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_103",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tập quán pháp là những tập quán thông thường của người dân trong cuộc sống hàng ngày.\"",
     "input": "Tập quán pháp là những tập quán thông thường của người dân trong cuộc sống hàng ngày.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tập quán pháp là những tập quán thông thường của người dân trong cuộc sống hàng ngày được nhà nước thừa nhận và áp dụng.\n103. Tập quán pháp không được thừa nhận tại Việt Nam.\nNhận định: SAI.\nGợiý giải thích: Bộ luật dân sự 2015 quy định về Tập quán thì “Tập quán là quy tắc xử sự có nội dung rõ ràng để xác định quyền, nghĩa vụ của cá nhân, pháp nhân trong quan hệ dân sự cụ thể, được hình thành và lặp đi lặp lại nhiều lần trong một thời gian dài, được thừa nhận và áp dụng rộng rãi trong một vùng, miền, dân tộc, cộng đồng dân cư hoặc trong một lĩnh vực dân sự.\nTrường hợp các bên không có thỏa thuận và pháp luật không quy định thì có thể áp dụng tập quán nhưng tập quán áp dụng không được trái với các nguyên tắc cơ bản của pháp luật dân sự quy định tại Điều 3 của Bộ luật này”.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tập quán pháp là những tập quán thông thường của người dân trong cuộc sống hàng ngày được nhà nước thừa nhận và áp dụng.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_104",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tiền lệ pháp không được thừa nhận tại Việt Nam.\"",
     "input": "Tiền lệ pháp không được thừa nhận tại Việt Nam.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Theo quy định tại khoản 3 Điều 45 Bộ luật tố tụng dân sự 2015 quy định “Án lệ được Tòa án nghiên cứu, áp dụng trong giải quyết vụ việc dân sự khi đã được Hội đồng Thẩm phán Tòa án nhân dân tối cao lựa chọn và được Chánh án Tòa án nhân dân tối cao công bố.”.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Theo quy định tại khoản 3 Điều 45 Bộ luật tố tụng dân sự 2015 quy định “Án lệ được Tòa án nghiên cứu, áp dụng trong giải quyết vụ việc dân sự khi đã được Hội đồng Thẩm phán Tòa án nhân dân tối cao lựa chọn và được Chánh án Tòa án nhân dân tối cao công bố.”.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_105",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản quy phạm pháp luật là hình thức pháp luật duy nhất được thừa nhận tại Việt Nam.\"",
     "input": "Văn bản quy phạm pháp luật là hình thức pháp luật duy nhất được thừa nhận tại Việt Nam.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Pháp luật Việt Nam thừa nhận tập quán pháp, tiền lệ pháp và văn bản quy phạm pháp luật.\n105. Mọi quy tắc xử sự tồn tại trong xã hội có nhà nước là quy phạm pháp luật.\nNhận định: SAI.\nGợiý giải thích: Chỉ có quy tắc xử sự mang tính bắt buộc chung do nhà nước ban hành hoặc thừa nhận và được nhà nước đảm bảo thực hiện bằng quyền lực nhà nước mới được coi là quy phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Pháp luật Việt Nam thừa nhận tập quán pháp, tiền lệ pháp và văn bản quy phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_106",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nhà nước ban hành pháp luật để điều chỉnh mọi quy tắc ứng xử của người dân trong cuộc sống hằng ngày.\"",
     "input": "Nhà nước ban hành pháp luật để điều chỉnh mọi quy tắc ứng xử của người dân trong cuộc sống hằng ngày.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nhà nước chỉ điều chỉnh các quan hệ xã hội phổ biến.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nhà nước chỉ điều chỉnh các quan hệ xã hội phổ biến.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_107",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Một quy phạm pháp luật bắt buộc phải có ba bộ phận là giả định, quy định, chế tài.\"",
     "input": "Một quy phạm pháp luật bắt buộc phải có ba bộ phận là giả định, quy định, chế tài.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Có những quy phạm pháp luật chỉ có giả định và chế tài hoặc giả định và quy định.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Có những quy phạm pháp luật chỉ có giả định và chế tài hoặc giả định và quy định.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_108",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản do cơ quan nhà nước ban hành là văn bản pháp luật.\"",
     "input": "Văn bản do cơ quan nhà nước ban hành là văn bản pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản do cơ quan nhà nước có thẩm quyền ban hành theo trình tự thủ tục luật định mới gọi là VBQPPL.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản do cơ quan nhà nước có thẩm quyền ban hành theo trình tự thủ tục luật định mới gọi là VBQPPL.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_109",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản quy phạm pháp luật do các cơ quan nhà nước, cá nhân, tổ chức ban hành nhằm điều chỉnh các quan hệ xã hội.\"",
     "input": "Văn bản quy phạm pháp luật do các cơ quan nhà nước, cá nhân, tổ chức ban hành nhằm điều chỉnh các quan hệ xã hội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản quy phạm pháp luật (legislative documents) là văn bản do Cơ quan nhà nước có thẩm quyền ban hành theo thủ tục, trình tự, hình thức luật định, trong đó có chứa các quy tắc xử sự chung, được Nhà nước bảo đảm thực hiện bằng quyền lực nhà nước để điều chỉnh các quan hệ xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản quy phạm pháp luật là văn bản do Cơ quan nhà nước có thẩm quyền ban hành theo thủ tục, trình tự, hình thức luật định, trong đó có chứa các quy tắc xử sự chung, được Nhà nước bảo đảm thực hiện bằng quyền lực nhà nước để điều chỉnh các quan hệ xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_110",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản chứa đựng quy tắc xử sự chung cho mọi người là văn bản quy phạm pháp luật.\"",
     "input": "Văn bản chứa đựng quy tắc xử sự chung cho mọi người là văn bản quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản quy phạm pháp luật (legislative documents) là văn bản do cơ quan nhà nước có thẩm quyền ban hành theo thủ tục, trình tự, hình thức luật định, trong đó có chứa các quy tắc xử sự chung, được Nhà nước bảo đảm thực hiện bằng quyền lực nhà nước để điều chỉnh các quan hệ xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản quy phạm pháp luật là văn bản do cơ quan nhà nước có thẩm quyền ban hành theo thủ tục, trình tự, hình thức luật định, trong đó có chứa các quy tắc xử sự chung, được Nhà nước bảo đảm thực hiện bằng quyền lực nhà nước để điều chỉnh các quan hệ xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_111",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi cơ quan nhà nước đều có quyền ban hành văn bản quy phạm pháp luật.\"",
     "input": "Mọi cơ quan nhà nước đều có quyền ban hành văn bản quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có cơ quan nhà nước có thẩm quyền mới có quyền ban hành văn bản quy phạm pháp luật theo quy định của Luật ban hành văn bản quy phạm pháp luật năm 2015.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có cơ quan nhà nước có thẩm quyền mới có quyền ban hành văn bản quy phạm pháp luật theo quy định của Luật ban hành văn bản quy phạm pháp luật năm 2015.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_112",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ có các cơ quan nhà nước mới có quyền ban hành văn bản quy phạm pháp luật.\"",
     "input": "Chỉ có các cơ quan nhà nước mới có quyền ban hành văn bản quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có cơ quan nhà nước có thẩm quyền mới có quyền ban hành văn bản quy phạm pháp luật theo quy định của Luật ban hành văn bản quy phạm pháp luật năm 2015.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có cơ quan nhà nước có thẩm quyền mới có quyền ban hành văn bản quy phạm pháp luật theo quy định của Luật ban hành văn bản quy phạm pháp luật năm 2015.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_113",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hệ thống văn bản quy phạm pháp luật bao gồm Hiến pháp và các văn bản dưới luật.\"",
     "input": "Hệ thống văn bản quy phạm pháp luật bao gồm Hiến pháp và các văn bản dưới luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hệ thống văn bản quy phạm pháp luật bao gồm văn bản quy phạm pháp luật có giá trị luật và văn bản quy phạm pháp luật có giá trị dưới luật (văn bản luật và văn bản dưới luật).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hệ thống văn bản quy phạm pháp luật bao gồm văn bản quy phạm pháp luật có giá trị luật và văn bản quy phạm pháp luật có giá trị dưới luật (văn bản luật và văn bản dưới luật).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_114",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản quy phạm pháp luật.\"",
     "input": "Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ngoài Quốc hội còn có Chính phủ, VKSNDTC, TANDTC….",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ngoài Quốc hội còn có Chính phủ, VKSNDTC, TANDTC….",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_115",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản luật.\"",
     "input": "Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Bởi vì Quốc hội là cơ quan duy nhất có quyền ban hành văn bản quy phạm pháp luật có giá trị luật: Hiến pháp, Bộ luật, Luật, Nghị quyết của Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Bởi vì Quốc hội là cơ quan duy nhất có quyền ban hành văn bản quy phạm pháp luật có giá trị luật: Hiến pháp, Bộ luật, Luật, Nghị quyết của Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_116",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản dưới luật là những văn bản pháp luật do Quốc hội và các cơ quan nhà nước khác có thẩm quyền ban hành.\"",
     "input": "Văn bản dưới luật là những văn bản pháp luật do Quốc hội và các cơ quan nhà nước khác có thẩm quyền ban hành.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản dưới luật và những văn bản pháp luật do các cơ quan nhà nước không phải là Quốc hội có thẩm quyền ban hành. Ví dụ: Nghị định do Chính phủ ban hành.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản dưới luật và những văn bản pháp luật do các cơ quan nhà nước không phải là Quốc hội có thẩm quyền ban hành. Ví dụ: Nghị định do Chính phủ ban hành.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_117",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản dưới luật có giá trị pháp lý thấp hơn văn bản luật.\"",
     "input": "Văn bản dưới luật có giá trị pháp lý thấp hơn văn bản luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vì các văn bản dưới luật phải tuân thủ quy định của văn bản luật, không được quy định trái với văn bản luật.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Vì các văn bản dưới luật phải tuân thủ quy định của văn bản luật, không được quy định trái với văn bản luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_118",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Các văn bản dưới luật có giá trị pháp lý tương đương nhau.\"",
     "input": "Các văn bản dưới luật có giá trị pháp lý tương đương nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Thông tư của Bộ trưởng có giá trị pháp lý thấp hơn Nghị định của Chính phủ. Nếu Thông tư trái với Nghị định thì phải sửa đổi hoặc bị hủy bỏ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Thông tư của Bộ trưởng có giá trị pháp lý thấp hơn Nghị định của Chính phủ. Nếu Thông tư trái với Nghị định thì phải sửa đổi hoặc bị hủy bỏ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_119",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Việc ban hành Luật Thủ Đô thuộc thẩm quyền của Ủy ban nhân dân thành phố Hà Nội.\"",
     "input": "Việc ban hành Luật Thủ Đô thuộc thẩm quyền của Ủy ban nhân dân thành phố Hà Nội.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có Quốc hội mới có thẩm quyền ban hành Luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ có Quốc hội mới có thẩm quyền ban hành Luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_120",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hiến pháp, Luật, Nghị quyết của Quốc hội, Quyết định của Chủ tịch nước, Nghị định của Chính phủ là những văn bản luật.\"",
     "input": "Hiến pháp, Luật, Nghị quyết của Quốc hội, Quyết định của Chủ tịch nước, Nghị định của Chính phủ là những văn bản luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản luật chỉ bao gồm Hiến pháp, Luật, nghị quyết của Quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản luật chỉ bao gồm Hiến pháp, Luật, nghị quyết của Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_121",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Văn bản luật là văn bản chứa đựng các quy phạm pháp luật do các cơ quan, tổ chức cá nhân có thẩm quyền ban hành nhằm điều chỉnh các quan hệ xã hội theoý chí của nhà nước.\"",
     "input": "Văn bản luật là văn bản chứa đựng các quy phạm pháp luật do các cơ quan, tổ chức cá nhân có thẩm quyền ban hành nhằm điều chỉnh các quan hệ xã hội theoý chí của nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Văn bản luật là văn bản do Quốc hội ban hành.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Văn bản luật là văn bản do Quốc hội ban hành.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_122",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chính phủ là cơ quan duy nhất có thẩm quyền ban hành văn bản pháp luật là Nghị định.\"",
     "input": "Chính phủ là cơ quan duy nhất có thẩm quyền ban hành văn bản pháp luật là Nghị định.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Nghị định là văn bản quy phạm pháp luật do Chính phủ ban hành.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Nghị định là văn bản quy phạm pháp luật do Chính phủ ban hành.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_123",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản pháp luật là Nghị quyết.\"",
     "input": "Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản pháp luật là Nghị quyết.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ủy ban thường vụ Quốc hội, Hội đồng nhân dân cũng có thẩm quyền ban hành văn bản pháp luật là Nghị Quyết.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ủy ban thường vụ Quốc hội, Hội đồng nhân dân cũng có thẩm quyền ban hành văn bản pháp luật là Nghị Quyết.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_124",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản luật là Nghị quyết.\"",
     "input": "Quốc hội là cơ quan duy nhất có thẩm quyền ban hành văn bản luật là Nghị quyết.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Quốc hội là cơ quan duy nhất có thẩm quyền ban hành Nghị quyết – văn bản luật.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Quốc hội là cơ quan duy nhất có thẩm quyền ban hành Nghị quyết – văn bản luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_125",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nghị quyết do các cơ quan, tổ chức, cá nhân có thẩm quyền ban hành là văn bản luật.\"",
     "input": "Nghị quyết do các cơ quan, tổ chức, cá nhân có thẩm quyền ban hành là văn bản luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nghị quyết của Ủy ban thường vụ Quốc hội, Nghị quyết của Hội đồng nhân dân các cấp là văn bản dưới luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nghị quyết của Ủy ban thường vụ Quốc hội, Nghị quyết của Hội đồng nhân dân các cấp là văn bản dưới luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_126",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Các quan hệ nảy sinh trong cuộc sống hằng ngày là quan hệ pháp luật.\"",
     "input": "Các quan hệ nảy sinh trong cuộc sống hằng ngày là quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ có những quan hệ xã hội được pháp luật điều chỉnh mới trở thành quan hệ pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các quan hệ nảy sinh trong đời sống hằng ngày là các quan hệ xã hội. Chỉ những quan hệ xã hội nào được các quy phạm pháp luật điều chỉnh (gắn liền với quyền và nghĩa vụ pháp lý được Nhà nước bảo đảm thực hiện) thì mới trở thành quan hệ pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_127",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi quan hệ nảy sinh trong cuộc sống hằng ngày đều chịu sự chi phối của pháp luật.\"",
     "input": "Mọi quan hệ nảy sinh trong cuộc sống hằng ngày đều chịu sự chi phối của pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: có những quan hệ xã hội do đạo đức, tôn giáo điều chỉnh. Chỉ có quan hệ pháp luật mới chịu sự chi phối của pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Không phải mọi quan hệ nảy sinh trong đời sống hằng ngày đều chịu sự chi phối của pháp luật. Có nhiều quan hệ xã hội thuộc lĩnh vực tình cảm, đạo đức, tôn giáo, phong tục tập quán thuần túy chỉ do các quy phạm đạo đức, tôn giáo hoặc tập quán điều chỉnh; chỉ những quan hệ pháp luật mới chịu sự điều chỉnh trực tiếp của pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_128",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ quan hệ pháp luật mới mang tính ý chí của chủ thể tham gia.\"",
     "input": "Chỉ quan hệ pháp luật mới mang tính ý chí của chủ thể tham gia.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các quan hệ xã hội đều mang tính ý chí của chủ thể tham gia.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các quan hệ xã hội đều mang tính ý chí của chủ thể tham gia.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_129",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nếu không có quy phạm pháp luật điều chỉnh thì không có quan hệ pháp luật.\"",
     "input": "Nếu không có quy phạm pháp luật điều chỉnh thì không có quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vì quan hệ pháp luật là quan hệ xã hội do quy phạm pháp luật điều chỉnh.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Vì quan hệ pháp luật là quan hệ xã hội do quy phạm pháp luật điều chỉnh.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_130",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực chủ thể của các cá nhân khi tham gia vào một quan hệ pháp luật là giống nhau.\"",
     "input": "Năng lực chủ thể của các cá nhân khi tham gia vào một quan hệ pháp luật là giống nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Vì năng lực chủ thể gồm năng lực pháp luật (giống nhau) và năng lực hành vi (tùy theo độ tuổi pháp luật quy định).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Vì năng lực chủ thể gồm năng lực pháp luật (giống nhau) và năng lực hành vi (tùy theo độ tuổi pháp luật quy định).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_131",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của các cá nhân khác nhau là không giống nhau.\"",
     "input": "Năng lực pháp luật của các cá nhân khác nhau là không giống nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Vì năng lực pháp luật là khả năng các nhân có quyền và nghĩa vụ theo quy định của pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Vì năng lực pháp luật là khả năng cá nhân có quyền và nghĩa vụ theo quy định của pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_132",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực hành vi của các cá nhân khác nhau là không giống nhau tùy thuộc vào độ tuổi của họ.\"",
     "input": "Năng lực hành vi của các cá nhân khác nhau là không giống nhau tùy thuộc vào độ tuổi của họ.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Tùy thuộc vào độ tuổi, cá nhân sẽ có năng lực hành vi khác nhau.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Tùy thuộc vào độ tuổi, cá nhân sẽ có năng lực hành vi khác nhau.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_133",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực hành vi có từ khi cá nhân được sinh ra và chỉ mất đi khi họ đã chết.\"",
     "input": "Năng lực hành vi có từ khi cá nhân được sinh ra và chỉ mất đi khi họ đã chết.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật có từ khi cá nhân được sinh ra và chỉ mất đi khi họ đã chết.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật có từ khi cá nhân được sinh ra và chỉ mất đi khi họ đã chết.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_134",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực hành vi của cá nhân có từ khi cá nhân đủ 18 tuổi.\"",
     "input": "Năng lực hành vi của cá nhân có từ khi cá nhân đủ 18 tuổi.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Cá nhân từ 6 – 18 tuổi có năng lực hành vi một phần.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Cá nhân từ 6 – 18 tuổi có năng lực hành vi một phần.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_135",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người từ đủ 18 tuổi trở lên mới có năng lực pháp luật đầy đủ.\"",
     "input": "Người từ đủ 18 tuổi trở lên mới có năng lực pháp luật đầy đủ.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật là khả năng các nhân có quyền và nghĩa vụ theo quy định của pháp luật, xuất hiện khi cá nhân sinh ra và mất đi khi cá nhân chết.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật là khả năng cá nhân có quyền và nghĩa vụ theo quy định của pháp luật, xuất hiện khi cá nhân sinh ra và mất đi khi cá nhân chết.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_136",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người từ đủ 18 tuổi trở lên là người có năng lực hành vi dân sự đầy đủ.\"",
     "input": "Người từ đủ 18 tuổi trở lên là người có năng lực hành vi dân sự đầy đủ.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người từ đủ 18 tuổi trở lên và không bị tòa án tuyên bố mất năng lực hành vi dân sự; có khó khăn trong nhận thức, làm chủ hành vi; hạn chế năng lực hành vi dân sự thì mới có năng lực hành vi đầy đủ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người từ đủ 18 tuổi trở lên và không bị tòa án tuyên bố mất năng lực hành vi dân sự; có khó khăn trong nhận thức, làm chủ hành vi; hạn chế năng lực hành vi dân sự thì mới có năng lực hành vi đầy đủ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_137",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người dưới 18 tuổi là người có năng lực hành vi dân sự hạn chế.\"",
     "input": "Người dưới 18 tuổi là người có năng lực hành vi dân sự hạn chế.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người dưới 6 tuổi là không có năng lực hành vi dân sự; từ đủ 6 tuổi đến 18 tuổi là có năng lực hành vi dân sự một phần.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người dưới 6 tuổi là không có năng lực hành vi dân sự; từ đủ 6 tuổi đến 18 tuổi là có năng lực hành vi dân sự một phần.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_138",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người dưới 18 tuổi là người có năng lực hành vi dân sự một phần.\"",
     "input": "Người dưới 18 tuổi là người có năng lực hành vi dân sự một phần.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người từ đủ 6 tuổi đến 18 tuổi là có năng lực hành vi dân sự một phần. Còn người dưới 6 tuổi không có năng lực hành vi dân sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người từ đủ 6 tuổi đến 18 tuổi là có năng lực hành vi dân sự một phần. Còn người dưới 6 tuổi không có năng lực hành vi dân sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_139",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ tịch nước không bắt buộc là đại biểu quốc hội.\"",
     "input": "Chủ tịch nước không bắt buộc là đại biểu quốc hội.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Căn cứ điều 87 hiến pháp 2013, chủ tịch nước do Quốc hội bầu trong số các đại biểu quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ Điều 87 Hiến pháp năm 2013, Chủ tịch nước do Quốc hội bầu trong số các đại biểu Quốc hội. Do đó, Chủ tịch nước bắt buộc phải là đại biểu Quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_141",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hội đồng nhân dân là cơ quan hành chính nhà nước ở địa phương, do nhân dân bầu ra.\"",
     "input": "Hội đồng nhân dân là cơ quan hành chính nhà nước ở địa phương, do nhân dân bầu ra.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Theo điều 1 luật Tổ chức hội đồng nhân dân và ủy ban nhân dân (2003) Hội đồng nhân dân là cơ quan quyền lực nhà nước ở địa phương, đại diện cho ý chí, nguyện vọng và quyền làm chủ của nhân dân, do nhân dân địa phương bầu ra, chịu trách nhiệm trước nhân dân địa phương và cơ quan nhà nước cấp trên.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ Điều 113 Hiến pháp năm 2013 và Luật Tổ chức chính quyền địa phương, Hội đồng nhân dân là cơ quan quyền lực nhà nước ở địa phương (không phải cơ quan hành chính nhà nước), đại diện cho ý chí, nguyện vọng và quyền làm chủ của Nhân dân địa phương. Cơ quan hành chính nhà nước ở địa phương là Ủy ban nhân dân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_142",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Ủy ban nhân dân địa phương có quyền ban hành nghị định, quyết định.\"",
     "input": "Ủy ban nhân dân địa phương có quyền ban hành nghị định, quyết định.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nghị định là chủ trương đường lối chỉ do chính phủ ban hành.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nghị định là chủ trương đường lối chỉ do chính phủ ban hành.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_143",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tòa án nhân dân và viện kiểm sát nhân dân là hai cơ quan duy nhất có chức năng xét xử ở nước ta.\"",
     "input": "Tòa án nhân dân và viện kiểm sát nhân dân là hai cơ quan duy nhất có chức năng xét xử ở nước ta.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tòa án nhân dân là cơ quan duy nhất có chức năng xét xử.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_144",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Đảng cộng sản Việt Nam là một cơ quan trong bộ máy nước cộng hòa xã hội chủ nghĩa Việt Nam.\"",
     "input": "Đảng cộng sản Việt Nam là một cơ quan trong bộ máy nước cộng hòa xã hội chủ nghĩa Việt Nam.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Đảng cộng sản Việt Nam là tổ chức lãnh đạo Nước cộng hòa xã hội chủ nghĩa Việt Nam.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Đảng cộng sản Việt Nam là tổ chức lãnh đạo Nước cộng hòa xã hội chủ nghĩa Việt Nam.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_145",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chỉ có pháp luật mới mang tính quy phạm.\"",
     "input": "Chỉ có pháp luật mới mang tính quy phạm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ngoài pháp luật, các quy phạm xã hội khác cũng mang tính quy phạm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ngoài pháp luật, các quy phạm xã hội khác cũng mang tính quy phạm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_146",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nhà nước bảo đảm cho pháp luật được thực hiện bằng những biện pháp như giáo dục thuyết phục, khuyến khích và cưỡng chế.\"",
     "input": "Nhà nước bảo đảm cho pháp luật được thực hiện bằng những biện pháp như giáo dục thuyết phục, khuyến khích và cưỡng chế.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nhà nước bảo đảm cho pháp luật bằng duy nhất biện pháp cưỡng chế.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Để bảo đảm cho pháp luật được tôn trọng và thực hiện nghiêm chỉnh trong đời sống, Nhà nước luôn kết hợp đồng bộ nhiều biện pháp như tuyên truyền, giáo dục, thuyết phục, khuyến khích về vật chất hoặc tinh thần, và khi cần thiết sẽ áp dụng các biện pháp cưỡng chế nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_147",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Pháp luật việt nam thừa nhận tập quán, tiền lệ là nguồn chủ yếu của pháp luật.\"",
     "input": "Pháp luật việt nam thừa nhận tập quán, tiền lệ là nguồn chủ yếu của pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các văn bản quy phạm pháp luật là nguồn chủ yếu của pháp luật Việt Nam.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các văn bản quy phạm pháp luật là nguồn chủ yếu của pháp luật Việt Nam.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_148",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Pháp luật việt nam chỉ thừa nhận nguồn hình thành pháp luật duy nhất là các văn bản quy phạm pháp luật.\"",
     "input": "Pháp luật việt nam chỉ thừa nhận nguồn hình thành pháp luật duy nhất là các văn bản quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ngoài các văn bản quy phạm pháp luật, nguồn của pháp luật còn bắt nguồn từ tiền lệ, tập quán, các quy tắc chung của quốc tế….",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ngoài các văn bản quy phạm pháp luật, nguồn của pháp luật còn bắt nguồn từ tiền lệ, tập quán, các quy tắc chung của quốc tế….",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_149",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tập quán là những quy tắc xử sự được xã hội công nhận và truyền từ đời này sang đời khác.\"",
     "input": "Tập quán là những quy tắc xử sự được xã hội công nhận và truyền từ đời này sang đời khác.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tập quán chỉ được cộng đồng nơi tồn tại tập quán đó thừa nhận.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tập quán chỉ được cộng đồng nơi tồn tại tập quán đó thừa nhận.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_150",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Tiền lệ là những quy định hành chính và án lệ.\"",
     "input": "Tiền lệ là những quy định hành chính và án lệ.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Tiền lệ bao gồm hệ thống các án lệ, những vụ việc đã đc xét xử trước đó, được nhà nước xem là khuôn mẫu. Các quy định hành chính được nhà nước ban hành, không phải tiền lệ.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Tiền lệ bao gồm hệ thống các án lệ, những vụ việc đã được xét xử trước đó, được nhà nước xem là khuôn mẫu. Các quy định hành chính được nhà nước ban hành, không phải tiền lệ.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_151",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ thể pháp luật chính là chủ thể quan hệ pháp luật và ngược lại.\"",
     "input": "Chủ thể pháp luật chính là chủ thể quan hệ pháp luật và ngược lại.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể pháp luật là Cá nhân, tổ chức có khả năng có quyền và nghĩa vụ pháp lý theo quy định của pháp luật. Chủ thể pháp luật khác với chủ thể quan hệ pháp luật. Để trở thành chủ thể pháp luật chỉ cần có năng lực pháp luật, nhưng để trở thành chủ thể của một quan hệ pháp luật cụ thể thì phải có năng lực pháp luật và năng lực hành vi pháp luật, tức là phải có khả năng tự mình thực hiện các quyền và nghĩa vụ theo quy định của pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể pháp luật là Cá nhân, tổ chức có khả năng có quyền và nghĩa vụ pháp lý theo quy định của pháp luật. Chủ thể pháp luật khác với chủ thể quan hệ pháp luật. Để trở thành chủ thể pháp luật chỉ cần có năng lực pháp luật, nhưng để trở thành chủ thể của một quan hệ pháp luật cụ thể thì phải có năng lực pháp luật và năng lực hành vi pháp luật, tức là phải có khả năng tự mình thực hiện các quyền và nghĩa vụ theo quy định của pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_152",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Những quan hệ pháp luật mà nhà nước tham gia thì luôn thể hiện ý chỉ của nhà nước.\"",
     "input": "Những quan hệ pháp luật mà nhà nước tham gia thì luôn thể hiện ý chỉ của nhà nước.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Nhà nước là chủ thể đặc biệt của những quan hệ pháp luật, do pháp luật do nhà nước đặt ra. Khi tham gia những quan hệ pháp luật, thì những quan hệ đó luôn luôn thể hiện ý chí của nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Nhà nước là chủ thể đặc biệt của những quan hệ pháp luật, do pháp luật do nhà nước đặt ra. Khi tham gia những quan hệ pháp luật, thì những quan hệ đó luôn luôn thể hiện ý chí của nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_153",
-    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quan hệ pháp luật phản ánh ý chí của các bên tham gi a quan hệ.\"",
-    "input": "Quan hệ pháp luật phản ánh ý chí của các bên tham gi a quan hệ.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Quan hệ pháp luật phản ánh ý chí của nhà nước và ý chí các bên tham gia quan hệ trong khuôn khổ ý chí của nhà nước.",
+    "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quan hệ pháp luật phản ánh ý chí của các bên tham gia quan hệ.\"",
+    "input": "Quan hệ pháp luật phản ánh ý chí của các bên tham gia quan hệ.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Quan hệ pháp luật phản ánh ý chí của nhà nước và ý chí các bên tham gia quan hệ trong khuôn khổ ý chí của nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_154",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Công dân đương nhiên là chủ thể của mọi quan hệ pháp luật.\"",
     "input": "Công dân đương nhiên là chủ thể của mọi quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể của pháp luật còn có thể là các tổ chức có năng lực pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể của pháp luật còn có thể là các tổ chức có năng lực pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_155",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Cá nhân tham gia vào quan hệ pháp luật sẽ trở thành chủ thể của quan hệ pháp luật.\"",
     "input": "Cá nhân tham gia vào quan hệ pháp luật sẽ trở thành chủ thể của quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Muốn trở thành chủ thể của quan hệ pháp luật đó, cá nhân phải có năng lực hành vi.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Muốn trở thành chủ thể của quan hệ pháp luật đó, cá nhân phải có năng lực hành vi.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_156",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực hành vi của mọi cá nhân là như nhau.\"",
     "input": "Năng lực hành vi của mọi cá nhân là như nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực hành vi của mỗi cá nhân có thể khác nhau, ví dụ người dưới 18 tuổi so với người từ 18 tuổi trở lên.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực hành vi của mỗi cá nhân có thể khác nhau, ví dụ người dưới 18 tuổi so với người từ 18 tuổi trở lên.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_157",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của mọi pháp nhân là như nhau.\"",
     "input": "Năng lực pháp luật của mọi pháp nhân là như nhau.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các pháp nhân được quy định năng lực pháp luật ở mức độ khác nhau, dựa trên quy định của pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các pháp nhân được quy định năng lực pháp luật ở mức độ khác nhau, dựa trên quy định của pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_158",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của chủ thể là khả năng thực hiện các quyền và nghĩa vụ do chủ thể đó tự quy định.\"",
     "input": "Năng lực pháp luật của chủ thể là khả năng thực hiện các quyền và nghĩa vụ do chủ thể đó tự quy định.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật của chủ thể là khả năng thực hiện các quyền và nghĩa vụ do pháp luật quy định.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật của chủ thể là khả năng thực hiện các quyền và nghĩa vụ do pháp luật quy định.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_159",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"“Năng lực hành vi của chủ thể” phụ thuộc vào độ tuổi, tình trạng sức khỏe, trình độ của chủ thể.\"",
     "input": "“Năng lực hành vi của chủ thể” phụ thuộc vào độ tuổi, tình trạng sức khỏe, trình độ của chủ thể.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nó không phụ thuộc vào trình độ của chủ thể.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nó không phụ thuộc vào trình độ của chủ thể.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_160",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ thể không có năng lực hành vi thì không thể tham gia vào các quan hệ pháp luật.\"",
     "input": "Chủ thể không có năng lực hành vi thì không thể tham gia vào các quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể không có năng lực hành vi có thể tham gia vào các quan hệ pháp luật thông qua người ủy quyền, người giám hộ….",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể không có năng lực hành vi có thể tham gia vào các quan hệ pháp luật thông qua người ủy quyền, người giám hộ….",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_161",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật phát sinh kể từ khi các cá nhân được sinh ra.\"",
     "input": "Năng lực pháp luật phát sinh kể từ khi các cá nhân được sinh ra.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Chỉ có năng lực pháp luật của cá nhân có từ khi người đó sinh ra và chấm dứt khi người đó chết.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Chỉ có năng lực pháp luật của cá nhân có từ khi người đó sinh ra và chấm dứt khi người đó chết.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_163",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của nhà nước là không thể bị hạn chế.\"",
     "input": "Năng lực pháp luật của nhà nước là không thể bị hạn chế.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật của nhà nước bị hạn chế bởi pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật của nhà nước bị hạn chế bởi pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_164",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nội dung của quan hệ pháp luật đồng nhất với năng lực pháp luật vì nó bao gồm quyền và nghĩa vụ pháp lý.\"",
     "input": "Nội dung của quan hệ pháp luật đồng nhất với năng lực pháp luật vì nó bao gồm quyền và nghĩa vụ pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật xuất hiện từ lúc sinh, tuy nhiên quan hệ pháp luật phụ thuộc vào một số yêu tố khác(ví dụ đủ 18 tuổi mới có thể kết hôn…).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật xuất hiện từ lúc sinh, tuy nhiên quan hệ pháp luật phụ thuộc vào một số yếu tố khác (ví dụ đủ 18 tuổi mới có thể kết hôn…).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_165",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nghĩa vụ pháp lý của chủ thể chính là hành vi pháp lý.\"",
     "input": "Nghĩa vụ pháp lý của chủ thể chính là hành vi pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nghĩa vụ pháp lý là những hành vi mà pháp luật quy định các cá nhân, tổ chức có nghĩa vụ phải thực hiện. Hành vi pháp lý là những sự kiện xảy ra theoý chí của con người.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nghĩa vụ pháp lý là những hành vi mà pháp luật quy định các cá nhân, tổ chức có nghĩa vụ phải thực hiện. Hành vi pháp lý là những sự kiện xảy ra theo ý chí của con người.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_166",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Khách thể của quan hệ pháp luật là những yếu tố thúc đẩy cá nhân, tổ chức tham gia vào quan hệ pháp luật.\"",
     "input": "Khách thể của quan hệ pháp luật là những yếu tố thúc đẩy cá nhân, tổ chức tham gia vào quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Khách thể của quan hệ pháp luật là những lợi ích mà các chủ thể mong muốn đạt được khi tham gia vào quan hệ pháp luật đó.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Khách thể của quan hệ pháp luật là những lợi ích mà các chủ thể mong muốn đạt được khi tham gia vào quan hệ pháp luật đó.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_167",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Sự kiện pháp lý là yếu tố thúc đẩy chủ thể tham gia vào các quan hệ pháp luật.\"",
     "input": "Sự kiện pháp lý là yếu tố thúc đẩy chủ thể tham gia vào các quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Sự kiện pháp lý là những sự việc cụ thể xảy ra trong đời sống phù hợp với những điều kiện, hoàn cảnh đã được dự liệu trong một quy phạm pháp luật từ đó làm phát sinh, thay đổi hay chấm dứt một QHPL cụ thể.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Sự kiện pháp lý là những sự việc cụ thể xảy ra trong đời sống phù hợp với những điều kiện, hoàn cảnh đã được dự liệu trong một quy phạm pháp luật từ đó làm phát sinh, thay đổi hay chấm dứt một QHPL cụ thể.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_168",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Các quan hệ pháp luật xuất hiện do ý chí các cá nhân.\"",
     "input": "Các quan hệ pháp luật xuất hiện do ý chí các cá nhân.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các quan hệ pháp luật xuất hiện do ý chí các cá nhân, tuy nhiên cũng phải trong khuôn khổ ý chí của nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các quan hệ pháp luật xuất hiện do ý chí các cá nhân, tuy nhiên cũng phải trong khuôn khổ ý chí của nhà nước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_169",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Đối với cá nhân, năng lực hành vi gắn với sự phát triển của con người và do các cá nhân đó tự quy định.\"",
     "input": "Đối với cá nhân, năng lực hành vi gắn với sự phát triển của con người và do các cá nhân đó tự quy định.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực hành vi của mỗi cá nhân là do pháp luật quy định.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực hành vi của mỗi cá nhân là do pháp luật quy định.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_170",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người bị hạn chế về năng lực hành vi thì không bị hạn chế về năng lực pháp luật.\"",
     "input": "Người bị hạn chế về năng lực hành vi thì không bị hạn chế về năng lực pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người bị hạn chế về năng lực pháp luật cũng đồng thời bị hạn chế về năng lực hành vi.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người bị hạn chế về năng lực pháp luật cũng đồng thời bị hạn chế về năng lực hành vi.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_171",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người bị kết án tù có thời hạn chỉ bị hạn chế về năng lực hành vi, không bị hạn chế năng lực pháp luật.\"",
     "input": "Người bị kết án tù có thời hạn chỉ bị hạn chế về năng lực hành vi, không bị hạn chế năng lực pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Những người này bị hạn chế về năng lực pháp luật (VD: không có năng lực pháp luật để ký kết hợp đồng kinh tế).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Những người này bị hạn chế về năng lực pháp luật (VD: không có năng lực pháp luật để ký kết hợp đồng kinh tế).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_172",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người say rượu là người có năng lực hành vi hạn chế.\"",
     "input": "Người say rượu là người có năng lực hành vi hạn chế.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Người có năng lực hành vi hạn chế là người được tòa án tuyên bố bị hạn chế năng lực hành vi.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Người có năng lực hành vi hạn chế là người được tòa án tuyên bố bị hạn chế năng lực hành vi.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_173",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Người đủ từ 18 tuổi trở lên là chủ thể của mọi quan hệ pháp luật.\"",
     "input": "Người đủ từ 18 tuổi trở lên là chủ thể của mọi quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể của quan hệ pháp luật có thể là tổ chức có tư cách pháp nhân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể của quan hệ pháp luật có thể là tổ chức có tư cách pháp nhân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_174",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nhà nước là chủ thể của mọi quan hệ pháp luật.\"",
     "input": "Nhà nước là chủ thể của mọi quan hệ pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể của các quan hệ pháp luật có thể là các cá nhân có đầy đủ năng lực, hoặc các tổ chức có tư cách pháp nhân.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể của các quan hệ pháp luật có thể là các cá nhân có đầy đủ năng lực, hoặc các tổ chức có tư cách pháp nhân.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_175",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Nghĩa vụ pháp lý đồng nhất với hành vi pháp lý của chủ thể.\"",
     "input": "Nghĩa vụ pháp lý đồng nhất với hành vi pháp lý của chủ thể.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nghĩa vụ pháp lý là những điều được quy định trong văn bản pháp lý. Hành vi pháp lý là những hành vi xảy ra phụ thuộc vào ý chí của cá nhân (có thể phù hợp hoặc vi phạm văn bản pháp lý).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nghĩa vụ pháp lý là những điều được quy định trong văn bản pháp lý. Hành vi pháp lý là những hành vi xảy ra phụ thuộc vào ý chí của cá nhân (có thể phù hợp hoặc vi phạm văn bản pháp lý).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_176",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ thể của hành vi pháp luật luôn là chủ thể của quan hệ pháp luật và ngược lại.\"",
     "input": "Chủ thể của hành vi pháp luật luôn là chủ thể của quan hệ pháp luật và ngược lại.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Các quan hệ pháp luật chỉ xuất hiện khi có sự kiện pháp lý chủ thể của hành vi pháp luật thì không.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Các quan hệ pháp luật chỉ xuất hiện khi có sự kiện pháp lý chủ thể của hành vi pháp luật thì không.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_177",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của người đã thành niên thì rộng hơn người chưa thành niên.\"",
     "input": "Năng lực pháp luật của người đã thành niên thì rộng hơn người chưa thành niên.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Năng lực pháp luật của mọi người là như nhau, xuất hiện từ khi ra đời (trừ khi bị hạn chế bởi pháp luật).",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Năng lực pháp luật của mọi người là như nhau, xuất hiện từ khi ra đời (trừ khi bị hạn chế bởi pháp luật).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_178",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Năng lực pháp luật của các cá nhân chỉ được quy định trong các văn bản pháp luật.\"",
     "input": "Năng lực pháp luật của các cá nhân chỉ được quy định trong các văn bản pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: NLPL của các cá nhân chỉ được quy định trong các văn bản pháp luật mà nội dung của nó phụ thuộc vào các điều kiện kinh tế, chính trị, xã hội….",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** NLPL của các cá nhân chỉ được quy định trong các văn bản pháp luật mà nội dung của nó phụ thuộc vào các điều kiện kinh tế, chính trị, xã hội….",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_179",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi hành vi vi phạm pháp luật đều là những hành vi trái pháp luật.\"",
     "input": "Mọi hành vi vi phạm pháp luật đều là những hành vi trái pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Vi phạm pháp luật là hành vi trái pháp luật, vi phạm những quy định trong các quy phạm pháp luật, gây thiệt hại cho xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Vi phạm pháp luật là hành vi trái pháp luật, vi phạm những quy định trong các quy phạm pháp luật, gây thiệt hại cho xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_180",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi biện pháp cưỡng chế của nhà nước đều là biện pháp trách nhiệm pháp lý.\"",
     "input": "Mọi biện pháp cưỡng chế của nhà nước đều là biện pháp trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Trách nhiệm pháp lý luôn gắn liền với các biện pháp cưỡng chế nhà nước được quy định trong phần chế tài của các quy phạm pháp luật. Đây là điểm khác biệt giữa trách nhiệm pháp lý với các biện pháp cưỡng chế khác của nhà nước như bắt buộc chữa bệnh, giải phóng mặt bằng….",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Trách nhiệm pháp lý luôn gắn liền với các biện pháp cưỡng chế nhà nước đối với chủ thể vi phạm pháp luật, nhưng không phải mọi biện pháp cưỡng chế của Nhà nước đều là trách nhiệm pháp lý. Nhà nước còn áp dụng các biện pháp cưỡng chế phòng ngừa hoặc vì lợi ích công cộng không xuất phát từ hành vi vi phạm pháp luật (như cách ly y tế bắt buộc khi có dịch bệnh, bắt buộc chữa bệnh, trưng mua, trưng dụng tài sản trong tình trạng khẩn cấp).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_181",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Những quan điểm tiêu cực của chủ thể vi phạm pháp luật được xem là biểu hiện bên ngoài (mặt khách quan) của vi phạm pháp luật.\"",
     "input": "Những quan điểm tiêu cực của chủ thể vi phạm pháp luật được xem là biểu hiện bên ngoài (mặt khách quan) của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Biểu hiện của vi phạm pháp luật phải là những hành vi, không phải quan điểm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Biểu hiện của vi phạm pháp luật phải là những hành vi, không phải quan điểm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_182",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hậu quả do hành vi vi phạm pháp luật gây ra đều phải là sự thiệt hại về vật chất.\"",
     "input": "Hậu quả do hành vi vi phạm pháp luật gây ra đều phải là sự thiệt hại về vật chất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hậu quả do hành vi trái pháp luật gây ra có thể là thiệt hại về mặt vật chất, tinh thần hoặc những thiệt hại khác cho xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hậu quả do hành vi trái pháp luật gây ra có thể là thiệt hại về mặt vật chất, tinh thần hoặc những thiệt hại khác cho xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_183",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Sự thiệt hại về vật chất là dấu hiệu bắt buộc của vi phạm pháp luật.\"",
     "input": "Sự thiệt hại về vật chất là dấu hiệu bắt buộc của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nó còn có thể là thiệt hại về tinh thần.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nó còn có thể là thiệt hại về tinh thần.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_184",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Chủ thể của vi phạm pháp luật có thể chịu đồng thời nhiều trách nhiệm pháp lý.\"",
     "input": "Chủ thể của vi phạm pháp luật có thể chịu đồng thời nhiều trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Ví dụ một người phạm tội vừa có thể bị phạt tiền, vừa có thể phải ngồi tù, tùy theo loại, mức độ vi phạm và các tình tiết tăng nặng.",
+    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Ví dụ một người phạm tội vừa có thể bị phạt tiền, vừa có thể phải ngồi tù, tùy theo loại, mức độ vi phạm và các tình tiết tăng nặng.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_185",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Không thấy trước hành vi của mình là nguy hiểm cho xã hội thì không bị xem là có lỗi.\"",
     "input": "Không thấy trước hành vi của mình là nguy hiểm cho xã hội thì không bị xem là có lỗi.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Đây là lỗi vô ý do cẩu thả. Chủ thể không nhìn thấy trước hành vi của mình là nguy hiểm cho xã hội trong điều kiện mà đáng lẽ ra phải thấy trước.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Đây là lỗi vô ý do cẩu thả. Chủ thể không nhìn thấy trước hành vi của mình là nguy hiểm cho xã hội trong điều kiện mà đáng lẽ ra phải thấy trước.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_186",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Hành vi chưa gây thiệt hại cho xã hội thì chưa bị xem là vi phạm pháp luật.\"",
     "input": "Hành vi chưa gây thiệt hại cho xã hội thì chưa bị xem là vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hành vi mà gây thiệt hại hoặc đe dọa gây thiệt hại cho xã hội, được quy định trong các văn bản pháp luật là hành vi vi phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hành vi mà gây thiệt hại hoặc đe dọa gây thiệt hại cho xã hội, được quy định trong các văn bản pháp luật là hành vi vi phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_187",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Phải là người đủ 18 tuổi trở lên thì mới được coi là chủ thể của vi phạm pháp luật.\"",
     "input": "Phải là người đủ 18 tuổi trở lên thì mới được coi là chủ thể của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chủ thể của hành vi vi phạm pháp luật có thể là bất cứ cá nhân tổ chức nào có năng lực trách nhiệm pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chủ thể của hành vi vi phạm pháp luật có thể là bất cứ cá nhân tổ chức nào có năng lực trách nhiệm pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_188",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Sự thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của vi phạm pháp luật.\"",
     "input": "Sự thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Chỉ cần đe dọa gây thiệt hại cho xã hội cũng có thể là dấu hiệu trong mặt khách quan của vi phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Chỉ cần đe dọa gây thiệt hại cho xã hội cũng có thể là dấu hiệu trong mặt khách quan của vi phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_189",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Một hành vi vừa có thể đồng thời là vi phạm pháp luật hình sự vừa là vi phạm pháp luật hành chính, nhưng không thể đồng thời là vi phạm pháp luật dân sự, vừa là vi phạm pháp luật hình sự\"",
     "input": "Một hành vi vừa có thể đồng thời là vi phạm pháp luật hình sự vừa là vi phạm pháp luật hành chính, nhưng không thể đồng thời là vi phạm pháp luật dân sự, vừa là vi phạm pháp luật hình sự",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Hành vi vi phạm hành chính thì chủ thể chưa cấu thành tội phạm, còn hành vi vi phạm luật hình sự thì chủ thể là tội phạm, gây nguy hại hoặc đe dọa gây nguy hại cho xã hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Hành vi vi phạm hành chính thì chủ thể chưa cấu thành tội phạm, còn hành vi vi phạm luật hình sự thì chủ thể là tội phạm, gây nguy hại hoặc đe dọa gây nguy hại cho xã hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_190",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Trách nhiệm pháp lý là bộ phận chế tài trong quy phạm pháp luật.\"",
     "input": "Trách nhiệm pháp lý là bộ phận chế tài trong quy phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Đây chỉ là định nghĩa trách nhiệm pháp lý theo hướng tiêu cực. Theo hướng tích cực, các biện pháp cưỡng chế hành chính nhắm ngăn chặn dịch bệnh không là bộ phận chế tài trong quy phạm pháp luật.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Đây chỉ là định nghĩa trách nhiệm pháp lý theo hướng tiêu cực. Theo hướng tích cực, các biện pháp cưỡng chế hành chính nhắm ngăn chặn dịch bệnh không là bộ phận chế tài trong quy phạm pháp luật.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_191",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi biện pháp cưỡng chế của nhà nước đều là biện pháp trách nhiệm pháp lý và ngược lại.\"",
     "input": "Mọi biện pháp cưỡng chế của nhà nước đều là biện pháp trách nhiệm pháp lý và ngược lại.",
-    "output": "- **Kết luận:** Nhận định trên là **ĐÚNG**.\n- **Giải thích:** Gợiý giải thích: Biện pháp trách nhiệm pháp lý luôn gắn liền với biện pháp cưỡng chế của nhà nước.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Mọi biện pháp trách nhiệm pháp lý đều là biện pháp cưỡng chế nhà nước, nhưng chiều ngược lại không đúng: không phải mọi biện pháp cưỡng chế của Nhà nước đều là biện pháp trách nhiệm pháp lý (ví dụ: cưỡng chế cách ly phòng chống dịch bệnh, bắt buộc chữa bệnh tâm thần, trưng dụng tài sản không phải là trách nhiệm pháp lý do không có vi phạm pháp luật).",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_193",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi hành vi trái pháp luật đều là hành vi vi phạm pháp luật.\"",
     "input": "Mọi hành vi trái pháp luật đều là hành vi vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Không phải tất cả hành vi trái pháp luật đều là vi phạm pháp luật. Vì chỉ có hành vi trái pháp luật nào được chủ thể thực hiện một cách cố ý hoặc vô ý mới có thể là hành vi vi phạm pháp luật. Dấu hiệu trái pháp luật mới chỉ là biểu hiện bên ngoài của hành vi. Để xác định hành vi vi phạm pháp luật cần xem xét cả mặt chủ quan của hành vi Nghĩa là xác định trạng thái tâm lý của người thực hiện hành vi đó, xác định lỗi của họ. Bởi vì nếu một hành vi được thực hiện do những điều kiện và hoàn cảnh khách quan và chủ thể không thể ý thức được, từ đó không thể lựa chọn được cách xử sự theo yêu cầu của pháp luật thì hành vi đó không thể coi là có lỗi, không thể coi là vi phạm pháp luật. Bên cạnh đó hành vi trái pháp luật của những người mất trí (tâm thần), trẻ em (chưa đến độ tuổi theo quy định của PL) cũng không được coi là VPPL vì họ không có khả năng nhận thức điều khiển được hành vi của mình.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Không phải tất cả hành vi trái pháp luật đều là vi phạm pháp luật. Vì chỉ có hành vi trái pháp luật nào được chủ thể thực hiện một cách cố ý hoặc vô ý mới có thể là hành vi vi phạm pháp luật. Dấu hiệu trái pháp luật mới chỉ là biểu hiện bên ngoài của hành vi. Để xác định hành vi vi phạm pháp luật cần xem xét cả mặt chủ quan của hành vi Nghĩa là xác định trạng thái tâm lý của người thực hiện hành vi đó, xác định lỗi của họ. Bởi vì nếu một hành vi được thực hiện do những điều kiện và hoàn cảnh khách quan và chủ thể không thể ý thức được, từ đó không thể lựa chọn được cách xử sự theo yêu cầu của pháp luật thì hành vi đó không thể coi là có lỗi, không thể coi là vi phạm pháp luật. Bên cạnh đó hành vi trái pháp luật của những người mất trí (tâm thần), trẻ em (chưa đến độ tuổi theo quy định của PL) cũng không được coi là VPPL vì họ không có khả năng nhận thức điều khiển được hành vi của mình.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_194",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Quan điểm tiêu cực của các chủ thể vi phạm pháp luật được xem là biểu hiện bên ngoài của vi phạm pháp luật.\"",
     "input": "Quan điểm tiêu cực của các chủ thể vi phạm pháp luật được xem là biểu hiện bên ngoài của vi phạm pháp luật.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Biểu hiện của vi phạm pháp luật phải là những hành vi, không phải quan điểm.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Biểu hiện của vi phạm pháp luật phải là những hành vi, không phải quan điểm.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_195",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi hậu quả do vi phạm pháp luật gây ra đều phải được thực hiện dưới dạng vật chất.\"",
     "input": "Mọi hậu quả do vi phạm pháp luật gây ra đều phải được thực hiện dưới dạng vật chất.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Nó còn có thể hiện dưới dạng tổn hại tinh thần hoặc đe dọa tổn hại.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Nó còn có thể hiện dưới dạng tổn hại tinh thần hoặc đe dọa tổn hại.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_196",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Một vi phạm pháp luật không thể đồng thời gánh chịu nhiều loại trách nhiệm pháp lý.\"",
     "input": "Một vi phạm pháp luật không thể đồng thời gánh chịu nhiều loại trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Một vi phạm pháp luật vẫn có thể vừa gánh trách nhiệm hành chính, vừa gánh trách nhiệm dân sự.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Một vi phạm pháp luật vẫn có thể vừa gánh trách nhiệm hành chính, vừa gánh trách nhiệm dân sự.",
     "intent_code": "TRUE_FALSE"
   },
   {
@@ -14157,14 +14157,14 @@
     "sample_id": "SFT_196Q_ND_140",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Thủ tướng chính phủ do chủ tịch nước bổ nhiệm, miễn nhiệm, bãi nhiệm.\"",
     "input": "Thủ tướng chính phủ do chủ tịch nước bổ nhiệm, miễn nhiệm, bãi nhiệm.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Căn cứ điều 98 hiến pháp 2013, thủ tướng chính phủ do Quốc hội bầu trong số đại biểu quốc hội.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Căn cứ điều 98 hiến pháp 2013, thủ tướng chính phủ do Quốc hội bầu trong số đại biểu quốc hội.",
     "intent_code": "TRUE_FALSE"
   },
   {
     "sample_id": "SFT_196Q_ND_192",
     "instruction": "Nhận định sau đây ĐÚNG hay SAI? Giải thích chi tiết theo Pháp luật đại cương: \"Mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm pháp lý.\"",
     "input": "Mọi hành vi vi phạm pháp luật đều phải chịu trách nhiệm pháp lý.",
-    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Gợiý giải thích: Ví dụ: hành vi hiếp dâm là vi phạm pháp luật, nhưng trong đa số trường hợp, nếu nạn nhân bác đơn hoặc không tố giác thì chủ thể sẽ không phải chịu trách nhiệm pháp lý.",
+    "output": "- **Kết luận:** Nhận định trên là **SAI**.\n- **Giải thích:** Ví dụ: hành vi hiếp dâm là vi phạm pháp luật, nhưng trong đa số trường hợp, nếu nạn nhân bác đơn hoặc không tố giác thì chủ thể sẽ không phải chịu trách nhiệm pháp lý.",
     "intent_code": "TRUE_FALSE"
   },
   {

@@ -1146,6 +1146,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       };
 
       const qCleanStmt = cleanStatement(query);
+      let bestTfCandidate: SftSample | null = null;
 
       for (let i = 0; i < this.examCorpus.length; i++) {
         const item = this.examCorpus[i];
@@ -1159,9 +1160,10 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         if (rawInput.includes('1.') && rawInput.includes('2.')) {
           const sliced = this.sliceSingleItemIfApplicable(query, item);
           if (sliced && sliced.sample_id !== item.sample_id) {
-            return sliced;
+            if (!bestTfCandidate || sliced.output.length > bestTfCandidate.output.length) {
+              bestTfCandidate = sliced;
+            }
           }
-          // Bỏ qua nếu đây là bài thi nhiều câu mà không khớp câu con nào
           continue;
         }
 
@@ -1181,9 +1183,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
           itemCleanStmt.length >= 15 &&
           (qCleanStmt.includes(itemCleanStmt) || itemCleanStmt.includes(qCleanStmt))
         ) {
-          const sliced = this.sliceSingleItemIfApplicable(query, item);
-          if (sliced) return sliced;
-          return item;
+          const candidate = this.sliceSingleItemIfApplicable(query, item) || item;
+          if (!bestTfCandidate || candidate.output.length > bestTfCandidate.output.length) {
+            bestTfCandidate = candidate;
+          }
+          continue;
         }
 
         // 2. Khớp theo ngoặc kép hoặc tiền tố trích dẫn trong văn bản gốc
@@ -1191,10 +1195,13 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         if (quoted && quoted[1] && quoted[1].length > 12) {
           const qCleanTarget = cleanStatement(quoted[1]);
           if (qCleanTarget.length >= 12 && (qCleanStmt.includes(qCleanTarget) || qCleanTarget.includes(qCleanStmt))) {
-            return item;
+            if (!bestTfCandidate || item.output.length > bestTfCandidate.output.length) {
+              bestTfCandidate = item;
+            }
           }
         }
       }
+      if (bestTfCandidate) return bestTfCandidate;
     }
 
     const qWords = this.normalize(query);
@@ -1489,12 +1496,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         sftMatch.output.includes('GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG');
 
       const topTb = !hasCitation
-        ? TextbookKnowledgeService.searchTopChunks(query + ' ' + (sftMatch.instruction || ''), 1)
+        ? TextbookKnowledgeService.searchTopChunks(`${query} ${sftMatch.input || ''} ${sftMatch.output || ''}`, 1)
         : [];
 
       const tbCitation =
         topTb.length > 0 && topTb[0].score >= 8
-          ? TextbookKnowledgeService.buildCompactCitation(topTb[0].chunk)
+          ? TextbookKnowledgeService.buildCompactCitation(topTb[0].chunk, retrievedArticles)
           : '';
 
       console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
