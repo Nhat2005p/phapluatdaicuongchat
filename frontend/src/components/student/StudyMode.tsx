@@ -853,8 +853,47 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
   };
 
   // Markdown Formatter for Assistant Response with Rich Editorial Legal Typography
-  const formatMarkdown = (text: string) => {
-    const lines = text.split('\n');
+  const formatMarkdown = (rawText: string) => {
+    const VN_UPPER = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+    const VN_LOWER = 'a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ';
+
+    // Pre-clean any OCR shifted 'đ' and unwrap mid-sentence single line breaks
+    const cleanedText = rawText.replace(
+      new RegExp(`([${VN_LOWER}${VN_UPPER}])([đĐ])\\s+([${VN_LOWER}]+)`, 'g'),
+      '$1 $2$3'
+    );
+    const rawLines = cleanedText.split('\n');
+    const lines: string[] = [];
+    const structuralLineRe = /^(?:#{1,6}\s|[-•*+◦▪▫▸▹►▻–—]\s|\*\*|\||---|___|\d{1,3}[.)]\s|\(\d{1,3}\)\s|[a-eđ][.)]\s|(?:I|II|III|IV|V|VI|VII|VIII|IX|X)[.)]\s|[📚⚖️🎯💡👉➔✅❌⚠️🔹🔸📌]|(?:MỤC|PHẦN|CHƯƠNG|CÂU|ĐỀ|BÀI|ĐIỀU|KHOẢN|LƯU Ý|VÍ DỤ|KẾT LUẬN|GIẢI THÍCH|TRẢ LỜI|NHẬN ĐỊNH|TÌNH HUỐNG|CĂN CỨ|ĐÁP ÁN|LỜI GIẢI|Tên Giáo trình|Tên Chương|Mục & Tiết|Vị trí học liệu|Nội dung giáo trình)\b)/i;
+    const lowerStartRe = new RegExp(`^[${VN_LOWER}]`);
+
+    for (const rawLine of rawLines) {
+      const s = rawLine.trim();
+      if (!s) {
+        lines.push('');
+        continue;
+      }
+      if (lines.length === 0 || lines[lines.length - 1] === '') {
+        lines.push(s);
+        continue;
+      }
+      const prev = lines[lines.length - 1];
+      const prevIsHeading =
+        prev.startsWith('#') ||
+        prev.startsWith('|') ||
+        prev === '---' ||
+        (prev === prev.toUpperCase() && prev.length < 120) ||
+        /^(?:\d{1,2}|I|II|III|IV|V|VI|VII|VIII|IX|X)\.\s+[^.?!]{2,75}$/.test(prev);
+
+      if (prevIsHeading || structuralLineRe.test(s)) {
+        lines.push(s);
+      } else if (!/[.?!:;”"]$/.test(prev) || lowerStartRe.test(s)) {
+        lines[lines.length - 1] = `${prev} ${s}`;
+      } else {
+        lines.push(s);
+      }
+    }
+
     const elements: React.ReactNode[] = [];
     let tableRows: string[] = [];
     let inTable = false;
@@ -919,10 +958,11 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         }
 
         // 4. Numbered Sub-Sections in All-Caps / Colon (e.g. "1. MẶT KHÁCH QUAN:", "2. MẶT CHỦ QUAN:", "3. CHỦ THỂ:", "4. KHÁCH THỂ:")
-        const numSectionMatch = trimmed.match(/^(\d+)\.\s+([A-ZÀ-Ỹ0-9\s/_\-()]{3,}):?\s*(.*)$/);
+        const numSectionRegex = new RegExp(`^(\\d+)\\.\\s+([${VN_UPPER}0-9\\s/_\\-()]{3,})(?::\\s*(.*)|$)$`);
+        const numSectionMatch = trimmed.match(numSectionRegex);
         if (numSectionMatch) {
           const num = numSectionMatch[1];
-          const subTitle = numSectionMatch[2];
+          const subTitle = numSectionMatch[2].trim();
           const extraText = numSectionMatch[3];
           elements.push(
             <div key={idx} className="flex items-start gap-2.5 mt-4 mb-2">
@@ -935,12 +975,64 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                 </span>
                 {extraText && (
                   <span className="ml-1.5 text-[#374151] dark:text-[#cbd5e1] font-chat text-[15px]">
-                    {renderFormattedInline(extraText)}
+                    {' '}{renderFormattedInline(extraText)}
                   </span>
                 )}
               </div>
             </div>
           );
+          return;
+        }
+
+        // 4b. Numbered Mixed-Case Sub-Sections or List Items (e.g. "1. Cơ quan quyền lực nhà nước:", "1. Giả định: ...")
+        const numItemMatch = trimmed.match(/^(\d+)\.\s+(.*)$/);
+        if (numItemMatch) {
+          const num = numItemMatch[1];
+          const content = numItemMatch[2].trim();
+          const colonIdx = content.indexOf(':');
+          const hasBalancedBold = colonIdx > 0 && ((content.substring(0, colonIdx).match(/\*\*/g) || []).length % 2 === 0);
+
+          if (colonIdx > 0 && colonIdx <= 75 && hasBalancedBold) {
+            const label = content.substring(0, colonIdx).trim();
+            const rest = content.substring(colonIdx + 1).trim();
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 mt-3.5 mb-2">
+                <span className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0 border border-indigo-200 dark:border-indigo-800 shadow-2xs font-mono mt-0.5">
+                  {num}
+                </span>
+                <div className="flex-1 min-w-0 text-[15px] leading-[1.78] font-chat text-[#374151] dark:text-[#cbd5e1]">
+                  <strong className="font-display font-bold text-[14.5px] sm:text-[15px] text-[#111827] dark:text-amber-100 mr-1.5">
+                    {renderFormattedInline(label)}:
+                  </strong>
+                  {rest ? <> {' '}{renderFormattedInline(rest)}</> : null}
+                </div>
+              </div>
+            );
+          } else if (content.length <= 85 && !/[.?!]$/.test(content)) {
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 mt-4 mb-2">
+                <span className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0 border border-indigo-200 dark:border-indigo-800 shadow-2xs font-mono mt-0.5">
+                  {num}
+                </span>
+                <div className="flex-1 min-w-0">
+                  <span className="font-display font-bold text-[15px] text-[#111827] dark:text-amber-100">
+                    {renderFormattedInline(content)}
+                  </span>
+                </div>
+              </div>
+            );
+          } else {
+            elements.push(
+              <div key={idx} className="flex items-start gap-2.5 my-2.5">
+                <span className="w-6 h-6 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-700 dark:text-indigo-300 font-bold text-xs flex items-center justify-center shrink-0 border border-indigo-200 dark:border-indigo-800 shadow-2xs font-mono mt-0.5">
+                  {num}
+                </span>
+                <div className="flex-1 min-w-0 text-[15px] leading-[1.78] font-chat text-[#374151] dark:text-[#d1d5db]">
+                  {renderFormattedInline(content)}
+                </div>
+              </div>
+            );
+          }
           return;
         }
 
@@ -954,8 +1046,10 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         if (trimmed.startsWith('- ') || trimmed.startsWith('• ') || trimmed.startsWith('* ')) {
           const rawBullet = trimmed.replace(/^[-•*]\s*/, '');
           const colonIdx = rawBullet.indexOf(':');
-          if (colonIdx > 0 && colonIdx <= 45) {
-            const label = rawBullet.substring(0, colonIdx);
+          const labelCandidate = colonIdx > 0 ? rawBullet.substring(0, colonIdx) : '';
+          const isBalancedBold = (labelCandidate.match(/\*\*/g) || []).length % 2 === 0;
+          if (colonIdx > 0 && colonIdx <= 48 && isBalancedBold) {
+            const label = labelCandidate.trim();
             const rest = rawBullet.substring(colonIdx + 1).trim();
             elements.push(
               <div key={idx} className="flex items-start gap-2.5 my-2 pl-1 group">
@@ -964,7 +1058,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                   <strong className="font-semibold text-[#111827] dark:text-amber-200 mr-1.5">
                     {renderFormattedInline(label)}:
                   </strong>
-                  {renderFormattedInline(rest)}
+                  {' '}{renderFormattedInline(rest)}
                 </div>
               </div>
             );
@@ -985,8 +1079,10 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         if (trimmed.startsWith('+ ')) {
           const rawSubBullet = trimmed.replace(/^\+\s*/, '');
           const colonIdx = rawSubBullet.indexOf(':');
-          if (colonIdx > 0 && colonIdx <= 45) {
-            const label = rawSubBullet.substring(0, colonIdx);
+          const labelCandidate = colonIdx > 0 ? rawSubBullet.substring(0, colonIdx) : '';
+          const isBalancedBold = (labelCandidate.match(/\*\*/g) || []).length % 2 === 0;
+          if (colonIdx > 0 && colonIdx <= 48 && isBalancedBold) {
+            const label = labelCandidate.trim();
             const rest = rawSubBullet.substring(colonIdx + 1).trim();
             elements.push(
               <div key={idx} className="flex items-start gap-2.5 my-1.5 pl-6 group">
@@ -995,7 +1091,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                   <strong className="font-medium text-[#1f2937] dark:text-slate-200 mr-1.5">
                     {renderFormattedInline(label)}:
                   </strong>
-                  {renderFormattedInline(rest)}
+                  {' '}{renderFormattedInline(rest)}
                 </div>
               </div>
             );

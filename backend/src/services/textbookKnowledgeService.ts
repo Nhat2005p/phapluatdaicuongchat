@@ -1082,7 +1082,7 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         if (!addedKeys.has(key)) {
           addedKeys.add(key);
           const excerpt = art.contentRaw ? `\n    + *Nội dung quy định*: ${art.contentRaw.replace(/\n+/g, ' ').slice(0, 190)}...` : '';
-          lines.push(`- ⚖️ **${art.lawName}** — **Điều ${art.articleNumber}: ${art.title}**${excerpt}`);
+          lines.push(`- ⚖️ **${art.lawName} — Điều ${art.articleNumber} (${art.title})**:${excerpt}`);
         }
       });
     }

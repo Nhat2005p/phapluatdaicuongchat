@@ -248,6 +248,20 @@ export class LlmService {
   public static sanitizeOutput(text: string): string {
     if (!text) return '';
     let res = text;
+    // Fix OCR shifted 'đ' (e.g. 'quânđ ội' -> 'quân đội')
+    const vnLower = 'a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ';
+    const vnUpper = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+    const shiftedDRe = new RegExp(`([${vnLower}${vnUpper}])([đĐ])\\s+([${vnLower}]+)`, 'g');
+    res = res.replace(shiftedDRe, '$1 $2$3');
+
+    // Format raw 'Trả lời: Nhận định trên: SAI/ĐÚNG. Bởi vì...' into structured bullets
+    const tfMatch = res.trim().match(/^(?:Trả\s*lời\s*:\s*\n*)?Nhận\s*định(?:\s+trên)?\s*:\s*(SAI|ĐÚNG|Sai|Đúng)\.?\s*\n+([\s\S]*)$/i);
+    if (tfMatch) {
+      const verdict = tfMatch[1].toUpperCase();
+      const explanation = tfMatch[2].replace(/\s*\n+\s*/g, ' ').trim();
+      res = `- **Kết luận:** Nhận định trên là **${verdict}**.\n- **Giải thích:** ${explanation}`;
+    }
+
     res = res.replace(
       /(###\s*2\.\s*Nghĩa vụ[^\n]*\n)(?:\s*\n)*(###\s*3\.)/gi,
       `$1- Nghiêm túc chấp hành các quy định, định mức và quy chuẩn kỹ thuật được xác lập trong văn bản.\n- Tổ chức thực hiện đúng thẩm quyền, phân cấp quản lý và trình tự thủ tục pháp luật hiện hành.\n- Phối hợp chặt chẽ giữa các đơn vị liên quan, thực hiện chế độ báo cáo định kỳ và chịu sự thanh tra, kiểm tra của cơ quan quản lý nhà nước có thẩm quyền.\n\n$2`
@@ -1113,17 +1127,20 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       const cleanStatement = (text: string) => {
         return text
           .toLowerCase()
+          .replace(/nhận định sau đây đúng hay sai[?:.]*/g, '')
           .replace(/nhận định sau đúng hay sai[?:.]*/g, '')
           .replace(/nhận định này đúng hay sai[?:.]*/g, '')
           .replace(/đúng hay sai[?:.]*/g, '')
+          .replace(/phân tích căn cứ pháp lý[^\n:"]*[:"]*/g, '')
+          .replace(/giải thích chi tiết theo pháp luật đại cương[:"]*/g, '')
           .replace(/giải thích cơ sở lý luận[^\n:"]*[:"]*/g, '')
           .replace(/giải thích rõ cơ sở lý luận[^\n:"]*[:"]*/g, '')
           .replace(/giải thích vì sao[?:.]*/g, '')
-          .replace(/chủ đề:[^\n.]*[.]*/g, '')
-          .replace(/câu hỏi thi:[^\n.]*[.]*/g, '')
-          .replace(/nhận định ôn thi:[^\n.]*[.]*/g, '')
-          .replace(/nhận định:[^\n.]*[.]*/g, '')
-          .replace(/[.,;:?!"'“”()\-–—_/\\]/g, ' ')
+          .replace(/chủ đề:\s*[^\n.]*[.]*/g, '')
+          .replace(/câu hỏi thi:\s*/g, '')
+          .replace(/nhận định ôn thi:\s*/g, '')
+          .replace(/nhận định:\s*/g, '')
+          .replace(/[.,;:?!"'“”()\[\]\-–—_/\\]/g, ' ')
           .replace(/\s+/g, ' ')
           .trim();
       };
@@ -1583,7 +1600,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             !text.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
               ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
               : '';
-          return { text: text.trim() + extraCitation, latencyMs: Date.now() - startTime };
+          return { text: this.cleanRubricText(text.trim()) + extraCitation, latencyMs: Date.now() - startTime };
         }
       }
     } catch (err: any) {
