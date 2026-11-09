@@ -600,6 +600,12 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
       setActiveSessionId(currentSessionId);
     }
 
+    // Lấy câu hỏi liền trước trong cùng phiên hội thoại (nếu có) để hỗ trợ nhớ ngữ cảnh câu hỏi nối tiếp
+    const prevUserMsg = !isBrandNewSession
+      ? [...messages].reverse().find((m) => m.role === 'user')
+      : undefined;
+    const previousQueryText = prevUserMsg?.content || null;
+
     // 1. Thêm câu hỏi người dùng vào luồng chat ngay lập tức
     const userMsg: ChatMessage = {
       id: 'user-' + Date.now(),
@@ -620,7 +626,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     }
 
     try {
-      const res = await api.solveQuery(textToSend, selectedCategoryId);
+      const res = await api.solveQuery(textToSend, selectedCategoryId, previousQueryText);
       if (res.success) {
         setIsLoading(false);
         const fullContent = res.response || '';

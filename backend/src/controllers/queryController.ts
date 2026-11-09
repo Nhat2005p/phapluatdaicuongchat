@@ -12,7 +12,7 @@ export class QueryController {
    */
   public static async solveQuery(req: Request, res: Response): Promise<void> {
     try {
-      const { query, categoryId } = req.body;
+      const { query, categoryId, previousQuery } = req.body;
       if (!query || typeof query !== 'string' || !query.trim()) {
         res.status(400).json({ success: false, message: 'Nội dung câu hỏi không được để trống.' });
         return;
@@ -48,14 +48,24 @@ export class QueryController {
 
       const startTime = Date.now();
 
+      // Nâng cấp 4: Tự động kế thừa ngữ cảnh hội thoại từ lượt hỏi liền trước (nếu câu hỏi hiện tại dùng đại từ chỉ định / hỏi nối tiếp)
+      let recentPrevQuery: string | null = typeof previousQuery === 'string' && previousQuery.trim() ? previousQuery.trim() : null;
+      if (!recentPrevQuery && req.user) {
+        const lastRecord = await QueryHistory.findOne({ userId: req.user.id }).sort({ createdAt: -1 });
+        if (lastRecord && lastRecord.createdAt && Date.now() - new Date(lastRecord.createdAt).getTime() <= 15 * 60 * 1000) {
+          recentPrevQuery = lastRecord.query;
+        }
+      }
+      const { effectiveQuery } = RagService.contextualizeQueryWithHistory(query, recentPrevQuery);
+
       // Giai đoạn 1: Phân loại và Điều hướng (Intent Routing) - ưu tiên categoryId nếu người dùng chọn
-      const intentCode = RagService.detectIntent(query, categoryId);
+      const intentCode = RagService.detectIntent(effectiveQuery, categoryId);
 
       // Giai đoạn 2: Truy xuất Ngữ cảnh Kép (Hybrid Retrieval)
-      const ragContext = await RagService.retrieveContext(query, intentCode);
+      const ragContext = await RagService.retrieveContext(effectiveQuery, intentCode);
 
       // Giai đoạn 3: Hợp nhất Ngữ cảnh và Suy luận sinh lời giải (Context Fusion & Generation)
-      const llmResult = await LlmService.generate(query, intentCode, ragContext.promptContext, ragContext.articles, categoryId);
+      const llmResult = await LlmService.generate(effectiveQuery, intentCode, ragContext.promptContext, ragContext.articles, categoryId);
 
       // Giai đoạn 4: Kiểm định và Chống Bịa luật (Citation Guardrail)
       const guardrailResult = await GuardrailService.scanAndVerify(llmResult.text);

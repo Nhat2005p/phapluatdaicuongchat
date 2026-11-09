@@ -5,7 +5,7 @@ import { fileURLToPath } from 'url';
 import { config } from '../config/env.js';
 import { ExamArchetype, RagService } from './ragService.js';
 import { ILawArticle } from '../models/LawArticle.js';
-import { TextbookKnowledgeService } from './textbookKnowledgeService.js';
+import { TextbookKnowledgeService, TextbookChunk } from './textbookKnowledgeService.js';
 
 interface SftSample {
   sample_id: string;
@@ -1485,33 +1485,73 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     }
 
     // =========================================================================
-    // QUY TRÌNH KẾT HỢP: SFT DATASET (MẪU ĐÃ TRAIN) + RAG GIÁO TRÌNH (TRÍCH DẪN)
+    // QUY TRÌNH KẾT HỢP: MULTI-QUERY + SFT DATASET + RAG GIÁO TRÌNH + FINE-TUNED LLM
     // =========================================================================
 
-    // BƯỚC 0: ƯU TIÊN SỐ 1: BỘ DỮ LIỆU ĐÃ TRAIN (SFT MASTER CORPUS) KẾT HỢP RAG GIÁO TRÌNH
-    const sftMatch = this.matchSftSample(query, effectiveIntent);
-    if (sftMatch) {
-      const hasCitation =
-        sftMatch.output.includes('CĂN CỨ GIÁO TRÌNH') ||
-        sftMatch.output.includes('GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG');
+    const isFollowUpContextual = query.includes('(Ngữ cảnh câu hỏi trước:');
+    const displayQuery = query.replace(/\s*\(Ngữ cảnh câu hỏi trước:[\s\S]*?\)\s*$/i, '').trim();
 
-      const topTb = !hasCitation
-        ? TextbookKnowledgeService.searchTopChunks(`${query} ${sftMatch.input || ''} ${sftMatch.output || ''}`, 1)
-        : [];
+    // BƯỚC 0.1: NÂNG CẤP 1 — BỘ TÁCH CÂU HỎI ĐA Ý & GIẢI SONG SONG (MULTI-QUERY DECOMPOSITION)
+    // Ưu tiên bóc tách khi người dùng hỏi từ 2 câu hỏi / nhận định độc lập trở lên trong 1 lượt gửi
+    const subQuestions = RagService.splitMultiQuestions(displayQuery);
+    if (subQuestions.length >= 2) {
+      console.log(`🔀 [Multi-Query Solver] Phát hiện ${subQuestions.length} câu hỏi/nhận định độc lập trong 1 lượt gửi. Tiến hành giải từng câu...`);
+      const solvedParts: string[] = [];
+      const collectedChunks: { subQuestion: string; chunk: TextbookChunk }[] = [];
 
-      const tbCitation =
-        topTb.length > 0 && topTb[0].score >= 8
-          ? TextbookKnowledgeService.buildCompactCitation(topTb[0].chunk, retrievedArticles)
-          : '';
+      for (let i = 0; i < subQuestions.length; i++) {
+        const subQ = subQuestions[i];
+        const { answerBody, matchedChunk } = this.solveSingleSubQuestionSync(
+          subQ,
+          retrievedArticles,
+          forcedCategory
+        );
+        const cleanTitle = subQ
+          .replace(/^Nhận định:\s*/i, '')
+          .replace(/\.\s*Nhận định này Đúng hay Sai\?.*$/i, '')
+          .trim();
 
-      console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
+        solvedParts.push(`## 📌 CÂU ${i + 1}: ${cleanTitle}\n\n${answerBody}`);
+        if (matchedChunk) {
+          collectedChunks.push({ subQuestion: subQ, chunk: matchedChunk });
+        }
+      }
+
+      const multiHeader = `### 📋 TỔNG HỢP GIẢI ĐÁP CHI TIẾT (${subQuestions.length} CÂU HỎI / NHẬN ĐỊNH)\n\n---\n\n`;
+      const multiCitation = TextbookKnowledgeService.buildMultiChunkCitation(collectedChunks, retrievedArticles);
+
       return {
-        text: this.cleanRubricText(sftMatch.output) + tbCitation,
+        text: multiHeader + solvedParts.join('\n\n---\n\n') + multiCitation,
         latencyMs: Date.now() - startTime
       };
     }
 
-    // BƯỚC 1: Đảm bảo Ngữ cảnh Giáo trình (Textbook Retrieval) và Điều luật đầy đủ nhất
+    // BƯỚC 0.2: Nếu là câu hỏi đơn (không phải câu hỏi nối tiếp đại từ) khớp trực tiếp với 1 mẫu trong SFT Dataset
+    const sftMatch = !isFollowUpContextual ? this.matchSftSample(query, effectiveIntent) : null;
+    if (sftMatch) {
+      const { bodyWithoutCitation, existingCitation } = this.splitEmbeddedCitation(this.cleanRubricText(sftMatch.output));
+      const enrichedBody = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
+
+      const topTb = TextbookKnowledgeService.searchTopChunks(
+        `${displayQuery} ${sftMatch.input || ''} ${bodyWithoutCitation.slice(0, 300)}`,
+        1
+      );
+
+      const tbCitation =
+        topTb.length > 0 && topTb[0].score >= 8
+          ? TextbookKnowledgeService.buildDetailedCitation(topTb[0].chunk, retrievedArticles, displayQuery)
+          : existingCitation
+          ? `\n\n---\n\n${existingCitation}`
+          : '';
+
+      console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
+      return {
+        text: enrichedBody + tbCitation,
+        latencyMs: Date.now() - startTime
+      };
+    }
+
+    // BƯỚC 1: Đảm bảo Ngữ cảnh Giáo trình (Textbook Retrieval) và Điều luật đầy đủ nhất cho câu đơn
     let fullRagContext = promptContext || '';
     const topTextbooks = TextbookKnowledgeService.searchTopChunks(query, 2);
     if (topTextbooks.length > 0) {
@@ -1574,7 +1614,16 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 - Trích dẫn điều luật hoặc bài học thực tiễn minh họa.`;
     }
 
-    // BƯỚC 3: Gọi mô hình Fine-tuned LLM (Qwen2.5-3B-Legal-VN) với Ngữ cảnh Giáo trình đã RAG
+    // BƯỚC 3: NÂNG CẤP 5 — Gọi mô hình Fine-tuned LLM (Qwen2.5-3B-Legal-VN) với Adaptive Timeout & Max Tokens
+    const isComplexQuery =
+      query.length > 180 ||
+      effectiveIntent === 'CASE_ANALYSIS' ||
+      effectiveIntent === 'VPPL_4_ELEMENTS' ||
+      effectiveIntent === 'CIVIL_INHERIT' ||
+      effectiveIntent === 'COMPARISON';
+    const adaptiveMaxTokens = isComplexQuery ? 1792 : 1280;
+    const adaptiveTimeoutMs = isComplexQuery ? 6000 : 4000;
+
     try {
       const response = await fetch(`${config.llamaServerUrl}/chat/completions`, {
         method: 'POST',
@@ -1585,17 +1634,17 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             {
               role: 'system',
               content:
-                `Bạn là Giảng viên Pháp lý VietLawAssist môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy dựa vào Ngữ cảnh giáo trình và các điều luật được cung cấp dưới đây để giải đáp chi tiết, lập luận chặt chẽ và đưa ra kết luận chuẩn Barem.`
+                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy dựa vào Ngữ cảnh giáo trình và các điều luật được cung cấp dưới đây để giải đáp chi tiết, lập luận chặt chẽ và đưa ra kết luận chuẩn xác.`
             },
             {
               role: 'user',
-              content: `--- NGỮ CẢNH GIÁO TRÌNH & ĐIỀU LUẬT TRUY XUẤT TỪ RAG ---\n${fullRagContext.slice(0, 2500)}\n\n--- CÂU HỎI / ĐỀ BÀI ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Hãy vận dụng đúng nội dung giáo trình và quy định pháp luật ở trên để trả lời đầy đủ, chính xác:`
+              content: `--- NGỮ CẢNH GIÁO TRÌNH & ĐIỀU LUẬT TRUY XUẤT TỪ RAG ---\n${fullRagContext.slice(0, 2800)}\n\n--- CÂU HỎI / ĐỀ BÀI ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Hãy vận dụng đúng nội dung giáo trình và quy định pháp luật ở trên để trả lời đầy đủ, chính xác:`
             }
           ],
           temperature: 0.2,
-          max_tokens: 1024
+          max_tokens: adaptiveMaxTokens
         }),
-        signal: AbortSignal.timeout(2500)
+        signal: AbortSignal.timeout(adaptiveTimeoutMs)
       });
 
       if (response.ok) {
@@ -1603,32 +1652,202 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         const text = data.choices?.[0]?.message?.content;
         if (text && text.trim().length > 60) {
           console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải từ ngữ cảnh Giáo trình trong ${Date.now() - startTime}ms.`);
+          const { bodyWithoutCitation } = this.splitEmbeddedCitation(this.cleanRubricText(text.trim()));
+          const enrichedText = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
           const extraCitation =
-            !text.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
-              ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
+            topTextbooks.length > 0 && topTextbooks[0].score >= 8
+              ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles, displayQuery)
               : '';
-          return { text: this.cleanRubricText(text.trim()) + extraCitation, latencyMs: Date.now() - startTime };
+          return { text: enrichedText + extraCitation, latencyMs: Date.now() - startTime };
         }
       }
     } catch (err: any) {
-      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Kích hoạt Bộ giải Barem Động trên ngữ cảnh Giáo trình.`);
+      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Kích hoạt Bộ giải Động trên ngữ cảnh Giáo trình.`);
     }
 
-    // BƯỚC 4: HYBRID FALLBACK: Sử dụng Bộ giải Barem ĐỘNG (Dynamic RAG Solver)
-    // Tự động phân tích các thực thể, tình tiết, điều luật và giáo trình đã RAG
-    const generatedText = this.generateDynamicRagSolution(query, effectiveIntent, fullRagContext, retrievedArticles, forcedCategory);
+    // BƯỚC 4: HYBRID FALLBACK: Sử dụng Bộ giải ĐỘNG (Dynamic RAG Solver) + Bổ sung đa yêu cầu (Compound Enrichment)
+    const generatedRaw = this.generateDynamicRagSolution(query, effectiveIntent, fullRagContext, retrievedArticles, forcedCategory);
+    const { bodyWithoutCitation } = this.splitEmbeddedCitation(generatedRaw);
+    const enrichedGenerated = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
     const extraCitation =
-      !generatedText.includes('CĂN CỨ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG') && topTextbooks.length > 0 && topTextbooks[0].score >= 8
-        ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles)
+      topTextbooks.length > 0 && topTextbooks[0].score >= 8
+        ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles, displayQuery)
         : '';
     return {
-      text: generatedText + extraCitation,
+      text: enrichedGenerated + extraCitation,
       latencyMs: Date.now() - startTime
     };
   }
 
   public static generateArchetypeSolution(query: string, intentCode: ExamArchetype): string {
     return this.generateDynamicRagSolution(query, intentCode, '');
+  }
+
+  /**
+   * Tách phần nội dung bài giải chính và phần trích dẫn Giáo trình (nếu có sẵn trong SFT output)
+   * để tránh lặp khối RAG hoặc chèn bổ sung ý phụ vào đúng vị trí trước khối RAG.
+   */
+  private static splitEmbeddedCitation(text: string): {
+    bodyWithoutCitation: string;
+    existingCitation: string;
+  } {
+    const raw = (text || '').trim();
+    const citationIdx = raw.search(/(?:\n\s*---\s*\n\s*)?(?:###\s*)?📚\s*CĂN CỨ(?:\s+THAM KHẢO)?\s+GIÁO TRÌNH/i);
+    if (citationIdx !== -1) {
+      return {
+        bodyWithoutCitation: raw.slice(0, citationIdx).trim(),
+        existingCitation: raw.slice(citationIdx).replace(/^\s*---\s*/, '').trim()
+      };
+    }
+    return {
+      bodyWithoutCitation: raw,
+      existingCitation: ''
+    };
+  }
+
+  /**
+   * Giải độc lập 1 câu hỏi con trong chế độ Multi-Question (kết hợp SFT Dataset + Dynamic RAG + Compound Enrichment)
+   */
+  private static solveSingleSubQuestionSync(
+    subQuery: string,
+    retrievedArticles: ILawArticle[],
+    forcedCategory?: string | null
+  ): { answerBody: string; matchedChunk: TextbookChunk | null } {
+    // Tự động nhận diện intent riêng của từng câu hỏi con (chỉ dùng forcedCategory khi câu con không có dấu hiệu riêng)
+    let subIntent = RagService.detectIntent(subQuery, null);
+    if (subIntent === 'GENERAL_THEORY' && forcedCategory) {
+      subIntent = RagService.detectIntent(subQuery, forcedCategory);
+    }
+
+    // 1. Thử khớp SFT Dataset cho câu hỏi con
+    const sftSub = this.matchSftSample(subQuery, subIntent);
+    if (sftSub) {
+      const { bodyWithoutCitation } = this.splitEmbeddedCitation(this.cleanRubricText(sftSub.output));
+      const enriched = this.enrichCompoundSingleAnswer(subQuery, bodyWithoutCitation, retrievedArticles);
+      const topTb = TextbookKnowledgeService.searchTopChunks(`${subQuery} ${sftSub.input || ''} ${enriched.slice(0, 200)}`, 1);
+      return {
+        answerBody: enriched,
+        matchedChunk: topTb.length > 0 && topTb[0].score >= 8 ? topTb[0].chunk : null
+      };
+    }
+
+    // 2. Giải bằng Dynamic RAG Solver cho câu hỏi con
+    const effectiveForcedCat =
+      subIntent === 'DEFINITION' || subIntent === 'COMPARISON' || subIntent === 'QPPL_STRUCT' || subIntent === 'VPPL_4_ELEMENTS'
+        ? null
+        : forcedCategory;
+
+    const dynRaw = this.generateDynamicRagSolution(subQuery, subIntent, '', retrievedArticles, effectiveForcedCat);
+    const { bodyWithoutCitation } = this.splitEmbeddedCitation(dynRaw);
+    const enriched = this.enrichCompoundSingleAnswer(subQuery, bodyWithoutCitation, retrievedArticles);
+    const topTb = TextbookKnowledgeService.searchTopChunks(`${subQuery} ${enriched.slice(0, 200)}`, 1);
+
+    return {
+      answerBody: enriched,
+      matchedChunk: topTb.length > 0 && topTb[0].score >= 8 ? topTb[0].chunk : null
+    };
+  }
+
+  /**
+   * Nâng cấp 3: Bổ sung đầy đủ các vế cho câu hỏi đơn đa yêu cầu (Compound Single-Question Enrichment)
+   * Đảm bảo nếu người dùng vừa hỏi khái niệm vừa yêu cầu "Phân tích cấu trúc / 4 yếu tố" hoặc "Lấy ví dụ minh họa"
+   * thì bài giải luôn có đầy đủ tất cả các phần được yêu cầu.
+   */
+  private static enrichCompoundSingleAnswer(
+    query: string,
+    baseAnswer: string,
+    retrievedArticles: ILawArticle[]
+  ): string {
+    let result = (baseAnswer || '').trim();
+    const reqs = RagService.detectCompoundRequirements(query);
+    const ansLower = result.toLowerCase();
+
+    // 1. Nếu câu hỏi yêu cầu phân tích cấu trúc 3 bộ phận của Quy phạm pháp luật mà câu trả lời chưa phân tích chi tiết
+    if (reqs.needsQpplStruct) {
+      const hasDetailedQppl =
+        ansLower.includes('giả định') &&
+        ansLower.includes('quy định') &&
+        ansLower.includes('chế tài') &&
+        result.length >= 520;
+
+      if (!hasDetailedQppl) {
+        result += `\n\n---\n\n### 🔍 PHÂN TÍCH CHUYÊN SÂU CẤU TRÚC 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT:
+1. **Bộ phận Giả định (Hypothesis)**:
+   - **Bản chất**: Là bộ phận nêu lên những điều kiện, hoàn cảnh (thời gian, địa điểm, tình huống) có thể xảy ra trong thực tế cuộc sống và xác định rõ cá nhân hay tổ chức nào ở vào những điều kiện, hoàn cảnh đó phải chịu sự tác động của quy phạm pháp luật.
+   - **Câu hỏi xác định**: Trả lời cho câu hỏi: *"Ai (chủ thể nào)? Khi nào? Trong điều kiện, hoàn cảnh nào?"*.
+   - **Phân loại**: Giả định giản đơn (chỉ nêu 1 điều kiện) và Giả định phức tạp (nêu nhiều điều kiện, hoàn cảnh đồng thời hoặc lựa chọn).
+2. **Bộ phận Quy định (Disposition)**:
+   - **Bản chất**: Là bộ phận trung tâm của quy phạm pháp luật, chứa đựng mệnh lệnh của Nhà nước, nêu lên cách thức xử sự mà chủ thể ở vào hoàn cảnh đã nêu trong phần giả định được phép thực hiện hoặc bắt buộc phải thực hiện.
+   - **Câu hỏi xác định**: Trả lời cho câu hỏi: *"Chủ thể được làm gì? Không được làm gì? Phải làm gì và làm như thế nào?"*.
+   - **Phân loại**: Quy định dứt khoát (chỉ nêu một cách xử sự duy nhất) và Quy định tùy nghi (cho phép chủ thể lựa chọn cách xử sự).
+3. **Bộ phận Chế tài (Sanction)**:
+   - **Bản chất**: Là bộ phận chỉ ra những biện pháp tác động mang tính bất lợi của Nhà nước dự kiến áp dụng đối với chủ thể nào không thực hiện hoặc thực hiện không đúng mệnh lệnh của Nhà nước đã nêu ở bộ phận quy định.
+   - **Câu hỏi xác định**: Trả lời cho câu hỏi: *"Hậu quả pháp lý bất lợi gì sẽ áp dụng nếu vi phạm?"*.
+   - **Phân loại**: Gồm 4 loại chế tài chính: Chế tài Hình sự, Chế tài Hành chính, Chế tài Dân sự và Chế tài Kỷ luật.`;
+      }
+    }
+
+    // 2. Nếu câu hỏi yêu cầu phân tích 4 yếu tố cấu thành của Vi phạm pháp luật mà câu trả lời chưa đủ 4 mặt
+    if (reqs.needsVpplElements) {
+      const hasFourElements =
+        ansLower.includes('mặt khách quan') &&
+        ansLower.includes('mặt chủ quan') &&
+        ansLower.includes('khách thể') &&
+        ansLower.includes('chủ thể');
+
+      if (!hasFourElements) {
+        result += `\n\n---\n\n### 🔍 PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH CỦA VI PHẠM PHÁP LUẬT:
+1. **Mặt khách quan của vi phạm pháp luật**:
+   - Là những biểu hiện ra bên ngoài thế giới khách quan của vi phạm pháp luật.
+   - Bao gồm: **Hành vi trái pháp luật** (dấu hiệu bắt buộc duy nhất trong mọi cấu thành), **Hậu quả nguy hiểm cho xã hội**, **Mối quan hệ nhân quả** giữa hành vi và hậu quả, cùng các yếu tố thời gian, địa điểm, công cụ, phương tiện vi phạm.
+2. **Mặt chủ quan của vi phạm pháp luật**:
+   - Là trạng thái tâm lý bên trong của chủ thể khi thực hiện hành vi trái pháp luật.
+   - Bao gồm: **Lỗi** (dấu hiệu bắt buộc, gồm: *Lỗi cố ý trực tiếp, Lỗi cố ý gián tiếp, Lỗi vô ý vì quá tự tin, Lỗi vô ý do cẩu thả*), **Động cơ** (động lực bên trong thúc đẩy) và **Mục đích** (kết quả trong ý thức mà chủ thể đặt ra).
+3. **Khách thể của vi phạm pháp luật**:
+   - Là những quan hệ xã hội được pháp luật bảo vệ nhưng bị hành vi vi phạm pháp luật xâm hại tới (Ví dụ: quyền sở hữu tài sản, tính mạng, sức khỏe, danh dự nhân phẩm của công dân, trật tự quản lý hành chính nhà nước).
+4. **Chủ thể của vi phạm pháp luật**:
+   - Là cá nhân hoặc tổ chức (pháp nhân) có **năng lực trách nhiệm pháp lý** (đạt độ tuổi do pháp luật quy định và có khả năng nhận thức, làm chủ hành vi) đã thực hiện hành vi trái pháp luật.`;
+      }
+    }
+
+    // 3. Nếu câu hỏi có yêu cầu "lấy ví dụ minh họa" mà nội dung trả lời chưa có mục Ví dụ cụ thể
+    if (reqs.needsExample && !ansLower.includes('ví dụ')) {
+      const qLower = query.toLowerCase();
+      let exampleBlock = '';
+
+      if (qLower.includes('quy phạm pháp luật') || qLower.includes('qppl') || qLower.includes('giả định')) {
+        exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN & BÓC TÁCH CẤU TRÚC QUY PHẠM PHÁP LUẬT:
+- **Trích dẫn điều luật**: **Khoản 1 Điều 584 Bộ luật Dân sự năm 2015** quy định: *"Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường, trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác."*
+- **Phân tích 3 bộ phận trong quy phạm trên**:
+  + **Bộ phận Giả định**: *"Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại (trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác)"* — Xác định chủ thể và hoàn cảnh gây thiệt hại ngoài hợp đồng.
+  + **Bộ phận Quy định** *(ẩn ngầm theo logic pháp lý)*: Không được xâm phạm đến tính mạng, sức khỏe, danh dự, tài sản của người khác; nếu gây thiệt hại thì có nghĩa vụ khắc phục.
+  + **Bộ phận Chế tài**: *"...thì phải bồi thường"* — Biện pháp chế tài dân sự buộc chủ thể vi phạm phải đền bù thiệt hại vật chất và tinh thần đã gây ra.`;
+      } else if (qLower.includes('quan hệ pháp luật') || qLower.includes('sự kiện pháp lý')) {
+        exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN VỀ QUAN HỆ PHÁP LUẬT:
+- **Tình huống thực tế**: Ngày 10/05/2025, anh Nguyễn Văn A (25 tuổi, nhận thức bình thường) ký hợp đồng mua một chiếc xe máy Honda Vision của Cửa hàng xe máy B với giá 35.000.000 đồng.
+- **Phân tích cơ cấu 3 yếu tố của Quan hệ pháp luật dân sự trên**:
+  + **Chủ thể**: Anh Nguyễn Văn A (cá nhân có đầy đủ năng lực pháp luật và năng lực hành vi dân sự theo Điều 16, 19, 20 BLDS 2015) và Cửa hàng xe máy B (tổ chức kinh tế hợp pháp).
+  + **Khách thể**: Quyền sở hữu đối với chiếc xe máy Honda Vision và khoản tiền thanh toán 35.000.000 đồng (lợi ích vật chất mà hai bên hướng tới).
+  + **Nội dung**: Quyền và nghĩa vụ pháp lý đối xứng của hai bên — Anh A có nghĩa vụ trả đủ 35 triệu đồng và có quyền nhận xe cùng giấy tờ; Cửa hàng B có nghĩa vụ bàn giao xe đúng chất lượng và có quyền nhận tiền.`;
+      } else if (qLower.includes('vi phạm pháp luật') || qLower.includes('trách nhiệm pháp lý') || qLower.includes('lỗi')) {
+        exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN VỀ VI PHẠM PHÁP LUẬT:
+- **Tình huống thực tế**: Lê Văn M (22 tuổi, hoàn toàn tỉnh táo) lợi dụng lúc gia đình ông H đi vắng đã lén lút cạy cửa đột nhập vào nhà lấy trộm chiếc máy tính xách tay trị giá 25.000.000 đồng.
+- **Phân tích cấu thành vi phạm pháp luật hình sự (Tội trộm cắp tài sản - Điều 173 BLHS 2015)**:
+  + **Mặt khách quan**: Hành vi lén lút cạy cửa chiếm đoạt tài sản trái pháp luật, gây thiệt hại trực tiếp 25 triệu đồng cho ông H.
+  + **Mặt chủ quan**: Lỗi cố ý trực tiếp (M biết rõ hành vi trộm cắp là phạm pháp nhưng vẫn mong muốn chiếm đoạt tài sản làm của riêng) với mục đích vụ lợi.
+  + **Khách thể**: Xâm phạm quyền sở hữu tài sản hợp pháp của công dân được pháp luật bảo vệ.
+  + **Chủ thể**: Lê Văn M (22 tuổi, đủ tuổi chịu trách nhiệm hình sự theo Điều 12 BLHS 2015 và không mắc bệnh tâm thần).`;
+      } else {
+        const coreConcept = this.extractLegalConcept(query) || 'Chế định pháp luật';
+        exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN VỀ ${coreConcept.toUpperCase()}:
+- **Tình huống áp dụng**: Trong đời sống pháp lý tại Việt Nam, chế định **${coreConcept}** được thể hiện trực tiếp khi các chủ thể (cá nhân đủ 18 tuổi có năng lực hành vi dân sự đầy đủ hoặc pháp nhân hợp pháp) xác lập, thực hiện quyền và nghĩa vụ theo quy định của Hiến pháp năm 2013 và Bộ luật Dân sự năm 2015.
+- **Ý nghĩa minh họa**: Nếu chủ thể tuân thủ đúng chuẩn mực pháp lý về ${coreConcept}, quyền và lợi ích hợp pháp của họ sẽ được Nhà nước bảo hộ; ngược lại, mọi hành vi vượt quá giới hạn hoặc làm trái quy định đều bị áp dụng chế tài tương ứng.`;
+      }
+
+      result += `\n\n---\n\n${exampleBlock}`;
+    }
+
+    return result;
   }
 
   // =========================================================================
@@ -1647,7 +1866,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       'thiệt', 'hại', 'tế', 'mặt', 'khách', 'chủ', 'thể', 'quan', 'nhận', 'định', 'quyền', 'lực', 'xã', 'hội',
       'các', 'những', 'mọi', 'tất', 'cả', 'theo', 'việc', 'người', 'cơ', 'cấu', 'so', 'sánh', 'hãy', 'xác',
       'nêu', 'cho', 'biết', 'sao', 'bản', 'chất', 'nguyên', 'nhân', 'hậu', 'quả', 'tình', 'huống', 'tội',
-      'danh', 'mức', 'án', 'hình', 'phạt', 'biện', 'pháp', 'áp', 'dụng'
+      'danh', 'mức', 'án', 'hình', 'phạt', 'biện', 'pháp', 'áp', 'dụng', 'ngữ', 'cảnh', 'câu', 'trước', 'trộm', 'cắp', 'cướp'
     ]);
 
     const VN_CAP = /^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;

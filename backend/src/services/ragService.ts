@@ -342,10 +342,12 @@ export class RagService {
     if (
       q.includes('độ tuổi') ||
       q.includes('chưa thành niên') ||
+      q.includes('13 tuổi') ||
       q.includes('14 tuổi') ||
       q.includes('15 tuổi') ||
       q.includes('16 tuổi') ||
-      (q.includes('tuổi') && q.includes('chịu trách nhiệm hình sự'))
+      q.includes('17 tuổi') ||
+      (q.includes('tuổi') && (q.includes('chịu trách nhiệm') || q.includes('phạm tội') || q.includes('tội này')))
     ) {
       return 'CRIMINAL_AGE';
     }
@@ -359,6 +361,310 @@ export class RagService {
    */
   public static detectArchetype(query: string): ExamArchetype {
     return RagService.detectIntent(query);
+  }
+
+  /**
+   * Nâng cấp 4: Nhớ ngữ cảnh hội thoại đa lượt (Multi-turn Conversational Context)
+   * Tự động phát hiện câu hỏi nối tiếp (dùng đại từ chỉ định hoặc câu hỏi tỉnh lược chủ ngữ)
+   * và ghép ngữ cảnh chủ đề pháp lý từ câu hỏi liền trước.
+   */
+  public static contextualizeQueryWithHistory(
+    query: string,
+    previousQuery?: string | null
+  ): { effectiveQuery: string; isContextualized: boolean; contextTopic?: string } {
+    const cleanCurrent = (query || '').trim();
+    if (!previousQuery || !previousQuery.trim() || !cleanCurrent) {
+      return { effectiveQuery: cleanCurrent, isContextualized: false };
+    }
+
+    // Nếu câu hiện tại là danh sách nhiều câu hỏi độc lập hoặc quá dài (> 180 ký tự) thì không ghép ngữ cảnh cũ
+    if (cleanCurrent.length > 180 || RagService.splitMultiQuestions(cleanCurrent).length > 1) {
+      return { effectiveQuery: cleanCurrent, isContextualized: false };
+    }
+
+    const qLower = cleanCurrent.toLowerCase();
+
+    // Các cụm đại từ chỉ định tham chiếu trực tiếp tới câu trước
+    const anaphoraPatterns = [
+      'tội này', 'tội đó', 'tội danh này', 'tội danh đó',
+      'hành vi này', 'hành vi đó', 'hành vi trên',
+      'trường hợp này', 'trường hợp đó', 'trường hợp trên',
+      'tình huống này', 'tình huống đó', 'tình huống trên',
+      'nhận định này', 'nhận định đó', 'nhận định trên',
+      'quy phạm này', 'quy phạm đó', 'quan hệ này', 'quan hệ đó',
+      'chế định này', 'loại này', 'loại đó', 'ngành luật này',
+      'người này', 'người đó', 'anh ta', 'chị ta', 'ông ta', 'bà ta', 'họ phải',
+      'chủ thể này', 'khái niệm này', 'vấn đề này', 'điều luật này', 'điều này'
+    ];
+
+    const hasAnaphora = anaphoraPatterns.some((p) => qLower.includes(p));
+
+    // Các câu hỏi nối tiếp ngắn gọn tỉnh lược chủ đề (ví dụ: "cho ví dụ minh họa", "phân tích kỹ hơn", "còn mặt chủ quan thì sao?")
+    const followUpPrefixes = [
+      'cho ví dụ', 'lấy ví dụ', 'nêu ví dụ', 'ví dụ minh họa', 'cho tôi ví dụ', 'cho 1 ví dụ', 'cho một ví dụ',
+      'phân tích kỹ hơn', 'giải thích rõ hơn', 'giải thích kỹ hơn', 'giải thích chi tiết', 'nói rõ hơn',
+      'tại sao vậy', 'vì sao vậy', 'tại sao lại thế',
+      'còn nếu', 'thế còn', 'vậy nếu', 'vậy còn', 'nếu người đó', 'nếu chủ thể',
+      'còn mặt khách quan', 'còn mặt chủ quan', 'còn khách thể', 'còn chủ thể',
+      'còn bộ phận', 'còn chế tài', 'còn giả định', 'còn quy định',
+      'hình phạt thế nào', 'mức phạt bao nhiêu', 'xử lý sao', 'xử lý thế nào', 'chia thế nào', 'chia ra sao'
+    ];
+
+    const hasFollowUpCue =
+      cleanCurrent.length < 110 &&
+      followUpPrefixes.some((p) => qLower.includes(p));
+
+    if (!hasAnaphora && !hasFollowUpCue) {
+      return { effectiveQuery: cleanCurrent, isContextualized: false };
+    }
+
+    // Làm sạch previousQuery (bỏ phần hậu tố ngữ cảnh cũ và các từ nghi vấn "là gì?", "đúng hay sai?" để giữ chủ đề cốt lõi)
+    const cleanPrev = previousQuery
+      .replace(/\s*\(Ngữ cảnh câu hỏi trước:[\s\S]*?\)\s*$/i, '')
+      .replace(/\s*(?:là gì|như thế nào|đúng hay sai|hãy phân tích|trình bày khái niệm)\s*\??\s*$/i, '')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 220);
+
+    if (!cleanPrev || cleanPrev.toLowerCase() === qLower) {
+      return { effectiveQuery: cleanCurrent, isContextualized: false };
+    }
+
+    return {
+      effectiveQuery: `${cleanCurrent} (Ngữ cảnh câu hỏi trước: ${cleanPrev})`,
+      isContextualized: true,
+      contextTopic: cleanPrev
+    };
+  }
+
+  /**
+   * Nâng cấp 1: Bộ tách câu hỏi đa ý & Giải song song (Multi-Query Decomposition)
+   * Tự động nhận diện khi người dùng gửi 1 lần nhiều câu hỏi / nhiều nhận định độc lập
+   * (1. ... 2. ..., Câu 1: ... Câu 2: ..., a) ... b) ..., gạch đầu dòng, hoặc nhiều câu hỏi ? độc lập),
+   * đồng thời bảo toàn nguyên vẹn nếu đó là 1 bài tập tình huống duy nhất có nhiều ý hỏi phụ.
+   */
+  public static splitMultiQuestions(query: string): string[] {
+    const raw = (query || '').trim();
+    if (!raw || raw.length < 15) return [raw];
+
+    const rawLower = raw.toLowerCase();
+
+    // 1. Không tách bài tập 4 câu trích dẫn QPPL kinh điển (đã có bộ giải chuyên biệt solveDynamicQpplDetailed)
+    if (
+      rawLower.includes('điều 39') &&
+      (rawLower.includes('điểm a khoản 1 điều 8') || rawLower.includes('điều 102') || rawLower.includes('điều 52'))
+    ) {
+      return [raw];
+    }
+
+    // Hàm kiểm tra xem một đoạn văn có phải là phần dẫn chuyện của Bài tập tình huống (Case Study) hay không
+    const isCaseStudyNarrative = (text: string): boolean => {
+      const t = text.trim();
+      const tl = t.toLowerCase();
+      if (t.length >= 95) {
+        // Nếu đoạn mở đầu dài nhưng chỉ là câu lệnh chung kiểu "Hãy cho biết các nhận định sau đây đúng hay sai và giải thích..." thì không phải tình huống
+        if (
+          (tl.includes('nhận định sau') || tl.includes('câu hỏi sau') || tl.includes('mệnh đề sau')) &&
+          !/\b(ông|bà|anh|chị|cháu|công ty|doanh nghiệp)\s+[a-zA-ZÀ-ỹ]/i.test(t)
+        ) {
+          return false;
+        }
+        return true;
+      }
+      const narrativeIndicators = [
+        /\b(ông|bà|anh|chị|cháu)\s+[A-ZÀ-Ỹ]/,
+        /\b(công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹ]/i,
+        /\b(kết hôn|chung sống|di sản|thừa kế|di chúc|vay|mượn|trộm|cướp|đâm|chém|đánh|vượt đèn đỏ|tai nạn|xích mích|thương tích|tình huống)\b/i,
+        /\b\d+\s*(triệu|tỷ|nghìn)\s*đồng\b/i
+      ];
+      return narrativeIndicators.some((rx) => rx.test(t));
+    };
+
+    // 2. Kiểm tra tách theo dòng có đánh số thứ tự: "Câu 1:", "Nhận định 1:", "1.", "1)", "(1)", "a)", "- "
+    const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+    const itemMarkerRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|ý|bài)\s*\d+\s*[:.)\-]?|\(?\d{1,2}[.)]|\([a-zA-Z]\)|[a-zA-Z][.)]|[-•*])\s+(.+)$/i;
+
+    const firstMarkerLineIdx = lines.findIndex((l) => itemMarkerRegex.test(l));
+    if (firstMarkerLineIdx !== -1) {
+      const preamble = lines.slice(0, firstMarkerLineIdx).join(' ').trim();
+      // Nếu phần mở đầu trước mục số 1 là đoạn dẫn chuyện tình huống -> Giữ nguyên cả bài tập tình huống!
+      if (preamble && isCaseStudyNarrative(preamble)) {
+        return [raw];
+      }
+
+      const sharedTrueFalseCue =
+        /đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định/i.test(preamble);
+
+      const items: string[] = [];
+      let currentItem = '';
+
+      for (let i = firstMarkerLineIdx; i < lines.length; i++) {
+        const line = lines[i];
+        const m = line.match(itemMarkerRegex);
+        if (m) {
+          if (currentItem.trim()) items.push(currentItem.trim());
+          currentItem = m[1].trim();
+        } else if (currentItem) {
+          currentItem += ' ' + line;
+        }
+      }
+      if (currentItem.trim()) items.push(currentItem.trim());
+
+      // Lọc các câu hợp lệ (độ dài >= 8 ký tự) và kiểm tra không phải các tình tiết của 1 vụ án
+      const validItems = items.filter((it) => it.length >= 8);
+      if (validItems.length >= 2) {
+        // Nếu câu 1 là tình huống có nhân vật Ông A/Anh B và câu 2 hỏi tiếp về nhân vật đó ("Hỏi anh A...", "Hành vi trên...") thì không tách!
+        const firstHasActor = isCaseStudyNarrative(validItems[0]);
+        const secondRefersBack =
+          validItems.length >= 2 &&
+          /\b(trên|đó|này|anh\s+[a-z]|ông\s+[a-z]|bà\s+[a-z]|chị\s+[a-z]|tình huống)/i.test(validItems[1]) &&
+          !/\b(là gì|đúng hay sai|nhận định)\b/i.test(validItems[1]);
+
+        if (!(firstHasActor && secondRefersBack)) {
+          return validItems.slice(0, 10).map((it) => {
+            if (
+              sharedTrueFalseCue &&
+              !/đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định|là\s*gì|\?/i.test(it)
+            ) {
+              return `Nhận định: "${it.replace(/^["“”']+|["“”']+$/g, '')}". Nhận định này Đúng hay Sai? Giải thích vì sao.`;
+            }
+            return it;
+          });
+        }
+      }
+    }
+
+    // 3. Kiểm tra đánh số inline trên cùng 1 dòng: "Câu 1: ... Câu 2: ..." hoặc "1. ... 2. ..."
+    const inlineParts = raw
+      .split(/(?:^|\s+)(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|\d{1,2}[.)]\s+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/i)
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (inlineParts.length >= 2) {
+      const markerStart = /^(?:câu\s*\d+|nhận\s*định\s*\d+|\d{1,2})[.:)]\s*/i;
+      const markedCount = inlineParts.filter((p) => markerStart.test(p)).length;
+      if (markedCount >= 2 && !isCaseStudyNarrative(inlineParts[0].replace(markerStart, ''))) {
+        const cleaned = inlineParts
+          .map((p) => p.replace(markerStart, '').trim())
+          .filter((p) => p.length >= 10);
+        if (cleaned.length >= 2) {
+          return cleaned.slice(0, 10);
+        }
+      }
+    }
+
+    // 4. Nhiều dòng độc lập không đánh số (mỗi dòng là 1 câu hỏi có dấu ? hoặc 1 câu nhận định độc lập)
+    if (lines.length >= 2 && lines.length <= 8) {
+      const allLinesSubstantial = lines.every((l) => l.length >= 15 && !isCaseStudyNarrative(l));
+      const questionLinesCount = lines.filter((l) => l.endsWith('?') || /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|trình bày|phân tích)\b/i.test(l)).length;
+      if (allLinesSubstantial && questionLinesCount >= 2) {
+        return lines;
+      }
+    }
+
+    // 5. Trên 1 dòng nhưng có nhiều câu hỏi kết thúc bằng dấu '?' hỏi về các chủ đề KHÁC NHAU
+    // (Nếu câu thứ 2 là "Phân tích cấu trúc...", "Cho ví dụ...", "Giải thích tại sao..." bổ trợ cho câu 1 thì GIỮ NGUYÊN để bộ giải câu ghép xử lý)
+    if (raw.includes('?')) {
+      const qSegments = raw
+        .split(/\?+/)
+        .map((s) => s.trim())
+        .filter((s) => s.length >= 12);
+
+      if (qSegments.length >= 2 && !isCaseStudyNarrative(raw)) {
+        const compoundFollowUpStarter = /^(?:hãy\s+|và\s+)?(?:phân\s*tích|cho\s*ví\s*dụ|lấy\s*ví\s*dụ|nêu\s*ví\s*dụ|ví\s*dụ|giải\s*thích|tại\s*sao|vì\s*sao|nêu\s*rõ|trình\s*bày\s*cấu\s*trúc|trình\s*bày\s*đặc\s*điểm|cấu\s*trúc|cơ\s*cấu|đặc\s*điểm|ý\s*nghĩa|vai\s*trò)/i;
+        const independentQuestions: string[] = [`${qSegments[0]}?`];
+
+        for (let i = 1; i < qSegments.length; i++) {
+          const seg = qSegments[i].replace(/^[.,;:\-–—\s]+/, '').trim();
+          if (!seg) continue;
+          // Nếu câu tiếp theo bắt đầu bằng từ khóa phụ thuộc hoặc hỏi tiếp về cùng khái niệm thì gộp vào câu trước
+          const prevConcept = RagService.extractCoreTopicKeyword(independentQuestions[independentQuestions.length - 1]);
+          const segLower = seg.toLowerCase();
+          const sharesSameConcept = prevConcept && segLower.includes(prevConcept);
+
+          if (compoundFollowUpStarter.test(seg) || sharesSameConcept) {
+            independentQuestions[independentQuestions.length - 1] += ` ${seg}?`;
+          } else if (
+            /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|bao nhiêu tuổi|gồm những gì|cơ quan nào|ngành luật nào)\b/i.test(seg)
+          ) {
+            independentQuestions.push(`${seg}?`);
+          } else {
+            independentQuestions[independentQuestions.length - 1] += ` ${seg}`;
+          }
+        }
+
+        if (independentQuestions.length >= 2) {
+          return independentQuestions.slice(0, 8);
+        }
+      }
+    }
+
+    return [raw];
+  }
+
+  /**
+   * Trích xuất cụm danh từ pháp lý cốt lõi trong câu hỏi để kiểm tra xem 2 vế câu hỏi có cùng chủ đề hay không
+   */
+  public static extractCoreTopicKeyword(query: string): string | null {
+    const q = query.toLowerCase();
+    const coreTopics = [
+      'quy phạm pháp luật',
+      'quan hệ pháp luật',
+      'vi phạm pháp luật',
+      'trách nhiệm pháp lý',
+      'năng lực pháp luật',
+      'năng lực hành vi',
+      'văn bản quy phạm pháp luật',
+      'thực hiện pháp luật',
+      'áp dụng pháp luật',
+      'sự kiện pháp lý',
+      'pháp chế xã hội chủ nghĩa',
+      'bộ máy nhà nước',
+      'hình thức nhà nước',
+      'bản chất nhà nước',
+      'giao dịch dân sự',
+      'hợp đồng dân sự',
+      'quyền sở hữu',
+      'thừa kế',
+      'tội phạm',
+      'hình phạt',
+      'phòng vệ chính đáng',
+      'tình thế cấp thiết',
+      'vi phạm hành chính',
+      'tham nhũng'
+    ];
+    for (const topic of coreTopics) {
+      if (q.includes(topic)) return topic;
+    }
+    return null;
+  }
+
+  /**
+   * Nâng cấp 3: Phát hiện câu hỏi đơn nhưng đa yêu cầu (Compound Single-Question Requirements)
+   * Ví dụ: "Quy phạm pháp luật là gì? Phân tích cấu trúc của quy phạm pháp luật và lấy ví dụ minh họa."
+   */
+  public static detectCompoundRequirements(query: string): {
+    needsQpplStruct: boolean;
+    needsVpplElements: boolean;
+    needsExample: boolean;
+  } {
+    const q = (query || '').toLowerCase();
+    const needsQpplStruct =
+      (q.includes('quy phạm pháp luật') || q.includes('qppl')) &&
+      (q.includes('cấu trúc') || q.includes('cơ cấu') || q.includes('3 bộ phận') || q.includes('ba bộ phận') || (q.includes('giả định') && q.includes('chế tài')));
+
+    const needsVpplElements =
+      (q.includes('vi phạm pháp luật') || q.includes('vppl') || q.includes('cấu thành tội phạm')) &&
+      (q.includes('cấu thành') || q.includes('4 yếu tố') || q.includes('bốn yếu tố') || (q.includes('mặt khách quan') && q.includes('mặt chủ quan')));
+
+    const needsExample =
+      q.includes('ví dụ') || q.includes('minh họa') || q.includes('cho vd');
+
+    return {
+      needsQpplStruct,
+      needsVpplElements,
+      needsExample
+    };
   }
 
   /**
@@ -629,11 +935,24 @@ export class RagService {
       contextStr += `[KHUNG LÝ LUẬN BỘ GD&ĐT - ${principle.frameworkTitle}]:\n${principle.theoryContent}\n\n`;
     }
 
-    // Tích hợp Textbook RAG từ Giáo trình Pháp luật Đại cương TMU 2021
-    const topTextbook = TextbookKnowledgeService.searchTopChunks(query, 1);
-    if (topTextbook.length > 0) {
-      const tb = topTextbook[0].chunk;
-      contextStr += `[GIÁO TRÌNH ĐH THƯƠNG MẠI 2021 - ${tb.chapterTitle} (${tb.sectionTitle})]:\n${tb.baremContent}\n\n`;
+    // Tích hợp Textbook RAG từ Giáo trình Pháp luật Đại cương TMU 2021 (Hỗ trợ cả câu đơn và câu đa ý)
+    const subQuestions = RagService.splitMultiQuestions(query);
+    if (subQuestions.length > 1) {
+      const seenSections = new Set<string>();
+      for (let i = 0; i < subQuestions.length; i++) {
+        const subTop = TextbookKnowledgeService.searchTopChunks(subQuestions[i], 1);
+        if (subTop.length > 0 && !seenSections.has(subTop[0].chunk.sectionCode)) {
+          seenSections.add(subTop[0].chunk.sectionCode);
+          const tb = subTop[0].chunk;
+          contextStr += `[GIÁO TRÌNH ĐH THƯƠNG MẠI 2021 (CÂU ${i + 1}) - ${tb.chapterTitle} (${tb.sectionTitle})]:\n${tb.baremContent}\n\n`;
+        }
+      }
+    } else {
+      const topTextbook = TextbookKnowledgeService.searchTopChunks(query, 1);
+      if (topTextbook.length > 0) {
+        const tb = topTextbook[0].chunk;
+        contextStr += `[GIÁO TRÌNH ĐH THƯƠNG MẠI 2021 - ${tb.chapterTitle} (${tb.sectionTitle})]:\n${tb.baremContent}\n\n`;
+      }
     }
 
     matchedArticles.forEach((art) => {

@@ -1182,27 +1182,123 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   }
 
   /**
-   * Chuẩn hóa nội dung học liệu giáo trình sang dạng danh sách phân cấp rõ ràng, dễ đọc trên UI
+   * Nâng cấp 2: Trích xuất & Đánh dấu trọng tâm học liệu giáo trình theo đúng ý hỏi (Focused Passage Extraction)
+   * Tự động chấm điểm từng mục La Mã (I, II, III...) trong chunk theo từ khóa câu hỏi để làm nổi bật
+   * và đưa tiểu mục khớp nhất lên đầu nếu người dùng hỏi sâu vào một khía cạnh cụ thể.
    */
-  public static formatCleanTextbookContent(rawContent: string): string {
+  public static formatCleanTextbookContent(rawContent: string, query?: string): string {
     if (!rawContent) return '';
-    return rawContent
-      .split('\n')
-      .map((line) => {
-        const trimmed = line.trim();
-        if (!trimmed) return '';
-        // Chuyển tiêu đề La Mã "I. ...", "II. ..." thành subheading H3 gọn đẹp (tránh banner MỤC I quá lớn)
-        const romanMatch = trimmed.match(/^(I|II|III|IV|V|VI)\.\s*(.+)$/i);
-        if (romanMatch) {
-          return `### 🔹 ${romanMatch[1].toUpperCase()}. ${romanMatch[2].replace(/:$/, '')}`;
+
+    const stopWords = new Set([
+      'của', 'những', 'trong', 'theo', 'nào', 'hãy', 'cho', 'biết', 'trình', 'bày',
+      'phân', 'tích', 'giải', 'thích', 'đúng', 'sai', 'nhận', 'định', 'sau', 'đây',
+      'như', 'thế', 'nào', 'với', 'các', 'một', 'được', 'không', 'phải', 'khi', 'nếu'
+    ]);
+
+    const queryTokens = (query || '')
+      .toLowerCase()
+      .replace(/[.,;:?!"'“”()\[\]\-–—_/\\]/g, ' ')
+      .split(/\s+/)
+      .filter((w) => w.length >= 3 && !stopWords.has(w));
+
+    // Tách thành các khối theo đề mục La Mã (I., II., III., IV.) nếu có
+    const rawLines = rawContent.split('\n');
+    interface RomanSection {
+      roman: string;
+      title: string;
+      bodyLines: string[];
+      score: number;
+      originalIndex: number;
+    }
+
+    const sections: RomanSection[] = [];
+    const preambleLines: string[] = [];
+    let currentSec: RomanSection | null = null;
+
+    for (const line of rawLines) {
+      const trimmed = line.trim();
+      if (trimmed === '---') continue;
+      const romanMatch = trimmed.match(/^(I|II|III|IV|V|VI)\.\s*(.+)$/i);
+      if (romanMatch) {
+        if (currentSec) sections.push(currentSec);
+        currentSec = {
+          roman: romanMatch[1].toUpperCase(),
+          title: romanMatch[2].replace(/:$/, '').trim(),
+          bodyLines: [],
+          score: 0,
+          originalIndex: sections.length
+        };
+      } else if (currentSec) {
+        currentSec.bodyLines.push(line);
+      } else {
+        preambleLines.push(line);
+      }
+    }
+    if (currentSec) sections.push(currentSec);
+
+    // Chấm điểm mức độ khớp của từng mục La Mã với câu hỏi người dùng
+    let bestSectionIdx = -1;
+    let maxScore = 0;
+
+    if (queryTokens.length > 0 && sections.length >= 2) {
+      sections.forEach((sec, idx) => {
+        const titleLower = sec.title.toLowerCase();
+        const bodyLower = sec.bodyLines.join(' ').toLowerCase();
+        let sc = 0;
+        for (const tk of queryTokens) {
+          if (titleLower.includes(tk)) sc += 3;
+          else if (bodyLower.includes(tk)) sc += 1;
         }
-        // Chuyển dòng thụt lề "   - ..." thành sub-bullet "+ ..."
-        if (/^\s{2,}[-•*]\s+/.test(line)) {
-          return `+ ${trimmed.replace(/^[-•*]\s+/, '')}`;
+        sec.score = sc;
+        if (sc > maxScore) {
+          maxScore = sc;
+          bestSectionIdx = idx;
         }
-        return trimmed;
-      })
-      .join('\n');
+      });
+
+      // Nếu mục khớp nhất nằm ở phía sau (mục II, III...) và có điểm vượt trội so với mục I, đưa mục trọng tâm lên đầu
+      if (bestSectionIdx > 0 && maxScore >= 4 && maxScore >= sections[0].score + 3) {
+        const focusedSec = sections[bestSectionIdx];
+        const otherSecs = sections.filter((_, idx) => idx !== bestSectionIdx);
+        sections.splice(0, sections.length, focusedSec, ...otherSecs);
+        bestSectionIdx = 0;
+      }
+    }
+
+    const formatLine = (line: string): string => {
+      const trimmed = line.trim();
+      if (!trimmed) return '';
+      if (/^\s{2,}[-•*]\s+/.test(line)) {
+        return `+ ${trimmed.replace(/^[-•*]\s+/, '')}`;
+      }
+      return trimmed;
+    };
+
+    if (sections.length === 0) {
+      return rawLines.map(formatLine).join('\n');
+    }
+
+    const outLines: string[] = [];
+    for (const pl of preambleLines) {
+      const fl = formatLine(pl);
+      if (fl) outLines.push(fl);
+    }
+
+    sections.forEach((sec, idx) => {
+      const isFocused = idx === bestSectionIdx && maxScore >= 4 && sections.length >= 2;
+      const badge = isFocused ? ' 🎯 *(Trọng tâm câu hỏi)*' : '';
+      const icon = isFocused ? '🎯' : '🔹';
+      outLines.push(`### ${icon} ${sec.roman}. ${sec.title}${badge}`);
+      for (const bl of sec.bodyLines) {
+        const fl = formatLine(bl);
+        if (fl !== '') outLines.push(fl);
+      }
+      if (idx < sections.length - 1) {
+        outLines.push('');
+      }
+    });
+
+    return outLines.join('\n');
   }
 
   /**
@@ -1210,9 +1306,10 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
    */
   public static buildCompactCitation(
     chunk: TextbookChunk,
-    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
+    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = [],
+    query?: string
   ): string {
-    return this.buildDetailedCitation(chunk, extraArticles);
+    return this.buildDetailedCitation(chunk, extraArticles, query);
   }
 
   /**
@@ -1221,12 +1318,13 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
    */
   public static buildDetailedCitation(
     chunk: TextbookChunk,
-    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
+    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = [],
+    query?: string
   ): string {
     const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
     const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
     const detailedLaws = this.formatDetailedLaws(chunk.legalBasis, extraArticles);
-    const formattedContent = this.formatCleanTextbookContent(chunk.baremContent);
+    const formattedContent = this.formatCleanTextbookContent(chunk.baremContent, query);
 
     return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
 - **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
@@ -1243,6 +1341,81 @@ ${detailedLaws}`;
   }
 
   /**
+   * Định dạng khối Trích dẫn RAG Tổng hợp khi người dùng hỏi nhiều câu hỏi thuộc nhiều chương/mục khác nhau cùng lúc
+   */
+  public static buildMultiChunkCitation(
+    items: { subQuestion: string; chunk: TextbookChunk }[],
+    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
+  ): string {
+    if (!items || items.length === 0) return '';
+    if (items.length === 1) {
+      return this.buildDetailedCitation(items[0].chunk, extraArticles, items[0].subQuestion);
+    }
+
+    // Khử trùng lặp theo sectionCode nhưng lưu lại danh sách các câu hỏi thuộc cùng mục đó
+    const groupedMap = new Map<string, { chunk: TextbookChunk; questions: string[]; indices: number[] }>();
+    items.forEach((it, idx) => {
+      const code = it.chunk.sectionCode;
+      if (!groupedMap.has(code)) {
+        groupedMap.set(code, { chunk: it.chunk, questions: [it.subQuestion], indices: [idx + 1] });
+      } else {
+        const entry = groupedMap.get(code)!;
+        entry.questions.push(it.subQuestion);
+        entry.indices.push(idx + 1);
+      }
+    });
+
+    const uniqueEntries = Array.from(groupedMap.values());
+    if (uniqueEntries.length === 1) {
+      return this.buildDetailedCitation(
+        uniqueEntries[0].chunk,
+        extraArticles,
+        uniqueEntries[0].questions.join(' ')
+      );
+    }
+
+    const allLegalBases: string[] = [];
+    const metadataLines: string[] = [];
+    const excerptBlocks: string[] = [];
+
+    uniqueEntries.forEach((entry) => {
+      const c = entry.chunk;
+      const pages = c.pageRange.replace(/^tr\.\s*/i, '');
+      const cleanSectionCode = c.sectionCode.replace(/_/g, ' – ');
+      const qLabel = entry.indices.map((n) => `Câu ${n}`).join(', ');
+
+      metadataLines.push(
+        `- **Đối chiếu ${qLabel}** — **${c.chapterTitle}** (*Mục ${cleanSectionCode}: ${c.sectionTitle}* — **Trang ${pages}**): ${c.summary}`
+      );
+
+      const formattedExcerpt = this.formatCleanTextbookContent(
+        c.baremContent,
+        entry.questions.join(' ')
+      );
+      excerptBlocks.push(
+        `#### 📘 Hạng mục học liệu (${qLabel}): ${c.chapterTitle} — Trang ${pages}
+${formattedExcerpt}`
+      );
+
+      for (const lb of c.legalBasis) {
+        if (!allLegalBases.includes(lb)) allLegalBases.push(lb);
+      }
+    });
+
+    const detailedLaws = this.formatDetailedLaws(allLegalBases, extraArticles);
+
+    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
+- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
+${metadataLines.join('\n')}
+
+### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH THEO TỪNG CHỦ ĐỀ:
+${excerptBlocks.join('\n\n---\n\n')}
+
+### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:
+${detailedLaws}`;
+  }
+
+  /**
    * Định dạng câu trả lời hoàn chỉnh dựa trên Giáo trình Pháp luật Đại cương TMU 2021
    */
   public static buildTextbookResponse(query: string, topMatch: { chunk: TextbookChunk; score: number }): string {
@@ -1250,6 +1423,6 @@ ${detailedLaws}`;
     return `📚 **GIẢI ĐÁP THEO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG — BỘ GIÁO DỤC VÀ ĐÀO TẠO**  
 *(Trường Đại học Thương Mại — NXB Hà Nội 2021, Chủ biên: TS. Trần Thành Thọ)*
 
-${this.buildDetailedCitation(c)}`;
+${this.buildDetailedCitation(c, [], query)}`;
   }
 }
