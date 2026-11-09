@@ -1037,15 +1037,32 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       }
 
       // F. Nếu hỏi về "hình thức pháp luật", "hình thức thể hiện của pháp luật", "hình thức của pháp luật", "đặc điểm pháp luật" -> Ưu tiên Chương 2, PHẠT NẶNG Chương 1 (Hình thức nhà nước)
+      // Lưu ý: Loại trừ "thực hiện pháp luật", "áp dụng pháp luật", "tuân thủ", "thi hành" (thuộc Chương 3 Mục 3.2)
       if (
         (rawQueryText.includes('hình thức') || rawQueryText.includes('đặc điểm') || rawQueryText.includes('đặc trưng')) &&
         rawQueryText.includes('pháp luật') &&
+        !rawQueryText.includes('thực hiện pháp luật') &&
+        !rawQueryText.includes('hình thức thực hiện') &&
+        !rawQueryText.includes('áp dụng pháp luật') &&
+        !rawQueryText.includes('tuân thủ') &&
+        !rawQueryText.includes('thi hành') &&
         !rawQueryText.includes('hình thức nhà nước') &&
         !rawQueryText.includes('chính thể') &&
         !rawQueryText.includes('cấu trúc nhà nước')
       ) {
         if (c.chapterNumber === 1) finalScore -= 40;
         if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.3'))) finalScore += 50;
+      }
+
+      // H. Nếu hỏi về Quan hệ pháp luật (Chủ thể, Khách thể, Nội dung, Sự kiện pháp lý) -> Ưu tiên tuyệt đối Chương 4 (Mục 4.1_4.2)
+      if (
+        rawQueryText.includes('quan hệ pháp luật') ||
+        rawQueryText.includes('sự kiện pháp lý') ||
+        rawQueryText.includes('năng lực hành vi') ||
+        (rawQueryText.includes('chủ thể') && rawQueryText.includes('khách thể'))
+      ) {
+        if (c.sectionCode.includes('4.1_4.2') || c.chapterNumber === 4) finalScore += 65;
+        if (c.chapterNumber === 9) finalScore -= 50;
       }
 
       // G. Nếu hỏi về "pháp luật xã hội chủ nghĩa", "pháp luật xhcn" -> Ưu tiên Mục 2.1.1_2.1.3 (Khái niệm, Bản chất và Đặc trưng của Pháp luật)

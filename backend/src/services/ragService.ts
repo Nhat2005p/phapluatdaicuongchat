@@ -183,7 +183,7 @@ export class RagService {
       q.includes('khi vượt đèn đỏ') ||
       q.includes('làm rơi') ||
       q.includes('rơi vỡ') ||
-      q.includes('laptop') ||
+      (q.includes('laptop') && (q.includes('rơi') || q.includes('vỡ') || q.includes('hỏng') || q.includes('mượn'))) ||
       q.includes('ông a') ||
       q.includes('anh b') ||
       q.includes('bà b') ||
@@ -302,7 +302,7 @@ export class RagService {
       q.includes('tình thế cấp thiết') ||
       q.includes('làm rơi') ||
       q.includes('rơi vỡ') ||
-      q.includes('laptop') ||
+      (q.includes('laptop') && (q.includes('rơi') || q.includes('vỡ') || q.includes('hỏng') || q.includes('mượn'))) ||
       (q.includes('mượn') && (q.includes('hỏng') || q.includes('vỡ') || q.includes('bồi thường') || q.includes('tai nạn'))) ||
       (q.includes('vượt đèn đỏ') && q.includes('va chạm')) ||
       (q.includes('đuổi theo') && q.includes('đánh')) ||
@@ -462,9 +462,8 @@ export class RagService {
       const t = text.trim();
       const tl = t.toLowerCase();
       if (t.length >= 95) {
-        // Nếu đoạn mở đầu dài nhưng chỉ là câu lệnh chung kiểu "Hãy cho biết các nhận định sau đây đúng hay sai và giải thích..." thì không phải tình huống
         if (
-          (tl.includes('nhận định sau') || tl.includes('câu hỏi sau') || tl.includes('mệnh đề sau')) &&
+          (tl.includes('nhận định sau') || tl.includes('câu hỏi sau') || tl.includes('mệnh đề sau') || tl.includes('phần i')) &&
           !/\b(ông|bà|anh|chị|cháu|công ty|doanh nghiệp)\s+[a-zA-ZÀ-ỹ]/i.test(t)
         ) {
           return false;
@@ -480,55 +479,119 @@ export class RagService {
       return narrativeIndicators.some((rx) => rx.test(t));
     };
 
-    // 2. Kiểm tra tách theo dòng có đánh số thứ tự: "Câu 1:", "Nhận định 1:", "1.", "1)", "(1)", "a)", "- "
-    const lines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
-    const itemMarkerRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|ý|bài)\s*\d+\s*[:.)\-]?|\(?\d{1,2}[.)]|\([a-zA-Z]\)|[a-zA-Z][.)]|[-•*])\s+(.+)$/i;
+    // Hàm nhận diện dòng tiêu đề Phần/Mục của đề thi (ví dụ: "PHẦN I. NHẬN ĐỊNH ĐÚNG/SAI", "PHẦN II. CÂU HỎI LÝ THUYẾT")
+    const isSectionHeaderLine = (line: string): boolean => {
+      return /^(?:phần|mục|i{1,3}|iv|v)\s*(?:[ivx\d]+)?\s*[.:–—\-]\s*(?:nhận\s*định|câu\s*hỏi|lý\s*thuyết|bài\s*tập|tự\s*luận|quan\s*hệ\s*pháp\s*luật|trắc\s*nghiệm)/i.test(
+        line.trim()
+      ) || /^phần\s+(?:[ivx]+|\d+)\b/i.test(line.trim());
+    };
 
-    const firstMarkerLineIdx = lines.findIndex((l) => itemMarkerRegex.test(l));
+    // Hàm nhận diện dòng chỉ chứa điểm số (ví dụ: "3,0 điểm – 6 câu × 0,5 điểm", "2,0 điểm", "1,0 điểm")
+    const isPureScoreLine = (line: string): boolean => {
+      return /^\(?\d+(?:[.,]\d+)?\s*điểm(?:\s*[-–—×x].*)?\)?$/i.test(line.trim());
+    };
+
+    // Hàm xóa tiền tố điểm số ở đầu câu hỏi (ví dụ: "1,0 điểm Hãy phân biệt..." -> "Hãy phân biệt...")
+    const stripLeadingScore = (text: string): string => {
+      return text
+        .replace(/^\(?\d+(?:[.,]\d+)?\s*điểm\)?\s*[:.\-–—]?\s*/i, '')
+        .trim();
+    };
+
+    const rawLines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
+
+    // Kiểm tra xem đề bài có sử dụng nhãn "Câu 1", "Câu 2" / "Nhận định 1", "Nhận định 2" / "Bài 1", "Bài 2" hay không
+    const explicitCauRegex = /^(?:câu\s*hỏi|câu|nhận\s*định|bài)\s*(\d+)\s*[:.)\-]?\s*(.*)$/i;
+    const explicitCauCount = rawLines.filter((l) => explicitCauRegex.test(l)).length;
+
+    // Nếu đề bài có từ 2 "Câu X" trở lên -> Chỉ tách theo cấp "Câu X" (bảo toàn mọi ý con a, b, c, d bên trong Câu 9!)
+    const generalItemRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|ý|bài)\s*\d+\s*[:.)\-]?|\(?\d{1,2}[.)]|\([a-zA-Z]\)|[a-zA-Z][.)]|[-•*])\s+(.+)$/i;
+    const activeItemRegex = explicitCauCount >= 2 ? explicitCauRegex : generalItemRegex;
+
+    const firstMarkerLineIdx = rawLines.findIndex((l) => activeItemRegex.test(l));
     if (firstMarkerLineIdx !== -1) {
-      const preamble = lines.slice(0, firstMarkerLineIdx).join(' ').trim();
+      const preambleLines = rawLines.slice(0, firstMarkerLineIdx);
+      const nonHeaderPreamble = preambleLines
+        .filter((l) => !isSectionHeaderLine(l) && !isPureScoreLine(l))
+        .join(' ')
+        .trim();
+
       // Nếu phần mở đầu trước mục số 1 là đoạn dẫn chuyện tình huống -> Giữ nguyên cả bài tập tình huống!
-      if (preamble && isCaseStudyNarrative(preamble)) {
+      if (nonHeaderPreamble && isCaseStudyNarrative(nonHeaderPreamble)) {
         return [raw];
       }
 
-      const sharedTrueFalseCue =
-        /đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định/i.test(preamble);
+      let currentSectionIsTrueFalse =
+        /đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định/i.test(preambleLines.join(' '));
 
-      const items: string[] = [];
-      let currentItem = '';
+      const items: { text: string; isTrueFalseSection: boolean }[] = [];
+      let currentItemLines: string[] = [];
+      let currentItemTfFlag = currentSectionIsTrueFalse;
 
-      for (let i = firstMarkerLineIdx; i < lines.length; i++) {
-        const line = lines[i];
-        const m = line.match(itemMarkerRegex);
+      for (let i = firstMarkerLineIdx; i < rawLines.length; i++) {
+        const line = rawLines[i];
+
+        // Nếu gặp dòng tiêu đề PHẦN I, PHẦN II, PHẦN III... -> Cập nhật cờ True/False cho phần tiếp theo và bỏ qua dòng tiêu đề
+        if (isSectionHeaderLine(line)) {
+          currentSectionIsTrueFalse = /nhận\s*định|đúng\s*\/?\s*sai|đúng\s+hay\s+sai/i.test(line);
+          continue;
+        }
+
+        // Bỏ qua dòng chỉ ghi điểm số ("2,0 điểm", "1,0 điểm")
+        if (isPureScoreLine(line)) {
+          continue;
+        }
+
+        const m = line.match(activeItemRegex);
         if (m) {
-          if (currentItem.trim()) items.push(currentItem.trim());
-          currentItem = m[1].trim();
-        } else if (currentItem) {
-          currentItem += ' ' + line;
+          if (currentItemLines.length > 0) {
+            items.push({
+              text: stripLeadingScore(currentItemLines.join('\n').trim()),
+              isTrueFalseSection: currentItemTfFlag
+            });
+          }
+          const bodyAfterMarker = stripLeadingScore(explicitCauCount >= 2 ? (m[2] || '') : (m[1] || ''));
+          currentItemLines = bodyAfterMarker ? [bodyAfterMarker] : [];
+          currentItemTfFlag = currentSectionIsTrueFalse;
+        } else {
+          const cleanedLine = stripLeadingScore(line);
+          if (cleanedLine) {
+            currentItemLines.push(cleanedLine);
+          }
         }
       }
-      if (currentItem.trim()) items.push(currentItem.trim());
 
-      // Lọc các câu hợp lệ (độ dài >= 8 ký tự) và kiểm tra không phải các tình tiết của 1 vụ án
-      const validItems = items.filter((it) => it.length >= 8);
+      if (currentItemLines.length > 0) {
+        items.push({
+          text: stripLeadingScore(currentItemLines.join('\n').trim()),
+          isTrueFalseSection: currentItemTfFlag
+        });
+      }
+
+      const validItems = items.filter((it) => it.text.length >= 8);
       if (validItems.length >= 2) {
-        // Nếu câu 1 là tình huống có nhân vật Ông A/Anh B và câu 2 hỏi tiếp về nhân vật đó ("Hỏi anh A...", "Hành vi trên...") thì không tách!
-        const firstHasActor = isCaseStudyNarrative(validItems[0]);
+        const firstHasActor = isCaseStudyNarrative(validItems[0].text);
         const secondRefersBack =
           validItems.length >= 2 &&
-          /\b(trên|đó|này|anh\s+[a-z]|ông\s+[a-z]|bà\s+[a-z]|chị\s+[a-z]|tình huống)/i.test(validItems[1]) &&
-          !/\b(là gì|đúng hay sai|nhận định)\b/i.test(validItems[1]);
+          /\b(trên|đó|này|anh\s+[a-z]|ông\s+[a-z]|bà\s+[a-z]|chị\s+[a-z]|tình huống)/i.test(validItems[1].text) &&
+          !/\b(là gì|đúng hay sai|nhận định)\b/i.test(validItems[1].text);
 
         if (!(firstHasActor && secondRefersBack)) {
-          return validItems.slice(0, 10).map((it) => {
+          return validItems.slice(0, 15).map((it) => {
+            const txt = it.text;
+            const isSelfEssayOrCase =
+              /\b(hãy\s+phân\s+biệt|phân\s+biệt|so\s+sánh|hãy\s+xác\s+định|xác\s+định\s*:|phân\s+tích\s*:|trình\s+bày|là\s+gì)\b/i.test(txt) ||
+              (/\ba[.)]\s+/i.test(txt) && /\bb[.)]\s+/i.test(txt));
+
             if (
-              sharedTrueFalseCue &&
-              !/đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định|là\s*gì|\?/i.test(it)
+              it.isTrueFalseSection &&
+              !isSelfEssayOrCase &&
+              !/đúng\s*hay\s*sai|đúng\s*\/\s*sai|nhận\s*định|là\s*gì|\?/i.test(txt)
             ) {
-              return `Nhận định: "${it.replace(/^["“”']+|["“”']+$/g, '')}". Nhận định này Đúng hay Sai? Giải thích vì sao.`;
+              const singleLineStmt = txt.replace(/\s*\n+\s*/g, ' ').replace(/^["“”']+|["“”']+$/g, '').trim();
+              return `Nhận định: "${singleLineStmt}". Nhận định này Đúng hay Sai? Giải thích vì sao.`;
             }
-            return it;
+            return txt;
           });
         }
       }
@@ -545,25 +608,25 @@ export class RagService {
       const markedCount = inlineParts.filter((p) => markerStart.test(p)).length;
       if (markedCount >= 2 && !isCaseStudyNarrative(inlineParts[0].replace(markerStart, ''))) {
         const cleaned = inlineParts
-          .map((p) => p.replace(markerStart, '').trim())
+          .map((p) => stripLeadingScore(p.replace(markerStart, '').trim()))
           .filter((p) => p.length >= 10);
         if (cleaned.length >= 2) {
-          return cleaned.slice(0, 10);
+          return cleaned.slice(0, 12);
         }
       }
     }
 
     // 4. Nhiều dòng độc lập không đánh số (mỗi dòng là 1 câu hỏi có dấu ? hoặc 1 câu nhận định độc lập)
-    if (lines.length >= 2 && lines.length <= 8) {
-      const allLinesSubstantial = lines.every((l) => l.length >= 15 && !isCaseStudyNarrative(l));
-      const questionLinesCount = lines.filter((l) => l.endsWith('?') || /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|trình bày|phân tích)\b/i.test(l)).length;
+    const contentLines = rawLines.filter((l) => !isSectionHeaderLine(l) && !isPureScoreLine(l));
+    if (contentLines.length >= 2 && contentLines.length <= 8) {
+      const allLinesSubstantial = contentLines.every((l) => l.length >= 15 && !isCaseStudyNarrative(l));
+      const questionLinesCount = contentLines.filter((l) => l.endsWith('?') || /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|trình bày|phân tích)\b/i.test(l)).length;
       if (allLinesSubstantial && questionLinesCount >= 2) {
-        return lines;
+        return contentLines;
       }
     }
 
     // 5. Trên 1 dòng nhưng có nhiều câu hỏi kết thúc bằng dấu '?' hỏi về các chủ đề KHÁC NHAU
-    // (Nếu câu thứ 2 là "Phân tích cấu trúc...", "Cho ví dụ...", "Giải thích tại sao..." bổ trợ cho câu 1 thì GIỮ NGUYÊN để bộ giải câu ghép xử lý)
     if (raw.includes('?')) {
       const qSegments = raw
         .split(/\?+/)
@@ -577,7 +640,6 @@ export class RagService {
         for (let i = 1; i < qSegments.length; i++) {
           const seg = qSegments[i].replace(/^[.,;:\-–—\s]+/, '').trim();
           if (!seg) continue;
-          // Nếu câu tiếp theo bắt đầu bằng từ khóa phụ thuộc hoặc hỏi tiếp về cùng khái niệm thì gộp vào câu trước
           const prevConcept = RagService.extractCoreTopicKeyword(independentQuestions[independentQuestions.length - 1]);
           const segLower = seg.toLowerCase();
           const sharesSameConcept = prevConcept && segLower.includes(prevConcept);
@@ -905,7 +967,7 @@ export class RagService {
       }
       if (qLower.includes('tâm thần') || qLower.includes('mất nhận thức')) dynamicConditions.push({ articleId: 'BLHS2015_D21' });
       if (qLower.includes('tuổi') || qLower.includes('thành niên')) dynamicConditions.push({ articleId: 'BLHS2015_D12' }, { articleId: 'BLHS2015_D9' });
-      if (qLower.includes('laptop') || qLower.includes('mượn') || qLower.includes('rơi') || qLower.includes('vỡ') || qLower.includes('tai nạn')) {
+      if (qLower.includes('mượn') || qLower.includes('làm rơi') || qLower.includes('rơi vỡ') || (qLower.includes('laptop') && (qLower.includes('rơi') || qLower.includes('vỡ') || qLower.includes('hỏng')))) {
         dynamicConditions.push(
           { articleId: 'BLDS2015_D494' },
           { articleId: 'BLDS2015_D496' },

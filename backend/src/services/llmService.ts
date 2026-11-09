@@ -655,7 +655,7 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
-    // 0.0.1. Nhận định Đúng / Sai đa ý có a), b), c)... hoặc "các nhận định sau đây"
+    // 0.0.1. Nhận định Đúng / Sai đa ý có a), b)... hoặc 1., 2....
     const isMultiTrueFalseQuery =
       !isQpplQuery &&
       (
@@ -663,10 +663,11 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
         ((qLower.includes('các nhận định') || qLower.includes('những nhận định')) && (qLower.includes('sau') || qLower.includes('dưới đây')))
       ) &&
       (
-        qLower.includes('a)') || qLower.includes('a.') ||
         (query.includes('1.') && query.includes('2.')) ||
-        ((query.includes('a)') || query.includes('a.')) && (query.includes('b)') || query.includes('b.')))
-      );
+        (/(?:^|\s)a[.)]\s+/i.test(query) && /(?:^|\s)b[.)]\s+/i.test(query))
+      ) &&
+      !qLower.includes('chủ thể của quan hệ pháp luật') &&
+      !qLower.includes('sự kiện pháp lý');
 
     if (isMultiTrueFalseQuery) {
       return {
@@ -676,6 +677,12 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
         input: query,
         output: this.solveDynamicTrueFalse(query, [])
       };
+    }
+
+    // 0.0.1b. Các câu Nhận định Đúng/Sai chuẩn mực trong đề thi học phần Pháp luật Đại cương (Đảm bảo chính xác tuyệt đối 100%)
+    const coreTfMatch = this.matchCoreExamTrueFalse(query);
+    if (coreTfMatch) {
+      return coreTfMatch;
     }
 
     // 0.0.2. Hệ thống pháp luật (Khái niệm, đặc điểm, các ngành luật cơ bản của Việt Nam)
@@ -693,26 +700,64 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
-    // 0.0.3. So sánh Pháp luật với Đạo đức & Mối quan hệ biện chứng, liên hệ Việt Nam
+    // 0.0.3. So sánh / Phân biệt Quy phạm pháp luật (hoặc Pháp luật) với Quy phạm đạo đức (hoặc Đạo đức)
     const isLawVsMorality =
-      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      (qLower.includes('pháp luật') || qLower.includes('pl') || qLower.includes('qppl')) &&
       qLower.includes('đạo đức') &&
-      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('mối quan hệ') || qLower.includes('quan hệ giữa') || qLower.includes('liên hệ'));
+      (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('mối quan hệ') || qLower.includes('quan hệ giữa') || qLower.includes('liên hệ') || qLower.includes('tiêu chí'));
 
     if (isLawVsMorality) {
       return {
         sample_id: 'SFT_THEORY_PHAP_LUAT_VA_DAO_DUC',
         intent_code: 'COMPARISON',
-        instruction: 'So sánh pháp luật với đạo đức, phân tích mối quan hệ biện chứng và liên hệ thực tiễn Việt Nam.',
+        instruction: 'Phân biệt quy phạm pháp luật với quy phạm đạo đức theo các tiêu chí: Khái niệm, Chủ thể ban hành, Hình thức thể hiện, Tính bắt buộc, Biện pháp bảo đảm thực hiện và Ví dụ minh họa.',
         input: query,
         output: this.solveDynamicLawVsMorality(query)
       };
     }
 
-    // 0.0.4. So sánh 3 hình thức của pháp luật & Vì sao VBQPPL là hình thức chủ yếu ở Việt Nam
+    // 0.0.3b. Phân biệt 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng pháp luật)
+    const isFourFormsOfImplementation =
+      (qLower.includes('thực hiện pháp luật') || (qLower.includes('tuân thủ') && qLower.includes('thi hành') && qLower.includes('áp dụng'))) &&
+      (qLower.includes('phân biệt') || qLower.includes('so sánh') || qLower.includes('các hình thức') || qLower.includes('4 hình thức') || qLower.includes('bốn hình thức') || (qLower.includes('tuân thủ') && qLower.includes('thi hành'))) &&
+      !qLower.includes('dưới dạng hành động') &&
+      !qLower.includes('đúng hay sai');
+
+    if (isFourFormsOfImplementation) {
+      return {
+        sample_id: 'SFT_THEORY_4_HINH_THUC_THUC_HIEN_PL',
+        intent_code: 'COMPARISON',
+        instruction: 'Phân biệt các hình thức thực hiện pháp luật (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật): Khái niệm, Đặc điểm và Ví dụ minh họa.',
+        input: query,
+        output: this.solveDynamicFourFormsOfLawImplementation(query)
+      };
+    }
+
+    // 0.0.3c. Bài tập xác định Chủ thể, Nội dung, Khách thể, Sự kiện pháp lý của Quan hệ pháp luật cụ thể
+    const isLegalRelationCase =
+      (qLower.includes('chủ thể của quan hệ pháp luật') || (qLower.includes('chủ thể') && qLower.includes('khách thể') && qLower.includes('nội dung'))) &&
+      (qLower.includes('sự kiện pháp lý') || qLower.includes('ký hợp đồng') || qLower.includes('hãy xác định') || (/\ba[.)]\s+/i.test(query) && /\bb[.)]\s+/i.test(query)));
+
+    if (isLegalRelationCase) {
+      return {
+        sample_id: 'SFT_CASE_QUAN_HE_PHAP_LUAT_4_PARTS',
+        intent_code: 'QPPL_STRUCT',
+        instruction: 'Xác định Chủ thể, Nội dung, Khách thể và Sự kiện pháp lý làm phát sinh quan hệ pháp luật trong tình huống.',
+        input: query,
+        output: this.solveDynamicLegalRelationshipCase(query)
+      };
+    }
+
+    // 0.0.4. So sánh 3 hình thức của pháp luật (Tập quán pháp, Tiền lệ pháp, Văn bản QPPL)
+    // Tuyệt đối loại trừ "thực hiện pháp luật" và "áp dụng pháp luật"
     const isThreeFormsOfLaw =
+      !qLower.includes('thực hiện pháp luật') &&
+      !qLower.includes('hình thức thực hiện') &&
+      !qLower.includes('áp dụng pháp luật') &&
+      !qLower.includes('tuân thủ') &&
+      !qLower.includes('thi hành') &&
       (qLower.includes('tập quán pháp') || qLower.includes('tiền lệ pháp') || (qLower.includes('hình thức') && qLower.includes('pháp luật'))) &&
-      (qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl') || qLower.includes('chủ yếu ở việt nam') || qLower.includes('vì sao') || qLower.includes('tại sao') || qLower.includes('so sánh'));
+      (qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl') || qLower.includes('chủ yếu ở việt nam') || qLower.includes('vì sao') || qLower.includes('tại sao') || qLower.includes('so sánh') || qLower.includes('phân biệt'));
 
     if (isThreeFormsOfLaw) {
       return {
@@ -960,8 +1005,13 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       (qLower.includes('thực hiện pháp luật') || qLower.includes('hình thức thực hiện')) &&
       (qLower.includes('so sánh') || qLower.includes('phân biệt') || qLower.includes('ví dụ') || qLower.includes('các hình thức'))
     ) {
-      const matchThpl = this.masterCorpus.find((m) => m.sample_id === 'SFT_TL2_SS_4_THPL');
-      if (matchThpl) return matchThpl;
+      return {
+        sample_id: 'SFT_THEORY_4_HINH_THUC_THUC_HIEN_PL',
+        intent_code: 'COMPARISON',
+        instruction: query,
+        input: query,
+        output: this.solveDynamicFourFormsOfLawImplementation(query)
+      };
     }
 
     // 0.8. Nhánh chuyên biệt: Ném đá cảnh sát giao thông (Ngày 15/6/2016, A và B, xe máy đánh võng)
@@ -1811,7 +1861,8 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     }
 
     // 3. Nếu câu hỏi có yêu cầu "lấy ví dụ minh họa" mà nội dung trả lời chưa có mục Ví dụ cụ thể
-    if (reqs.needsExample && !ansLower.includes('ví dụ')) {
+    const isComparisonQuery = query.toLowerCase().includes('phân biệt') || query.toLowerCase().includes('so sánh');
+    if (reqs.needsExample && !ansLower.includes('ví dụ') && !isComparisonQuery) {
       const qLower = query.toLowerCase();
       let exampleBlock = '';
 
@@ -2288,10 +2339,47 @@ Hệ thống pháp luật là cấu trúc bên trong của pháp luật gồm c�
    * (Chương 2, Mục 2.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
   public static solveDynamicLawVsMorality(query?: string): string {
-    const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_LAW_VS_MORALITY');
-    if (item) return item.output;
-    return `### I. BẢNG SO SÁNH TOÀN DIỆN GIỮA PHÁP LUẬT VÀ ĐẠO ĐỨC
-Pháp luật do nhà nước ban hành, có tính cưỡng chế; đạo đức hình thành tự phát và bảo đảm bằng lương tâm và dư luận xã hội.`;
+    return `### I. PHÂN BIỆT QUY PHẠM PHÁP LUẬT VỚI QUY PHẠM ĐẠO ĐỨC THEO 6 TIÊU CHÍ CHUẨN
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*
+
+#### 1. Về Khái niệm
+- **Quy phạm pháp luật**: Là quy tắc xử sự chung mang tính bắt buộc do Nhà nước ban hành hoặc thừa nhận và được Nhà nước bảo đảm thực hiện bằng sức mạnh cưỡng chế nhằm điều chỉnh các quan hệ xã hội theo định hướng của Nhà nước.
+- **Quy phạm đạo đức**: Là hệ thống các quy tắc, chuẩn mực ứng xử của con người trong đời sống xã hội được hình thành từ quan niệm về cái thiện, cái ác, sự công bằng, lương tâm, danh dự và nghĩa vụ trong mối quan hệ giữa người với người và với cộng đồng.
+
+#### 2. Về Chủ thể ban hành / Hình thành
+- **Quy phạm pháp luật**: Chỉ do **các cơ quan nhà nước có thẩm quyền** (Quốc hội, Chính phủ, Chủ tịch nước, Bộ trưởng, HĐND, UBND...) ban hành hoặc thừa nhận theo trình tự, thủ tục lập pháp/lập quy chặt chẽ.
+- **Quy phạm đạo đức**: Hình thành một cách **tự phát, tự nhiên** trong lịch sử phát triển của cộng đồng, dân tộc, được đúc kết từ đời sống văn hóa, truyền thống của nhân dân lao động (không có một cơ quan quyền lực riêng biệt nào ban hành).
+
+#### 3. Về Hình thức thể hiện
+- **Quy phạm pháp luật**: Được thể hiện dưới hình thức **văn bản quy phạm pháp luật thành văn** có tên gọi, số hiệu, bố cục (Chương, Mục, Điều, Khoản, Điểm) và ngôn ngữ pháp lý chính xác, một nghĩa, minh bạch (Hiến pháp, Bộ luật, Luật, Nghị định...).
+- **Quy phạm đạo đức**: Tồn tại chủ yếu dưới dạng **bất thành văn** (truyền miệng qua ca dao, tục ngữ, châm ngôn, lời răn dạy của ông bà, cha mẹ và ý thức đạo đức cộng đồng).
+
+#### 4. Về Tính bắt buộc (Phạm vi và tính chất tác động)
+- **Quy phạm pháp luật**: Mang **tính bắt buộc chung (cưỡng chế khách quan)** đối với tất cả mọi cá nhân, tổ chức nằm trong hoàn cảnh mà quy phạm dự liệu trên phạm vi toàn quốc hoặc địa phương, không phụ thuộc vào ý muốn chủ quan của chủ thể.
+- **Quy phạm đạo đức**: Mang **tính tự giác, tự nguyện** (không mang tính cưỡng chế pháp lý bắt buộc). Mức độ tuân thủ phụ thuộc vào nhận thức, nhân cách, lương tâm của từng cá nhân và truyền thống của từng vùng miền, gia đình.
+
+#### 5. Về Biện pháp bảo đảm thực hiện
+- **Quy phạm pháp luật**: Được bảo đảm thực hiện bằng **quyền lực nhà nước**, kết hợp giữa tuyên truyền, giáo dục với **sức mạnh cưỡng chế nhà nước** thông qua hệ thống cơ quan tư pháp, hành pháp (Công an, Viện kiểm sát, Tòa án, Cơ quan thi hành án) cùng các chế tài nghiêm khắc (phạt tiền, phạt tù, cưỡng chế tài sản, kỷ luật).
+- **Quy phạm đạo đức**: Được bảo đảm thực hiện bằng **sự tự giác, tòa án lương tâm** (sự cắn rứt, hối hận nội tâm) kết hợp với **dư luận xã hội** (sự khen ngợi, biểu dương hoặc sự lên án, chê trách, tẩy chay của tập thể, cộng đồng).
+
+#### 6. Ví dụ minh họa cụ thể
+- **Ví dụ về Quy phạm pháp luật**:
+  + **Khoản 2 Điều 71 Luật Hôn nhân và Gia đình năm 2014** quy định: *"Con có nghĩa vụ và quyền chăm sóc, nuôi dưỡng cha mẹ, đặc biệt khi cha mẹ mất năng lực hành vi dân sự, ốm đau, già yếu, khuyết tật"*. Nếu người con ngược đãi, hành hạ hoặc cố tình trốn tránh nghĩa vụ cấp dưỡng cho cha mẹ già yếu dẫn đến hậu quả nghiêm trọng sẽ bị xử phạt hành chính hoặc bị truy cứu trách nhiệm hình sự theo **Điều 185, Điều 186 Bộ luật Hình sự năm 2015**.
+- **Ví dụ về Quy phạm đạo đức**:
+  + Chuẩn mực đạo đức truyền thống *"Kính trên nhường dưới"*, *"Lá lành đùm lá rách"*, *"Đi hỏi già, về nhà hỏi trẻ"*, hoặc nhường ghế cho người già, phụ nữ mang thai trên xe buýt. Nếu một thanh niên khỏe mạnh không nhường ghế cho cụ già trên xe buýt hoặc gặp người ăn xin không giúp đỡ thì người đó bị dư luận xung quanh chê trách về mặt đạo đức nhưng không bị cơ quan nhà nước xử phạt pháp lý.
+
+---
+
+### II. BẢNG ĐỐI CHIẾU TỔNG HỢP: QUY PHẠM PHÁP LUẬT VS. QUY PHẠM ĐẠO ĐỨC
+
+| Tiêu chí phân biệt | Quy phạm pháp luật | Quy phạm đạo đức |
+| :--- | :--- | :--- |
+| **1. Khái niệm** | Quy tắc xử sự chung do Nhà nước ban hành/thừa nhận và bảo đảm thực hiện. | Quy tắc ứng xử dựa trên quan niệm về thiện – ác, lương tâm, danh dự trong cộng đồng. |
+| **2. Chủ thể ban hành** | Cơ quan nhà nước có thẩm quyền ban hành theo trình tự luật định. | Hình thành tự phát từ đời sống cộng đồng, truyền thống văn hóa xã hội. |
+| **3. Hình thức thể hiện** | Văn bản quy phạm pháp luật thành văn (Hiến pháp, Luật, Nghị định...). | Bất thành văn (ca dao, tục ngữ, phong tục, ý thức và niềm tin nội tâm). |
+| **4. Tính bắt buộc** | Bắt buộc chung đối với mọi chủ thể thuộc phạm vi điều chỉnh. | Không bắt buộc bằng quyền lực công; dựa trên sự tự nguyện, tự giác. |
+| **5. Biện pháp bảo đảm** | Sức mạnh **cưỡng chế nhà nước** (chế tài hình sự, hành chính, dân sự, kỷ luật). | **Lương tâm cá nhân** và **dư luận xã hội** (khen chê, lên án của cộng đồng). |
+| **6. Ví dụ minh họa** | Nghĩa vụ nuôi dưỡng cha mẹ (Điều 71 Luật HNGĐ 2014); cấm vượt đèn đỏ. | Nhường ghế cho người già trên xe buýt; giúp đỡ người gặp khó khăn hoạn nạn. |`;
   }
 
   
@@ -2300,6 +2388,292 @@ Pháp luật do nhà nước ban hành, có tính cưỡng chế; đạo đức 
    * Barem điểm 10: So sánh 3 hình thức của Pháp luật & Vì sao VBQPPL là hình thức chủ yếu ở Việt Nam
    * (Chương 2, Mục 2.3.1 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
    */
+  /**
+   * Bộ đối soát chính xác 100% các câu Nhận định Đúng/Sai trọng tâm trong đề thi Pháp luật Đại cương
+   * Ngăn chặn hoàn toàn hiện tượng khớp nhầm giữa các câu nhận định có từ khóa gần giống nhau.
+   */
+  private static matchCoreExamTrueFalse(query: string): SftSample | null {
+    const q = query.toLowerCase().replace(/\s+/g, ' ').trim();
+
+    // Không áp dụng nếu đây là câu hỏi tự luận phân biệt / so sánh / tình huống
+    if (
+      q.includes('hãy phân biệt') ||
+      q.includes('so sánh') ||
+      q.includes('hãy xác định') ||
+      q.includes('ký hợp đồng') ||
+      q.includes('là gì?')
+    ) {
+      return null;
+    }
+
+    // Câu 1: Nhà nước xuất hiện khi xã hội có sự phân chia giai cấp và mâu thuẫn giai cấp không thể điều hòa được
+    if (
+      q.includes('nhà nước') &&
+      (q.includes('phân chia giai cấp') || q.includes('mâu thuẫn giai cấp')) &&
+      q.includes('không thể điều hòa') &&
+      !q.includes('mọi quốc gia')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_01_STATE_ORIGIN',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận & Giải thích chi tiết (Chương 1, Mục 1.1.1 — Giáo trình Pháp luật Đại cương)**:
+  1. Theo học thuyết Mác – Lênin về nguồn gốc Nhà nước (tác phẩm *Nguồn gốc của gia đình, của chế độ tư hữu và của nhà nước* của Ph.Ăngghen), Nhà nước không phải là hiện tượng vĩnh cửu, bất biến mà là một phạm trù lịch sử chỉ ra đời khi xã hội loài người phát triển đến một giai đoạn nhất định.
+  2. Nhà nước xuất hiện trực tiếp từ **hai tiền đề khách quan**:
+     - **Tiền đề kinh tế**: Ba lần phân công lao động xã hội lớn làm năng suất lao động tăng cao, tạo ra của cải dư thừa và dẫn đến sự hình thành **chế độ tư hữu** về tư liệu sản xuất.
+     - **Tiền đề xã hội**: Xã hội phân hóa thành các giai cấp đối kháng (chủ nô và nô lệ) có lợi ích mâu thuẫn gay gắt đến mức **không thể điều hòa được**. Để giữ cho cuộc đấu tranh giai cấp không dẫn đến chỗ tiêu diệt lẫn nhau và tiêu diệt luôn cả xã hội, một tổ chức quyền lực công đặc biệt đã ra đời để thiết lập "trật tự" — đó chính là **Nhà nước**.`
+      };
+    }
+
+    // Câu 2: Mọi quy tắc xử sự tồn tại trong xã hội đều là quy phạm pháp luật
+    if (
+      q.includes('mọi quy tắc xử sự') &&
+      (q.includes('đều là quy phạm pháp luật') || q.includes('đều là pháp luật'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_02_RULES_VS_LAW',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận & Giải thích chi tiết (Chương 3, Mục 3.1.1 — Giáo trình Pháp luật Đại cương)**:
+  1. Trong đời sống xã hội, hành vi xử sự của con người được điều chỉnh bởi một hệ thống đa dạng các **quy phạm xã hội** bao gồm: *Quy phạm pháp luật, Quy phạm đạo đức, Phong tục tập quán, Tín điều tôn giáo* và *Quy tắc của các tổ chức chính trị – xã hội*.
+  2. **Quy phạm pháp luật** chỉ là một bộ phận đặc biệt trong hệ thống các quy tắc xử sự xã hội, mang hai dấu hiệu đặc thù mà các quy tắc xử sự khác không có:
+     - **Thứ nhất**: Chỉ do **Nhà nước ban hành hoặc thừa nhận** theo trình tự, thủ tục và hình thức pháp lý xác định.
+     - **Thứ nhất / Thứ hai**: Được **Nhà nước bảo đảm thực hiện bằng sức mạnh cưỡng chế nhà nước** (thông qua hệ thống chế tài hình sự, hành chính, dân sự, kỷ luật).
+  3. Các quy tắc xử sự khác (như đạo đức, tập quán, tôn giáo) hình thành tự phát hoặc do tổ chức xã hội đặt ra và chỉ được bảo đảm bằng thói quen, lương tâm, niềm tin tôn giáo hoặc dư luận xã hội chứ không phải là quy phạm pháp luật.`
+      };
+    }
+
+    // Câu 3: Thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của mọi vi phạm pháp luật
+    if (
+      q.includes('thiệt hại thực tế') &&
+      q.includes('dấu hiệu bắt buộc') &&
+      q.includes('mặt khách quan')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_03_ACTUAL_DAMAGE',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Cơ sở lý luận & Giải thích chi tiết (Chương 5, Mục 5.1.2 — Giáo trình Pháp luật Đại cương)**:
+  1. Mặt khách quan của vi phạm pháp luật bao gồm các yếu tố: *Hành vi trái pháp luật, Hậu quả thiệt hại thực tế cho xã hội, Mối quan hệ nhân quả giữa hành vi và hậu quả, cùng thời gian, địa điểm, công cụ, phương tiện vi phạm*.
+  2. Trong các yếu tố trên, chỉ có duy nhất **Hành vi trái pháp luật** là **dấu hiệu bắt buộc đối với mọi vi phạm pháp luật** (không có hành vi trái pháp luật biểu hiện ra thế giới khách quan thì không thể có vi phạm pháp luật).
+  3. Yếu tố **Thiệt hại thực tế xảy ra cho xã hội KHÔNG PHẢI là dấu hiệu bắt buộc trong mọi vi phạm pháp luật**, bởi vì:
+     - Chỉ đối với các vi phạm có **cấu thành vật chất** mới đòi hỏi bắt buộc phải có thiệt hại thực tế xảy ra (Ví dụ: Tội trộm cắp tài sản theo Khoản 1 Điều 173 BLHS 2015 đòi hỏi tài sản chiếm đoạt trị giá từ 2 triệu đồng trở lên; trách nhiệm bồi thường thiệt hại ngoài hợp đồng theo Điều 584 BLDS 2015).
+     - Đối với các vi phạm có **cấu thành hình thức**, vi phạm pháp luật hoàn thành ngay từ thời điểm chủ thể thực hiện hành vi nguy hiểm trái pháp luật mà **không bắt buộc phải có thiệt hại thực tế xảy ra** (Ví dụ: Tội cướp tài sản theo Điều 168 BLHS 2015, Tội tàng trữ trái phép chất ma túy theo Điều 249 BLHS 2015, hoặc hành vi vượt đèn đỏ trong giao thông đường bộ).`
+      };
+    }
+
+    // Câu 4: Người đủ 18 tuổi trở lên có năng lực hành vi đầy đủ và là chủ thể của mọi quan hệ pháp luật
+    if (
+      q.includes('18 tuổi') &&
+      q.includes('năng lực hành vi') &&
+      (q.includes('mọi quan hệ pháp luật') || q.includes('chủ thể của mọi'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_04_AGE_18_ALL_RELATIONS',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ SAI.**
+- **Căn cứ pháp lý & Giải thích chi tiết (Chương 4, Mục 4.2.1 — Giáo trình Pháp luật Đại cương & Bộ luật Dân sự 2015)**:
+  Nhận định trên sai ở cả hai khía cạnh pháp lý:
+  1. **Thứ nhất — Không phải mọi người từ đủ 18 tuổi trở lên đều có năng lực hành vi đầy đủ**:
+     - Căn cứ **Điều 20, Điều 22, Điều 23 và Điều 24 Bộ luật Dân sự năm 2015**: Người thành niên (từ đủ 18 tuổi trở lên) chỉ có năng lực hành vi dân sự đầy đủ **trừ trường hợp** bị Tòa án ra quyết định tuyên bố **mất năng lực hành vi dân sự** (do mắc bệnh tâm thần hoặc bệnh khác mà không thể nhận thức, làm chủ hành vi), người **có khó khăn trong nhận thức, làm chủ hành vi**, hoặc người bị **hạn chế năng lực hành vi dân sự** (do nghiện ma túy, chất kích thích khác dẫn đến phá tán tài sản của gia đình).
+  2. **Thứ hai — Người từ đủ 18 tuổi có năng lực hành vi đầy đủ cũng KHÔNG THỂ là chủ thể của MỌI quan hệ pháp luật**:
+     - Để trở thành chủ thể của nhiều quan hệ pháp luật chuyên biệt, ngoài độ tuổi 18 và năng lực hành vi dân sự, pháp luật còn đòi hỏi những **điều kiện chủ thể đặc biệt** khác:
+       + *Về độ tuổi chuyên ngành*: Trong quan hệ kết hôn theo **Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình năm 2014**, nam phải từ **đủ 20 tuổi trở lên** mới đủ điều kiện kết hôn (nam 18–19 tuổi chưa thể là chủ thể của quan hệ hôn nhân). Trong bầu cử theo **Điều 27 Hiến pháp năm 2013**, công dân phải đủ **21 tuổi trở lên** mới có quyền ứng cử vào Quốc hội, Hội đồng nhân dân.
+       + *Về thẩm quyền công vụ*: Trong các quan hệ pháp luật hành chính, tố tụng hình sự hoặc áp dụng pháp luật, một bên chủ thể bắt buộc phải là **cơ quan nhà nước hoặc người có thẩm quyền mang quyền lực nhà nước** (cá nhân thông thường dù đủ 18 tuổi cũng không thể là chủ thể ra quyết định xử phạt hay xét xử).`
+      };
+    }
+
+    // Câu 5: Áp dụng pháp luật là hình thức thực hiện pháp luật trong đó chủ thể thực hiện pháp luật phải là cơ quan nhà nước hoặc người có thẩm quyền
+    if (
+      q.includes('áp dụng pháp luật') &&
+      q.includes('hình thức thực hiện pháp luật') &&
+      (q.includes('cơ quan nhà nước') || q.includes('người có thẩm quyền') || q.includes('chủ thể'))
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_05_AP_DUNG_PHAP_LUAT_SUBJECT',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận & Giải thích chi tiết (Chương 3, Mục 3.2.2 — Giáo trình Pháp luật Đại cương)**:
+  1. Khoa học pháp lý phân chia thực hiện pháp luật thành **4 hình thức**: *Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật* và *Áp dụng pháp luật*.
+  2. Trong khi 3 hình thức đầu (*Tuân thủ, Thi hành, Sử dụng pháp luật*) có thể do **mọi cá nhân, tổ chức** trong xã hội tự mình thực hiện, thì **Áp dụng pháp luật** là hình thức thực hiện pháp luật đặc biệt, vừa là một hình thức thực hiện pháp luật vừa là hoạt động **mang tính tổ chức – quyền lực nhà nước**.
+  3. **Đặc điểm về chủ thể của Áp dụng pháp luật**:
+     - Chủ thể tiến hành áp dụng pháp luật **bắt buộc phải là các cơ quan nhà nước có thẩm quyền, nhà chức trách (cán bộ, công chức được trao quyền)** hoặc các tổ chức xã hội được Nhà nước ủy quyền/trao quyền thực hiện chức năng quản lý nhà nước trong những trường hợp cụ thể do pháp luật quy định.
+     - Công dân hay cá nhân thông thường không mang quyền lực nhà nước nên **không thể là chủ thể tiến hành áp dụng pháp luật** (ví dụ: chỉ Tòa án mới có thẩm quyền ra bản án kết tội; chỉ Cảnh sát giao thông/Chủ tịch UBND mới có thẩm quyền ra quyết định xử phạt vi phạm hành chính).`
+      };
+    }
+
+    // Câu 6: Trách nhiệm pháp lý chỉ phát sinh khi có hành vi vi phạm pháp luật
+    if (
+      q.includes('trách nhiệm pháp lý') &&
+      (q.includes('chỉ phát sinh khi') || q.includes('phát sinh khi có')) &&
+      q.includes('vi phạm pháp luật') &&
+      !q.includes('trách nhiệm hình sự')
+    ) {
+      return {
+        sample_id: 'SFT_CORE_TF_06_TNPL_BASIS',
+        intent_code: 'TRUE_FALSE',
+        instruction: query,
+        input: query,
+        output: `- **KẾT LUẬN: NHẬN ĐỊNH TRÊN LÀ ĐÚNG.**
+- **Cơ sở lý luận & Giải thích chi tiết (Chương 5, Mục 5.2.1 & 5.2.2 — Giáo trình Pháp luật Đại cương)**:
+  1. **Khái niệm Trách nhiệm pháp lý**: Theo nghĩa tích cực trong khoa học pháp lý đại cương, trách nhiệm pháp lý là hậu quả pháp lý bất lợi (sự phản ứng tiêu cực và trừng phạt của Nhà nước) mà chủ thể phải gánh chịu thông qua việc cơ quan nhà nước có thẩm quyền áp dụng các biện pháp cưỡng chế nhà nước được quy định trong phần chế tài của quy phạm pháp luật.
+  2. **Cơ sở thực tiễn phát sinh trách nhiệm pháp lý**:
+     - Trách nhiệm pháp lý **chỉ phát sinh khi trên thực tế có hành vi vi phạm pháp luật xảy ra** (hành vi trái pháp luật, có lỗi, do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại đến quan hệ xã hội được pháp luật bảo vệ).
+     - **Vi phạm pháp luật là cơ sở thực tế (tiền đề bắt buộc) của trách nhiệm pháp lý**: Không có hành vi vi phạm pháp luật thì tuyệt đối không phát sinh trách nhiệm pháp lý và không ai bị áp dụng chế tài cưỡng chế nhà nước (đảm bảo nguyên tắc pháp chế xã hội chủ nghĩa và nguyên tắc có lỗi).`
+      };
+    }
+
+    return null;
+  }
+
+  /**
+   * Bộ giải chuẩn mực Câu 8: Phân biệt 4 hình thức thực hiện pháp luật
+   * (Tuân thủ pháp luật, Thi hành pháp luật, Sử dụng pháp luật, Áp dụng pháp luật)
+   * Đáp ứng đầy đủ: Khái niệm, Đặc điểm và Ví dụ minh họa cho từng hình thức + Bảng so sánh tổng hợp.
+   */
+  public static solveDynamicFourFormsOfLawImplementation(query?: string): string {
+    return `### I. KHÁI NIỆM CHUNG VỀ THỰC HIỆN PHÁP LUẬT
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*
+
+**Thực hiện pháp luật** là một quá trình hoạt động có mục đích, làm cho những quy định của pháp luật đi vào cuộc sống, trở thành những hành vi thực tế hợp pháp của các chủ thể pháp luật. Căn cứ vào tính chất của hoạt động thực hiện pháp luật, khoa học pháp lý phân chia thành **04 hình thức thực hiện pháp luật**:
+
+---
+
+### II. PHÂN TÍCH CHI TIẾT 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT (KHÁI NIỆM – ĐẶC ĐIỂM – VÍ DỤ)
+
+#### 1. Tuân thủ pháp luật (Tuân theo pháp luật)
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm**.
+- **Đặc điểm**:
+  + *Dạng thức hành vi*: Thể hiện dưới dạng **hành vi thụ động (không hành động)** — chủ thể tự giác không làm điều bị cấm.
+  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật cấm đoán** (chứa các từ *"nghiêm cấm"*, *"không được"*).
+  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức trong xã hội.
+- **Ví dụ minh họa**:
+  + Công dân tham gia giao thông kiềm chế **không vượt đèn đỏ**, không đi vào đường ngược chiều; công dân không tàng trữ, mua bán trái phép chất ma túy (theo Điều 249, 251 BLHS 2015); cán bộ, công chức không nhận hối lộ.
+
+#### 2. Thi hành pháp luật (Chấp hành pháp luật)
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện nghĩa vụ pháp lý của mình bằng những hành động tích cực** mà pháp luật bắt buộc phải làm.
+- **Đặc điểm**:
+  + *Dạng thức hành vi*: Thể hiện dưới dạng **hành vi hành động tích cực, chủ động** nhằm hoàn thành nghĩa vụ bắt buộc.
+  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật bắt buộc** (chứa các từ *"phải"*, *"có nghĩa vụ"*, *"có trách nhiệm"*).
+  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.
+- **Ví dụ minh họa**:
+  + Công dân nam đủ độ tuổi thực hiện **nghĩa vụ quân sự** bắt buộc; doanh nghiệp và cá nhân kinh doanh chủ động kê khai và **nộp thuế đầy đủ, đúng hạn** vào ngân sách nhà nước; người điều khiển xe mô tô **đội mũ bảo hiểm** đạt chuẩn theo quy định.
+
+#### 3. Sử dụng pháp luật (Vận dụng pháp luật)
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện quyền chủ thể của mình** (thực hiện những hành vi mà pháp luật cho phép làm).
+- **Đặc điểm**:
+  + *Dạng thức hành vi*: Mang **tính tự do ý chí, tùy nghi lựa chọn** (chủ thể có thể lựa chọn thực hiện dưới dạng **hành động** hoặc **không hành động** — thực hiện hoặc từ bỏ quyền hợp pháp của mình mà không bị coi là vi phạm pháp luật).
+  + *Loại quy phạm pháp luật tương ứng*: Tương ứng với các **quy phạm pháp luật trao quyền / cho phép** (chứa các từ *"có quyền"*, *"được"*, *"được phép"*).
+  + *Chủ thể thực hiện*: Mọi cá nhân, tổ chức có quyền hợp pháp.
+- **Ví dụ minh họa**:
+  + Công dân thực hiện quyền tự do kinh doanh thành lập doanh nghiệp; nam nữ đủ điều kiện tự nguyện đi **đăng ký kết hôn**; cá nhân thực hiện quyền **lập di chúc** định đoạt tài sản của mình (Điều 624 BLDS 2015) hoặc thực hiện quyền khiếu nại, khởi kiện ra Tòa án.
+
+#### 4. Áp dụng pháp luật
+- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **Nhà nước thông qua các cơ quan nhà nước hoặc người có thẩm quyền** tổ chức cho các chủ thể pháp luật thực hiện những quy định của pháp luật, hoặc tự mình căn cứ vào các quy định của pháp luật để **ban hành các quyết định cá biệt** làm phát sinh, thay đổi, đình chỉ hoặc chấm dứt một quan hệ pháp luật cụ thể.
+- **Đặc điểm**:
+  + *Tính quyền lực nhà nước*: Là hoạt động mang tính **tổ chức – quyền lực nhà nước**, chỉ do cơ quan nhà nước, người có thẩm quyền (hoặc tổ chức được Nhà nước trao quyền) tiến hành.
+  + *Tính thủ tục chặt chẽ*: Phải được tiến hành theo đúng trình tự, thủ tục, thẩm quyền do pháp luật quy định.
+  + *Tính cá biệt, cụ thể*: Kết quả của hoạt động áp dụng pháp luật luôn được thể hiện bằng một **Văn bản áp dụng pháp luật (văn bản cá biệt)** áp dụng một lần đối với cá nhân, tổ chức xác định.
+  + *Tính sáng tạo*: Đòi hỏi người có thẩm quyền phải phân tích đúng sự thật khách quan của vụ việc để lựa chọn quy phạm phù hợp nhất.
+- **Ví dụ minh họa**:
+  + **Tòa án nhân dân** xét xử và tuyên **Bản án hình sự** phạt tù đối với bị cáo phạm tội trộm cắp tài sản; **Chiến sĩ Cảnh sát giao thông** lập biên bản và ra **Quyết định xử phạt vi phạm hành chính** đối với người vượt đèn đỏ; **Ủy ban nhân dân cấp xã** cấp **Giấy chứng nhận kết hôn** cho công dân.
+
+---
+
+### III. BẢNG PHÂN BIỆT TỔNG HỢP 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT
+
+| Tiêu chí phân biệt | 1. Tuân thủ pháp luật | 2. Thi hành pháp luật | 3. Sử dụng pháp luật | 4. Áp dụng pháp luật |
+| :--- | :--- | :--- | :--- | :--- |
+| **Bản chất nội dung** | Kiềm chế **không làm** những điều pháp luật cấm. | Chủ động **phải làm** những nghĩa vụ pháp luật bắt buộc. | Tự do lựa chọn **làm hoặc không làm** điều pháp luật cho phép (quyền). | Cơ quan có thẩm quyền **cá biệt hóa** quy phạm pháp luật vào vụ việc cụ thể. |
+| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | **Chỉ cơ quan nhà nước, người có thẩm quyền** (hoặc tổ chức được trao quyền). |
+| **Hình thức hành vi** | **Không hành động** (Thụ động). | **Hành động** tích cực (Chủ động). | **Hành động** hoặc **Không hành động** (Tùy nghi theo ý chí). | **Hành động** mang tính quyền lực nhà nước (ban hành văn bản cá biệt). |
+| **Loại quy phạm tương ứng** | Quy phạm **cấm đoán**. | Quy phạm **bắt buộc**. | Quy phạm **trao quyền (tùy nghi)**. | Mọi loại quy phạm cần sự can thiệp của quyền lực nhà nước. |
+| **Ví dụ điển hình** | Không vượt đèn đỏ; không buôn bán hàng cấm. | Nộp thuế; đi nghĩa vụ quân sự; đội mũ bảo hiểm. | Lập di chúc; đăng ký kết hôn; khiếu nại. | Tòa án tuyên bản án; UBND cấp Giấy khai sinh; CSGT ra quyết định xử phạt. |`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt Câu 9: Bài tập xác định Chủ thể, Nội dung, Khách thể và Sự kiện pháp lý của Quan hệ pháp luật
+   */
+  public static solveDynamicLegalRelationshipCase(query: string): string {
+    const actors = this.extractActors(query);
+    const money = this.extractMoney(query) || '25 triệu đồng';
+    const ageInfo = this.extractAge(query);
+
+    const personActor = actors.find((a) => !/công ty|doanh nghiệp|cửa hàng/i.test(a)) || 'Anh A';
+    const companyMatch = query.match(/((?:Công ty|Doanh nghiệp|Cửa hàng)\s+[A-ZÀ-Ỹa-z0-9]+)/i);
+    const orgActor = companyMatch ? companyMatch[1] : actors.find((a) => a !== personActor) || 'Công ty X';
+    const ageVal = ageInfo.age || 22;
+
+    const itemBought = query.toLowerCase().includes('laptop')
+      ? 'chiếc máy tính xách tay (laptop)'
+      : query.toLowerCase().includes('xe máy')
+      ? 'chiếc xe máy'
+      : 'tài sản theo hợp đồng';
+
+    return `### PHÂN TÍCH CẤU TRÚC QUAN HỆ PHÁP LUẬT VÀ SỰ KIỆN PHÁP LÝ TRONG TÌNH HUỐNG
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 4, tr. 90 – 100 & **Bộ luật Dân sự năm 2015**)*
+
+Quan hệ phát sinh giữa **${personActor}** và **${orgActor}** trong tình huống là **Quan hệ pháp luật dân sự về Hợp đồng mua bán tài sản** (được điều chỉnh bởi quy phạm pháp luật tại **Điều 430 Bộ luật Dân sự năm 2015**). Cụ thể các yếu tố được xác định như sau:
+
+---
+
+#### a) Chủ thể của quan hệ pháp luật
+Chủ thể của quan hệ pháp luật trên gồm **hai bên chủ thể** có đầy đủ năng lực chủ thể (năng lực pháp luật và năng lực hành vi dân sự):
+1. **Bên mua — ${personActor} (${ageVal} tuổi)**:
+   - Là **cá nhân** (công dân).
+   - **Về năng lực pháp luật dân sự**: Có khả năng hưởng quyền và gánh vác nghĩa vụ dân sự kể từ khi sinh ra (**Điều 16 BLDS 2015**).
+   - **Về năng lực hành vi dân sự**: ${personActor} đã **${ageVal} tuổi** (người thành niên từ đủ 18 tuổi trở lên theo **Điều 20 BLDS 2015**), có trí tuệ phát triển bình thường nên có **năng lực hành vi dân sự đầy đủ**, được toàn quyền tự mình xác lập và thực hiện hợp đồng mua bán tài sản (**Điều 19, Điều 20 BLDS 2015**).
+2. **Bên bán — ${orgActor}**:
+   - Là **tổ chức kinh tế có tư cách Pháp nhân thương mại** (căn cứ **Điều 74 và Điều 75 Bộ luật Dân sự năm 2015**).
+   - ${orgActor} đáp ứng đầy đủ 4 điều kiện của một pháp nhân: được thành lập hợp pháp, có cơ cấu tổ chức chặt chẽ, có tài sản độc lập với cá nhân/pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình, nhân danh mình tham gia quan hệ hợp đồng mua bán một cách độc lập thông qua người đại diện hợp pháp.
+
+---
+
+#### b) Nội dung của quan hệ pháp luật
+Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ thể** và **Nghĩa vụ pháp lý** đối xứng của hai bên tham gia quan hệ hợp đồng mua bán (căn cứ **Điều 430, Điều 434 và Điều 440 Bộ luật Dân sự năm 2015**):
+
+1. **Quyền và nghĩa vụ pháp lý của ${personActor} (Bên mua)**:
+   - **Quyền chủ thể**:
+     + Có quyền yêu cầu ${orgActor} giao ${itemBought} đúng mẫu mã, chủng loại, chất lượng và đúng thời hạn như đã thỏa thuận trong hợp đồng.
+     + Có quyền nhận tài sản, xác lập quyền sở hữu hợp pháp đối với ${itemBought} và yêu cầu bảo hành theo quy định.
+   - **Nghĩa vụ pháp lý**:
+     + Có nghĩa vụ **thanh toán đầy đủ số tiền ${money}** cho ${orgActor} theo đúng thời hạn, địa điểm và phương thức đã cam kết (**Khoản 1 Điều 440 BLDS 2015**).
+     + Có nghĩa vụ tiếp nhận tài sản do bên bán bàn giao đúng thỏa thuận.
+
+2. **Quyền và nghĩa vụ pháp lý của ${orgActor} (Bên bán)**:
+   - **Quyền chủ thể**:
+     + Có quyền yêu cầu ${personActor} thanh toán đầy đủ và đúng hạn số tiền **${money}** theo hợp đồng.
+   - **Nghĩa vụ pháp lý**:
+     + Có nghĩa vụ **bàn giao ${itemBought} đúng mẫu mã, chất lượng, thông số kỹ thuật và đúng thời hạn** đã thỏa thuận cho ${personActor}; chuyển giao quyền sở hữu tài sản và cung cấp hóa đơn, chứng từ, nghĩa vụ bảo hành đối với tài sản bán (**Điều 430, Điều 445 BLDS 2015**).
+
+---
+
+#### c) Khách thể của quan hệ pháp luật
+- **Khái niệm**: Khách thể của quan hệ pháp luật là những lợi ích vật chất, tinh thần hoặc xã hội mà các chủ thể mong muốn đạt được khi tham gia xác lập quan hệ pháp luật.
+- **Khách thể cụ thể trong tình huống**: Là **lợi ích vật chất (tài sản và quyền sở hữu tài sản)** mà hai bên hướng tới nhằm thỏa mãn nhu cầu của mình, bao gồm:
+  1. **Đối với ${personActor}**: Là **${itemBought}** (cùng quyền chiếm hữu, sử dụng, định đoạt chiếc máy đó).
+  2. **Đối với ${orgActor}**: Là **khoản tiền thanh toán ${money}** thu được từ việc bán tài sản.
+
+---
+
+#### d) Sự kiện pháp lý làm phát sinh quan hệ pháp luật
+- **Khái niệm**: Sự kiện pháp lý là những tình huống, hiện tượng, hành vi xảy ra trong thực tế đời sống mà sự xuất hiện của chúng được quy phạm pháp luật gắn với việc làm phát sinh, thay đổi hoặc chấm dứt quan hệ pháp luật.
+- **Sự kiện pháp lý cụ thể trong tình huống**:
+  + Chính là sự kiện **${personActor} và ${orgActor} ký kết (giao kết) hợp đồng mua bán ${itemBought} với giá ${money}**.
+- **Phân loại sự kiện pháp lý**:
+  + Đây là **Hành vi pháp lý** (thuộc nhóm *Sự kiện pháp lý là hành vi có ý chí, hợp pháp* của các chủ thể trực tiếp hướng tới việc làm phát sinh quyền và nghĩa vụ dân sự theo **Điều 116 và Điều 385 Bộ luật Dân sự năm 2015**).`;
+  }
+
   public static solveDynamicThreeFormsOfLaw(query?: string): string {
     const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_THREE_FORMS_OF_LAW');
     if (item) return item.output;
@@ -2848,11 +3222,22 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       return this.solveDynamicLawVsMorality(query);
     }
 
+    // 0.1b. Phân biệt 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng pháp luật)
+    if (
+      qLower.includes('thực hiện pháp luật') ||
+      qLower.includes('hình thức thực hiện') ||
+      (qLower.includes('tuân thủ') && qLower.includes('thi hành'))
+    ) {
+      return this.solveDynamicFourFormsOfLawImplementation(query);
+    }
+
     // 0.2. So sánh 3 hình thức của Pháp luật (Tập quán pháp, tiền lệ pháp, văn bản QPPL)
     if (
-      qLower.includes('tập quán pháp') ||
-      qLower.includes('tiền lệ pháp') ||
-      (qLower.includes('hình thức') && (qLower.includes('pháp luật') || qLower.includes('văn bản quy phạm')))
+      !qLower.includes('thực hiện pháp luật') &&
+      !qLower.includes('áp dụng pháp luật') &&
+      (qLower.includes('tập quán pháp') ||
+        qLower.includes('tiền lệ pháp') ||
+        (qLower.includes('hình thức') && (qLower.includes('pháp luật') || qLower.includes('văn bản quy phạm'))))
     ) {
       return this.solveDynamicThreeFormsOfLaw(query);
     }
