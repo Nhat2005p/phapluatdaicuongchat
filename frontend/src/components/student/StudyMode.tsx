@@ -1510,15 +1510,23 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                 <div className="w-8 h-8 rounded-xl bg-slate-900 dark:bg-indigo-600 text-white flex items-center justify-center shrink-0 shadow-md shadow-indigo-500/20 animate-pulse">
                   <Scale className="w-4 h-4" />
                 </div>
-                <div className="flex-1 space-y-2 py-1">
-                  <div className="flex items-center gap-2 text-xs text-[#72706b] dark:text-[#94a3b8] font-medium">
-                    <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 animate-spin" />
-                    <span>Chatbot đang phân tích đề bài & đối soát căn cứ pháp luật...</span>
+                <div className="flex-1 space-y-2 py-1 bg-white/70 dark:bg-white/[0.03] p-4 rounded-2xl border border-black/[0.06] dark:border-white/10 backdrop-blur-md shadow-xs">
+                  <div className="flex items-center justify-between text-xs text-[#72706b] dark:text-[#94a3b8] font-medium">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 animate-spin" />
+                      <span className="font-semibold text-slate-800 dark:text-slate-200">AI đang phân tích & đối soát cơ sở dữ liệu pháp luật...</span>
+                    </div>
+                    <span className="text-[11px] font-mono text-indigo-500 bg-indigo-50 dark:bg-indigo-950/40 px-2 py-0.5 rounded-full border border-indigo-200/50 dark:border-indigo-800/50">
+                      Local RAG &bull; Barem BGD&ĐT
+                    </span>
                   </div>
                   <div className="flex items-center gap-1.5 py-1">
                     <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce"></span>
                     <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce [animation-delay:0.2s]"></span>
                     <span className="w-2 h-2 rounded-full bg-indigo-600 animate-bounce [animation-delay:0.4s]"></span>
+                    <span className="text-xs text-slate-500 dark:text-slate-400 italic ml-2">
+                      Đang truy xuất Điều luật & Cấu trúc Barem tương thích...
+                    </span>
                   </div>
                 </div>
               </div>

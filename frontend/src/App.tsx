@@ -1,13 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, Suspense, lazy } from 'react';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { Header } from './components/common/Header';
 import { HomePage } from './components/home/HomePage';
 import { StudyMode } from './components/student/StudyMode';
-import { LawSearchMode } from './components/student/LawSearchMode';
-import { AiReviewMode } from './components/student/AiReviewMode';
-import { CouncilBenchmark } from './components/council/CouncilBenchmark';
-import { AdminHub } from './components/admin/AdminHub';
 import { AuthModal } from './components/auth/AuthModal';
+
+// Code Splitting / Lazy Loading cho các module nặng
+const LawSearchMode = lazy(() => import('./components/student/LawSearchMode').then(m => ({ default: m.LawSearchMode })));
+const AiReviewMode = lazy(() => import('./components/student/AiReviewMode').then(m => ({ default: m.AiReviewMode })));
+const CouncilBenchmark = lazy(() => import('./components/council/CouncilBenchmark').then(m => ({ default: m.CouncilBenchmark })));
+const AdminHub = lazy(() => import('./components/admin/AdminHub').then(m => ({ default: m.AdminHub })));
 
 const MainContent: React.FC = () => {
   const { role, isAuthenticated, isLoading } = useAuth();
@@ -156,22 +158,54 @@ const MainContent: React.FC = () => {
           />
         )}
         {safeTab === 'laws' && (
-          <LawSearchMode
-            onAskAi={handleStartChatFromHome}
-            onReviewAi={handleStartReviewWithContent}
-            isDarkMode={isDarkMode}
-          />
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
+              <div className="w-8 h-8 border-3 border-rose-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm">Đang tải kho văn bản pháp luật...</span>
+            </div>
+          }>
+            <LawSearchMode
+              onAskAi={handleStartChatFromHome}
+              onReviewAi={handleStartReviewWithContent}
+              isDarkMode={isDarkMode}
+            />
+          </Suspense>
         )}
         {safeTab === 'review' && (
-          <AiReviewMode
-            initialContent={initialReviewContent}
-            onAskAi={handleStartChatFromHome}
-            onOpenAuth={handleOpenAuth}
-            isDarkMode={isDarkMode}
-          />
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
+              <div className="w-8 h-8 border-3 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm">Đang tải công cụ AI Rà soát...</span>
+            </div>
+          }>
+            <AiReviewMode
+              initialContent={initialReviewContent}
+              onAskAi={handleStartChatFromHome}
+              onOpenAuth={handleOpenAuth}
+              isDarkMode={isDarkMode}
+            />
+          </Suspense>
         )}
-        {safeTab === 'council' && <CouncilBenchmark />}
-        {safeTab === 'admin' && <AdminHub />}
+        {safeTab === 'council' && (
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
+              <div className="w-8 h-8 border-3 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm">Đang tải Hội đồng thẩm định...</span>
+            </div>
+          }>
+            <CouncilBenchmark />
+          </Suspense>
+        )}
+        {safeTab === 'admin' && (
+          <Suspense fallback={
+            <div className="flex flex-col items-center justify-center p-12 text-slate-400 gap-3">
+              <div className="w-8 h-8 border-3 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="text-sm">Đang tải trung tâm Quản trị...</span>
+            </div>
+          }>
+            <AdminHub />
+          </Suspense>
+        )}
       </main>
 
       {safeTab !== 'study' && safeTab !== 'home' && (
