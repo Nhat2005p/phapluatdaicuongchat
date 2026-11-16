@@ -721,6 +721,22 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
+    // 0.01. Nhánh chuyên biệt Barem Điểm 10: Nguồn gốc ra đời, Bản chất và Các đặc trưng cơ bản của Nhà nước (Chương 1)
+    const isStateComprehensive =
+      qLower.includes('nhà nước') &&
+      (qLower.includes('nguồn gốc') || qLower.includes('ra đời') || qLower.includes('xuất hiện') || qLower.includes('nguyên nhân')) &&
+      (qLower.includes('bản chất') || qLower.includes('đặc trưng') || qLower.includes('đặc điểm') || qLower.includes('trình bày') || qLower.includes('phân tích'));
+
+    if (isStateComprehensive) {
+      return {
+        sample_id: 'SFT_THEORY_STATE_ORIGIN_NATURE_FEATURES',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Trình bày nguồn gốc ra đời, bản chất và các đặc trưng cơ bản của Nhà nước theo Giáo trình Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicStateComprehensive(query)
+      };
+    }
+
     // === CÁC NHÁNH ĐẶC TRỊ BAREM CHƯƠNG 2 & CHƯƠNG 3 (ĐẢM BẢO CHÍNH XÁC 100%) ===
 
     // 0.0.0. Cơ cấu 3 bộ phận Quy phạm pháp luật (Bài tập xác định Giả định, Quy định, Chế tài trong các điều luật cụ thể)
@@ -1857,9 +1873,10 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         1
       );
 
+      const safeArticles = Array.isArray(retrievedArticles) ? retrievedArticles : [];
       const tbCitation =
         topTb.length > 0 && topTb[0].score >= 8
-          ? TextbookKnowledgeService.buildDetailedCitation(topTb[0].chunk, retrievedArticles, displayQuery)
+          ? TextbookKnowledgeService.buildDetailedCitation(topTb[0].chunk, safeArticles, displayQuery)
           : existingCitation
           ? `\n\n---\n\n${existingCitation}`
           : '';
@@ -1869,7 +1886,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         enrichedBody + tbCitation,
         effectiveIntent,
         topTb.length,
-        retrievedArticles.length
+        safeArticles.length
       );
 
       console.log(`🎯 [SFT + RAG Fusion] Khớp mẫu chuẩn từ Dataset đã train (${sftMatch.sample_id}) kết hợp trích dẫn Giáo trình.`);
@@ -1951,26 +1968,28 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       effectiveIntent === 'CIVIL_INHERIT' ||
       effectiveIntent === 'COMPARISON';
     // Đảm bảo số lượng tokens đủ để mô hình sinh bài giải trọn vẹn, không bị ngắt cụt giữa chừng
-    const adaptiveMaxTokens = isComplexQuery ? 640 : 480;
+    const adaptiveMaxTokens = isComplexQuery ? 750 : 550;
     // Timeout 4 phút (240.000ms): Cho phép CPU hoàn tất việc sinh câu trả lời tối đa 4 phút, biên độ an toàn tuyệt đối, không bao giờ bị abort sớm
     const adaptiveTimeoutMs = 240000;
 
-    // Ngữ cảnh tinh gọn kết hợp Căn cứ thực định và Trọng tâm giáo trình (Concise Context):
+    // Ngữ cảnh tinh gọn kết hợp Căn cứ thực định và Barem giáo trình chuyên sâu (Concise Context):
     let compactLlmContext = '';
     if (retrievedArticles.length > 0) {
-      const topArts = retrievedArticles.slice(0, 4);
+      const topArts = retrievedArticles.slice(0, 3);
       topArts.forEach((art) => {
         const snippet = art.contentRaw ? art.contentRaw.slice(0, 320).replace(/\s+/g, ' ').trim() : '';
         compactLlmContext += `[Điều ${art.articleNumber} ${art.lawName}: ${art.title}]\n${snippet}\n\n`;
       });
     }
-    if (topTextbooks.length > 0 && compactLlmContext.length < 800) {
-      const tb = topTextbooks[0].chunk;
-      const snippet = tb.baremContent ? tb.baremContent.slice(0, 400).replace(/\s+/g, ' ').trim() : '';
-      compactLlmContext += `[Giáo trình: ${tb.chapterTitle} - ${tb.sectionTitle}]\n${snippet}\n\n`;
+    if (topTextbooks.length > 0) {
+      for (const t of topTextbooks.slice(0, 2)) {
+        if (t.chunk && t.chunk.baremContent) {
+          compactLlmContext += `[Barem Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle}]\n${t.chunk.baremContent.trim()}\n\n`;
+        }
+      }
     }
     if (!compactLlmContext) {
-      compactLlmContext = fullRagContext.slice(0, 800);
+      compactLlmContext = fullRagContext.slice(0, 1500);
     }
 
     try {
@@ -1990,7 +2009,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
               content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Dựa vào các căn cứ pháp luật và nguyên lý trên, hãy phân tích và trả lời câu hỏi một cách chuẩn xác, đầy đủ:`
             }
           ],
-          temperature: 0.2,
+          temperature: 0.0,
           max_tokens: adaptiveMaxTokens
         }),
         signal: AbortSignal.timeout(adaptiveTimeoutMs)
@@ -2663,6 +2682,75 @@ Tôi là hệ thống được phát triển **chuyên biệt cho học phần m
   7. *Các dạng bài tập thực hành*: Nhận định Đúng/Sai có giải thích cơ sở lý luận, So sánh/Phân biệt các chế định pháp lý, Bài tập tình huống môn học.
 
 💡 *Vui lòng gửi câu hỏi liên quan đến kiến thức môn Pháp luật Đại cương để được hỗ trợ giải đáp chi tiết!*`;
+  }
+
+  /**
+   * Barem điểm 10 chuẩn Giáo trình Pháp luật Đại cương (ĐH Thương mại 2021 & Bộ GD&ĐT):
+   * Nguồn gốc ra đời, Bản chất và Các đặc trưng cơ bản của Nhà nước (Chương 1, Mục 1.1.1 - 1.1.3, Trang 5 - 14)
+   */
+  public static solveDynamicStateComprehensive(query?: string): string {
+    const qLower = (query || '').toLowerCase();
+    const needsOrigin = qLower.includes('nguồn gốc') || qLower.includes('ra đời') || qLower.includes('xuất hiện') || qLower.includes('nguyên nhân') || (!qLower.includes('bản chất') && !qLower.includes('đặc trưng'));
+    const needsNature = qLower.includes('bản chất') || (!qLower.includes('nguồn gốc') && !qLower.includes('đặc trưng'));
+    const needsFeatures = qLower.includes('đặc trưng') || qLower.includes('đặc điểm') || (!qLower.includes('nguồn gốc') && !qLower.includes('bản chất'));
+
+    const sections: string[] = [];
+
+    // PHẦN I: NGUỒN GỐC RA ĐỜI CỦA NHÀ NƯỚC
+    if (needsOrigin || (!needsNature && !needsFeatures) || (needsOrigin && needsNature && needsFeatures)) {
+      sections.push(`### I. NGUỒN GỐC RA ĐỜI CỦA NHÀ NƯỚC
+
+#### 1. Các quan điểm phi Mác-xít về nguồn gốc Nhà nước:
+Trong lịch sử tư tưởng trước Mác, có nhiều học thuyết lý giải sự ra đời của nhà nước nhưng đều mang tính duy tâm hoặc siêu hình:
+- **Thuyết thần học**: Cho rằng Thượng đế là đấng tối cao sáng tạo ra muôn loài và lập ra Nhà nước để duy trì trật tự xã hội; quyền lực nhà nước là vĩnh cửu, thiêng liêng và con người có bổn phận phục tùng tuyệt đối (J.Calvin, J.Althisius).
+- **Thuyết gia trưởng**: Cho rằng Nhà nước là kết quả của sự phát triển tự nhiên từ gia đình, là sự mở rộng của quyền gia trưởng; quyền lực nhà nước giống như quyền lực của người cha đối với con cái (Aristote, Jean Bodin).
+- **Thuyết bạo lực**: Cho rằng Nhà nước ra đời trực tiếp từ việc sử dụng bạo lực, chiến tranh xâm lược giữa các thị tộc, bộ lạc; thị tộc chiến thắng lập ra bộ máy nhà nước để đàn áp, nô dịch kẻ chiến bại (L.Gumplowicz, K.Kautsky, E.Dühring).
+- **Thuyết khế ước xã hội**: Cho rằng Nhà nước ra đời từ một bản "khế ước xã hội" (hợp đồng thỏa thuận) giữa các cá nhân tự do nhằm bảo vệ quyền tự nhiên của con người (tính mạng, tự do, tài sản). Khi nhà nước vi phạm khế ước, nhân dân có quyền lật đổ để lập nhà nước mới (Thomas Hobbes, John Locke, J.J.Rousseau).
+
+#### 2. Học thuyết Mác - Lênin về nguồn gốc Nhà nước:
+Chủ nghĩa Mác - Lênin giải thích nguồn gốc nhà nước trên lập trường chủ nghĩa duy vật biện chứng và duy vật lịch sử. Nhà nước **không phải là hiện tượng bất biến, vĩnh cửu**, mà là một phạm trù lịch sử khách quan, xuất hiện khi xã hội loài người hội tụ đủ **hai tiền đề**:
+- **Tiền đề kinh tế**: Lực lượng sản xuất phát triển qua ba lần phân công lao động xã hội lớn (Chăn nuôi tách khỏi trồng trọt -> Thủ công nghiệp tách khỏi nông nghiệp -> Thương nghiệp xuất hiện) làm năng suất lao động tăng nhanh, xuất hiện của cải dư thừa thường xuyên. Từ đó dẫn đến sự xuất hiện của **chế độ chiếm hữu tư nhân về tư liệu sản xuất** (chế độ tư hữu).
+- **Tiền đề xã hội**: Chế độ tư hữu làm xã hội thị tộc - bộ lạc nguyên thủy tan rã, phân hóa thành các **giai cấp có lợi ích kinh tế đối kháng sâu sắc không thể điều hòa** (chủ nô - nô lệ). Để sự xung đột giai cấp không thiêu hủy toàn bộ xã hội và các giai cấp đó, giai cấp nắm ưu thế kinh tế đã tổ chức ra một lực lượng quyền lực công cộng đặc biệt để bảo vệ trật tự và đàn áp các giai cấp khác — đó chính là **Nhà nước**.`);
+    }
+
+    // PHẦN II: BẢN CHẤT CỦA NHÀ NƯỚC
+    if (needsNature || (needsOrigin && needsNature && needsFeatures)) {
+      sections.push(`### II. BẢN CHẤT CỦA NHÀ NƯỚC
+Theo Giáo trình Pháp luật Đại cương và quan điểm của Chủ nghĩa Mác - Lênin, Nhà nước là tổ chức quyền lực chính trị công cộng đặc biệt của xã hội có giai cấp. Bản chất của nhà nước thể hiện qua **hai thuộc tính thống nhất biện chứng**:
+
+1. **Tính giai cấp của Nhà nước**:
+   - Nhà nước là công cụ chuyên chính giai cấp của giai cấp thống trị nhằm duy trì trật tự xã hội có lợi nhất cho mình trên 3 mặt quyền lực:
+     + *Quyền lực kinh tế*: Nắm giữ những tư liệu sản xuất chủ yếu trong xã hội, buộc các giai cấp bị trị phải phụ thuộc về mặt kinh tế.
+     + *Quyền lực chính trị*: Nắm độc quyền bộ máy cưỡng chế bạo lực (quân đội, cảnh sát, tòa án, trại giam) để trấn áp các lực lượng đối kháng.
+     + *Quyền lực tư tưởng*: Xác lập và truyền bá hệ tư tưởng của giai cấp thống trị thành hệ tư tưởng chính thống, chi phối đời sống tinh thần xã hội.
+
+2. **Tính xã hội của Nhà nước**:
+   - Nhà nước không thể chỉ phục vụ riêng lợi ích của giai cấp thống trị mà còn phải thực hiện chức năng quản lý, điều hành các công việc chung của toàn xã hội (duy trì an ninh trật tự công cộng, phòng chống thiên tai, dịch bệnh, bảo vệ môi trường, xây dựng hệ thống đê điều, giao thông, y tế, giáo dục, an sinh xã hội).
+   - *Lưu ý*: Mức độ thể hiện tính giai cấp và tính xã hội thay đổi tùy theo bản chất từng kiểu nhà nước. Trong Nhà nước CHXHCN Việt Nam hiện nay, tính xã hội được mở rộng tối đa theo nguyên tắc Hiến định: *"Nhà nước của Nhân dân, do Nhân dân, vì Nhân dân"* (Điều 2 Hiến pháp 2013).`);
+    }
+
+    // PHẦN III: NĂM ĐẶC TRƯNG CƠ BẢN CỦA NHÀ NƯỚC
+    if (needsFeatures || (needsOrigin && needsNature && needsFeatures)) {
+      sections.push(`### III. NĂM ĐẶC TRƯNG CƠ BẢN CỦA NHÀ NƯỚC
+*(Các dấu hiệu đặc trưng phân biệt Nhà nước với tổ chức thị tộc - bộ lạc nguyên thủy và các tổ chức chính trị - xã hội khác)*:
+
+1. **Nhà nước thiết lập một quyền lực công cộng đặc biệt**:
+   - Khác với quyền lực xã hội thời nguyên thủy hòa lẫn với dân cư, quyền lực nhà nước tách rời khỏi xã hội, có bộ máy quản lý và cưỡng chế chuyên nghiệp (quân đội, công an, tòa án, viện kiểm sát, nhà tù) để thực thi quyền lực tối cao bắt buộc mọi thành viên phải phục tùng.
+
+2. **Nhà nước phân chia dân cư theo các đơn vị hành chính lãnh thổ**:
+   - Thị tộc quản lý các thành viên theo quan hệ huyết thống. Nhà nước vượt qua quan hệ huyết thống, phân chia lãnh thổ thành các đơn vị hành chính (tỉnh/thành phố, quận/huyện, phường/xã) và quản lý dân cư theo nơi cư trú, không phân biệt dòng máu hay sắc tộc.
+
+3. **Nhà nước có chủ quyền quốc gia**:
+   - Chủ quyền quốc gia là quyền tối cao của Nhà nước về mặt đối nội (toàn quyền quyết định mọi chính sách, pháp luật trên toàn bộ lãnh thổ) và độc lập tự quyết về mặt đối ngoại (không chịu sự can thiệp hay phụ thuộc vào bất kỳ quốc gia, thế lực ngoại bang nào) (Điều 1 Hiến pháp 2013).
+
+4. **Nhà nước ban hành pháp luật và quản lý xã hội bằng pháp luật**:
+   - Nhà nước là tổ chức duy nhất có quyền ban hành các quy tắc xử sự có tính quy phạm phổ biến và bắt buộc chung đối với toàn xã hội. Pháp luật là công cụ quản lý hiệu quả nhất được bảo đảm thực hiện bằng sức mạnh cưỡng chế nhà nước (Điều 8 Hiến pháp 2013).
+
+5. **Nhà nước quy định và thực hiện việc thu các loại thuế bắt buộc**:
+   - Để nuôi dưỡng bộ máy nhà nước và duy trì các công trình, dịch vụ phúc lợi công cộng, Nhà nước quy định và thu các khoản thuế, phí dưới hình thức bắt buộc từ các thể nhân và pháp nhân trong xã hội. Không một tổ chức xã hội nào khác có quyền hạn này.`);
+    }
+
+    return sections.join('\n\n---\n\n');
   }
 
   /**
@@ -3977,14 +4065,19 @@ ${contextContent ? `\n---\n**TÀI LIỆU GIÁO TRÌNH THAM CHIẾU**:\n${context
       return this.solveDynamicStateAndLawRelation(query);
     }
 
-    // 0. Ưu tiên câu hỏi về Bản chất Nhà nước (tính giai cấp & tính xã hội)
+    // 0. Ưu tiên câu hỏi về Nhà nước (Nguồn gốc ra đời, Bản chất, 5 Đặc trưng cơ bản)
     if (
-      qLower.includes('bản chất của nhà nước') ||
-      qLower.includes('bản chất nhà nước') ||
-      (qLower.includes('tính giai cấp') && qLower.includes('tính xã hội')) ||
-      (qLower.includes('nhà nước') && qLower.includes('bản chất'))
+      qLower.includes('nhà nước') &&
+      (qLower.includes('nguồn gốc') ||
+        qLower.includes('ra đời') ||
+        qLower.includes('xuất hiện') ||
+        qLower.includes('bản chất') ||
+        qLower.includes('đặc trưng') ||
+        qLower.includes('đặc điểm') ||
+        qLower.includes('tính giai cấp') ||
+        qLower.includes('tính xã hội'))
     ) {
-      return this.solveDynamicStateNature();
+      return this.solveDynamicStateComprehensive(query);
     }
 
     // Kiểm tra ưu tiên nếu là câu hỏi định nghĩa / khái niệm

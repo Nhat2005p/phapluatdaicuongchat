@@ -976,13 +976,58 @@ export class RagService {
       };
     }
 
-    // 1. Quét bảng nguyên lý giáo trình chuẩn
-    const principle = await TextbookPrinciple.findOne({ topicCode: intentCode });
+    // 1. Quét bảng nguyên lý giáo trình chuẩn theo từ khóa chuyên biệt
+    let principle = null;
+    const qLowerPrinciple = query.toLowerCase();
+    if (intentCode === 'GENERAL_THEORY' || intentCode === 'DEFINITION') {
+      if (qLowerPrinciple.includes('nhà nước')) {
+        principle = await TextbookPrinciple.findOne({ principleId: 'TMU_PLDC_CH1_NHA_NUOC' });
+      } else if (qLowerPrinciple.includes('pháp luật') || qLowerPrinciple.includes('hệ thống văn bản')) {
+        principle = await TextbookPrinciple.findOne({ principleId: 'TMU_PLDC_CH2_PHAP_LUAT' });
+      }
+    }
+    if (!principle) {
+      principle = await TextbookPrinciple.findOne({ topicCode: intentCode });
+    }
 
     // 2. Quét văn bản luật thực định theo đặc thù dạng đề
     let matchedArticles: ILawArticle[] = [];
 
     switch (intentCode) {
+      case 'GENERAL_THEORY': {
+        const qL = query.toLowerCase();
+        if (
+          qL.includes('nhà nước') ||
+          qL.includes('chủ quyền') ||
+          qL.includes('chính thể') ||
+          qL.includes('bộ máy') ||
+          qL.includes('nguồn gốc')
+        ) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HP2013_D1' },
+              { articleId: 'HP2013_D2' },
+              { articleId: 'HP2013_D8' }
+            ]
+          }).limit(3);
+        } else if (qL.includes('pháp luật') || qL.includes('quy phạm') || qL.includes('văn bản')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D1' },
+              { articleId: 'BLDS2015_D74' }
+            ]
+          }).limit(2);
+        } else {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HP2013_D2' },
+              { articleId: 'BLDS2015_D1' }
+            ]
+          }).limit(2);
+        }
+        break;
+      }
+
       case 'DEFINITION':
         matchedArticles = await LawArticle.find({
           $or: [

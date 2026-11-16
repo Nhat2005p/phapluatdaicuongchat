@@ -1,450 +1,147 @@
 [
   {
-    "_id": "6af3f8ad3c0244646232ca38",
-    "userId": "6af3f823c224429484d4587e",
+    "_id": "6afb0500ae375a6f362deddf",
+    "userId": "6afb02760dad502d61c36a75",
     "userEmail": "longvu24112005@gmail.com",
-    "query": "tài sản của vợ chồng được nhà chông cho,tặng thì sau khi ly hôn sẽ chia như thế nào",
-    "intentCode": "FAMILY_LAW",
-    "response": "Đápán:\n1. Đối với \"Cơ quan đăng ký hộ tịch\":\n- Giải thích: Theo Điều 101 Luật Hôn nhân và Gia đình 2014, cơ quan có thẩm quyền xác định cha, mẹ, con là UBND cấp xã hoặc Hộ tịch nơi đăng ký khai sinh của trẻ nếu không có tranh chấp.\n- Phân biệt:\n + Không có tranh chấp: Cơ quan có thẩm quyền giải quyết nhanh gọn, đơn giản.\n + Có tranh chấp: Tranh chấp về quyền cha, mẹ, con thuộc thẩm quyền TAND cấp huyện hoặc TAND tương đương ở cấp tỉnh.\n\n2. Đối với \"Nam, nữ chung sống như vợ chồng mà chưa đăng ký\":\n- Điều 14 quy định:\n + \"Nam, nữ có quan hệ nam nữ thề nguyện sống với nhau như vợ chồng mà không đăng ký kết\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 6: Một số nội dung cơ bản của Luật Dân sự** — **Mục 6.4 – 6.5: Tài sản, Quyền sở hữu và Thừa kế theo BLDS 2015** (Trang 130 - 147).\n- **Căn cứ pháp lý cốt lõi**: Bộ luật Dân sự 2015 (Điều 105, 158, 179, 189, 192, 612, 644, 651, 652); Điều 101 Luật Hôn nhân và Gia đình 2014; Điều 14 Luật Hôn nhân và Gia đình 2014; Điều 15 Luật Hôn nhân và Gia đình 2014.",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 101 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 101,
-        "verified": true,
-        "lawTitle": "Thẩm quyền giải quyết việc xác định cha, mẹ, con",
-        "_id": "6af3f8ad3c0244646232ca39"
-      },
-      {
-        "rawText": "Điều 14 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 14,
-        "verified": true,
-        "lawTitle": "Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn",
-        "_id": "6af3f8ad3c0244646232ca3a"
-      },
-      {
-        "rawText": "Điều 15 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 15,
-        "verified": true,
-        "lawTitle": "Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn",
-        "_id": "6af3f8ad3c0244646232ca3b"
-      }
-    ],
-    "verifiedCitationsCount": 3,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 104136,
-    "createdAt": "2026-11-11T05:10:05.953Z"
-  },
-  {
-    "_id": "6af3f617860abd568d49a00f",
-    "userId": "6af3f5cf99fdee7eadfb24b1",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "khi 2 vợ chồng ly hôn thì tài sản chia như thế nào",
-    "intentCode": "FAMILY_LAW",
-    "response": "### I. CĂN CỨ PHÁP LÝ THỰC ĐỊNH\nCăn cứ các quy định của **Luật Hôn nhân và Gia đình năm 2014**:\n1. **Khoản 1 Điều 43** (Tài sản riêng của vợ, chồng):\n   > *\"Tài sản riêng của vợ, chồng gồm tài sản mà mỗi người có trước khi kết hôn; **tài sản được thừa kế riêng, được tặng cho riêng trong thời kỳ hôn nhân**; tài sản được chia riêng cho vợ, chồng theo quy định tại các điều 38, 39 và 40 của Luật này...\"*\n2. **Khoản 1 Điều 33** (Tài sản chung của vợ chồng):\n   > *\"Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân...\"*\n3. **Khoản 4 Điều 59** (Nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn):\n   > *\"Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật này.\"*\n\n---\n\n### II. NGUYÊN TẮC PHÂN CHIA TÀI SẢN KHI LY HÔN\n\n#### 1. Trường hợp 1: Tài sản được tặng cho riêng người chồng (Chưa nhập vào khối tài sản chung)\n- **Xác định quyền sở hữu**:\n  + Nếu gia đình người chồng (cha mẹ, người thân) lập văn bản tặng cho (hợp đồng tặng cho, giấy tờ chuyển nhượng, di chúc hoặc sang tên giấy chứng nhận quyền sở hữu/sử dụng) ghi rõ người thụ hưởng là **riêng người chồng**, tài sản này được xác định là **TÀI SẢN RIÊNG HỢP PHÁP CỦA NGƯỜI CHỒNG** theo quy định tại Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014.\n- **Cách phân chia khi ly hôn**:\n  + Căn cứ **Khoản 4 Điều 59 Luật HNGĐ 2014**: **Tài sản riêng của người chồng vẫn thuộc quyền sở hữu toàn vẹn của người chồng, KHÔNG BỊ ĐƯA VÀO KHỐI TÀI SẢN CHUNG ĐỂ CHIA CHO NGƯỜI VỢ.** Người vợ hoàn toàn không có quyền yêu cầu chia đôi tài sản này.\n  *Lưu ý về hoa lợi, lợi tức*: Hoa lợi, lợi tức phát sinh từ tài sản riêng này trong thời kỳ hôn nhân (như tiền thuê nhà, cổ tức) được coi là tài sản chung (Khoản 1 Điều 33).\n  *Lưu ý về công sức đóng góp*: Nếu người vợ chứng minh được mình có công sức đóng góp làm tăng đáng kể giá trị của tài sản riêng đó (ví dụ bỏ tiền sửa sang, tôn tạo), người chồng có nghĩa vụ thanh toán lại giá trị công sức đóng góp thực tế cho người vợ.\n\n#### 2. Trường hợp 2: Người chồng ĐÃ TỰ NGUYỆN NHẬP tài sản được tặng cho vào khối tài sản chung\n- Căn cứ **Điều 46 Luật HNGĐ 2014**: Nếu trong thời kỳ hôn nhân, người chồng đã lập văn bản thỏa thuận nhập tài sản riêng đó vào khối tài sản chung của vợ chồng (hoặc đăng ký đổi sổ đỏ đứng tên cả hai vợ chồng).\n- **Cách phân chia khi ly hôn**:\n  + Tài sản này đã trở thành **tài sản chung hợp nhất**.\n  + Khi ly hôn sẽ được chia theo nguyên tắc tại **Điều 59 Luật HNGĐ 2014**: Về nguyên tắc tài sản chung được chia đôi, có tính đến các yếu tố: hoàn cảnh của mỗi bên; công sức đóng góp vào việc tạo lập, duy trì, phát triển khối tài sản; bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất kinh doanh; lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 6: Một số nội dung cơ bản của Luật Dân sự** — **Mục 6.4 – 6.5: Tài sản, Quyền sở hữu và Thừa kế theo BLDS 2015** (Trang 130 - 147).\n- **Căn cứ pháp lý cốt lõi**: Bộ luật Dân sự 2015 (Điều 105, 158, 179, 189, 192, 612, 644, 651, 652); Điều 101 Luật Hôn nhân và Gia đình 2014; Điều 14 Luật Hôn nhân và Gia đình 2014; Điều 15 Luật Hôn nhân và Gia đình 2014.",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 43,
-        "clauseNumber": 1,
-        "verified": false,
-        "_id": "6af3f617860abd568d49a010"
-      },
-      {
-        "rawText": "Khoản 4 Điều 59 Luật HNGĐ 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 59,
-        "clauseNumber": 4,
-        "verified": false,
-        "_id": "6af3f617860abd568d49a011"
-      },
-      {
-        "rawText": "Điều 46 Luật HNGĐ 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 46,
-        "verified": false,
-        "_id": "6af3f617860abd568d49a012"
-      },
-      {
-        "rawText": "Điều 59 Luật HNGĐ 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 59,
-        "verified": false,
-        "_id": "6af3f617860abd568d49a013"
-      },
-      {
-        "rawText": "Điều 101 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 101,
-        "verified": true,
-        "lawTitle": "Thẩm quyền giải quyết việc xác định cha, mẹ, con",
-        "_id": "6af3f617860abd568d49a014"
-      },
-      {
-        "rawText": "Điều 14 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 14,
-        "verified": true,
-        "lawTitle": "Giải quyết hậu quả của việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn",
-        "_id": "6af3f617860abd568d49a015"
-      },
-      {
-        "rawText": "Điều 15 Luật Hôn nhân và Gia đình 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 15,
-        "verified": true,
-        "lawTitle": "Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn",
-        "_id": "6af3f617860abd568d49a016"
-      }
-    ],
-    "verifiedCitationsCount": 3,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 38043,
-    "createdAt": "2026-11-11T04:59:03.681Z"
-  },
-  {
-    "_id": "6af3f39708c0129b007c65d8",
-    "userId": "6af3f2c8ed62f851f7803f3b",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "anh a dùng dao đâm anh b thì anh a phạm tội gì",
-    "intentCode": "CASE_ANALYSIS",
-    "response": "### I. KẾT LUẬN SƠ BỘ VỀ HÀNH VI\nHành vi của **Anh A** trong tình huống có đầy đủ các dấu hiệu cấu thành **Vi phạm pháp luật** theo quy định của pháp luật Việt Nam.\n\n---\n\n### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT\n*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*\n\n| Yếu tố cấu thành | Nội dung phân tích cụ thể trong tình huống | Ý nghĩa & Căn cứ pháp lý |\n| :--- | :--- | :--- |\n| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: Hành vi dùng hung khí/vũ lực tước đoạt tính mạng của Anh B.<br>• **Hậu quả thiệt hại**: Xâm phạm trực tiếp đến quyền và lợi ích hợp pháp của người bị hại.<br>• **Mối quan hệ nhân quả**: Hành vi trái pháp luật của Anh A là nguyên nhân trực tiếp, tất yếu dẫn đến hậu quả thiệt hại xảy ra.<br>• **Công cụ, phương tiện**: Thể hiện cụ thể trong diễn biến tình huống. | Biểu hiện ra thế giới khách quan, xác định mức độ nguy hiểm cho xã hội của hành vi. |\n| **2. Mặt chủ quan** | • **Hình thức lỗi**: **Lỗi cố ý trực tiếp (nhận thức rõ tính chất đặc biệt nguy hiểm cho xã hội của hành vi tước đoạt tính mạng và mong muốn hậu quả chết người xảy ra) hoặc Lỗi cố ý gián tiếp**.<br>- *Về lý trí*: Chủ thể nhận thức được tính chất nguy hiểm cho xã hội của hành vi.<br>- *Về ý chí*: Chủ thể mong muốn hoặc để mặc cho hậu quả xảy ra.<br>• **Động cơ, mục đích**: Thể hiện thái độ tâm lý chủ quan khi thực hiện hành vi vi phạm. | Phản ánh trạng thái tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |\n| **3. Khách thể** | Xâm phạm trực tiếp đến: **Quyền được sống, quyền bất khả xâm phạm về tính mạng của con người (được Hiến pháp 2013 và Bộ luật Hình sự bảo vệ ở mức độ tối cao)**. | Xác định loại quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |\n| **4. Chủ thể** | **Anh A**: Có đầy đủ năng lực trách nhiệm pháp lý, đạt độ tuổi luật định, không thuộc trường hợp mất khả năng nhận thức hoặc điều khiển hành vi. | Đạt độ tuổi và có năng lực trách nhiệm pháp lý theo luật định. |\n\n---\n\n### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG\n- **Căn cứ pháp lý xác định**: **Điều 123 Bộ luật Hình sự 2015 về Tội giết người và Điều 8 BLHS 2015**.\n- **Chế tài áp dụng**: Chủ thể phải chịu trách nhiệm pháp lý tương ứng và có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** theo quy định của **Bộ luật Dân sự 2015**.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 7: Một số nội dung cơ bản của Luật Hình sự** — **Mục 7.2: Khái niệm tội phạm và Bốn yếu tố cấu thành tội phạm** (Trang 165 - 175).\n- **Căn cứ pháp lý cốt lõi**: Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017) - Điều 8, Điều 9, Điều 10, Điều 11, Điều 12; Điều 584 Bộ luật Dân sự 2015; Điều 601 Bộ luật Dân sự 2015; Điều 134 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017).",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 123 Bộ luật Hình sự 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 123,
-        "verified": true,
-        "lawTitle": "Tội giết người",
-        "_id": "6af3f39708c0129b007c65d9"
-      },
-      {
-        "rawText": "Điều 8 BLHS 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 8,
-        "verified": true,
-        "lawTitle": "Khái niệm tội phạm",
-        "_id": "6af3f39708c0129b007c65da"
-      },
-      {
-        "rawText": "Điều 584 Bộ luật Dân sự 2015",
-        "lawCode": "BLDS2015",
-        "articleNumber": 584,
-        "verified": true,
-        "lawTitle": "Căn cứ phát sinh trách nhiệm bồi thường thiệt hại",
-        "_id": "6af3f39708c0129b007c65db"
-      },
-      {
-        "rawText": "Điều 601 Bộ luật Dân sự 2015",
-        "lawCode": "BLDS2015",
-        "articleNumber": 601,
-        "verified": true,
-        "lawTitle": "Bồi thường thiệt hại do nguồn nguy hiểm cao độ gây ra",
-        "_id": "6af3f39708c0129b007c65dc"
-      },
-      {
-        "rawText": "Điều 134 Bộ luật Hình sự 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 134,
-        "verified": true,
-        "lawTitle": "Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác",
-        "_id": "6af3f39708c0129b007c65dd"
-      }
-    ],
-    "verifiedCitationsCount": 5,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 183603,
-    "createdAt": "2026-11-11T04:48:23.796Z"
-  },
-  {
-    "_id": "6af3f0d3f194a33568b0d24e",
-    "userId": "6af3eaf970b5d0e26812634e",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "1 người vượt đèn đỏ thì có được gọi là vi phạm pháp luật không",
-    "intentCode": "VPPL_4_ELEMENTS",
-    "response": "### I. KẾT LUẬN SƠ BỘ VỀ HÀNH VI\nHành vi của **Chủ thể thực hiện hành vi** trong tình huống có đầy đủ các dấu hiệu cấu thành **Vi phạm pháp luật** theo quy định của pháp luật Việt Nam.\n\n---\n\n### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT\n*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*\n\n| Yếu tố cấu thành | Nội dung phân tích cụ thể trong tình huống | Ý nghĩa & Căn cứ pháp lý |\n| :--- | :--- | :--- |\n| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: Hành vi điều khiển phương tiện tham gia giao thông không chấp hành tín hiệu/quy tắc an toàn, gây va chạm làm hư hỏng tài sản.<br>• **Hậu quả thiệt hại**: Xâm phạm trực tiếp đến quyền và lợi ích hợp pháp của người bị hại.<br>• **Mối quan hệ nhân quả**: Hành vi trái pháp luật của Chủ thể thực hiện hành vi là nguyên nhân trực tiếp, tất yếu dẫn đến hậu quả thiệt hại xảy ra.<br>• **Công cụ, phương tiện**: Thể hiện cụ thể trong diễn biến tình huống. | Biểu hiện ra thế giới khách quan, xác định mức độ nguy hiểm cho xã hội của hành vi. |\n| **2. Mặt chủ quan** | • **Hình thức lỗi**: **Lỗi cố ý đối với hành vi vi phạm quy tắc giao thông, lỗi vô ý đối với hậu quả thiệt hại tài sản**.<br>- *Về lý trí*: Chủ thể nhận thức được tính chất nguy hiểm cho xã hội của hành vi.<br>- *Về ý chí*: Chủ thể mong muốn hoặc để mặc cho hậu quả xảy ra.<br>• **Động cơ, mục đích**: Thể hiện thái độ tâm lý chủ quan khi thực hiện hành vi vi phạm. | Phản ánh trạng thái tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |\n| **3. Khách thể** | Xâm phạm trực tiếp đến: **Trật tự an toàn giao thông đường bộ và quyền sở hữu tài sản hợp pháp của người tham gia giao thông**. | Xác định loại quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |\n| **4. Chủ thể** | **Chủ thể thực hiện hành vi**: Có đầy đủ năng lực trách nhiệm pháp lý, đạt độ tuổi luật định, không thuộc trường hợp mất khả năng nhận thức hoặc điều khiển hành vi. | Đạt độ tuổi và có năng lực trách nhiệm pháp lý theo luật định. |\n\n---\n\n### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG\n- **Căn cứ pháp lý xác định**: **Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)**.\n- **Chế tài áp dụng**: Chủ thể phải chịu trách nhiệm pháp lý tương ứng và có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** theo quy định của **Bộ luật Dân sự 2015**.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 5: Vi phạm pháp luật và Trách nhiệm pháp lý** — **Mục 5.1 – 5.2: Bốn dấu hiệu, Cấu thành 4 yếu tố của VPPL và 4 loại Trách nhiệm pháp lý** (Trang 104 - 116).\n- **Căn cứ pháp lý cốt lõi**: Bộ luật Hình sự 2015; Bộ luật Dân sự 2015; Luật Xử lý vi phạm hành chính 2012; Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017).",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 12 Bộ luật Hình sự 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 12,
-        "verified": true,
-        "lawTitle": "Tuổi chịu trách nhiệm hình sự",
-        "_id": "6af3f0d3f194a33568b0d24f"
-      }
-    ],
-    "verifiedCitationsCount": 1,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 121967,
-    "createdAt": "2026-11-11T04:36:35.628Z"
-  },
-  {
-    "_id": "6af3f02ff194a33568b0d245",
-    "userId": "6af3eaf970b5d0e26812634e",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "anh a vượt đèn đỏ thì bị vi phạm pháp luật không",
-    "intentCode": "VPPL_4_ELEMENTS",
-    "response": "### I. KẾT LUẬN SƠ BỘ VỀ HÀNH VI\nHành vi của **Anh A** trong tình huống có đầy đủ các dấu hiệu cấu thành **Vi phạm pháp luật** theo quy định của pháp luật Việt Nam.\n\n---\n\n### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT\n*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*\n\n| Yếu tố cấu thành | Nội dung phân tích cụ thể trong tình huống | Ý nghĩa & Căn cứ pháp lý |\n| :--- | :--- | :--- |\n| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: Hành vi điều khiển phương tiện tham gia giao thông không chấp hành tín hiệu/quy tắc an toàn, gây va chạm làm hư hỏng tài sản.<br>• **Hậu quả thiệt hại**: Xâm phạm trực tiếp đến quyền và lợi ích hợp pháp của người bị hại.<br>• **Mối quan hệ nhân quả**: Hành vi trái pháp luật của Anh A là nguyên nhân trực tiếp, tất yếu dẫn đến hậu quả thiệt hại xảy ra.<br>• **Công cụ, phương tiện**: Thể hiện cụ thể trong diễn biến tình huống. | Biểu hiện ra thế giới khách quan, xác định mức độ nguy hiểm cho xã hội của hành vi. |\n| **2. Mặt chủ quan** | • **Hình thức lỗi**: **Lỗi cố ý đối với hành vi vi phạm quy tắc giao thông, lỗi vô ý đối với hậu quả thiệt hại tài sản**.<br>- *Về lý trí*: Chủ thể nhận thức được tính chất nguy hiểm cho xã hội của hành vi.<br>- *Về ý chí*: Chủ thể mong muốn hoặc để mặc cho hậu quả xảy ra.<br>• **Động cơ, mục đích**: Thể hiện thái độ tâm lý chủ quan khi thực hiện hành vi vi phạm. | Phản ánh trạng thái tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |\n| **3. Khách thể** | Xâm phạm trực tiếp đến: **Trật tự an toàn giao thông đường bộ và quyền sở hữu tài sản hợp pháp của người tham gia giao thông**. | Xác định loại quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |\n| **4. Chủ thể** | **Anh A**: Có đầy đủ năng lực trách nhiệm pháp lý, đạt độ tuổi luật định, không thuộc trường hợp mất khả năng nhận thức hoặc điều khiển hành vi. | Đạt độ tuổi và có năng lực trách nhiệm pháp lý theo luật định. |\n\n---\n\n### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG\n- **Căn cứ pháp lý xác định**: **Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)**.\n- **Chế tài áp dụng**: Chủ thể phải chịu trách nhiệm pháp lý tương ứng và có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** theo quy định của **Bộ luật Dân sự 2015**.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 5: Vi phạm pháp luật và Trách nhiệm pháp lý** — **Mục 5.1 – 5.2: Bốn dấu hiệu, Cấu thành 4 yếu tố của VPPL và 4 loại Trách nhiệm pháp lý** (Trang 104 - 116).\n- **Căn cứ pháp lý cốt lõi**: Bộ luật Hình sự 2015; Bộ luật Dân sự 2015; Luật Xử lý vi phạm hành chính 2012; Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017).",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 12 Bộ luật Hình sự 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 12,
-        "verified": true,
-        "lawTitle": "Tuổi chịu trách nhiệm hình sự",
-        "_id": "6af3f02ff194a33568b0d246"
-      }
-    ],
-    "verifiedCitationsCount": 1,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 123799,
-    "createdAt": "2026-11-11T04:33:51.502Z"
-  },
-  {
-    "_id": "6af3ef92f194a33568b0d230",
-    "userId": "6af3eaf970b5d0e26812634e",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "anh b vượt đèn đỏ thì bị xử lí như thế nào",
-    "intentCode": "OUT_OF_SCOPE",
-    "response": "### ⚠️ THÔNG BÁO TỪ HỆ THỐNG\n\n**Tôi không có quyền hạn trả lời câu hỏi này.**\n\n---\n\n* **Lý do**: Câu hỏi của bạn nằm ngoài phạm vi chương trình và nội dung học tập của môn **Pháp luật Đại cương** (theo chuẩn Giáo trình môn học của Bộ Giáo dục & Đào tạo).\n* **Phạm vi hỗ trợ của hệ thống**: Hệ thống chỉ được cấp quyền hỗ trợ học tập, giải đáp và tra cứu các nội dung thuộc học phần Pháp luật Đại cương:\n  1. *Lý luận chung về Nhà nước*: Nguồn gốc, bản chất, chức năng, hình thức nhà nước, bộ máy nhà nước, Nhà nước CHXHCN Việt Nam.\n  2. *Lý luận chung về Pháp luật*: Nguồn gốc, bản chất, các mối quan hệ xã hội của pháp luật, hình thức pháp luật, hệ thống pháp luật.\n  3. *Quy phạm pháp luật*: Khái niệm, đặc điểm và cơ cấu 3 bộ phận (Giả định – Quy định – Chế tài).\n  4. *Quan hệ pháp luật*: Khái niệm, đặc điểm, thành phần chủ thể, khách thể, nội dung và sự kiện pháp lý.\n  5. *Thực hiện pháp luật & Áp dụng pháp luật*: 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng).\n  6. *Vi phạm pháp luật & Trách nhiệm pháp lý*: Dấu hiệu, phân loại và 4 yếu tố cấu thành vi phạm pháp luật.\n  7. *Các dạng bài tập thực hành*: Nhận định Đúng/Sai có giải thích cơ sở lý luận, So sánh/Phân biệt các chế định pháp lý, Bài tập tình huống môn học.\n\n💡 *Vui lòng gửi câu hỏi liên quan đến kiến thức môn Pháp luật Đại cương để được hỗ trợ giải đáp chi tiết!*",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [],
-    "verifiedCitationsCount": 0,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 24,
-    "createdAt": "2026-11-11T04:31:14.797Z"
-  },
-  {
-    "_id": "6af3e672b5dc3056eae0779e",
-    "userId": "6af3e4def10e2987683f11e2",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "anh a giết anh b thì anh a có vi phạm phap luật không\\",
+    "query": "Trình bày nguồn gốc ra đời, bản chất và các đặc trưng cơ bản của Nhà nước.",
     "intentCode": "GENERAL_THEORY",
-    "response": "📚 **GIẢI ĐÁP THEO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG — BỘ GIÁO DỤC VÀ ĐÀO TẠO**  \n*(Trường Đại học Thương Mại — NXB Hà Nội 2021, Chủ biên: TS. Trần Thành Thọ)*\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 5: Vi phạm pháp luật và Trách nhiệm pháp lý**\n- **Mục & Tiết bài học**: **Mục 5.4: Mặt khách quan của vi phạm pháp luật và Dấu hiệu thiệt hại thực tế**\n- **Vị trí học liệu trong sách**: **Trang 105 - 108**\n- **Trọng tâm lý luận**: Khẳng định nhận định là SAI; phân tích hành vi trái pháp luật là dấu hiệu bắt buộc duy nhất, phân biệt cấu thành hình thức và cấu thành vật chất.\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 105 - 108):\n### 🔹 I. KHẲNG ĐỊNH NHẬN ĐỊNH\nNhận định: \"Thiệt hại thực tế xảy ra cho xã hội là dấu hiệu bắt buộc trong mặt khách quan của vi phạm pháp luật\" là HOÀN TOÀN SAI.\n\n### 🎯 II. LUẬN CỨ GIẢI THÍCH LÝ LUẬN VÀ THỰC TIỄN 🎯 *(Trọng tâm câu hỏi)*\n1. Trong mặt khách quan của vi phạm pháp luật, chỉ có duy nhất **HÀNH VI TRÁI PHÁP LUẬT** là dấu hiệu bắt buộc đối với tất cả các vi phạm pháp luật (vì không có hành vi thể hiện ra thế giới khách quan thì không thể có vi phạm pháp luật).\n2. Yếu tố **Hậu quả thiệt hại thực tế KHÔNG PHẢI là dấu hiệu bắt buộc** trong mọi trường hợp, bởi vì khoa học pháp lý phân chia cấu thành vi phạm thành hai dạng:\n+ **Cấu thành vật chất**: Bắt buộc phải có hậu quả thiệt hại thực tế xảy ra thì mới hoàn thành vi phạm (Ví dụ: Tội giết người, Tội trộm cắp tài sản theo giá trị tài sản từ 2 triệu đồng trở lên, trách nhiệm bồi thường thiệt hại ngoài hợp đồng theo Điều 584 BLDS 2015).\n+ **Cấu thành hình thức**: Chỉ cần chủ thể thực hiện hành vi nguy hiểm cho xã hội bị pháp luật cấm là vi phạm pháp luật đã hoàn thành đầy đủ, **hoàn toàn không bắt buộc phải có thiệt hại thực tế xảy ra** (Ví dụ: Tội cướp tài sản theo Điều 168 BLHS - chỉ cần có hành vi dùng vũ lực nhằm chiếm đoạt là tội phạm đã hoàn thành; Tội tàng trữ trái phép chất ma túy theo Điều 249 BLHS; hoặc trong luật hành chính, hành vi vượt đèn đỏ, chạy quá tốc độ dù chưa gây ra tai nạn hay thiệt hại thực tế nào vẫn cấu thành vi phạm pháp luật hành chính và bị xử phạt).\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 1 (Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự))**:\n    + *Nội dung quy định*: Bộ luật này quy định địa vị pháp lý, chuẩn mực pháp lý về cách ứng xử của cá nhân, pháp nhân; quyền, nghĩa vụ về nhân thân và tài sản của cá nhân, pháp nhân trong các quan hệ được hình thành...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 117 (Điều kiện có hiệu lực của giao dịch dân sự)**:\n    + *Nội dung quy định*: 1. Giao dịch dân sự có hiệu lực khi có đủ các điều kiện sau đây: a) Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch dân sự được xác lập; b) Chủ thể tham g...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 74 (Pháp nhân)**:\n    + *Nội dung quy định*: 1. Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây: a) Được thành lập theo quy định của Bộ luật này, luật khác có liên quan; b) Có cơ cấu tổ chức theo quy định tại Đi...\n- ⚖️ **Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)**:\n  + *Điều 8 (Khái niệm tội phạm)*: Hành vi nguy hiểm cho xã hội được quy định trong BLHS, do người có năng lực TNHS hoặc pháp nhân thương mại thực hiện một cách có lỗi.\n  + *Điều 10 (Cố ý phạm tội)*: Phân định ranh giới lỗi Cố ý trực tiếp (thấy trước hậu quả và mong muốn hậu quả) và Lỗi cố ý gián tiếp (thấy trước hậu quả, không mong muốn nhưng để mặc hậu quả xảy ra).\n  + *Điều 12 (Tuổi chịu trách nhiệm hình sự)*: Người từ đủ 16 tuổi trở lên chịu TNHS về mọi tội phạm; người từ đủ 14 đến dưới 16 tuổi chỉ chịu TNHS về tội phạm rất nghiêm trọng hoặc đặc biệt nghiêm trọng do cố ý luật định.\n  + *Điều 134 (Tội cố ý gây thương tích)*: Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác (tình tiết định khung khi phạm tội đối với người đang thi hành công vụ).\n  + *Điều 330 (Tội chống người thi hành công vụ)*: Hành vi dùng vũ lực, đe dọa dùng vũ lực hoặc thủ đoạn khác cản trở người thi hành công vụ thực hiện công vụ.",
+    "response": "**Câu hỏi: \"Phân tích nguồn gốc ra đời, bản chất và các đặc trưng cơ bản của Nhà nước.\"**\n\n### Nguồn gốc Ra Đời:\n- **Nguồn gốc lịch sử**: Theo học thuyết Mác – Lênin, Nhà nước xuất hiện lần đầu tiên trong xã hội Tư sản (thế giới hiện đại), khi xã hội phân chia giai cấp và mâu thuẫn đối kháng không thể điều hòa được (từ các cộng đồng thị tộc – bộ lạc cổ đại).\n- **Bản chất lịch sử**: Nhà nước là tổ chức quyền lực công đặc biệt của giai cấp thống trị, giữ vai trò quản lý xã hội và trấn áp đối kháng.\n\n### Đặc trưng Cơ Bản của Nhà nước:\n1. **Quyền Công Chúa (Thể chế):\n   - **Độc lập về Tín ngưỡng**: Nhà nước mang tính tôn giáo (thần học) -> \"Chúa trời封疆\".\n   - **Tính Cưỡng chế (Kỷ luật'): Nhà nước nắm quyền lực Kỷ luật xã hội bằng bạo lực và cưỡng chế (Police, Army).\n   - **Tính Công cộng (Public Service): Bảo vệ lợi ích Chung của toàn xã hội (Taxation, Law).\n\n2. **Bản chất Khoa học Pháp lý (Đoàn thể Pháp lý**:\n   - **Độc lập về Tín ngưỡng**: Nhà nước tách khỏi tôn giáo, đặt trên lý tưởng Nhân văn (Công lý, Tự do, Dân chủ).\n   - **Tính Tự do (Freedom): Bảo vệ Nhân phẩm và Tính tự do cá nhân.\n   - **Tính Công Bằng (Justice): Xem xét Tính\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam** — **Mục 1.1.1: Nguồn gốc của Nhà nước (Quan niệm phi Mác-xít và Học thuyết Mác - Lênin)** (Trang 5 - 10).\n- **Căn cứ pháp lý cốt lõi**: Học thuyết Mác - Lênin về Nhà nước và Pháp luật; Tác phẩm Nguồn gốc của gia đình, của tư hữu và của nhà nước (Ph.Ăngghen); Điều 1 Bộ luật Dân sự 2015; Điều 117 Bộ luật Dân sự 2015.",
     "activityType": "solver",
     "isBookmarked": false,
     "bookmarkNote": "",
     "reviewMetadata": {},
     "citations": [
       {
-        "rawText": "Điều 584 BLDS 2015",
+        "rawText": "Điều 1 Bộ luật Dân sự 2015",
         "lawCode": "BLDS2015",
-        "articleNumber": 584,
+        "articleNumber": 1,
         "verified": true,
-        "lawTitle": "Căn cứ phát sinh trách nhiệm bồi thường thiệt hại",
-        "_id": "6af3e672b5dc3056eae0779f"
+        "lawTitle": "Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự)",
+        "_id": "6afb0500ae375a6f362dede0"
       },
       {
-        "rawText": "Điều 168 BLHS",
-        "lawCode": "BLHS2015",
-        "articleNumber": 168,
+        "rawText": "Điều 117 Bộ luật Dân sự 2015",
+        "lawCode": "BLDS2015",
+        "articleNumber": 117,
         "verified": true,
-        "lawTitle": "Tội cướp tài sản",
-        "_id": "6af3e672b5dc3056eae077a0"
-      },
-      {
-        "rawText": "Điều 249 BLHS",
-        "lawCode": "BLHS2015",
-        "articleNumber": 249,
-        "verified": true,
-        "lawTitle": "Tội tàng trữ trái phép chất ma túy",
-        "_id": "6af3e672b5dc3056eae077a1"
+        "lawTitle": "Điều kiện có hiệu lực của giao dịch dân sự",
+        "_id": "6afb0500ae375a6f362dede1"
       }
     ],
-    "verifiedCitationsCount": 3,
+    "verifiedCitationsCount": 2,
     "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 31741,
-    "createdAt": "2026-11-11T03:52:18.110Z"
+    "latencyMs": 165463,
+    "createdAt": "2026-11-16T13:28:32.778Z"
   },
   {
-    "_id": "6af3e631b5dc3056eae07795",
-    "userId": "6af3e4def10e2987683f11e2",
+    "_id": "6afb0424ae375a6f362dedcb",
+    "userId": "6afb02760dad502d61c36a75",
     "userEmail": "longvu24112005@gmail.com",
-    "query": "Theo quan điểm của chủ nghĩa Mác-Lênin thì nguyên nhân chủ yếu làm xuất hiện Nhà nước là?",
-    "intentCode": "GENERAL_THEORY",
-    "response": "Theo chủ nghĩa Mác - Lênin, Nhà nước ra đời do 2 nguyên nhân cốt lõi mang tính lịch sử khách quan:\n1. Nguyên nhân kinh tế: Sự xuất hiện chế độ tư hữu về tư liệu sản xuất (bắt nguồn từ 3 lần phân công lao động xã hội lớn và năng suất lao động tăng tạo ra của cải dư thừa).\n2. Nguyên nhân xã hội: Xã hội phân hóa sâu sắc thành các giai cấp đối kháng và mâu thuẫn giai cấp trở nên gay gắt đến mức không thể tự điều hòa được. Nhà nước xuất hiện như một công cụ nắm giữ trật tự xã hội và duy trì sự thống trị của giai cấp cầm quyền.\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam**\n- **Mục & Tiết bài học**: **Mục 1.1.1: Nguồn gốc của Nhà nước (Quan niệm phi Mác-xít và Học thuyết Mác - Lênin)**\n- **Vị trí học liệu trong sách**: **Trang 5 - 10**\n- **Trọng tâm lý luận**: Lý giải nguồn gốc nhà nước qua các học thuyết phi Mác-xít và 2 tiền đề kinh tế - xã hội của Chủ nghĩa Mác - Lênin.\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 5 - 10):\n### 🎯 II. HỌC THUYẾT MÁC - LÊNIN VỀ NGUỒN GỐC NHÀ NƯỚC 🎯 *(Trọng tâm câu hỏi)*\nChủ nghĩa Mác - Lênin khẳng định nhà nước là một hiện tượng lịch sử khách quan, xuất hiện khi xã hội phát triển đến một giai đoạn nhất định do 2 tiền đề:\n1. Tiền đề kinh tế: Lực lượng sản xuất phát triển qua ba lần phân công lao động xã hội lớn (Chăn nuôi tách khỏi trồng trọt -> Thủ công nghiệp tách khỏi nông nghiệp -> Thương nghiệp xuất hiện) làm năng suất lao động tăng, xuất hiện của cải dư thừa, dẫn đến sự xuất hiện của chế độ tư hữu về tư liệu sản xuất.\n2. Tiền đề xã hội: Xã hội phân chia thành các giai cấp đối kháng có lợi ích mâu thuẫn gay gắt không thể điều hòa. Để giữ cho sự xung đột giai cấp không tự thiêu hủy xã hội, giai cấp thống trị đã lập ra bộ máy quyền lực công đặc biệt để trấn áp và quản lý - đó là Nhà nước.\n\n### 🔹 I. CÁC QUAN NIỆM PHI MÁC-XÍT VỀ NGUỒN GỐC NHÀ NƯỚC\n1. Thuyết thần học: Thượng đế là người sắp đặt trật tự xã hội, nhà nước là do Thượng đế sáng tạo ra để bảo vệ trật tự chung; quyền lực nhà nước là vĩnh cửu và con người có bổn phận phục tùng (J.Calvin, J.Althisius).\n2. Thuyết gia trưởng: Nhà nước là kết quả phát triển tự nhiên của gia đình và quyền gia trưởng; quyền lực nhà nước giống như quyền lực gia trưởng của người đứng đầu gia đình (Aristote, Bodin).\n3. Thuyết bạo lực: Nhà nước xuất hiện trực tiếp từ việc sử dụng bạo lực của thị tộc này đối với thị tộc khác, thị tộc chiến thắng lập ra bộ máy nhà nước để nô dịch kẻ chiến bại (Hume, Gumplowicz, E.Duhring).\n4. Thuyết khế ước xã hội: Nhà nước ra đời từ một bản \"khế ước xã hội\" (hợp đồng) giữa các thành viên nhằm bảo vệ quyền tự nhiên của con người. Nếu nhà nước vi phạm khế ước, nhân dân có quyền lật đổ và lập khế ước mới (Thomas Hobbes, John Locke, J.J.Rousseau).\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 1 (Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự))**:\n    + *Nội dung quy định*: Bộ luật này quy định địa vị pháp lý, chuẩn mực pháp lý về cách ứng xử của cá nhân, pháp nhân; quyền, nghĩa vụ về nhân thân và tài sản của cá nhân, pháp nhân trong các quan hệ được hình thành...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 117 (Điều kiện có hiệu lực của giao dịch dân sự)**:\n    + *Nội dung quy định*: 1. Giao dịch dân sự có hiệu lực khi có đủ các điều kiện sau đây: a) Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch dân sự được xác lập; b) Chủ thể tham g...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 74 (Pháp nhân)**:\n    + *Nội dung quy định*: 1. Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây: a) Được thành lập theo quy định của Bộ luật này, luật khác có liên quan; b) Có cơ cấu tổ chức theo quy định tại Đi...\n- ⚖️ **Tác phẩm Nguồn gốc của gia đình, của tư hữu và của nhà nước (Ph.Ăngghen)**",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [],
-    "verifiedCitationsCount": 0,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 639,
-    "createdAt": "2026-11-11T03:51:13.655Z"
-  },
-  {
-    "_id": "6af3e5dfb5dc3056eae0778c",
-    "userId": "6af3e4def10e2987683f11e2",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "Nhận định: \"[Năng lực pháp luật của cá nhân có từ khi cá nhân được sinh ra và chấm dứt khi cá nhân chết.]\". Nhận định này Đúng hay Sai? Phân tích căn cứ pháp lý và giải thích cơ sở lý luận theo giáo trình Bộ GD&ĐT.",
-    "intentCode": "TRUE_FALSE",
-    "response": "### KẾT LUẬN VÀ GIẢI ĐÁP CHI TIẾT:\n\n\"Năng lực pháp luật và năng lực hành vi của cá nhân chỉ chấm dứt khi cá nhân đó chết.\"\n-> SAI. Năng lực pháp luật của cá nhân có từ khi sinh ra và chỉ chấm dứt khi cá nhân đó chết (Khoản 3 Điều 16 BLDS 2015). Tuy nhiên, năng lực hành vi của cá nhân có thể bị mất hoặc chấm dứt ngay cả khi cá nhân đó còn sống nếu người đó mắc bệnh tâm thần hoặc bệnh khác mà không thể nhận thức, làm chủ được hành vi và bị Tòa án tuyên bố mất năng lực hành vi dân sự (Điều 22 BLDS 2015).\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 4: Quan hệ pháp luật**\n- **Mục & Tiết bài học**: **Mục 4.1 – 4.2: Khái niệm, Đặc điểm và Cơ cấu 3 yếu tố của Quan hệ pháp luật**\n- **Vị trí học liệu trong sách**: **Trang 90 - 100**\n- **Trọng tâm lý luận**: Cơ cấu 3 yếu tố: Chủ thể (năng lực pháp luật, năng lực hành vi, 4 điều kiện pháp nhân Điều 74 BLDS), Khách thể và Nội dung (Quyền & Nghĩa vụ).\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 90 - 100):\n### 🎯 II. CƠ CẤU 3 YẾU TỐ CỦA QUAN HỆ PHÁP LUẬT 🎯 *(Trọng tâm câu hỏi)*\n1. Chủ thể: Các bên tham gia quan hệ có năng lực chủ thể gồm:\n+ Năng lực pháp luật: Khả năng hưởng quyền và gánh vác nghĩa vụ (có từ khi sinh ra đến khi chết).\n+ Năng lực hành vi: Khả năng tự mình bằng hành vi xác lập quyền và nghĩa vụ (phụ thuộc độ tuổi và nhận thức).\n+ Cá nhân & Pháp nhân (Pháp nhân phải đủ 4 điều kiện theo Điều 74 BLDS: Thành lập hợp pháp; Cơ cấu chặt chẽ; Tài sản độc lập; Nhân danh mình tham gia quan hệ độc lập).\n2. Khách thể: Lợi ích vật chất, giá trị tinh thần hoặc lợi ích xã hội mà các chủ thể hướng tới (tài sản, quyền tác giả, tính mạng, sức khỏe).\n3. Nội dung: Tổng hợp các Quyền chủ thể (cách xử sự được phép) và Nghĩa vụ pháp lý (cách xử sự bắt buộc phải thực hiện hoặc kiềm chế không làm).\n\n### 🔹 I. KHÁI NIỆM QUAN HỆ PHÁP LUẬT & MỐI QUAN HỆ VỚI QUAN HỆ XÃ HỘI\n- Định nghĩa: Quan hệ pháp luật là những quan hệ xã hội được các quy phạm pháp luật điều chỉnh, trong đó các bên tham gia có các quyền chủ thể và nghĩa vụ pháp lý cụ thể được Nhà nước quy định và bảo đảm thực hiện bằng sức mạnh cưỡng chế.\n- Phân biệt Quan hệ xã hội và Quan hệ pháp luật: Không phải mọi quan hệ xã hội đều được điều chỉnh bằng pháp luật. Pháp luật chỉ điều chỉnh những quan hệ xã hội phổ biến, điển hình, quan trọng gắn liền với lợi ích nhà nước và trật tự công cộng; các quan hệ xã hội khác (như tình bạn, tình yêu, giao tiếp đạo đức, tín ngưỡng tôn giáo thuần túy) do các quy phạm xã hội khác (đạo đức, tập quán, tín điều tôn giáo) điều chỉnh.\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017) — Điều 12 (Tuổi chịu trách nhiệm hình sự)**:\n    + *Nội dung quy định*: 1. Người từ đủ 16 tuổi trở lên phải chịu trách nhiệm hình sự về mọi tội phạm, trừ những tội phạm mà Bộ luật này có quy định khác. 2. Người từ đủ 14 tuổi đến dưới 16 tuổi phải chịu trách nhiệ...\n- ⚖️ **Bộ luật Hình sự 2015 — Điều 21 (Tình trạng không có năng lực trách nhiệm hình sự)**:\n    + *Nội dung quy định*: Người thực hiện hành vi nguy hiểm cho xã hội trong khi đang mắc bệnh tâm thần, một bệnh khác làm mất khả năng nhận thức hoặc khả năng điều khiển hành vi của mình, thì không phải chịu trách n...\n- ⚖️ **Bộ luật Hình sự 2015 — Điều 22 (Phòng vệ chính đáng)**:\n    + *Nội dung quy định*: 1. Phòng vệ chính đáng là hành vi của người vì bảo vệ quyền hoặc lợi ích chính đáng của mình, của người khác hoặc lợi ích của Nhà nước, của cơ quan, tổ chức mà chống trả lại một cách cần thi...\n- ⚖️ **Bộ luật Dân sự năm 2015**:\n  + *Điều 16, 19, 20*: Quy định về Năng lực pháp luật dân sự, Năng lực hành vi dân sự và mốc từ đủ 18 tuổi trở lên là người thành niên có năng lực hành vi dân sự đầy đủ.\n  + *Điều 74 (Điều kiện công nhận pháp nhân)*: Tổ chức được công nhận là pháp nhân khi có đủ 4 điều kiện (thành lập hợp pháp; cơ cấu tổ chức chặt chẽ; tài sản độc lập; nhân danh mình tham gia quan hệ pháp luật độc lập).\n  + *Điều 117, Điều 122 - 133*: Quy định điều kiện có hiệu lực của giao dịch dân sự và các trường hợp giao dịch dân sự vô hiệu (do giả tạo, nhầm lẫn, lừa dối, đe dọa...).\n  + *Điều 584, Điều 590*: Căn cứ phát sinh trách nhiệm bồi thường thiệt hại ngoài hợp đồng (người nào có hành vi xâm phạm tính mạng, sức khỏe, tài sản của người khác mà gây thiệt hại thì phải bồi thường) và xác định thiệt hại do sức khỏe bị xâm phạm.",
+    "query": "Trình bày các hình thức thực hiện pháp luật. Phân biệt áp dụng pháp luật và sử dụng pháp luật.",
+    "intentCode": "COMPARISON",
+    "response": "### I. BẢNG PHÂN BIỆT CHUẨN 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*\n\n| Tiêu chí | Tuân thủ pháp luật | Thi hành pháp luật | Sử dụng pháp luật | Áp dụng pháp luật |\n| :--- | :--- | :--- | :--- | :--- |\n| **Khái niệm** | Chủ thể kiềm chế không thực hiện những điều pháp luật cấm. | Chủ thể chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm. | Chủ thể thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép. | Cơ quan, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể. |\n| **Đặc điểm biểu hiện** | Dạng **không hành động** (thụ động) — tương ứng với quy phạm cấm đoán. | Dạng **hành động** (tích cực, chủ động) — tương ứng với quy phạm bắt buộc. | Dạng **hành động hoặc không hành động** (tùy nghi quyết định theo ý chí) — tương ứng với quy phạm trao quyền. | Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, trình tự thủ tục chặt chẽ, ban hành văn bản cá biệt. |\n| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Cơ quan nhà nước, người có thẩm quyền hoặc tổ chức được Nhà nước ủy quyền/trao quyền. |\n| **Ví dụ minh họa** | Không chở hàng cấm, không vượt đèn đỏ, không tàng trữ chất ma túy. | Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi đi xe máy. | Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc. | Tòa án tuyên án phạt tù; CSGT lập biên bản ra quyết định xử phạt hành chính; UBND cấp Giấy chứng nhận kết hôn. |\n\n---\n\n### II. PHÂN TÍCH CHI TIẾT TỪNG HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n\n#### 1. Tuân thủ pháp luật (Tuân theo pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **không hành động (thụ động)**; tương ứng với các quy phạm pháp luật cấm đoán (chứa từ *\"nghiêm cấm\", \"không được\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức trong xã hội.\n- **Ví dụ minh họa**: Không chở hàng cấm, không vượt đèn đỏ, không nhận hối lộ.\n\n#### 2. Thi hành pháp luật (Chấp hành pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động (tích cực)**; tương ứng với các quy phạm pháp luật bắt buộc (chứa từ *\"phải\", \"có nghĩa vụ\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.\n- **Ví dụ minh họa**: Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm đạt chuẩn khi tham gia giao thông.\n\n#### 3. Sử dụng pháp luật (Vận dụng pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động hoặc không hành động (tùy nghi quyết định)** — chủ thể có thể lựa chọn thực hiện hoặc không thực hiện quyền của mình mà không bị coi là vi phạm pháp luật; tương ứng với quy phạm trao quyền.\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức có quyền hợp pháp.\n- **Ví dụ minh họa**: Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc định đoạt tài sản (Điều 624 BLDS 2015).\n\n#### 4. Áp dụng pháp luật\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **cơ quan nhà nước, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể** nhằm làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ pháp lý của các chủ thể cụ thể.\n- **Đặc điểm biểu hiện**: Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, tuân theo trình tự thủ tục chặt chẽ do luật định và kết thúc bằng việc ban hành một **Văn bản áp dụng pháp luật (quyết định cá biệt)**.\n- **Chủ thể thực hiện**: Chỉ cơ quan nhà nước, người có thẩm quyền hoặc tổ chức xã hội được Nhà nước ủy quyền.\n- **Ví dụ minh họa**: Tòa án tuyên án phạt tù đối với bị cáo; Cảnh sát giao thông lập biên bản và ra quyết định xử phạt vi phạm hành chính.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 3: Quy phạm pháp luật và Thực hiện pháp luật** — **Mục 3.2.1 – 3.2.2: Bốn hình thức Thực hiện pháp luật và Áp dụng pháp luật** (Trang 80 - 89).\n- **Căn cứ pháp lý cốt lõi**: Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 80-88); Điều 1 Bộ luật Dân sự 2015; Điều 117 Bộ luật Dân sự 2015; Điều 74 Bộ luật Dân sự 2015.",
     "activityType": "solver",
     "isBookmarked": false,
     "bookmarkNote": "",
     "reviewMetadata": {},
     "citations": [
       {
-        "rawText": "Khoản 3 Điều 16 BLDS 2015",
+        "rawText": "Điều 624 BLDS 2015",
         "lawCode": "BLDS2015",
-        "articleNumber": 16,
-        "clauseNumber": 3,
+        "articleNumber": 624,
         "verified": true,
-        "lawTitle": "Năng lực pháp luật dân sự của cá nhân",
-        "_id": "6af3e5dfb5dc3056eae0778d"
+        "lawTitle": "Di chúc",
+        "_id": "6afb0424ae375a6f362dedcc"
       },
       {
-        "rawText": "Điều 22 BLDS 2015",
+        "rawText": "Điều 1 Bộ luật Dân sự 2015",
         "lawCode": "BLDS2015",
-        "articleNumber": 22,
+        "articleNumber": 1,
         "verified": true,
-        "lawTitle": "Mất năng lực hành vi dân sự",
-        "_id": "6af3e5dfb5dc3056eae0778e"
+        "lawTitle": "Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự)",
+        "_id": "6afb0424ae375a6f362dedcd"
       },
       {
-        "rawText": "Điều 74 BLDS",
+        "rawText": "Điều 117 Bộ luật Dân sự 2015",
+        "lawCode": "BLDS2015",
+        "articleNumber": 117,
+        "verified": true,
+        "lawTitle": "Điều kiện có hiệu lực của giao dịch dân sự",
+        "_id": "6afb0424ae375a6f362dedce"
+      },
+      {
+        "rawText": "Điều 74 Bộ luật Dân sự 2015",
         "lawCode": "BLDS2015",
         "articleNumber": 74,
         "verified": true,
         "lawTitle": "Pháp nhân",
-        "_id": "6af3e5dfb5dc3056eae0778f"
-      }
-    ],
-    "verifiedCitationsCount": 3,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 297,
-    "createdAt": "2026-11-11T03:49:51.063Z"
-  },
-  {
-    "_id": "6af3e5b9b5dc3056eae07782",
-    "userId": "6af3e4def10e2987683f11e2",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "Nhận định: \"[Trình bày các hình thức thực hiện pháp luật.\n\nPhân biệt:\n\nTuân thủ pháp luật.\nThi hành pháp luật.\nSử dụng pháp luật.\nÁp dụng pháp luật.\nCho mỗi hình thức một ví dụ cụ thể.]\". Nhận định này Đúng hay Sai? Phân tích căn cứ pháp lý và giải thích cơ sở lý luận theo giáo trình Bộ GD&ĐT.",
-    "intentCode": "TRUE_FALSE",
-    "response": "### I. BẢNG PHÂN BIỆT CHUẨN 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*\n\n| Tiêu chí | Tuân thủ pháp luật | Thi hành pháp luật | Sử dụng pháp luật | Áp dụng pháp luật |\n| :--- | :--- | :--- | :--- | :--- |\n| **Khái niệm** | Chủ thể kiềm chế không thực hiện những điều pháp luật cấm. | Chủ thể chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm. | Chủ thể thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép. | Cơ quan, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể. |\n| **Đặc điểm biểu hiện** | Dạng **không hành động** (thụ động) — tương ứng với quy phạm cấm đoán. | Dạng **hành động** (tích cực, chủ động) — tương ứng với quy phạm bắt buộc. | Dạng **hành động hoặc không hành động** (tùy nghi quyết định theo ý chí) — tương ứng với quy phạm trao quyền. | Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, trình tự thủ tục chặt chẽ, ban hành văn bản cá biệt. |\n| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Cơ quan nhà nước, người có thẩm quyền hoặc tổ chức được Nhà nước ủy quyền/trao quyền. |\n| **Ví dụ minh họa** | Không chở hàng cấm, không vượt đèn đỏ, không tàng trữ chất ma túy. | Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi đi xe máy. | Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc. | Tòa án tuyên án phạt tù; CSGT lập biên bản ra quyết định xử phạt hành chính; UBND cấp Giấy chứng nhận kết hôn. |\n\n---\n\n### II. PHÂN TÍCH CHI TIẾT TỪNG HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n\n#### 1. Tuân thủ pháp luật (Tuân theo pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **không hành động (thụ động)**; tương ứng với các quy phạm pháp luật cấm đoán (chứa từ *\"nghiêm cấm\", \"không được\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức trong xã hội.\n- **Ví dụ minh họa**: Không chở hàng cấm, không vượt đèn đỏ, không nhận hối lộ.\n\n#### 2. Thi hành pháp luật (Chấp hành pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động (tích cực)**; tương ứng với các quy phạm pháp luật bắt buộc (chứa từ *\"phải\", \"có nghĩa vụ\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.\n- **Ví dụ minh họa**: Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm đạt chuẩn khi tham gia giao thông.\n\n#### 3. Sử dụng pháp luật (Vận dụng pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động hoặc không hành động (tùy nghi quyết định)** — chủ thể có thể lựa chọn thực hiện hoặc không thực hiện quyền của mình mà không bị coi là vi phạm pháp luật; tương ứng với quy phạm trao quyền.\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức có quyền hợp pháp.\n- **Ví dụ minh họa**: Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc định đoạt tài sản (Điều 624 BLDS 2015).\n\n#### 4. Áp dụng pháp luật\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **cơ quan nhà nước, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể** nhằm làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ pháp lý của các chủ thể cụ thể.\n- **Đặc điểm biểu hiện**: Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, tuân theo trình tự thủ tục chặt chẽ do luật định và kết thúc bằng việc ban hành một **Văn bản áp dụng pháp luật (quyết định cá biệt)**.\n- **Chủ thể thực hiện**: Chỉ cơ quan nhà nước, người có thẩm quyền hoặc tổ chức xã hội được Nhà nước ủy quyền.\n- **Ví dụ minh họa**: Tòa án tuyên án phạt tù đối với bị cáo; Cảnh sát giao thông lập biên bản và ra quyết định xử phạt vi phạm hành chính.\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 3: Quy phạm pháp luật và Thực hiện pháp luật**\n- **Mục & Tiết bài học**: **Mục 3.2.1 – 3.2.2: Bốn hình thức Thực hiện pháp luật và Áp dụng pháp luật**\n- **Vị trí học liệu trong sách**: **Trang 80 - 89**\n- **Trọng tâm lý luận**: So sánh 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng); 5 trường hợp áp dụng pháp luật và 4 giai đoạn áp dụng.\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 80 - 89):\n### 🎯 I. BỐN HÌNH THỨC THỰC HIỆN PHÁP LUẬT 🎯 *(Trọng tâm câu hỏi)*\n1. Tuân theo (Tuân thủ) pháp luật: Chủ thể kiềm chế không thực hiện điều pháp luật cấm (Hành vi thụ động, dạng không hành động. Ví dụ: Không vượt đèn đỏ, không buôn ma túy).\n2. Thi hành (Chấp hành) pháp luật: Chủ thể chủ động thực hiện nghĩa vụ pháp lý bắt buộc (Hành vi tích cực, dạng hành động. Ví dụ: Đi nghĩa vụ quân sự, đóng thuế đầy đủ).\n3. Sử dụng pháp luật: Chủ thể chủ động quyết định thực hiện hay không thực hiện quyền luật cho phép (Ví dụ: Đăng ký kết hôn, khiếu nại, lập di chúc).\n4. Áp dụng pháp luật: Nhà nước thông qua cơ quan có thẩm quyền ra quyết định cá biệt làm phát sinh, thay đổi, chấm dứt quan hệ pháp luật cụ thể hoặc áp dụng chế tài cưỡng chế (Ví dụ: Tòa án tuyên phạt tù, CSGT ra quyết định xử phạt).\n\n### 🔹 II. ĐẶC ĐIỂM CỦA ÁP DỤNG PHÁP LUẬT\n- Mang tính quyền lực nhà nước, chỉ do chủ thể có thẩm quyền tiến hành.\n- Tiến hành theo trình tự, thủ tục chặt chẽ do pháp luật quy định.\n- Cá biệt hóa quy phạm pháp luật vào từng trường hợp cụ thể thông qua Văn bản áp dụng pháp luật.\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 1 (Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự))**:\n    + *Nội dung quy định*: Bộ luật này quy định địa vị pháp lý, chuẩn mực pháp lý về cách ứng xử của cá nhân, pháp nhân; quyền, nghĩa vụ về nhân thân và tài sản của cá nhân, pháp nhân trong các quan hệ được hình thành...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 74 (Pháp nhân)**:\n    + *Nội dung quy định*: 1. Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây: a) Được thành lập theo quy định của Bộ luật này, luật khác có liên quan; b) Có cơ cấu tổ chức theo quy định tại Đi...",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 624 BLDS 2015",
-        "lawCode": "BLDS2015",
-        "articleNumber": 624,
-        "verified": true,
-        "lawTitle": "Di chúc",
-        "_id": "6af3e5b9b5dc3056eae07783"
-      }
-    ],
-    "verifiedCitationsCount": 1,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 59,
-    "createdAt": "2026-11-11T03:49:13.834Z"
-  },
-  {
-    "_id": "6af3e575b5dc3056eae07774",
-    "userId": "6af3e4def10e2987683f11e2",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "Trình bày các hình thức thực hiện pháp luật.\n\nPhân biệt:\n\nTuân thủ pháp luật.\nThi hành pháp luật.\nSử dụng pháp luật.\nÁp dụng pháp luật.\nCho mỗi hình thức một ví dụ cụ thể.",
-    "intentCode": "COMPARISON",
-    "response": "### I. BẢNG PHÂN BIỆT CHUẨN 04 HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3, Mục 3.2, tr. 80 – 89)*\n\n| Tiêu chí | Tuân thủ pháp luật | Thi hành pháp luật | Sử dụng pháp luật | Áp dụng pháp luật |\n| :--- | :--- | :--- | :--- | :--- |\n| **Khái niệm** | Chủ thể kiềm chế không thực hiện những điều pháp luật cấm. | Chủ thể chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm. | Chủ thể thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép. | Cơ quan, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể. |\n| **Đặc điểm biểu hiện** | Dạng **không hành động** (thụ động) — tương ứng với quy phạm cấm đoán. | Dạng **hành động** (tích cực, chủ động) — tương ứng với quy phạm bắt buộc. | Dạng **hành động hoặc không hành động** (tùy nghi quyết định theo ý chí) — tương ứng với quy phạm trao quyền. | Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, trình tự thủ tục chặt chẽ, ban hành văn bản cá biệt. |\n| **Chủ thể thực hiện** | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Mọi cá nhân, tổ chức. | Cơ quan nhà nước, người có thẩm quyền hoặc tổ chức được Nhà nước ủy quyền/trao quyền. |\n| **Ví dụ minh họa** | Không chở hàng cấm, không vượt đèn đỏ, không tàng trữ chất ma túy. | Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm khi đi xe máy. | Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc. | Tòa án tuyên án phạt tù; CSGT lập biên bản ra quyết định xử phạt hành chính; UBND cấp Giấy chứng nhận kết hôn. |\n\n---\n\n### II. PHÂN TÍCH CHI TIẾT TỪNG HÌNH THỨC THỰC HIỆN PHÁP LUẬT\n\n#### 1. Tuân thủ pháp luật (Tuân theo pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **kiềm chế không tiến hành những hoạt động mà pháp luật ngăn cấm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **không hành động (thụ động)**; tương ứng với các quy phạm pháp luật cấm đoán (chứa từ *\"nghiêm cấm\", \"không được\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức trong xã hội.\n- **Ví dụ minh họa**: Không chở hàng cấm, không vượt đèn đỏ, không nhận hối lộ.\n\n#### 2. Thi hành pháp luật (Chấp hành pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **chủ động thực hiện các nghĩa vụ mà pháp luật bắt buộc phải làm**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động (tích cực)**; tương ứng với các quy phạm pháp luật bắt buộc (chứa từ *\"phải\", \"có nghĩa vụ\"*).\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức mang nghĩa vụ pháp lý theo luật định.\n- **Ví dụ minh họa**: Đóng thuế thu nhập, đăng ký nghĩa vụ quân sự, đội mũ bảo hiểm đạt chuẩn khi tham gia giao thông.\n\n#### 3. Sử dụng pháp luật (Vận dụng pháp luật)\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó các chủ thể pháp luật **thực hiện các quyền và quyền tự do dân chủ mà pháp luật cho phép**.\n- **Đặc điểm biểu hiện**: Thể hiện dưới dạng **hành động hoặc không hành động (tùy nghi quyết định)** — chủ thể có thể lựa chọn thực hiện hoặc không thực hiện quyền của mình mà không bị coi là vi phạm pháp luật; tương ứng với quy phạm trao quyền.\n- **Chủ thể thực hiện**: Mọi cá nhân, tổ chức có quyền hợp pháp.\n- **Ví dụ minh họa**: Nộp đơn xin việc, đăng ký kết hôn, làm đơn khiếu nại, lập di chúc định đoạt tài sản (Điều 624 BLDS 2015).\n\n#### 4. Áp dụng pháp luật\n- **Khái niệm**: Là hình thức thực hiện pháp luật, trong đó **cơ quan nhà nước, người có thẩm quyền ra quyết định cá biệt giải quyết vụ việc cụ thể** nhằm làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ pháp lý của các chủ thể cụ thể.\n- **Đặc điểm biểu hiện**: Luôn là dạng **hành động**, mang tính **quyền lực nhà nước**, tuân theo trình tự thủ tục chặt chẽ do luật định và kết thúc bằng việc ban hành một **Văn bản áp dụng pháp luật (quyết định cá biệt)**.\n- **Chủ thể thực hiện**: Chỉ cơ quan nhà nước, người có thẩm quyền hoặc tổ chức xã hội được Nhà nước ủy quyền.\n- **Ví dụ minh họa**: Tòa án tuyên án phạt tù đối với bị cáo; Cảnh sát giao thông lập biên bản và ra quyết định xử phạt vi phạm hành chính.\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 3: Quy phạm pháp luật và Thực hiện pháp luật**\n- **Mục & Tiết bài học**: **Mục 3.2.1 – 3.2.2: Bốn hình thức Thực hiện pháp luật và Áp dụng pháp luật**\n- **Vị trí học liệu trong sách**: **Trang 80 - 89**\n- **Trọng tâm lý luận**: So sánh 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng); 5 trường hợp áp dụng pháp luật và 4 giai đoạn áp dụng.\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 80 - 89):\n### 🎯 I. BỐN HÌNH THỨC THỰC HIỆN PHÁP LUẬT 🎯 *(Trọng tâm câu hỏi)*\n1. Tuân theo (Tuân thủ) pháp luật: Chủ thể kiềm chế không thực hiện điều pháp luật cấm (Hành vi thụ động, dạng không hành động. Ví dụ: Không vượt đèn đỏ, không buôn ma túy).\n2. Thi hành (Chấp hành) pháp luật: Chủ thể chủ động thực hiện nghĩa vụ pháp lý bắt buộc (Hành vi tích cực, dạng hành động. Ví dụ: Đi nghĩa vụ quân sự, đóng thuế đầy đủ).\n3. Sử dụng pháp luật: Chủ thể chủ động quyết định thực hiện hay không thực hiện quyền luật cho phép (Ví dụ: Đăng ký kết hôn, khiếu nại, lập di chúc).\n4. Áp dụng pháp luật: Nhà nước thông qua cơ quan có thẩm quyền ra quyết định cá biệt làm phát sinh, thay đổi, chấm dứt quan hệ pháp luật cụ thể hoặc áp dụng chế tài cưỡng chế (Ví dụ: Tòa án tuyên phạt tù, CSGT ra quyết định xử phạt).\n\n### 🔹 II. ĐẶC ĐIỂM CỦA ÁP DỤNG PHÁP LUẬT\n- Mang tính quyền lực nhà nước, chỉ do chủ thể có thẩm quyền tiến hành.\n- Tiến hành theo trình tự, thủ tục chặt chẽ do pháp luật quy định.\n- Cá biệt hóa quy phạm pháp luật vào từng trường hợp cụ thể thông qua Văn bản áp dụng pháp luật.\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 1 (Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự))**:\n    + *Nội dung quy định*: Bộ luật này quy định địa vị pháp lý, chuẩn mực pháp lý về cách ứng xử của cá nhân, pháp nhân; quyền, nghĩa vụ về nhân thân và tài sản của cá nhân, pháp nhân trong các quan hệ được hình thành...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 117 (Điều kiện có hiệu lực của giao dịch dân sự)**:\n    + *Nội dung quy định*: 1. Giao dịch dân sự có hiệu lực khi có đủ các điều kiện sau đây: a) Chủ thể có năng lực pháp luật dân sự, năng lực hành vi dân sự phù hợp với giao dịch dân sự được xác lập; b) Chủ thể tham g...\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 74 (Pháp nhân)**:\n    + *Nội dung quy định*: 1. Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây: a) Được thành lập theo quy định của Bộ luật này, luật khác có liên quan; b) Có cơ cấu tổ chức theo quy định tại Đi...",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Điều 624 BLDS 2015",
-        "lawCode": "BLDS2015",
-        "articleNumber": 624,
-        "verified": true,
-        "lawTitle": "Di chúc",
-        "_id": "6af3e575b5dc3056eae07775"
-      }
-    ],
-    "verifiedCitationsCount": 1,
-    "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 70,
-    "createdAt": "2026-11-11T03:48:05.853Z"
-  },
-  {
-    "_id": "6af3e512b5dc3056eae07764",
-    "userId": "6af3e4def10e2987683f11e2",
-    "userEmail": "longvu24112005@gmail.com",
-    "query": "Nêu định nghĩa pháp luật. Phân tích mối quan hệ giữa Pháp luật với \nKinh tế, Chính trị và Đạo đức.",
-    "intentCode": "DEFINITION",
-    "response": "### I. PHÂN BIỆT QUY PHẠM PHÁP LUẬT VỚI QUY PHẠM ĐẠO ĐỨC THEO 6 TIÊU CHÍ CHUẨN\n*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021 & Bộ GD&ĐT)*\n\n#### 1. Về Khái niệm\n- **Quy phạm pháp luật**: Là quy tắc xử sự chung mang tính bắt buộc do Nhà nước ban hành hoặc thừa nhận và được Nhà nước bảo đảm thực hiện bằng sức mạnh cưỡng chế nhằm điều chỉnh các quan hệ xã hội theo định hướng của Nhà nước.\n- **Quy phạm đạo đức**: Là hệ thống các quy tắc, chuẩn mực ứng xử của con người trong đời sống xã hội được hình thành từ quan niệm về cái thiện, cái ác, sự công bằng, lương tâm, danh dự và nghĩa vụ trong mối quan hệ giữa người với người và với cộng đồng.\n\n#### 2. Về Chủ thể ban hành / Hình thành\n- **Quy phạm pháp luật**: Chỉ do **các cơ quan nhà nước có thẩm quyền** (Quốc hội, Chính phủ, Chủ tịch nước, Bộ trưởng, HĐND, UBND...) ban hành hoặc thừa nhận theo trình tự, thủ tục lập pháp/lập quy chặt chẽ.\n- **Quy phạm đạo đức**: Hình thành một cách **tự phát, tự nhiên** trong lịch sử phát triển của cộng đồng, dân tộc, được đúc kết từ đời sống văn hóa, truyền thống của nhân dân lao động (không có một cơ quan quyền lực riêng biệt nào ban hành).\n\n#### 3. Về Hình thức thể hiện\n- **Quy phạm pháp luật**: Được thể hiện dưới hình thức **văn bản quy phạm pháp luật thành văn** có tên gọi, số hiệu, bố cục (Chương, Mục, Điều, Khoản, Điểm) và ngôn ngữ pháp lý chính xác, một nghĩa, minh bạch (Hiến pháp, Bộ luật, Luật, Nghị định...).\n- **Quy phạm đạo đức**: Tồn tại chủ yếu dưới dạng **bất thành văn** (truyền miệng qua ca dao, tục ngữ, châm ngôn, lời răn dạy của ông bà, cha mẹ và ý thức đạo đức cộng đồng).\n\n#### 4. Về Tính bắt buộc (Phạm vi và tính chất tác động)\n- **Quy phạm pháp luật**: Mang **tính bắt buộc chung (cưỡng chế khách quan)** đối với tất cả mọi cá nhân, tổ chức nằm trong hoàn cảnh mà quy phạm dự liệu trên phạm vi toàn quốc hoặc địa phương, không phụ thuộc vào ý muốn chủ quan của chủ thể.\n- **Quy phạm đạo đức**: Mang **tính tự giác, tự nguyện** (không mang tính cưỡng chế pháp lý bắt buộc). Mức độ tuân thủ phụ thuộc vào nhận thức, nhân cách, lương tâm của từng cá nhân và truyền thống của từng vùng miền, gia đình.\n\n#### 5. Về Biện pháp bảo đảm thực hiện\n- **Quy phạm pháp luật**: Được bảo đảm thực hiện bằng **quyền lực nhà nước**, kết hợp giữa tuyên truyền, giáo dục với **sức mạnh cưỡng chế nhà nước** thông qua hệ thống cơ quan tư pháp, hành pháp (Công an, Viện kiểm sát, Tòa án, Cơ quan thi hành án) cùng các chế tài nghiêm khắc (phạt tiền, phạt tù, cưỡng chế tài sản, kỷ luật).\n- **Quy phạm đạo đức**: Được bảo đảm thực hiện bằng **sự tự giác, tòa án lương tâm** (sự cắn rứt, hối hận nội tâm) kết hợp với **dư luận xã hội** (sự khen ngợi, biểu dương hoặc sự lên án, chê trách, tẩy chay của tập thể, cộng đồng).\n\n#### 6. Ví dụ minh họa cụ thể\n- **Ví dụ về Quy phạm pháp luật**:\n  + **Khoản 2 Điều 71 Luật Hôn nhân và Gia đình năm 2014** quy định: *\"Con có nghĩa vụ và quyền chăm sóc, nuôi dưỡng cha mẹ, đặc biệt khi cha mẹ mất năng lực hành vi dân sự, ốm đau, già yếu, khuyết tật\"*. Nếu người con ngược đãi, hành hạ hoặc cố tình trốn tránh nghĩa vụ cấp dưỡng cho cha mẹ già yếu dẫn đến hậu quả nghiêm trọng sẽ bị xử phạt hành chính hoặc bị truy cứu trách nhiệm hình sự theo **Điều 185, Điều 186 Bộ luật Hình sự năm 2015**.\n- **Ví dụ về Quy phạm đạo đức**:\n  + Chuẩn mực đạo đức truyền thống *\"Kính trên nhường dưới\"*, *\"Lá lành đùm lá rách\"*, *\"Đi hỏi già, về nhà hỏi trẻ\"*, hoặc nhường ghế cho người già, phụ nữ mang thai trên xe buýt. Nếu một thanh niên khỏe mạnh không nhường ghế cho cụ già trên xe buýt hoặc gặp người ăn xin không giúp đỡ thì người đó bị dư luận xung quanh chê trách về mặt đạo đức nhưng không bị cơ quan nhà nước xử phạt pháp lý.\n\n---\n\n### II. BẢNG ĐỐI CHIẾU TỔNG HỢP: QUY PHẠM PHÁP LUẬT VS. QUY PHẠM ĐẠO ĐỨC\n\n| Tiêu chí phân biệt | Quy phạm pháp luật | Quy phạm đạo đức |\n| :--- | :--- | :--- |\n| **1. Khái niệm** | Quy tắc xử sự chung do Nhà nước ban hành/thừa nhận và bảo đảm thực hiện. | Quy tắc ứng xử dựa trên quan niệm về thiện – ác, lương tâm, danh dự trong cộng đồng. |\n| **2. Chủ thể ban hành** | Cơ quan nhà nước có thẩm quyền ban hành theo trình tự luật định. | Hình thành tự phát từ đời sống cộng đồng, truyền thống văn hóa xã hội. |\n| **3. Hình thức thể hiện** | Văn bản quy phạm pháp luật thành văn (Hiến pháp, Luật, Nghị định...). | Bất thành văn (ca dao, tục ngữ, phong tục, ý thức và niềm tin nội tâm). |\n| **4. Tính bắt buộc** | Bắt buộc chung đối với mọi chủ thể thuộc phạm vi điều chỉnh. | Không bắt buộc bằng quyền lực công; dựa trên sự tự nguyện, tự giác. |\n| **5. Biện pháp bảo đảm** | Sức mạnh **cưỡng chế nhà nước** (chế tài hình sự, hành chính, dân sự, kỷ luật). | **Lương tâm cá nhân** và **dư luận xã hội** (khen chê, lên án của cộng đồng). |\n| **6. Ví dụ minh họa** | Nghĩa vụ nuôi dưỡng cha mẹ (Điều 71 Luật HNGĐ 2014); cấm vượt đèn đỏ. | Nhường ghế cho người già trên xe buýt; giúp đỡ người gặp khó khăn hoạn nạn. |\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):\n- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Tên Chương học phần**: **Chương 3: Quy phạm pháp luật và Thực hiện pháp luật**\n- **Mục & Tiết bài học**: **Mục 3.1.1 – 3.1.2: Khái niệm và Cơ cấu 3 bộ phận của Quy phạm pháp luật (Giả định - Quy định - Chế tài)**\n- **Vị trí học liệu trong sách**: **Trang 71 - 78**\n- **Trọng tâm lý luận**: Quy phạm pháp luật là tế bào nhỏ nhất của hệ thống pháp luật; phân tích chi tiết Giả định, Quy định, Chế tài và ví dụ thực tế.\n\n### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG 71 - 78):\n### 🔹 I. KHÁI NIỆM QUY PHẠM PHÁP LUẬT\nLà quy tắc xử sự mang tính bắt buộc chung do cơ quan nhà nước có thẩm quyền ban hành hoặc thừa nhận và được nhà nước bảo đảm thực hiện để điều chỉnh các quan hệ xã hội.\n\n### 🎯 II. CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT 🎯 *(Trọng tâm câu hỏi)*\n1. Giả định: Nêu lên hoàn cảnh, điều kiện, chủ thể cụ thể chịu sự tác động của quy phạm (Trả lời câu hỏi: Chủ thể nào? Khi nào? Trong điều kiện, hoàn cảnh nào?).\n+ Ví dụ: Khoản 1 Điều 35 Hiến pháp 2013: \"Công dân\" (chủ thể) \"có quyền làm việc...\".\n2. Quy định: Nêu lên cách xử sự mà chủ thể phải làm, được làm hoặc không được làm khi rơi vào hoàn cảnh nêu ở phần giả định (Trả lời câu hỏi: Phải làm gì? Được làm gì? Không được làm gì?).\n+ Phân loại: Quy định bắt buộc (cấm, phải), quy định tùy nghi, quy định trao quyền.\n3. Chế tài: Nêu lên các biện pháp tác động bất lợi (hậu quả pháp lý) mà Nhà nước áp dụng đối với chủ thể vi phạm phần quy định (Trả lời câu hỏi: Hậu quả sẽ ra sao nếu không thực hiện đúng mệnh lệnh?).\n+ Phân loại: Chế tài hình sự (phạt tù, tử hình), chế tài hành chính (phạt tiền, tước bằng lái), chế tài dân sự (bồi thường thiệt hại), chế tài kỷ luật (khiển trách, buộc thôi việc).\n\n### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:\n- ⚖️ **Bộ luật Dân sự 2015 — Điều 1 (Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự))**:\n    + *Nội dung quy định*: Bộ luật này quy định địa vị pháp lý, chuẩn mực pháp lý về cách ứng xử của cá nhân, pháp nhân; quyền, nghĩa vụ về nhân thân và tài sản của cá nhân, pháp nhân trong các quan hệ được hình thành...",
-    "activityType": "solver",
-    "isBookmarked": false,
-    "bookmarkNote": "",
-    "reviewMetadata": {},
-    "citations": [
-      {
-        "rawText": "Khoản 2 Điều 71 Luật Hôn nhân và Gia đình năm 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 71,
-        "clauseNumber": 2,
-        "verified": true,
-        "lawTitle": "Nghĩa vụ và quyền chăm sóc, nuôi dưỡng",
-        "_id": "6af3e512b5dc3056eae07765"
-      },
-      {
-        "rawText": "Điều 186 Bộ luật Hình sự năm 2015",
-        "lawCode": "BLHS2015",
-        "articleNumber": 186,
-        "verified": true,
-        "lawTitle": "Tội từ chối hoặc trốn tránh nghĩa vụ cấp dưỡng",
-        "_id": "6af3e512b5dc3056eae07766"
-      },
-      {
-        "rawText": "Điều 71 Luật HNGĐ 2014",
-        "lawCode": "HNGD2014",
-        "articleNumber": 71,
-        "verified": true,
-        "lawTitle": "Nghĩa vụ và quyền chăm sóc, nuôi dưỡng",
-        "_id": "6af3e512b5dc3056eae07767"
-      },
-      {
-        "rawText": "Khoản 1 Điều 35 Hiến pháp 2013",
-        "lawCode": "HP2013",
-        "articleNumber": 35,
-        "clauseNumber": 1,
-        "verified": true,
-        "lawTitle": "Quyền làm việc của công dân",
-        "_id": "6af3e512b5dc3056eae07768"
+        "_id": "6afb0424ae375a6f362dedcf"
       }
     ],
     "verifiedCitationsCount": 4,
     "tier": "Tier 4 - Fine-tuned LoRA",
-    "latencyMs": 1520,
-    "createdAt": "2026-11-11T03:46:26.009Z"
+    "latencyMs": 100,
+    "createdAt": "2026-11-16T13:24:52.572Z"
+  },
+  {
+    "_id": "6afb03fdae375a6f362dedc0",
+    "userId": "6afb02760dad502d61c36a75",
+    "userEmail": "longvu24112005@gmail.com",
+    "query": "Phân tích khái niệm, bản chất và vai trò của pháp luật trong đời sống xã hội.",
+    "intentCode": "DEFINITION",
+    "response": "### ĐỊNH NGHĨA PHÁP LUẬT\n**Pháp luật** là hệ thống các quy tắc xử sự có tính bắt buộc chung, do Nhà nước ban hành hoặc thừa nhận và bảo đảm thực hiện, thể hiện ý chí của giai cấp thống trị và là công cụ điều chỉnh các quan hệ xã hội nhằm duy trì trật tự và sự phát triển của xã hội.\n\n---\n\n### CÁC ĐẶC TRƯNG CƠ BẢN CỦA PHÁP LUẬT\n1. **Tính quy phạm phổ biến (tính bắt buộc chung)**: Pháp luật là khuôn mẫu, chuẩn mực xử sự chung cho tất cả mọi cá nhân, cơ quan, tổ chức trong xã hội; được áp dụng lặp đi lặp lại nhiều lần trong đời sống thực tế.\n2. **Tính xác định chặt chẽ về mặt hình thức**: Các quy định của pháp luật phải được thể hiện rõ ràng, chuẩn xác dưới hình thức các văn bản quy phạm pháp luật với tên gọi, thẩm quyền và trình tự ban hành luật định.\n3. **Tính được bảo đảm thực hiện bằng quyền lực Nhà nước**: Pháp luật do Nhà nước ban hành và được bảo đảm thực hiện bằng sức mạnh quyền lực nhà nước, bao gồm các biện pháp giáo dục, thuyết phục và đặc biệt là biện pháp cưỡng chế nhà nước.\n\n---\n\n### BẢN CHẤT CỦA PHÁP LUẬT\n- **Bản chất giai cấp**: Pháp luật phản ánh và bảo vệ trước hết ý chí và lợi ích của giai cấp thống trị trong xã hội.\n- **Bản chất xã hội**: Pháp luật đồng thời ghi nhận, điều chỉnh các quan hệ xã hội nhằm bảo vệ lợi ích chung, duy trì sự ổn định, an toàn và tiến bộ của toàn thể xã hội.\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 2: Một số vấn đề lý luận cơ bản về pháp luật** — **Mục 2.1.1 – 2.1.4: Khái niệm, Nguồn gốc, Bản chất và 4 Đặc trưng của Pháp luật** (Trang 33 - 39).\n- **Căn cứ pháp lý cốt lõi**: Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 34-38); Điều 1 Bộ luật Dân sự 2015.",
+    "activityType": "solver",
+    "isBookmarked": false,
+    "bookmarkNote": "",
+    "reviewMetadata": {},
+    "citations": [
+      {
+        "rawText": "Điều 1 Bộ luật Dân sự 2015",
+        "lawCode": "BLDS2015",
+        "articleNumber": 1,
+        "verified": true,
+        "lawTitle": "Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự)",
+        "_id": "6afb03fdae375a6f362dedc1"
+      }
+    ],
+    "verifiedCitationsCount": 1,
+    "tier": "Tier 4 - Fine-tuned LoRA",
+    "latencyMs": 1107,
+    "createdAt": "2026-11-16T13:24:13.436Z"
+  },
+  {
+    "_id": "6afb03b6ae375a6f362dedb4",
+    "userId": "6afb02760dad502d61c36a75",
+    "userEmail": "longvu24112005@gmail.com",
+    "query": "Trình bày nguồn gốc ra đời, bản chất và các đặc trưng cơ bản của Nhà nước.",
+    "intentCode": "GENERAL_THEORY",
+    "response": "**Câu hỏi: \"Phân tích nguồn gốc, bản chất và các đặc trưng của Nhà nước\"**\n\n### I. Nguồn gốc ra đời của Nhà nước\n- **Nguồn gốc lịch sử**: Theo học thuyết Khác biệt giai cấp (Lão Tử, Mác – Lênin): Nhà nước hình thành từ sự phân hóa trong xã hội cộng sản nguyên thủy (từ \"Chúa thần\" - quyền bạo lực và \"Văn hóa\" (tổ chức xã hội) khi có sự phân chia giai cấp và mâu thuẫn đối kháng không thể điều hòa.\n- **Bản chất lịch sử**: Nhà nước là tổ chức quyền lực công đặc biệt của thị tộc/bộ lạc đã tách ra để bảo vệ lợi ích của giai cấp thống trị (thủ lĩnh/bầu cử) và quản lý xã hội, thực hiện 4 chức năng: Chế tạo quy tắc, Xử lý tranh chấp, Bảo vệ trật tự và trấn áp, Quản lý kinh tế, Củng cố ý thức.\n\n### II. Bản chất của Nhà nước\n- **Bản chất khách quan**: Nhà nước mang tính cả \"Quyền lực công\" (bảo vệ lợi ích xã hội) và \"Tính giai cấp\" (bảo vệ lợi ích giai cấp).\n- **Bản chất Khách quan (Thiệt lý - Mác – Lênin)**: Nhà nước là công cụ trấn áp xã hội, bảo vệ lợi ích của giai cấp thống trị, tổ chức trật tự và quản lý xã hội.\n- **Bản chất Trong nhà nước**: Nhà nước mang tính đối kháng (bảo vệ lợi ích giai cấp) và T\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:\n- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).\n- **Chương & Mục**: **Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam** — **Mục 1.1.1: Nguồn gốc của Nhà nước (Quan niệm phi Mác-xít và Học thuyết Mác - Lênin)** (Trang 5 - 10).\n- **Căn cứ pháp lý cốt lõi**: Học thuyết Mác - Lênin về Nhà nước và Pháp luật; Tác phẩm Nguồn gốc của gia đình, của tư hữu và của nhà nước (Ph.Ăngghen); Điều 1 Bộ luật Dân sự 2015; Điều 117 Bộ luật Dân sự 2015.",
+    "activityType": "solver",
+    "isBookmarked": false,
+    "bookmarkNote": "",
+    "reviewMetadata": {},
+    "citations": [
+      {
+        "rawText": "Điều 1 Bộ luật Dân sự 2015",
+        "lawCode": "BLDS2015",
+        "articleNumber": 1,
+        "verified": true,
+        "lawTitle": "Phạm vi điều chỉnh của Bộ luật Dân sự (Quan hệ pháp luật dân sự)",
+        "_id": "6afb03b6ae375a6f362dedb5"
+      },
+      {
+        "rawText": "Điều 117 Bộ luật Dân sự 2015",
+        "lawCode": "BLDS2015",
+        "articleNumber": 117,
+        "verified": true,
+        "lawTitle": "Điều kiện có hiệu lực của giao dịch dân sự",
+        "_id": "6afb03b6ae375a6f362dedb6"
+      }
+    ],
+    "verifiedCitationsCount": 2,
+    "tier": "Tier 4 - Fine-tuned LoRA",
+    "latencyMs": 225377,
+    "createdAt": "2026-11-16T13:23:02.442Z"
   },
   {
     "_id": "6af3ca7e31533ab3f41173ec",

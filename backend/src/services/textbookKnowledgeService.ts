@@ -1110,12 +1110,22 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       additions.push('cơ cấu 3 bộ phận quy phạm pháp luật bộ phận giả định bộ phận quy định bộ phận chế tài');
     }
 
-    // 10. Nhóm nguồn gốc & bản chất Nhà nước (Chương 1)
+    // 10. Nhóm nguồn gốc, bản chất & đặc trưng của Nhà nước (Chương 1)
     if (
-      qLower.includes('nguồn gốc nhà nước') ||
-      (qLower.includes('nhà nước') && (qLower.includes('ra đời') || qLower.includes('xuất hiện') || qLower.includes('phân chia giai cấp') || qLower.includes('mác lênin')))
+      qLower.includes('nhà nước') &&
+      (qLower.includes('nguồn gốc') ||
+        qLower.includes('ra đời') ||
+        qLower.includes('xuất hiện') ||
+        qLower.includes('bản chất') ||
+        qLower.includes('đặc trưng') ||
+        qLower.includes('đặc điểm') ||
+        qLower.includes('tính giai cấp') ||
+        qLower.includes('tính xã hội') ||
+        qLower.includes('mác lênin'))
     ) {
-      additions.push('nguồn gốc nhà nước học thuyết mác lênin tiền đề kinh tế tư hữu ba lần phân công lao động tiền đề xã hội mâu thuẫn giai cấp không thể điều hòa');
+      additions.push(
+        'nguồn gốc nhà nước học thuyết mác lênin tiền đề kinh tế tư hữu ba lần phân công lao động tiền đề xã hội mâu thuẫn giai cấp bản chất nhà nước tính giai cấp tính xã hội khái niệm nhà nước đặc trưng cơ bản phân biệt nhà nước quyền lực công cộng đặc biệt phân chia dân cư theo lãnh thổ chủ quyền quốc gia ban hành pháp luật thu thuế'
+      );
     }
 
     // 11. Nhóm Quan hệ pháp luật & Sự kiện pháp lý (Chương 4)
@@ -1170,7 +1180,7 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   public static searchTopChunks(query: string, topK: number = 2): { chunk: TextbookChunk; score: number }[] {
     const expandedQuery = this.rewriteAndExpandQuery(query);
     const STOP_WORDS = new Set([
-      'nhà', 'nước', 'pháp', 'luật', 'của', 'và', 'là', 'trong', 'các', 'cho',
+      'của', 'và', 'là', 'trong', 'các', 'cho',
       'với', 'theo', 'về', 'khi', 'này', 'đó', 'thì', 'ở', 'đến', 'từ', 'những',
       'được', 'sau', 'đúng', 'hay', 'sai', 'mọi', 'đều', 'cho', 'biết', 'nhận', 'định'
     ]);
@@ -1664,10 +1674,11 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   ): string {
     const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
     const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
+    const safeArticles = Array.isArray(extraArticles) ? extraArticles : [];
     const allLaws = Array.from(
       new Set([
-        ...chunk.legalBasis,
-        ...extraArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`)
+        ...(chunk.legalBasis || []),
+        ...safeArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`)
       ])
     ).filter(Boolean);
 

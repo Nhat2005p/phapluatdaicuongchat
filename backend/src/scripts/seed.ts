@@ -410,6 +410,35 @@ export async function runSeed(): Promise<void> {
       title: 'Pháp nhân',
       contentRaw: '1. Một tổ chức được công nhận là pháp nhân khi có đủ các điều kiện sau đây: a) Được thành lập theo quy định của Bộ luật này, luật khác có liên quan; b) Có cơ cấu tổ chức theo quy định tại Điều 83 của Bộ luật này; c) Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình; d) Nhân danh mình tham gia các quan hệ pháp luật một cách độc lập.',
       keywords: ['pháp nhân', 'chủ thể quan hệ dân sự', 'điều kiện pháp nhân', 'tài sản độc lập']
+    },
+
+    // Hiến pháp năm 2013 (Lý luận cơ bản về Nhà nước & Bộ máy nhà nước)
+    {
+      articleId: 'HP2013_D1',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 1,
+      title: 'Chủ quyền quốc gia và toàn vẹn lãnh thổ',
+      contentRaw: 'Nước Cộng hòa xã hội chủ nghĩa Việt Nam là một nước độc lập, có chủ quyền, thống nhất và toàn vẹn lãnh thổ, bao gồm đất liền, hải đảo, vùng biển và vùng trời.',
+      keywords: ['hiến pháp', 'nhà nước', 'chủ quyền quốc gia', 'độc lập', 'lãnh thổ', 'đặc trưng nhà nước', 'bản chất nhà nước']
+    },
+    {
+      articleId: 'HP2013_D2',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 2,
+      title: 'Bản chất Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam',
+      contentRaw: '1. Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam là nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân.\n2. Nước Cộng hòa xã hội chủ nghĩa Việt Nam do Nhân dân làm chủ; tất cả quyền lực nhà nước thuộc về Nhân dân mà nền tảng là liên minh giữa giai cấp công nhân với giai cấp nông dân và đội ngũ trí thức.\n3. Quyền lực nhà nước là thống nhất, có sự phân công, phối hợp, kiểm soát giữa các cơ quan nhà nước trong việc thực hiện các quyền lập pháp, hành pháp, tư pháp.',
+      keywords: ['bản chất nhà nước', 'nhà nước pháp quyền', 'của nhân dân do nhân dân vì nhân dân', 'tất cả quyền lực thuộc về nhân dân', 'hiến pháp 2013', 'nguồn gốc nhà nước']
+    },
+    {
+      articleId: 'HP2013_D8',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 8,
+      title: 'Nguyên tắc tổ chức và hoạt động của Nhà nước',
+      contentRaw: '1. Nhà nước được tổ chức và hoạt động theo Hiến pháp và pháp luật, quản lý xã hội bằng Hiến pháp và pháp luật, thực hiện nguyên tắc tập trung dân chủ.\n2. Các cơ quan nhà nước, cán bộ, công chức, viên chức phải tôn trọng Nhân dân, tận tụy phục vụ Nhân dân, liên hệ chặt chẽ với Nhân dân, lắng nghe ý kiến và chịu sự giám sát của Nhân dân; kiên quyết đấu tranh chống tham nhũng, lãng phí và mọi biểu hiện quan liêu, hách dịch, cửa quyền.',
+      keywords: ['quản lý xã hội bằng pháp luật', 'hiến pháp và pháp luật', 'đặc trưng nhà nước', 'nguyên tắc tổ chức nhà nước']
     }
   ];
 
