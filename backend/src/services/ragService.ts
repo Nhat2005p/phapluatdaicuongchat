@@ -52,6 +52,17 @@ export class RagService {
     const shiftedDRe = new RegExp(`([${vnLower}${vnUpper}])([đĐ])\\s+(ội|ến|ịnh|ồng|ầu|ược|ây|ó|iều|úng|ối|ơn|ộ|ộc|ạo|ất|ảm|áng)\\b`, 'gi');
     res = res.replace(shiftedDRe, '$1 $2$3');
 
+    // 1.1 Khử dấu gạch chéo ngược trailing do gõ nhầm (ví dụ: "không\", "gì\\")
+    res = res.replace(/\\+$/g, '').trim();
+
+    // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu thường gặp
+    res = res.replace(/\bphap\s+luat\b/gi, 'pháp luật')
+             .replace(/\bphap\s+ly\b/gi, 'pháp lý')
+             .replace(/\bvi\s+pham\b/gi, 'vi phạm')
+             .replace(/\bnghi\s+dinh\b/gi, 'nghị định')
+             .replace(/\bgiet\s+nguoi\b/gi, 'giết người')
+             .replace(/\btrom\s+cap\b/gi, 'trộm cắp');
+
     // 2. Mở rộng các từ viết tắt chuyên ngành Pháp luật Đại cương (dùng ranh giới từ hỗ trợ tiếng Việt có dấu)
     const wbLeft = '(?:^|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
     const wbRight = '(?=$|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
@@ -94,7 +105,9 @@ export class RagService {
     }
 
     // 3. Khử nhiễu điểm số trong câu đơn (ví dụ "(1,0 điểm)", "(2,0 điểm)")
-    res = res.replace(/\(\s*\d+(?:[.,]\d+)?\s*điểm\s*\)/gi, ' ').replace(/\s{2,}/g, ' ').trim();
+    res = res.replace(/\(\s*\d+(?:[.,]\d+)?\s*điểm\s*\)/gi, ' ');
+    // Chuẩn hóa khoảng trắng ngang (spaces, tabs) mà KHÔNG xóa các dấu ngắt dòng \n
+    res = res.replace(/[^\S\r\n]{2,}/g, ' ').replace(/\n{3,}/g, '\n\n').trim();
 
     return res;
   }
@@ -295,10 +308,12 @@ export class RagService {
       'trục xuất', 'hình phạt chính', 'hình phạt bổ sung', 'miễn trách nhiệm hình sự', 'xóa án tích',
       'phòng vệ', 'cấp thiết', 'sự kiện bất ngờ', 'độ tuổi', 'tuổi chịu', 'chưa thành niên',
       'chuẩn bị phạm tội', 'phạm tội chưa đạt', 'tự ý nửa chừng', 'tái phạm',
+      'giết', 'tước đoạt tính mạng', 'đâm', 'chém', 'bắn', 'trộm', 'cướp', 'lừa đảo', 'chiếm đoạt',
 
       // 4. Chương 8 & 9: Luật Hành chính & Phòng, chống tham nhũng
       'hành chính', 'quản lý nhà nước', 'xử phạt', 'vi phạm hành chính', 'xử phạt vi phạm hành chính',
       'biện pháp ngăn chặn', 'tạm giữ', 'khám xét',
+      'vượt đèn', 'vượt đèn đỏ', 'đèn đỏ', 'giao thông', 'xử lý', 'xử lí', 'bị phạt', 'phạt tiền', 'tước bằng', 'tước giấy phép', 'tai nạn', 'va chạm',
       'tham nhũng', 'vụ lợi', 'chức vụ', 'quyền hạn', 'kê khai tài sản', 'hối lộ', 'nhận hối lộ', 'tham ô',
 
       // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
@@ -506,11 +521,21 @@ export class RagService {
       q.includes('rơi vỡ') ||
       (q.includes('laptop') && (q.includes('rơi') || q.includes('vỡ') || q.includes('hỏng') || q.includes('mượn'))) ||
       (q.includes('mượn') && (q.includes('hỏng') || q.includes('vỡ') || q.includes('bồi thường') || q.includes('tai nạn'))) ||
-      (q.includes('vượt đèn đỏ') && q.includes('va chạm')) ||
+      q.includes('vượt đèn đỏ') ||
+      q.includes('vượt đèn') ||
       (q.includes('đuổi theo') && q.includes('đánh')) ||
       q.includes('dùng gậy') ||
       q.includes('dùng ghế') ||
-      q.includes('đập phá')
+      q.includes('đập phá') ||
+      q.includes('giết') ||
+      q.includes('tước đoạt tính mạng') ||
+      q.includes('chém') ||
+      q.includes('đâm') ||
+      q.includes('bắn') ||
+      q.includes('cướp') ||
+      q.includes('trộm') ||
+      q.includes('lừa đảo') ||
+      q.includes('chiếm đoạt')
     ) {
       return 'CASE_ANALYSIS';
     }
@@ -1011,18 +1036,47 @@ export class RagService {
         break;
       }
 
-      case 'FAMILY_LAW':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'HNGD2014_D14' },
-            { articleId: 'HNGD2014_D15' },
-            { articleId: 'HNGD2014_D88' },
-            { articleId: 'HNGD2014_D90' },
-            { articleId: 'HNGD2014_D91' },
-            { articleId: 'HNGD2014_D101' }
-          ]
-        }).limit(6);
+      case 'FAMILY_LAW': {
+        const qL = query.toLowerCase();
+        if (
+          qL.includes('tài sản') ||
+          qL.includes('chia') ||
+          qL.includes('ly hôn') ||
+          qL.includes('ly dị') ||
+          qL.includes('cho') ||
+          qL.includes('tặng') ||
+          qL.includes('thừa kế') ||
+          qL.includes('nhà chồng') ||
+          qL.includes('nhà chông') ||
+          qL.includes('nhà vợ') ||
+          qL.includes('nhập') ||
+          qL.includes('riêng')
+        ) {
+          // Nhánh 1: Tài sản riêng, tài sản chung, phân chia tài sản khi ly hôn
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HNGD2014_D43' },
+              { articleId: 'HNGD2014_D59' },
+              { articleId: 'HNGD2014_D33' },
+              { articleId: 'HNGD2014_D46' },
+              { articleId: 'BLDS2015_D457' }
+            ]
+          }).limit(5);
+        } else {
+          // Nhánh 2: Xác định cha mẹ con / Nhận con / Chung sống không kết hôn
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HNGD2014_D14' },
+              { articleId: 'HNGD2014_D15' },
+              { articleId: 'HNGD2014_D88' },
+              { articleId: 'HNGD2014_D90' },
+              { articleId: 'HNGD2014_D91' },
+              { articleId: 'HNGD2014_D101' }
+            ]
+          }).limit(6);
+        }
         break;
+      }
 
       case 'QPPL_STRUCT': {
         const qL = query.toLowerCase();
@@ -1142,30 +1196,45 @@ export class RagService {
         if (qLower.includes('thương tích') || qLower.includes('đánh') || qLower.includes('gậy') || qLower.includes('hung khí')) dynamicConditions.push({ articleId: 'BLHS2015_D134' });
         if (qLower.includes('phòng vệ') || qLower.includes('chống trả')) dynamicConditions.push({ articleId: 'BLHS2015_D22' });
         if (qLower.includes('cấp thiết')) dynamicConditions.push({ articleId: 'BLHS2015_D23' });
-        if (qLower.includes('nguồn nguy hiểm') || qLower.includes('xe máy') || qLower.includes('ô tô') || qLower.includes('tai nạn') || qLower.includes('vượt đèn đỏ')) {
+        if (qLower.includes('nguồn nguy hiểm') || qLower.includes('xe máy') || qLower.includes('ô tô') || qLower.includes('tai nạn')) {
           dynamicConditions.push({ articleId: 'BLDS2015_D601' });
           dynamicConditions.push({ articleId: 'BLDS2015_D584' });
+        }
+        if (qLower.includes('vượt đèn đỏ') || qLower.includes('đèn đỏ') || (qLower.includes('giao thông') && qLower.includes('xử phạt'))) {
+          dynamicConditions.push({ articleId: 'GT2019_ND100' });
+        }
+        if (qLower.includes('giết') || qLower.includes('đâm chết') || qLower.includes('chém chết') || qLower.includes('tước đoạt mạng sống')) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D123' }, { articleId: 'BLHS2015_D12' });
         }
         if (qLower.includes('thừa kế') || qLower.includes('di sản') || qLower.includes('di chúc')) {
           dynamicConditions.push({ articleId: 'BLDS2015_D612' }, { articleId: 'BLDS2015_D651' }, { articleId: 'BLDS2015_D644' });
         }
       }
+      // Nhánh tài sản vợ chồng / ly hôn / tặng cho riêng
       if (
-        qLower.includes('vợ chồng') ||
-        qLower.includes('kết hôn') ||
-        qLower.includes('tài sản chung') ||
+        (qLower.includes('tài sản') || qLower.includes('chia') || qLower.includes('ly hôn') || qLower.includes('ly dị') || qLower.includes('nhà chồng') || qLower.includes('nhà chông') || qLower.includes('nhà vợ') || qLower.includes('cho tặng') || qLower.includes('tặng cho') || qLower.includes('thừa kế riêng')) &&
+        (qLower.includes('vợ chồng') || qLower.includes('ly hôn') || qLower.includes('hôn nhân') || qLower.includes('chồng') || qLower.includes('vợ'))
+      ) {
+        dynamicConditions.push(
+          { articleId: 'HNGD2014_D43' },
+          { articleId: 'HNGD2014_D59' },
+          { articleId: 'HNGD2014_D33' },
+          { articleId: 'HNGD2014_D46' },
+          { articleId: 'BLDS2015_D457' }
+        );
+      } else if (
         qLower.includes('chung sống') ||
         qLower.includes('nhận con') ||
         qLower.includes('khai sinh') ||
-        qLower.includes('hôn nhân')
+        qLower.includes('hộ tịch') ||
+        qLower.includes('cha mẹ con')
       ) {
         dynamicConditions.push(
           { articleId: 'HNGD2014_D14' },
           { articleId: 'HNGD2014_D15' },
           { articleId: 'HNGD2014_D88' },
           { articleId: 'HNGD2014_D91' },
-          { articleId: 'HNGD2014_D101' },
-          { articleId: 'HNGD2014_D33' }
+          { articleId: 'HNGD2014_D101' }
         );
       }
       if (qLower.includes('quan hệ pháp luật') || qLower.includes('quan hệ dân sự') || qLower.includes('pháp nhân')) {

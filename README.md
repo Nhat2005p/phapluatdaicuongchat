@@ -290,3 +290,5 @@ legal-chatbot-local/
 
 > **Bản quyền & Phát triển**: Đồ án PBL6 — Khoa Công nghệ Thông tin, Trường Đại học Bách Khoa - Đại học Đà Nẵng (DUT).  
 > **Năm thực hiện**: 2026.
+   
+   .\tools\llama\llama-server.exe -m models\qwen2.5-3b-legal-vn-Q4_K_M.gguf --host 127.0.0.1 --port 8088 -c 2048 -t 8

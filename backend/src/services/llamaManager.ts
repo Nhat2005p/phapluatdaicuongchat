@@ -49,8 +49,9 @@ export class LlamaManager {
           '-m', MODEL_GGUF,
           '--host', '127.0.0.1',
           '--port', '8088',
-          '-c', '2048',
-          '-t', '6',
+          '-c', '1024',
+          '-np', '1',
+          '-t', '4',
           '--log-disable'
         ],
         {

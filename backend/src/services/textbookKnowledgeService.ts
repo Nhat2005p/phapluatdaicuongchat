@@ -507,6 +507,57 @@ II. CHẾ ĐỊNH THỪA KẾ (CHƯƠNG XXII - XXIII BLDS 2015):
    - Hàng 3: Cụ nội ngoại, bác chú cậu cô dì ruột, cháu ruột, chắt ruột.
 4. Thừa kế thế vị (Điều 652): Con của người để lại di sản chết trước/cùng thời điểm thì cháu thế vị; cháu chết thì chắt thế vị.`
     },
+    {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự & Luật Hôn nhân Gia đình',
+      sectionCode: '6.6',
+      sectionTitle: 'Chế độ tài sản của vợ chồng và Nguyên tắc phân chia tài sản khi ly hôn',
+      pageRange: 'tr. 144 - 148',
+      keywords: [
+        'tài sản vợ chồng',
+        'tài sản chung',
+        'tài sản riêng',
+        'tặng cho riêng',
+        'thừa kế riêng',
+        'nhà chồng cho',
+        'nhà chông cho',
+        'nhà vợ cho',
+        'cho tặng',
+        'cho,tặng',
+        'chia tài sản khi ly hôn',
+        'ly hôn chia tài sản',
+        'nhập tài sản riêng vào tài sản chung',
+        'điều 33',
+        'điều 43',
+        'điều 46',
+        'điều 59',
+        'hôn nhân gia đình'
+      ],
+      summary: 'Quy định về tài sản chung (Điều 33) và tài sản riêng (Điều 43), thỏa thuận nhập tài sản (Điều 46) và nguyên tắc phân chia tài sản khi ly hôn (Điều 59 Luật HNGĐ 2014).',
+      legalBasis: [
+        'Luật Hôn nhân và Gia đình 2014 (Điều 33, 43, 46, 59)',
+        'Bộ luật Dân sự 2015 (Điều 105, 158, 457)'
+      ],
+      baremContent: `I. PHÂN BIỆT TÀI SẢN CHUNG VÀ TÀI SẢN RIÊNG CỦA VỢ CHỒNG:
+1. Tài sản riêng của vợ, chồng (Điều 43 Luật Hôn nhân và Gia đình 2014):
+- Tài sản mà mỗi người có trước khi kết hôn.
+- Tài sản được THỪA KẾ RIÊNG, ĐƯỢC TẶNG CHO RIÊNG trong thời kỳ hôn nhân (ví dụ: nhà chồng cho riêng chồng hoặc nhà vợ cho riêng vợ).
+- Tài sản được chia riêng cho vợ, chồng theo thỏa thuận phân chia tài sản chung.
+- Hoa lợi, lợi tức phát sinh từ tài sản riêng thuộc về người đó, trừ trường hợp luật có quy định khác.
+2. Tài sản chung của vợ chồng (Điều 33 Luật Hôn nhân và Gia đình 2014):
+- Gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, sản xuất kinh doanh, hoa lợi lợi tức và thu nhập hợp pháp khác trong thời kỳ hôn nhân.
+- Tài sản mà vợ chồng được thừa kế chung hoặc tặng cho chung.
+- Quyền sử dụng đất có được sau khi kết hôn (trừ trường hợp được thừa kế riêng, tặng cho riêng).
+
+II. NGUYÊN TẮC PHÂN CHIA TÀI SẢN KHI LY HÔN (ĐIỀU 59 LUẬT HNGĐ 2014):
+1. Đối với tài sản riêng:
+- Tài sản riêng của bên nào thì vẫn thuộc quyền sở hữu của bên đó, KHÔNG ĐƯA VÀO KHỐI TÀI SẢN CHUNG ĐỂ CHIA (Khoản 4 Điều 59).
+- Nếu tài sản được gia đình/nhà chồng cho riêng người chồng (hợp đồng tặng cho riêng, đứng tên riêng), khi ly hôn người chồng tiếp tục sở hữu toàn bộ, vợ không có quyền đòi chia đôi.
+- Trừ trường hợp người có tài sản riêng đã tự nguyện lập văn bản thỏa thuận nhập tài sản riêng vào khối tài sản chung của vợ chồng theo Điều 46.
+2. Đối với tài sản chung:
+- Ưu tiên thỏa thuận giữa các bên. Nếu không thỏa thuận được thì Tòa án giải quyết.
+- Về nguyên tắc chia đôi (50/50), có tính đến công sức đóng góp, hoàn cảnh gia đình và lỗi của mỗi bên.`
+    },
 
     // =========================================================================
     // CHƯƠNG 7: MỘT SỐ NỘI DUNG CƠ BẢN CỦA LUẬT HÌNH SỰ (tr. 148 - 180)
@@ -1096,6 +1147,14 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       additions.push('luật phòng chống tham nhũng 2018 khái niệm đặc điểm hành vi tham nhũng người có chức vụ quyền hạn vì vụ lợi');
     }
 
+    // 15. Nhóm Tài sản vợ chồng, Phân chia tài sản khi ly hôn, Tài sản riêng tặng cho
+    if (
+      (qLower.includes('tài sản') || qLower.includes('chia') || qLower.includes('ly hôn') || qLower.includes('ly dị') || qLower.includes('nhà chồng') || qLower.includes('nhà chông') || qLower.includes('nhà vợ') || qLower.includes('cho') || qLower.includes('tặng')) &&
+      (qLower.includes('vợ chồng') || qLower.includes('ly hôn') || qLower.includes('hôn nhân') || qLower.includes('chồng') || qLower.includes('vợ'))
+    ) {
+      additions.push('chế độ tài sản vợ chồng tài sản riêng điều 43 tài sản chung điều 33 nguyên tắc phân chia tài sản khi ly hôn điều 59 nhập tài sản riêng điều 46 tặng cho riêng');
+    }
+
     return additions.length > 0 ? `${query} ${additions.join(' ')}` : query;
   }
 
@@ -1595,8 +1654,8 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   }
 
   /**
-   * Định dạng khối Trích dẫn RAG & Căn cứ Học liệu Giáo trình TMU 2021 chi tiết chuẩn mực
-   * Đáp ứng: Nêu rõ Chương gì, Luật gì, Trang mấy, Nội dung chi tiết tại các trang đó là gì.
+   * Định dạng khối Trích dẫn RAG & Căn cứ Học liệu Giáo trình TMU 2021 ngắn gọn, chuẩn mực
+   * Chỉ ghi mục, chương, trang và điều luật cốt lõi, không diễn giải dài dòng.
    */
   public static buildDetailedCitation(
     chunk: TextbookChunk,
@@ -1605,21 +1664,22 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
   ): string {
     const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
     const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
-    const detailedLaws = this.formatDetailedLaws(chunk.legalBasis, extraArticles);
-    const formattedContent = this.formatCleanTextbookContent(chunk.baremContent, query);
+    const allLaws = Array.from(
+      new Set([
+        ...chunk.legalBasis,
+        ...extraArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`)
+      ])
+    ).filter(Boolean);
 
-    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
-- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-- **Tên Chương học phần**: **${chunk.chapterTitle}**
-- **Mục & Tiết bài học**: **Mục ${cleanSectionCode}: ${chunk.sectionTitle}**
-- **Vị trí học liệu trong sách**: **Trang ${pages}**
-- **Trọng tâm lý luận**: ${chunk.summary}
+    const lawSummary =
+      allLaws.length > 0
+        ? allLaws.slice(0, 4).join('; ')
+        : 'Bộ luật Dân sự 2015, Bộ luật Hình sự 2015';
 
-### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH (TRANG ${pages}):
-${formattedContent}
-
-### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:
-${detailedLaws}`;
+    return `\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:
+- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
+- **Chương & Mục**: **${chunk.chapterTitle}** — **Mục ${cleanSectionCode}: ${chunk.sectionTitle}** (Trang ${pages}).
+- **Căn cứ pháp lý cốt lõi**: ${lawSummary}.`;
   }
 
   /**
@@ -1634,77 +1694,46 @@ ${detailedLaws}`;
       return this.buildDetailedCitation(items[0].chunk, extraArticles, items[0].subQuestion);
     }
 
-    // Khử trùng lặp theo sectionCode nhưng lưu lại danh sách các câu hỏi thuộc cùng mục đó
-    const groupedMap = new Map<string, { chunk: TextbookChunk; questions: string[]; indices: number[] }>();
+    const groupedMap = new Map<string, { chunk: TextbookChunk; indices: number[] }>();
     items.forEach((it, idx) => {
       const code = it.chunk.sectionCode;
       if (!groupedMap.has(code)) {
-        groupedMap.set(code, { chunk: it.chunk, questions: [it.subQuestion], indices: [idx + 1] });
+        groupedMap.set(code, { chunk: it.chunk, indices: [idx + 1] });
       } else {
-        const entry = groupedMap.get(code)!;
-        entry.questions.push(it.subQuestion);
-        entry.indices.push(idx + 1);
+        groupedMap.get(code)!.indices.push(idx + 1);
       }
     });
 
-    const uniqueEntries = Array.from(groupedMap.values());
-    if (uniqueEntries.length === 1) {
-      return this.buildDetailedCitation(
-        uniqueEntries[0].chunk,
-        extraArticles,
-        uniqueEntries[0].questions.join(' ')
+    const lines: string[] = [];
+    const allBases = new Set<string>();
+
+    groupedMap.forEach(({ chunk, indices }) => {
+      const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
+      const cleanCode = chunk.sectionCode.replace(/_/g, ' – ');
+      const qLabels = indices.map((n) => `Câu ${n}`).join(', ');
+      lines.push(
+        `- **Đối chiếu ${qLabels}**: **${chunk.chapterTitle}** — Mục ${cleanCode}: ${chunk.sectionTitle} (Trang ${pages})`
       );
-    }
-
-    const allLegalBases: string[] = [];
-    const metadataLines: string[] = [];
-    const excerptBlocks: string[] = [];
-
-    uniqueEntries.forEach((entry) => {
-      const c = entry.chunk;
-      const pages = c.pageRange.replace(/^tr\.\s*/i, '');
-      const cleanSectionCode = c.sectionCode.replace(/_/g, ' – ');
-      const qLabel = entry.indices.map((n) => `Câu ${n}`).join(', ');
-
-      metadataLines.push(
-        `- **Đối chiếu ${qLabel}** — **${c.chapterTitle}** (*Mục ${cleanSectionCode}: ${c.sectionTitle}* — **Trang ${pages}**): ${c.summary}`
-      );
-
-      const formattedExcerpt = this.formatCleanTextbookContent(
-        c.baremContent,
-        entry.questions.join(' ')
-      );
-      excerptBlocks.push(
-        `#### 📘 Hạng mục học liệu (${qLabel}): ${c.chapterTitle} — Trang ${pages}
-${formattedExcerpt}`
-      );
-
-      for (const lb of c.legalBasis) {
-        if (!allLegalBases.includes(lb)) allLegalBases.push(lb);
-      }
+      chunk.legalBasis.forEach((b) => allBases.add(b));
     });
 
-    const detailedLaws = this.formatDetailedLaws(allLegalBases, extraArticles);
+    extraArticles.forEach((a) => allBases.add(`Điều ${a.articleNumber} ${a.lawName}`));
+    const lawSummary = Array.from(allBases).slice(0, 5).join('; ');
 
-    return `\n\n---\n\n### 📚 CĂN CỨ THAM KHẢO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (TMU 2021 — BỘ GD&ĐT):
-- **Tên Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-${metadataLines.join('\n')}
-
-### 📖 NỘI DUNG LÝ LUẬN ĐỐI CHIẾU TRONG GIÁO TRÌNH THEO TỪNG CHỦ ĐỀ:
-${excerptBlocks.join('\n\n---\n\n')}
-
-### ⚖️ CĂN CỨ VĂN BẢN QUY PHẠM PHÁP LUẬT THỰC ĐỊNH ÁP DỤNG:
-${detailedLaws}`;
+    return `\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:
+- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
+${lines.join('\n')}
+- **Căn cứ pháp lý cốt lõi**: ${lawSummary || 'Bộ luật Dân sự 2015, Bộ luật Hình sự 2015'}.`;
   }
 
   /**
    * Định dạng câu trả lời hoàn chỉnh dựa trên Giáo trình Pháp luật Đại cương TMU 2021
+   * Đưa câu trả lời trực tiếp lên trước, phần căn cứ giáo trình chỉ ghi mục ngắn gọn ở cuối.
    */
   public static buildTextbookResponse(query: string, topMatch: { chunk: TextbookChunk; score: number }): string {
     const c = topMatch.chunk;
-    return `📚 **GIẢI ĐÁP THEO GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG — BỘ GIÁO DỤC VÀ ĐÀO TẠO**  
-*(Trường Đại học Thương Mại — NXB Hà Nội 2021, Chủ biên: TS. Trần Thành Thọ)*
-
-${this.buildDetailedCitation(c, [], query)}`;
+    const answerBody = this.formatCleanTextbookContent(c.baremContent, query);
+    const citation = this.buildDetailedCitation(c, [], query);
+    return `${answerBody.trim()}${citation}`;
   }
 }

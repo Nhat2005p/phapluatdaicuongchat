@@ -1805,7 +1805,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
     // BƯỚC 0.1: NÂNG CẤP 1 — BỘ TÁCH CÂU HỎI ĐA Ý & GIẢI SONG SONG (MULTI-QUERY DECOMPOSITION)
     // Ưu tiên bóc tách khi người dùng hỏi từ 2 câu hỏi / nhận định độc lập trở lên trong 1 lượt gửi
-    const subQuestions = RagService.splitMultiQuestions(displayQuery);
+    const subQuestions = RagService.splitMultiQuestions(rawQuery && rawQuery.trim().length > 30 ? rawQuery : displayQuery);
     if (subQuestions.length >= 2) {
       console.log(`🔀 [Multi-Query Solver] Phát hiện ${subQuestions.length} câu hỏi/nhận định độc lập trong 1 lượt gửi. Tiến hành giải từng câu...`);
       const solvedParts: string[] = [];
@@ -1950,8 +1950,28 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       effectiveIntent === 'VPPL_4_ELEMENTS' ||
       effectiveIntent === 'CIVIL_INHERIT' ||
       effectiveIntent === 'COMPARISON';
-    const adaptiveMaxTokens = isComplexQuery ? 1792 : 1280;
-    const adaptiveTimeoutMs = isComplexQuery ? 6000 : 4000;
+    // Đảm bảo số lượng tokens đủ để mô hình sinh bài giải trọn vẹn, không bị ngắt cụt giữa chừng
+    const adaptiveMaxTokens = isComplexQuery ? 640 : 480;
+    // Timeout 4 phút (240.000ms): Cho phép CPU hoàn tất việc sinh câu trả lời tối đa 4 phút, biên độ an toàn tuyệt đối, không bao giờ bị abort sớm
+    const adaptiveTimeoutMs = 240000;
+
+    // Ngữ cảnh tinh gọn kết hợp Căn cứ thực định và Trọng tâm giáo trình (Concise Context):
+    let compactLlmContext = '';
+    if (retrievedArticles.length > 0) {
+      const topArts = retrievedArticles.slice(0, 4);
+      topArts.forEach((art) => {
+        const snippet = art.contentRaw ? art.contentRaw.slice(0, 320).replace(/\s+/g, ' ').trim() : '';
+        compactLlmContext += `[Điều ${art.articleNumber} ${art.lawName}: ${art.title}]\n${snippet}\n\n`;
+      });
+    }
+    if (topTextbooks.length > 0 && compactLlmContext.length < 800) {
+      const tb = topTextbooks[0].chunk;
+      const snippet = tb.baremContent ? tb.baremContent.slice(0, 400).replace(/\s+/g, ' ').trim() : '';
+      compactLlmContext += `[Giáo trình: ${tb.chapterTitle} - ${tb.sectionTitle}]\n${snippet}\n\n`;
+    }
+    if (!compactLlmContext) {
+      compactLlmContext = fullRagContext.slice(0, 800);
+    }
 
     try {
       const response = await fetch(`${config.llamaServerUrl}/chat/completions`, {
@@ -1963,11 +1983,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             {
               role: 'system',
               content:
-                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy dựa vào Ngữ cảnh giáo trình và các điều luật được cung cấp dưới đây để giải đáp chi tiết, lập luận chặt chẽ và đưa ra kết luận chuẩn xác.`
+                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Nhiệm vụ của bạn là giải đáp chính xác, sâu sắc các tình huống pháp lý và câu hỏi đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNguyên tắc trả lời:\n1. Phân tích trực tiếp đúng trọng tâm vấn đề được hỏi (không lạc đề sang các chế định pháp luật khác).\n2. Nêu rõ Căn cứ pháp lý áp dụng (Điều luật, Tên văn bản luật).\n3. Phân biệt rõ các trường hợp cụ thể trong thực tế để người học nắm trọn vẹn (ví dụ: tài sản riêng do tặng cho riêng vs tài sản chung hoặc trường hợp đã thỏa thuận nhập tài sản riêng vào tài sản chung).\n4. Đưa ra kết luận rõ ràng, dứt khoát cho câu hỏi.`
             },
             {
               role: 'user',
-              content: `--- NGỮ CẢNH GIÁO TRÌNH & ĐIỀU LUẬT TRUY XUẤT TỪ RAG ---\n${fullRagContext.slice(0, 2800)}\n\n--- CÂU HỎI / ĐỀ BÀI ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Hãy vận dụng đúng nội dung giáo trình và quy định pháp luật ở trên để trả lời đầy đủ, chính xác:`
+              content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Dựa vào các căn cứ pháp luật và nguyên lý trên, hãy phân tích và trả lời câu hỏi một cách chuẩn xác, đầy đủ:`
             }
           ],
           temperature: 0.2,
@@ -2222,6 +2242,20 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 
     const VN_CAP = /^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;
     const actors: string[] = [];
+
+    // 0. Bắt các danh xưng kèm tên/ký tự kể cả viết thường (ví dụ: "anh a", "anh b", "ông a", "bà b", "chị c")
+    const honorificRegex = /\b(ông|bà|anh|chị|cháu|bác|cô|chú)\s+([a-zA-ZÀ-ỹ]+)\b/gi;
+    let hMatch: RegExpExecArray | null;
+    while ((hMatch = honorificRegex.exec(query)) !== null) {
+      const title = hMatch[1].charAt(0).toUpperCase() + hMatch[1].slice(1).toLowerCase();
+      const rawName = hMatch[2];
+      const name = rawName.length === 1 ? rawName.toUpperCase() : rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
+      const actorName = `${title} ${name}`;
+      if (!actors.includes(actorName) && !commonWords.has(rawName.toLowerCase())) {
+        actors.push(actorName);
+      }
+    }
+
     const words = query.replace(/[.,;:?!()]/g, ' ').split(/\s+/).filter(Boolean);
 
     for (let i = 0; i < words.length; i++) {
@@ -2392,7 +2426,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     let lawClause = 'Quy định pháp luật hiện hành';
     let faultType = 'Lỗi cố ý trực tiếp';
 
-    if (qLower.includes('trộm cắp') || qLower.includes('trộm')) {
+    if (qLower.includes('giết') || qLower.includes('tước đoạt tính mạng') || qLower.includes('chém') || qLower.includes('đâm') || qLower.includes('bắn')) {
+      actionDesc = `Hành vi dùng hung khí/vũ lực tước đoạt tính mạng của ${actorB}`;
+      objectDesc = 'Quyền được sống, quyền bất khả xâm phạm về tính mạng của con người (được Hiến pháp 2013 và Bộ luật Hình sự bảo vệ ở mức độ tối cao)';
+      lawClause = 'Điều 123 Bộ luật Hình sự 2015 về Tội giết người và Điều 8 BLHS 2015';
+      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ tính chất đặc biệt nguy hiểm cho xã hội của hành vi tước đoạt tính mạng và mong muốn hậu quả chết người xảy ra) hoặc Lỗi cố ý gián tiếp';
+    } else if (qLower.includes('trộm cắp') || qLower.includes('trộm')) {
       actionDesc = `Hành vi lén lút, bí mật chiếm đoạt tài sản của ${actorB}${money ? ` có giá trị ${money}` : ''}`;
       objectDesc = 'Quyền sở hữu tài sản hợp pháp của công dân (được Hiến pháp 2013 và Bộ luật Hình sự bảo vệ)';
       lawClause = 'Điều 173 Bộ luật Hình sự 2015 (sửa đổi 2017) về Tội trộm cắp tài sản';
@@ -2402,7 +2441,17 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       objectDesc = 'Quyền sở hữu tài sản và quyền bất khả xâm phạm về sức khỏe, tính mạng của con người';
       lawClause = 'Điều 168 Bộ luật Hình sự 2015 về Tội cướp tài sản';
       faultType = 'Lỗi cố ý trực tiếp';
-    } else if (qLower.includes('vượt đèn đỏ') || qLower.includes('tai nạn') || qLower.includes('xe máy') || qLower.includes('ô tô')) {
+    } else if (qLower.includes('lừa đảo') || qLower.includes('lừa tiền') || qLower.includes('lừa chiếm đoạt')) {
+      actionDesc = `Hành vi dùng thủ đoạn gian dối làm cho ${actorB} tin tưởng giao tài sản rồi chiếm đoạt${money ? ` giá trị ${money}` : ''}`;
+      objectDesc = 'Quyền sở hữu tài sản hợp pháp của cá nhân, tổ chức được pháp luật hình sự bảo vệ';
+      lawClause = 'Điều 174 Bộ luật Hình sự 2015 về Tội lừa đảo chiếm đoạt tài sản';
+      faultType = 'Lỗi cố ý trực tiếp (mục đích chiếm đoạt xuất hiện trước khi thực hiện hành vi gian dối)';
+    } else if (qLower.includes('vượt đèn đỏ') || qLower.includes('vượt đèn')) {
+      actionDesc = `Hành vi điều khiển phương tiện không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ)`;
+      objectDesc = 'Trật tự, an toàn giao thông đường bộ và trật tự quản lý công cộng của Nhà nước';
+      lawClause = 'Điểm a Khoản 5 Điều 5 hoặc Điểm e Khoản 4 Điều 6 Nghị định 100/2019/NĐ-CP (sửa đổi bởi Nghị định 123/2021/NĐ-CP) và Luật Giao thông đường bộ 2008';
+      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ đèn tín hiệu đỏ nhưng vẫn cố tình không dừng lại)';
+    } else if (qLower.includes('tai nạn') || qLower.includes('va chạm') || qLower.includes('xe máy') || qLower.includes('ô tô')) {
       actionDesc = `Hành vi điều khiển phương tiện tham gia giao thông không chấp hành tín hiệu/quy tắc an toàn, gây va chạm làm hư hỏng tài sản${money ? ` (thiệt hại ${money})` : ''}`;
       objectDesc = 'Trật tự an toàn giao thông đường bộ và quyền sở hữu tài sản hợp pháp của người tham gia giao thông';
       lawClause = 'Nghị định 100/2019/NĐ-CP (sửa đổi bởi Nghị định 123/2021/NĐ-CP) và Điều 584, Điều 601 Bộ luật Dân sự 2015';
@@ -2419,7 +2468,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ hành vi đập phá là trái pháp luật và mong muốn làm hư hại tài sản)';
     }
 
-    const citedLaw = articles.length > 0 ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}` : lawClause;
+    const citedLaw =
+      lawClause !== 'Quy định pháp luật hiện hành'
+        ? lawClause
+        : articles.length > 0
+          ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}`
+          : 'Quy định pháp luật hiện hành';
 
     return `### I. KẾT LUẬN SƠ BỘ VỀ HÀNH VI
 Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hiệu cấu thành **Vi phạm pháp luật** theo quy định của pháp luật Việt Nam.
@@ -2537,7 +2591,8 @@ Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hi�
     const textbookMatches = TextbookKnowledgeService.searchTopChunks(stmt, 1);
     if (textbookMatches.length > 0 && textbookMatches[0].score >= 8) {
       const tb = textbookMatches[0].chunk;
-      return `- **KẾT LUẬN: ĐÁNH GIÁ DỰA TRÊN NGUYÊN LÝ GIÁO TRÌNH PHÁP LUẬT ĐẠI CƯƠNG (BỘ GD&ĐT)**${TextbookKnowledgeService.buildDetailedCitation(tb, articles)}`;
+      const cleanContent = TextbookKnowledgeService.formatCleanTextbookContent(tb.baremContent, stmt);
+      return `${cleanContent.trim()}${TextbookKnowledgeService.buildDetailedCitation(tb, articles)}`;
     }
 
     // 3. Fallback tiêu chuẩn đảm bảo nguyên tắc đối chiếu pháp lý thực định
@@ -3547,6 +3602,23 @@ Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt bu
       return this.solveDynamicFamilyLaw(query, actors, articles);
     }
 
+    // 2.5 Tình huống tội phạm hình sự hoặc xem xét cấu thành vi phạm pháp luật
+    if (
+      qLower.includes('giết') ||
+      qLower.includes('tước đoạt tính mạng') ||
+      qLower.includes('chém') ||
+      qLower.includes('đâm') ||
+      qLower.includes('bắn') ||
+      qLower.includes('trộm') ||
+      qLower.includes('cướp') ||
+      qLower.includes('lừa đảo') ||
+      qLower.includes('vi phạm pháp luật') ||
+      qLower.includes('có vi phạm') ||
+      (qLower.includes('vượt đèn') && !qLower.includes('đánh') && !qLower.includes('gậy'))
+    ) {
+      return this.solveDynamicVppl(query, actors, money, injury, this.extractAge(query), articles);
+    }
+
     // 3. Tình huống giao thông, phòng vệ chính đáng, đánh người, gậy, ghế
     return `### I. PHÂN TÍCH TỔNG QUAN TÌNH HUỐNG VÀ CÁC QUAN HỆ PHÁP LUẬT PHÁT SINH
 Vụ việc nêu trong đề bài liên quan đến các quan hệ pháp luật:
@@ -3968,6 +4040,26 @@ ${contextContent ? `\n---\n**TÀI LIỆU GIÁO TRÌNH THAM CHIẾU**:\n${context
       return this.solveDynamicCaseAnalysis(query, actors, money, null, articles);
     }
 
+    // Nếu câu hỏi về hành vi vi phạm, tội phạm hình sự, hoặc kiểm tra có vi phạm pháp luật không
+    if (
+      qLower.includes('giết') ||
+      qLower.includes('tước đoạt tính mạng') ||
+      qLower.includes('chém') ||
+      qLower.includes('đâm') ||
+      qLower.includes('bắn') ||
+      qLower.includes('trộm') ||
+      qLower.includes('cướp') ||
+      qLower.includes('lừa đảo') ||
+      qLower.includes('vi phạm pháp luật') ||
+      qLower.includes('có vi phạm') ||
+      (qLower.includes('vượt đèn') && !qLower.includes('đánh') && !qLower.includes('gậy'))
+    ) {
+      const actors = this.extractActors(query);
+      const money = this.extractMoney(query);
+      const injury = this.extractInjury(query);
+      return this.solveDynamicVppl(query, actors, money, injury, this.extractAge(query), articles);
+    }
+
     if (qLower.includes('thực hiện pháp luật') || qLower.includes('tuân thủ') || qLower.includes('thi hành')) {
       return `### I. KHÁI NIỆM THỰC HIỆN PHÁP LUẬT
 Theo giáo trình Pháp luật Đại cương:
@@ -4058,8 +4150,44 @@ Là tổng hợp các **Quyền dân sự** và **Nghĩa vụ dân sự** giữa
   + *Quyền của Anh B*: Quyền nhận xe và quyền sở hữu hợp pháp đối với xe; *Nghĩa vụ của Anh B*: Thanh toán đầy đủ tiền mua xe đúng thời hạn cho Ông A.`;
   }
 
-  // --- DẠNG 9: HÔN NHÂN & GIA ĐÌNH / XÁC ĐỊNH CHA MẸ CON ---
+  // --- DẠNG 9: HÔN NHÂN & GIA ĐÌNH / CHIA TÀI SẢN KHI LY HÔN & XÁC ĐỊNH CHA MẸ CON ---
   private static solveDynamicFamilyLaw(query: string, actors: string[], articles: ILawArticle[]): string {
+    const qLower = query.toLowerCase();
+
+    // 1. Nhánh xử lý: Phân chia tài sản khi ly hôn (Tài sản riêng được tặng cho / thừa kế riêng / tài sản chung)
+    if (
+      (qLower.includes('chia') || qLower.includes('phân chia') || qLower.includes('giải quyết')) &&
+      (qLower.includes('ly hôn') || qLower.includes('ly dị') || qLower.includes('ly thân') || qLower.includes('vợ chồng') || qLower.includes('kết hôn')) &&
+      (qLower.includes('tài sản') || qLower.includes('trao tặng') || qLower.includes('tặng cho') || qLower.includes('cho,tặng') || qLower.includes('cho tặng') || qLower.includes('thừa kế') || qLower.includes('nhà chồng') || qLower.includes('nhà chông') || qLower.includes('nhà vợ'))
+    ) {
+      return `### I. CĂN CỨ PHÁP LÝ THỰC ĐỊNH
+Căn cứ các quy định của **Luật Hôn nhân và Gia đình năm 2014**:
+1. **Khoản 1 Điều 43** (Tài sản riêng của vợ, chồng):
+   > *"Tài sản riêng của vợ, chồng gồm tài sản mà mỗi người có trước khi kết hôn; **tài sản được thừa kế riêng, được tặng cho riêng trong thời kỳ hôn nhân**; tài sản được chia riêng cho vợ, chồng theo quy định tại các điều 38, 39 và 40 của Luật này..."*
+2. **Khoản 1 Điều 33** (Tài sản chung của vợ chồng):
+   > *"Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân..."*
+3. **Khoản 4 Điều 59** (Nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn):
+   > *"Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật này."*
+
+---
+
+### II. NGUYÊN TẮC PHÂN CHIA TÀI SẢN KHI LY HÔN
+
+#### 1. Trường hợp 1: Tài sản được tặng cho riêng người chồng (Chưa nhập vào khối tài sản chung)
+- **Xác định quyền sở hữu**:
+  + Nếu gia đình người chồng (cha mẹ, người thân) lập văn bản tặng cho (hợp đồng tặng cho, giấy tờ chuyển nhượng, di chúc hoặc sang tên giấy chứng nhận quyền sở hữu/sử dụng) ghi rõ người thụ hưởng là **riêng người chồng**, tài sản này được xác định là **TÀI SẢN RIÊNG HỢP PHÁP CỦA NGƯỜI CHỒNG** theo quy định tại Khoản 1 Điều 43 Luật Hôn nhân và Gia đình 2014.
+- **Cách phân chia khi ly hôn**:
+  + Căn cứ **Khoản 4 Điều 59 Luật HNGĐ 2014**: **Tài sản riêng của người chồng vẫn thuộc quyền sở hữu toàn vẹn của người chồng, KHÔNG BỊ ĐƯA VÀO KHỐI TÀI SẢN CHUNG ĐỂ CHIA CHO NGƯỜI VỢ.** Người vợ hoàn toàn không có quyền yêu cầu chia đôi tài sản này.
+  *Lưu ý về hoa lợi, lợi tức*: Hoa lợi, lợi tức phát sinh từ tài sản riêng này trong thời kỳ hôn nhân (như tiền thuê nhà, cổ tức) được coi là tài sản chung (Khoản 1 Điều 33).
+  *Lưu ý về công sức đóng góp*: Nếu người vợ chứng minh được mình có công sức đóng góp làm tăng đáng kể giá trị của tài sản riêng đó (ví dụ bỏ tiền sửa sang, tôn tạo), người chồng có nghĩa vụ thanh toán lại giá trị công sức đóng góp thực tế cho người vợ.
+
+#### 2. Trường hợp 2: Người chồng ĐÃ TỰ NGUYỆN NHẬP tài sản được tặng cho vào khối tài sản chung
+- Căn cứ **Điều 46 Luật HNGĐ 2014**: Nếu trong thời kỳ hôn nhân, người chồng đã lập văn bản thỏa thuận nhập tài sản riêng đó vào khối tài sản chung của vợ chồng (hoặc đăng ký đổi sổ đỏ đứng tên cả hai vợ chồng).
+- **Cách phân chia khi ly hôn**:
+  + Tài sản này đã trở thành **tài sản chung hợp nhất**.
+  + Khi ly hôn sẽ được chia theo nguyên tắc tại **Điều 59 Luật HNGĐ 2014**: Về nguyên tắc tài sản chung được chia đôi, có tính đến các yếu tố: hoàn cảnh của mỗi bên; công sức đóng góp vào việc tạo lập, duy trì, phát triển khối tài sản; bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất kinh doanh; lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.`;
+    }
+
     const actorA = actors[0] || 'Chị A';
     const actorB = actors[1] || 'Anh T';
 

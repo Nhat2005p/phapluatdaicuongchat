@@ -31,13 +31,18 @@ async function startServer() {
     await connectDB();
     await runSeed();
 
-    app.listen(config.port, () => {
+    const server = app.listen(config.port, () => {
       console.log(`=======================================================`);
       console.log(`🚀 VietLawAssist Node.js Backend is LIVE on port ${config.port}`);
       console.log(`🔗 API Base: http://localhost:${config.port}/api/v1`);
       console.log(`👥 Roles configured: student (User) & admin (Council/Admin)`);
       console.log(`=======================================================`);
     });
+
+    // Cấu hình HTTP timeout 5 phút (300.000ms) để hỗ trợ thời gian sinh văn bản tối đa 4 phút của mô hình
+    server.timeout = 300000;
+    server.requestTimeout = 300000;
+    server.headersTimeout = 305000;
 
     // Start LLM model in background so Auth & API routes respond instantly
     LlamaManager.ensureRunning().catch((err) => {

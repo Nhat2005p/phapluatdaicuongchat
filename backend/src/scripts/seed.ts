@@ -51,6 +51,15 @@ export async function runSeed(): Promise<void> {
   const laws = [
     // BLHS 2015
     {
+      articleId: 'BLHS2015_D123',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 123,
+      title: 'Tội giết người',
+      contentRaw: '1. Người nào giết người thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình: a) Giết 02 người trở lên; b) Giết người dưới 16 tuổi; c) Giết phụ nữ mà biết là có thai; d) Giết người đang thi hành công vụ;... n) Có tính chất côn đồ; p) Vì động cơ đê hèn...\n2. Phạm tội không thuộc các trường hợp quy định tại khoản 1 Điều này, thì bị phạt tù từ 07 năm đến 15 năm.\n3. Người chuẩn bị phạm tội này, thì bị phạt tù từ 01 năm đến 05 năm.',
+      keywords: ['tội giết người', 'đâm chết', 'chém chết', 'tước đoạt mạng sống', 'giết người', 'tử hình', 'tù chung thân']
+    },
+    {
       articleId: 'BLHS2015_D9',
       lawCode: 'BLHS2015',
       lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
@@ -188,8 +197,53 @@ export async function runSeed(): Promise<void> {
       lawName: 'Luật Hôn nhân và Gia đình 2014',
       articleNumber: 33,
       title: 'Tài sản chung của vợ chồng',
-      contentRaw: '1. Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.\nQuyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.',
-      keywords: ['tài sản chung', 'thời kỳ hôn nhân', 'vợ chồng', 'chia đôi tài sản']
+      contentRaw: '1. Tài sản chung của vợ chồng gồm tài sản do vợ, chồng tạo ra, thu nhập do lao động, hoạt động sản xuất, kinh doanh, hoa lợi, lợi tức phát sinh từ tài sản riêng và thu nhập hợp pháp khác trong thời kỳ hôn nhân; tài sản mà vợ chồng được thừa kế chung hoặc được tặng cho chung và tài sản khác mà vợ chồng thỏa thuận là tài sản chung.\nQuyền sử dụng đất mà vợ, chồng có được sau khi kết hôn là tài sản chung của vợ chồng, trừ trường hợp vợ hoặc chồng được thừa kế riêng, được tặng cho riêng hoặc có được thông qua giao dịch bằng tài sản riêng.\n2. Tài sản chung của vợ chồng thuộc sở hữu chung hợp nhất, được dùng để bảo đảm nhu cầu của gia đình, thực hiện nghĩa vụ chung của vợ chồng.',
+      keywords: ['tài sản chung', 'thời kỳ hôn nhân', 'vợ chồng', 'chia đôi tài sản', 'thừa kế chung', 'tặng cho chung']
+    },
+    {
+      articleId: 'HNGD2014_D43',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình 2014',
+      articleNumber: 43,
+      title: 'Tài sản riêng của vợ, chồng',
+      contentRaw: '1. Tài sản riêng của vợ, chồng gồm tài sản mà mỗi người có trước khi kết hôn; tài sản được thừa kế riêng, được tặng cho riêng trong thời kỳ hôn nhân; tài sản được chia riêng cho vợ, chồng theo quy định tại các điều 38, 39 và 40 của Luật này; tài sản phục vụ nhu cầu thiết yếu của vợ, chồng và tài sản khác mà theo quy định của pháp luật thuộc sở hữu riêng của vợ, chồng.\n2. Tài sản được hình thành từ tài sản riêng của vợ, chồng cũng là tài sản riêng của vợ, chồng. Hoa lợi, lợi tức phát sinh từ tài sản riêng trong thời kỳ hôn nhân được thực hiện theo quy định tại khoản 1 Điều 33 và khoản 1 Điều 40 của Luật này.',
+      keywords: ['tài sản riêng', 'tặng cho riêng', 'thừa kế riêng', 'cho riêng', 'nhà chồng cho', 'nhà vợ cho', 'tài sản trước kết hôn', 'cho tặng']
+    },
+    {
+      articleId: 'HNGD2014_D46',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình 2014',
+      articleNumber: 46,
+      title: 'Nhập tài sản riêng của vợ, chồng vào tài sản chung',
+      contentRaw: '1. Việc nhập tài sản riêng của vợ, chồng vào tài sản chung được thực hiện theo thỏa thuận của vợ chồng.\n2. Tài sản được nhập vào tài sản chung mà theo quy định của pháp luật, giao dịch liên quan đến tài sản đó phải tuân theo hình thức nhất định thì thỏa thuận đó phải bảo đảm hình thức theo quy định của pháp luật.\n3. Nghĩa vụ liên quan đến tài sản riêng đã nhập vào tài sản chung được thực hiện bằng tài sản chung, trừ trường hợp vợ chồng có thỏa thuận khác hoặc pháp luật có quy định khác.',
+      keywords: ['nhập tài sản riêng', 'tài sản chung', 'thỏa thuận nhập tài sản', 'nhập vào tài sản chung']
+    },
+    {
+      articleId: 'HNGD2014_D59',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình 2014',
+      articleNumber: 59,
+      title: 'Nguyên tắc giải quyết tài sản của vợ chồng khi ly hôn',
+      contentRaw: '1. Trong trường hợp chế độ tài sản của vợ chồng theo luật định thì việc giải quyết tài sản do các bên thỏa thuận; nếu không thỏa thuận được thì theo yêu cầu của vợ, chồng hoặc của cả hai vợ chồng, Tòa án giải quyết theo quy định tại các khoản 2, 3, 4 và 5 Điều này...\n2. Tài sản chung của vợ chồng được chia đôi nhưng có tính đến các yếu tố sau đây:\na) Hoàn cảnh của gia đình và của vợ, chồng;\nb) Công sức đóng góp của vợ, chồng vào việc tạo lập, duy trì và phát triển khối tài sản chung. Lao động của vợ, chồng trong gia đình được coi như lao động có thu nhập;\nc) Bảo vệ lợi ích chính đáng của mỗi bên trong sản xuất, kinh doanh và nghề nghiệp để các bên có điều kiện tiếp tục lao động tạo thu nhập;\nd) Lỗi của mỗi bên trong vi phạm quyền, nghĩa vụ của vợ chồng.\n4. Tài sản riêng của vợ, chồng thuộc quyền sở hữu của người đó, trừ trường hợp tài sản riêng đã nhập vào tài sản chung theo quy định của Luật này. Trong trường hợp có sự sáp nhập, trộn lẫn giữa tài sản riêng với tài sản chung mà vợ, chồng có yêu cầu chia tài sản thì được thanh toán phần giá trị tài sản của mình đóng góp vào khối tài sản đó, trừ trường hợp vợ chồng có thỏa thuận khác.',
+      keywords: ['chia tài sản khi ly hôn', 'nguyên tắc giải quyết tài sản', 'tài sản riêng thuộc quyền sở hữu của người đó', 'chia đôi tài sản', 'công sức đóng góp', 'ly hôn chia tài sản']
+    },
+    {
+      articleId: 'BLDS2015_D457',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự 2015',
+      articleNumber: 457,
+      title: 'Hợp đồng tặng cho tài sản',
+      contentRaw: 'Hợp đồng tặng cho tài sản là sự thỏa thuận giữa các bên, theo đó bên tặng cho giao tài sản của mình và chuyển quyền sở hữu cho bên được tặng cho mà không yêu cầu đền bù, bên được tặng cho đồng ý nhận.',
+      keywords: ['hợp đồng tặng cho tài sản', 'tặng cho', 'chuyển quyền sở hữu', 'cho tặng', 'nhà chồng cho']
+    },
+    {
+      articleId: 'GT2019_ND100',
+      lawCode: 'ND100_2019',
+      lawName: 'Nghị định 100/2019/NĐ-CP (sửa đổi bổ sung bởi Nghị định 123/2021/NĐ-CP)',
+      articleNumber: 6,
+      title: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
+      contentRaw: '1. Phạt tiền từ 800.000 đồng đến 1.000.000 đồng đối với người điều khiển xe thực hiện hành vi không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ hoặc đèn vàng trái quy định).\n2. Ngoài việc bị phạt tiền, người điều khiển xe thực hiện hành vi vi phạm còn bị áp dụng hình thức xử phạt bổ sung: bị tước quyền sử dụng Giấy phép lái xe từ 01 tháng đến 03 tháng.',
+      keywords: ['vượt đèn đỏ', 'giao thông', 'xe máy', 'tước bằng lái', 'xử phạt vi phạm giao thông']
     },
 
     // Hợp đồng & Giao dịch dân sự, Vay mượn (BLDS 2015)
