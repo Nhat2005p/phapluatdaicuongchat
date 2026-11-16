@@ -6,6 +6,7 @@ import { config } from '../config/env.js';
 import { ExamArchetype, RagService } from './ragService.js';
 import { ILawArticle } from '../models/LawArticle.js';
 import { TextbookKnowledgeService, TextbookChunk } from './textbookKnowledgeService.js';
+import { LlamaManager } from './llamaManager.js';
 
 interface SftSample {
   sample_id: string;
@@ -860,6 +861,27 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
+    // 0.0.3d2. Trình bày các loại trách nhiệm pháp lý + Cho ví dụ minh họa từng loại (Chương 5, Mục 5.3)
+    const isLegalLiabilityTypes =
+      (qLower.includes('các loại trách nhiệm pháp lý') ||
+        qLower.includes('phân loại trách nhiệm pháp lý') ||
+        qLower.includes('những loại trách nhiệm pháp lý') ||
+        (qLower.includes('loại trách nhiệm pháp lý') && (qLower.includes('trình bày') || qLower.includes('nêu') || qLower.includes('ví dụ') || qLower.includes('minh họa') || qLower.includes('phân tích')))) &&
+      !qLower.includes('trách nhiệm xã hội') &&
+      !qLower.includes('đúng hay sai') &&
+      !qLower.includes('xe tải') &&
+      !qLower.includes('say rượu');
+
+    if (isLegalLiabilityTypes) {
+      return {
+        sample_id: 'SFT_THEORY_CAC_LOAI_TRACH_NHIEM_PHAP_LY',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Trình bày các loại trách nhiệm pháp lý và cho ví dụ minh họa đối với từng loại theo Giáo trình Pháp luật Đại cương.',
+        input: query,
+        output: this.solveDynamicLegalLiabilityTypes(query)
+      };
+    }
+
     // 0.0.3e. Tình huống va chạm giao thông vượt đèn đỏ + dùng gậy đánh người gây thương tích (Câu 10)
     const isTrafficAndAssaultCase =
       qLower.includes('vượt đèn đỏ') &&
@@ -1450,6 +1472,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
           continue;
         }
 
+        // Loại trừ mẫu SFT_TMU_CH5_002 nếu câu hỏi không hỏi về trách nhiệm xã hội
+        if (item.sample_id === 'SFT_TMU_CH5_002' && !qLower.includes('trách nhiệm xã hội')) {
+          continue;
+        }
+
         const itemRawNorm = `${item.instruction} ${item.input}`
           .toLowerCase()
           .replace(/[.,;:?!"'“”()]/g, ' ')
@@ -1640,6 +1667,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
           continue;
         }
         if (icStr === 'CASE_ANALYSIS' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'DEFINITION')) {
+          continue;
+        }
+
+        // Loại trừ mẫu SFT_TMU_CH5_002 nếu câu hỏi không hỏi về trách nhiệm xã hội
+        if (item.sample_id === 'SFT_TMU_CH5_002' && !qLower.includes('trách nhiệm xã hội')) {
           continue;
         }
 
@@ -1993,6 +2025,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     }
 
     try {
+      // Tự động kiểm tra và khởi chạy Llama-Server nếu chưa sẵn sàng
+      if (!(await LlamaManager.isHealthy())) {
+        await LlamaManager.ensureRunning();
+      }
+
       const response = await fetch(`${config.llamaServerUrl}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -2219,6 +2256,20 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
   + **Chủ thể**: Anh Nguyễn Văn A (cá nhân có đầy đủ năng lực pháp luật và năng lực hành vi dân sự theo Điều 16, 19, 20 BLDS 2015) và Cửa hàng xe máy B (tổ chức kinh tế hợp pháp).
   + **Khách thể**: Quyền sở hữu đối với chiếc xe máy Honda Vision và khoản tiền thanh toán 35.000.000 đồng (lợi ích vật chất mà hai bên hướng tới).
   + **Nội dung**: Quyền và nghĩa vụ pháp lý đối xứng của hai bên — Anh A có nghĩa vụ trả đủ 35 triệu đồng và có quyền nhận xe cùng giấy tờ; Cửa hàng B có nghĩa vụ bàn giao xe đúng chất lượng và có quyền nhận tiền.`;
+      } else if (qLower.includes('trách nhiệm pháp lý') && (qLower.includes('từng loại') || qLower.includes('mỗi loại') || qLower.includes('các loại'))) {
+        exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN ĐỐI VỚI TỪNG LOẠI TRÁCH NHIỆM PHÁP LÝ:
+1. **Ví dụ về Trách nhiệm hình sự (TNHS)**:
+   - *Hành vi*: Nguyễn Văn A (22 tuổi) lợi dụng đêm khuya cạy cửa nhà người khác trộm cắp xe máy SH trị giá 80 triệu đồng.
+   - *Hệ quả*: Hành vi cấu thành *Tội trộm cắp tài sản* theo Khoản 2 Điều 173 BLHS 2015. Tòa án tuyên phạt A mức án 02 năm tù giam. A có án tích.
+2. **Ví dụ về Trách nhiệm hành chính (TNHC)**:
+   - *Hành vi*: Trần Văn B (20 tuổi) điều khiển xe mô tô vượt đèn đỏ và không đội mũ bảo hiểm tại ngã tư.
+   - *Hệ quả*: Vi phạm trật tự an toàn giao thông đường bộ. CSGT lập biên bản ra quyết định xử phạt tiền 900.000 đồng về lỗi vượt đèn đỏ theo Nghị định 100/2019/NĐ-CP (sửa đổi bởi NĐ 123/2021/NĐ-CP). B không có án tích.
+3. **Ví dụ về Trách nhiệm dân sự (TNDS)**:
+   - *Hành vi*: Công ty X ký hợp đồng mua 20 tấn hàng của Doanh nghiệp Y, hẹn thanh toán 500 triệu đồng nhưng quá hạn 03 tháng vẫn không trả.
+   - *Hệ quả*: Vi phạm nghĩa vụ thanh toán trong hợp đồng (Điều 440 BLDS 2015). Tòa án buộc Công ty X trả đủ 500 triệu tiền gốc và tiền lãi chậm trả theo Điều 357, 468 BLDS 2015.
+4. **Ví dụ về Trách nhiệm kỷ luật (TNKL)**:
+   - *Hành vi*: Chị Lê Thị D là công chức nhà nước tự ý nghỉ việc liên tục 07 ngày không có lý do chính đáng.
+   - *Hệ quả*: Vi phạm kỷ luật công vụ. Giám đốc cơ quan ban hành Quyết định kỷ luật hình thức "Cảnh cáo" theo Luật Cán bộ, công chức.`;
       } else if (qLower.includes('vi phạm pháp luật') || qLower.includes('trách nhiệm pháp lý') || qLower.includes('lỗi')) {
         exampleBlock = `### 💡 VÍ DỤ MINH HỌA THỰC TIỄN VỀ VI PHẠM PHÁP LUẬT:
 - **Tình huống thực tế**: Lê Văn M (22 tuổi, hoàn toàn tỉnh táo) lợi dụng lúc gia đình ông H đi vắng đã lén lút cạy cửa đột nhập vào nhà lấy trộm chiếc máy tính xách tay trị giá 25.000.000 đồng.
@@ -3361,6 +3412,88 @@ Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ th
   + Đây là **Hành vi pháp lý** (thuộc nhóm *Sự kiện pháp lý là hành vi có ý chí, hợp pháp* của các chủ thể trực tiếp hướng tới việc làm phát sinh quyền và nghĩa vụ dân sự theo **Điều 116 và Điều 385 Bộ luật Dân sự năm 2015**).`;
   }
 
+  /**
+   * Barem điểm 10: Trình bày các loại trách nhiệm pháp lý và cho ví dụ minh họa đối với từng loại
+   * (Chương 5, Mục 5.3 - Giáo trình Pháp luật Đại cương TMU 2021 & Bộ GD&ĐT)
+   */
+  public static solveDynamicLegalLiabilityTypes(query?: string): string {
+    return `### I. KHÁI NIỆM VÀ ĐẶC ĐIỂM CỦA TRÁCH NHIỆM PHÁP LÝ
+*(Theo Giáo trình Pháp luật Đại cương — Trường Đại học Thương Mại 2021, Chương 5, Mục 5.3, tr. 112 – 115)*
+
+**Trách nhiệm pháp lý** là hậu quả pháp lý bất lợi mà Nhà nước buộc chủ thể vi phạm pháp luật phải gánh chịu, thể hiện qua việc áp dụng các biện pháp cưỡng chế nhà nước do pháp luật quy định, nhằm bảo vệ trật tự pháp luật và giáo dục, phòng ngừa vi phạm.
+
+**03 đặc điểm cơ bản của trách nhiệm pháp lý**:
+1. **Cơ sở thực tế phát sinh**: Luôn gắn liền với hành vi vi phạm pháp luật (hoặc trường hợp đặc biệt do luật định như bồi thường thiệt hại do nguồn nguy hiểm cao độ). Không có vi phạm pháp luật thì không làm phát sinh trách nhiệm pháp lý.
+2. **Mang tính quyền lực nhà nước**: Luôn do cơ quan nhà nước hoặc người có thẩm quyền áp dụng nhân danh Nhà nước, tuân theo trình tự, thủ tục luật định chặt chẽ.
+3. **Chứa đựng sự phản ứng bất lợi (chế tài)**: Buộc chủ thể vi phạm phải gánh chịu những chế tài trừng phạt, hạn chế hoặc tước đoạt các quyền, lợi ích về tinh thần, nhân thân hoặc tài sản.
+
+---
+
+### II. BỐN LOẠI TRÁCH NHIỆM PHÁP LÝ VÀ VÍ DỤ MINH HỌA TỪNG LOẠI
+
+#### 1. Trách nhiệm hình sự (TNHS)
+- **Bản chất**: Là loại trách nhiệm pháp lý nghiêm khắc nhất trong hệ thống pháp luật, do Tòa án nhân dân nhân danh Nhà nước áp dụng đối với cá nhân (hoặc pháp nhân thương mại) có hành vi nguy hiểm cho xã hội bị Bộ luật Hình sự coi là tội phạm.
+- **Cơ sở pháp lý**: Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017).
+- **Thẩm quyền áp dụng**: **Duy nhất Tòa án nhân dân** có thẩm quyền xét xử và tuyên áp dụng trách nhiệm hình sự thông qua bản án có hiệu lực pháp luật.
+- **Chế tài áp dụng (Hình phạt)**:
+  + *Hình phạt chính*: Cảnh cáo, phạt tiền, cải tạo không giam giữ, trục xuất, tù có thời hạn, tù chung thân, tử hình.
+  + *Hình phạt bổ sung*: Cấm đảm nhiệm chức vụ, cấm hành nghề, tịch thu tài sản, quản chế, tước một số quyền công dân...
+  + Người bị kết án hình sự sẽ có **án tích** cho đến khi được xóa án tích theo luật định.
+- **💡 Ví dụ minh họa thực tiễn**:
+  > Anh Nguyễn Văn A (22 tuổi, đầy đủ năng lực trách nhiệm hình sự) lợi dụng đêm tối đã đột nhập vào cửa hàng điện thoại để cạy khóa trộm cắp 10 chiếc iPhone với tổng trị giá định giá là 150.000.000 đồng.
+  > - **Đánh giá pháp lý**: Hành vi của A đã thỏa mãn 4 yếu tố cấu thành *Tội trộm cắp tài sản* theo quy định tại **Khoản 2 Điều 173 Bộ luật Hình sự 2015**.
+  > - **Chế tài áp dụng**: Tòa án nhân dân tuyên phạt A mức án **03 năm tù giam** (hình phạt tù có thời hạn). A có án tích và phải thi hành án tại trại giam.
+
+#### 2. Trách nhiệm hành chính (TNHC)
+- **Bản chất**: Là loại trách nhiệm pháp lý do cơ quan nhà nước, người có thẩm quyền quản lý nhà nước áp dụng đối với cá nhân, tổ chức có hành vi vi phạm pháp luật hành chính (xâm phạm trật tự quản lý nhà nước mà chưa đến mức truy cứu trách nhiệm hình sự).
+- **Cơ sở pháp lý**: Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020) và các Nghị định xử phạt vi phạm hành chính chuyên ngành (như Nghị định 100/2019/NĐ-CP, Nghị định 123/2021/NĐ-CP).
+- **Thẩm quyền áp dụng**: Cảnh sát giao thông, Chủ tịch UBND các cấp, cơ quan Quản lý thị trường, Thanh tra chuyên ngành... (thực hiện theo thủ tục hành chính, không qua xét xử của Tòa án).
+- **Chế tài áp dụng**: Phạt cảnh cáo; Phạt tiền; Tước quyền sử dụng giấy phép, chứng chỉ hành nghề có thời hạn; Tịch thu tang vật, phương tiện vi phạm hành chính; Buộc khắc phục hậu quả. Bị xử phạt hành chính **không để lại án tích**.
+- **💡 Ví dụ minh họa thực tiễn**:
+  > Anh Trần Văn B (20 tuổi) điều khiển xe mô tô hai bánh trên đường nhưng không đội mũ bảo hiểm và cố tình vượt đèn đỏ tại ngã tư.
+  > - **Đánh giá pháp lý**: Hành vi của B đã vi phạm quy tắc an toàn giao thông đường bộ, cấu thành vi phạm hành chính theo quy định tại Nghị định số 100/2019/NĐ-CP (sửa đổi bởi Nghị định 123/2021/NĐ-CP).
+  > - **Chế tài áp dụng**: Đội Cảnh sát giao thông đã dừng xe, lập biên bản và ra quyết định xử phạt vi phạm hành chính đối với B: phạt tiền 900.000 đồng về lỗi vượt đèn đỏ và 500.000 đồng về lỗi không đội mũ bảo hiểm.
+
+#### 3. Trách nhiệm dân sự (TNDS)
+- **Bản chất**: Là loại trách nhiệm pháp lý mang tính tài sản do Tòa án hoặc cơ quan có thẩm quyền áp dụng đối với cá nhân, pháp nhân có hành vi vi phạm nghĩa vụ dân sự hoặc xâm phạm đến tài sản, tính mạng, sức khỏe, danh dự, nhân phẩm, quyền và lợi ích hợp pháp của chủ thể khác.
+- **Cơ sở pháp lý**: Bộ luật Dân sự năm 2015.
+- **Nguyên tắc cơ bản**: Mang tính chất khôi phục, đền bù tương xứng với thiệt hại thực tế phát sinh; tôn trọng sự tự do thương lượng, hòa giải giữa các đương sự.
+- **Chế tài áp dụng**: Buộc chấm dứt hành vi vi phạm; Buộc xin lỗi, cải chính công khai; Buộc thực hiện nghĩa vụ; Buộc bồi thường toàn bộ thiệt hại vật chất và bù đắp tổn thất tinh thần; Phạt vi phạm hợp đồng (theo thỏa thuận hợp pháp).
+- **💡 Ví dụ minh họa thực tiễn**:
+  > Công ty X ký hợp đồng mua bán 20 tấn cà phê của Doanh nghiệp Y, hẹn thanh toán toàn bộ 500.000.000 đồng vào ngày 15/01/2025. Tuy nhiên đã quá hạn 03 tháng dù Doanh nghiệp Y liên tục gửi văn bản đôn đốc nhưng Công ty X vẫn chây ì không chịu trả tiền hàng.
+  > - **Đánh giá pháp lý**: Công ty X đã có hành vi vi phạm nghĩa vụ thanh toán trong hợp đồng dân sự theo quy định tại **Điều 440 Bộ luật Dân sự 2015**.
+  > - **Chế tài áp dụng**: Tòa án nhân dân tuyên buộc Công ty X phải gánh chịu trách nhiệm dân sự: hoàn trả toàn bộ nợ gốc 500.000.000 đồng và trả khoản tiền lãi chậm trả theo quy định tại **Điều 357 và Điều 468 BLDS 2015**.
+
+#### 4. Trách nhiệm kỷ luật (TNKL)
+- **Bản chất**: Là loại trách nhiệm pháp lý do người đứng đầu cơ quan, đơn vị, tổ chức hoặc người sử dụng lao động áp dụng đối với cán bộ, công chức, viên chức, người lao động thuộc quyền quản lý của mình do có hành vi vi phạm nội quy, quy chế lao động hoặc kỷ luật công vụ.
+- **Cơ sở pháp lý**: Luật Cán bộ, công chức năm 2008 (sửa đổi, bổ sung năm 2019), Luật Viên chức năm 2010 (sửa đổi 2019) và Bộ luật Lao động năm 2019.
+- **Chế tài áp dụng**:
+  + *Đối với cán bộ, công chức*: Khiển trách, Cảnh cáo, Hạ bậc lương, Giáng chức, Cách chức, Buộc thôi việc.
+  + *Đối với người lao động trong doanh nghiệp*: Khiển trách, Kéo dài thời hạn nâng lương không quá 06 tháng, Cách chức, Sa thải (Điều 124, 125 Bộ luật Lao động 2019).
+- **💡 Ví dụ minh họa thực tiễn**:
+  > Chị Lê Thị D là chuyên viên làm việc tại Sở Kế hoạch và Đầu tư tỉnh H. Trong tháng 03/2025, chị D tự ý nghỉ việc liên tục 07 ngày làm việc mà không gửi đơn xin phép và không có lý do chính đáng.
+  > - **Đánh giá pháp lý**: Hành vi của chị D đã vi phạm nghiêm trọng kỷ luật công vụ và nghĩa vụ của công chức theo Luật Cán bộ, công chức năm 2008 (sửa đổi, bổ sung 2019).
+  > - **Chế tài áp dụng**: Hội đồng kỷ luật cơ quan họp và Giám đốc Sở đã ký Quyết định kỷ luật với hình thức **"Cảnh cáo"** đối với chị D theo quy định của pháp luật.
+
+---
+
+### III. BẢNG TỔNG HỢP SO SÁNH 4 LOẠI TRÁCH NHIỆM PHÁP LÝ
+
+| Tiêu chí phân định | Trách nhiệm Hình sự | Trách nhiệm Hành chính | Trách nhiệm Dân sự | Trách nhiệm Kỷ luật |
+| :--- | :--- | :--- | :--- | :--- |
+| **Cơ sở thực tế phát sinh** | Hành vi phạm tội (nguy hiểm cho XH) | Hành vi vi phạm hành chính | Vi phạm nghĩa vụ dân sự / xâm phạm quyền dân sự | Vi phạm nội quy, kỷ luật lao động, công vụ |
+| **Văn bản pháp lý điều chỉnh** | Bộ luật Hình sự 2015 (sửa đổi 2017) | Luật XLVPHC 2012 (sửa đổi 2020) | Bộ luật Dân sự 2015 | Luật Cán bộ, công chức / BLLĐ 2019 |
+| **Thẩm quyền quyết định áp dụng** | **Duy nhất Tòa án nhân dân** | Cơ quan quản lý NN (CSGT, Chủ tịch UBND, Thanh tra...) | Tòa án nhân dân, Trọng tài thương mại, hoặc thỏa thuận | Thủ trưởng cơ quan, Người sử dụng lao động |
+| **Biện pháp chế tài áp dụng** | Hình phạt (tù có thời hạn, chung thân, tử hình...) | Phạt tiền, cảnh cáo, tước giấy phép... | Bồi thường thiệt hại, phạt vi phạm, buộc trả nợ | Khiển trách, cảnh cáo, cách chức, buộc thôi việc/sa thải |
+| **Hậu quả nhân thân** | **Có án tích** (đến khi được xóa án tích) | **Không có án tích** | Không có án tích | Không có án tích |
+
+---
+
+### IV. Ý NGHĨA PHÁP LÝ CỦA VIỆC PHÂN LOẠI TRÁCH NHIỆM PHÁP LÝ
+1. **Bảo đảm nguyên tắc đúng người, đúng việc, đúng thẩm quyền**: Giúp các cơ quan nhà nước phân định rõ ranh giới quản lý, tránh việc hình sự hóa các quan hệ dân sự, kinh tế hoặc xử lý trùng lặp đối với cùng một hành vi đơn nhất.
+2. **Nâng cao ý thức pháp luật và phòng ngừa vi phạm**: Giúp các chủ thể trong xã hội nhận thức rõ chế tài và hậu quả pháp lý của từng loại hành vi, từ đó tự giác điều chỉnh hành vi hợp pháp trong công tác và đời sống xã hội.`;
+  }
+
   public static solveDynamicThreeFormsOfLaw(query?: string): string {
     const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_THREE_FORMS_OF_LAW');
     if (item) return item.output;
@@ -3669,12 +3802,12 @@ Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt bu
       return this.solveDynamicPropertyDestructionCase(query);
     }
 
-    // 1. Tình huống mượn laptop làm rơi vỡ, tai nạn, bồi thường thiệt hại
+    // 1. Tình huống mượn xe máy, laptop, tài sản làm rơi vỡ, tai nạn, bồi thường thiệt hại
     if (
       qLower.includes('laptop') ||
       qLower.includes('làm rơi') ||
       qLower.includes('rơi vỡ') ||
-      (qLower.includes('mượn') && (qLower.includes('vỡ') || qLower.includes('hỏng') || qLower.includes('tai nạn')))
+      (qLower.includes('mượn') && (qLower.includes('vỡ') || qLower.includes('hỏng') || qLower.includes('tai nạn') || qLower.includes('va chạm') || qLower.includes('xe')))
     ) {
       return this.solveDynamicBorrowedPropertyDamage(query, actors, articles);
     }
@@ -3740,34 +3873,132 @@ Vụ việc nêu trong đề bài liên quan đến các quan hệ pháp luật:
 | **Bồi thường dân sự** | **Không phải bồi thường** (Điều 594 BLDS). | Phải bồi thường cho người thứ ba bị thiệt hại (Điều 595 BLDS). |`;
   }
 
-  // --- DẠNG MỚI: MƯỢN TÀI SẢN & BỒI THƯỜNG THIỆT HẠI RƠI VỠ (LAPTOP / TÀI SẢN) ---
+  // --- DẠNG MỚI: MƯỢN TÀI SẢN (XE MÁY, LAPTOP, TÀI SẢN) & BỒI THƯỜNG THIỆT HẠI ---
   private static solveDynamicBorrowedPropertyDamage(
     query: string,
     actors: string[],
     articles: ILawArticle[]
   ): string {
-    const actorA = actors[0] || 'A';
-    const actorB = actors[1] || 'B';
+    const actorA = actors[0] || 'Anh A';
+    const actorB = actors[1] || 'Anh B';
+    const qLower = query.toLowerCase();
 
+    // 1. Nhận diện đối tượng tài sản mượn
+    let propertyName = 'xe máy';
+    if (qLower.includes('xe máy') || qLower.includes('mô tô') || qLower.includes('xe gắn máy') || qLower.includes('xe honda') || qLower.includes('xe tay ga')) {
+      propertyName = 'chiếc xe máy';
+    } else if (qLower.includes('ô tô') || qLower.includes('xe hơi')) {
+      propertyName = 'chiếc xe ô tô';
+    } else if (qLower.includes('laptop') || qLower.includes('máy tính') || qLower.includes('máy tính xách tay')) {
+      propertyName = 'chiếc laptop';
+    } else if (qLower.includes('điện thoại') || qLower.includes('smartphone')) {
+      propertyName = 'chiếc điện thoại';
+    } else if (qLower.includes('máy ảnh')) {
+      propertyName = 'chiếc máy ảnh';
+    } else {
+      const matchProp = query.match(/mượn\s+(?:chiếc\s+|cái\s+)?([a-zA-ZÀ-ỹ0-9\s]+?)\s+(?:của|để|đi|về|làm)/i);
+      if (matchProp && matchProp[1] && matchProp[1].trim().length < 25) {
+        propertyName = matchProp[1].trim();
+      }
+    }
+
+    // 2. Nhận diện dạng biến cố gây thiệt hại
+    const isTrafficCollision =
+      qLower.includes('va chạm') ||
+      qLower.includes('tai nạn') ||
+      qLower.includes('đâm') ||
+      qLower.includes('quẹt') ||
+      qLower.includes('giao thông') ||
+      propertyName.includes('xe');
+
+    // === NHÁNH 1: TÌNH HUỐNG MƯỢN XE (XE MÁY / Ô TÔ) GÂY VA CHẠM TAI NẠN GIAO THÔNG ===
+    if (isTrafficCollision) {
+      return `### I. CÁC LOẠI TRÁCH NHIỆM PHÁP LÝ PHÁT SINH TỪ HÀNH VI CỦA ${actorA.toUpperCase()}
+
+Hành vi mượn ${propertyName} của ${actorB} và trong quá trình điều khiển do thiếu chú ý gây va chạm với phương tiện của người khác làm xe bị hư hỏng có thể làm phát sinh các loại trách nhiệm pháp lý sau:
+
+#### 1. Trách nhiệm dân sự (TNDS)
+- **Đối với ${actorB} (Chủ sở hữu ${propertyName} cho mượn)**:
+  + Phát sinh **trách nhiệm dân sự do vi phạm nghĩa vụ trong hợp đồng mượn tài sản**. Căn cứ **Điều 494 và Khoản 4 Điều 496 Bộ luật Dân sự 2015**, bên mượn có nghĩa vụ giữ gìn, bảo quản tài sản mượn cẩn thận và *"Bồi thường thiệt hại, nếu làm mất, hư hỏng tài sản mượn"*.
+  + ${actorA} có nghĩa vụ bồi thường toàn bộ chi phí sửa chữa, thay thế phụ tùng để phục hồi ${propertyName} về trạng thái bình thường ban đầu cho ${actorB}.
+- **Đối với người thứ ba (Chủ phương tiện bị va chạm)**:
+  + Phát sinh **trách nhiệm bồi thường thiệt hại ngoài hợp đồng**. Căn cứ **Khoản 1 Điều 584, Điều 585 và Điều 601 Bộ luật Dân sự 2015**, người nào có hành vi xâm phạm tài sản của người khác mà gây thiệt hại thì phải bồi thường.
+  + Do ${actorA} là người trực tiếp điều khiển phương tiện (nguồn nguy hiểm cao độ) và có lỗi thiếu chú ý quan sát gây tai nạn, ${actorA} phải bồi thường toàn bộ thiệt hại thực tế phát sinh (chi phí sửa chữa phương tiện) cho người thứ ba.
+
+#### 2. Trách nhiệm hành chính (TNHC)
+- Căn cứ quy định của **Luật Giao thông đường bộ 2008** và **Nghị định 100/2019/NĐ-CP (sửa đổi, bổ sung bởi Nghị định 123/2021/NĐ-CP)**:
+  + Hành vi điều khiển phương tiện giao thông đường bộ không chú ý quan sát, không giữ khoảng cách an toàn dẫn đến va chạm, tai nạn giao thông là hành vi vi phạm quy tắc trật tự an toàn giao thông.
+  + ${actorA} sẽ bị lực lượng Cảnh sát giao thông lập biên bản vi phạm hành chính và ra quyết định xử phạt vi phạm hành chính (phạt tiền, đồng thời có thể bị tước quyền sử dụng Giấy phép lái xe có thời hạn tùy theo tính chất mức độ lỗi vi phạm).
+
+#### 3. Xem xét về Trách nhiệm hình sự (TNHS)
+- Căn cứ **Điều 260 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)** quy định về *Tội vi phạm quy định về tham gia giao thông đường bộ*:
+  + Trách nhiệm hình sự chỉ phát sinh khi hành vi vi phạm an toàn giao thông gây ra hậu quả đặc biệt nghiêm trọng: làm chết người, gây thương tích cho người khác với tỷ lệ tổn thương cơ thể từ 61% trở lên, hoặc gây thiệt hại về tài sản từ **100.000.000 đồng trở lên**.
+  + Trong tình huống đề bài nêu, vụ va chạm chỉ làm các phương tiện bị hư hỏng thông thường, không có thiệt hại nghiêm trọng về người và tài sản chưa đến định khung hình sự. Do đó, ${actorA} **CHƯA PHẢI CHỊU TRÁCH NHIỆM HÌNH SỰ**.
+
+---
+
+### II. ${actorA.toUpperCase()} CÓ PHẢI BỒI THƯỜNG THIỆT HẠI KHÔNG? VÌ SAO?
+
+**KẾT LUẬN DỨT KHOÁT: ${actorA} BẮT BUỘC PHẢI BỒI THƯỜNG TOÀN BỘ THIỆT HẠI.**
+
+**Cơ sở lý luận và căn cứ pháp luật giải thích (Vì sao):**
+1. **Xuất phát từ nghĩa vụ pháp lý trong Hợp đồng mượn tài sản**:
+   - Căn cứ **Điều 494 Bộ luật Dân sự 2015**: Hợp đồng mượn tài sản là hợp đồng không có đền bù (bên mượn được hưởng lợi ích sử dụng tài sản hoàn toàn miễn phí mà không phải trả tiền).
+   - Vì được sử dụng miễn phí, pháp luật đòi hỏi bên mượn phải nâng cao trách nhiệm bảo quản. Căn cứ **Khoản 1 và Khoản 4 Điều 496 BLDS 2015**, bên mượn bắt buộc phải:
+     + *"Giữ gìn, bảo quản tài sản mượn, không được tự ý thay đổi tình trạng của tài sản"*.
+     + *"Bồi thường thiệt hại, nếu làm mất, hư hỏng tài sản mượn"*.
+2. **Xuất phát từ yếu tố lỗi của ${actorA}**:
+   - Đề bài xác định rõ: *"do thiếu chú ý, anh A đã va chạm với xe của người khác..."*. Hành vi "thiếu chú ý" cấu thành **lỗi vô ý do cẩu thả** (A không cẩn trọng quan sát mặt đường và các phương tiện cùng lưu thông, mặc dù một người bình thường khi điều khiển phương tiện cơ giới buộc phải biết và phải quan sát để phòng ngừa nguy hiểm).
+   - Căn cứ **Khoản 1 Điều 584 BLDS 2015**, người gây thiệt hại dù có lỗi cố ý hay lỗi vô ý đều **phải chịu trách nhiệm bồi thường toàn bộ thiệt hại**. Thiếu chú ý khi lái xe hoàn toàn không phải là "sự kiện bất khả kháng" (Điều 156 BLDS 2015), do đó ${actorA} không có bất kỳ căn cứ nào để được miễn trừ nghĩa vụ bồi thường.
+3. **Nghĩa vụ bồi thường đối với chủ phương tiện thứ ba**:
+   - Căn cứ **Điều 584 và Điều 585 BLDS 2015**, ${actorA} là chủ thể trực tiếp thực hiện hành vi trái pháp luật xâm phạm đến tài sản của người khác nên phải bồi thường toàn bộ chi phí sửa chữa phương tiện cho bên thứ ba.
+
+---
+
+### III. NHỮNG CĂN CỨ ĐƯỢC SỬ DỤNG ĐỂ XÁC ĐỊNH TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI
+
+Theo quy định tại **Điều 584, Điều 585 Bộ luật Dân sự 2015** và hướng dẫn của Hội đồng Thẩm phán Tòa án nhân dân tối cao tại **Nghị quyết số 02/2022/NQ-HĐTP**, trách nhiệm bồi thường thiệt hại được xác định dựa trên **04 căn cứ (yếu tố cấu thành bắt buộc)** sau:
+
+1. **Căn cứ 1: Có hành vi trái pháp luật**:
+   - ${actorA} đã có hành vi vi phạm quy tắc an toàn giao thông đường bộ (thiếu chú ý quan sát khi lái xe dẫn đến va chạm) và vi phạm nghĩa vụ giữ gìn, bảo quản tài sản mượn theo Hợp đồng mượn tài sản (Khoản 1 Điều 496 BLDS 2015).
+2. **Căn cứ 2: Có thiệt hại thực tế xảy ra**:
+   - Căn cứ **Điều 589 Bộ luật Dân sự 2015** quy định về thiệt hại do tài sản bị xâm phạm, thiệt hại thực tế bao gồm:
+     + Chi phí sửa chữa, phục hồi, thay thế các linh kiện, phụ tùng bị gãy, vỡ, móp méo của ${propertyName} (${actorB}) và xe của người thứ ba.
+     + Chi phí cứu hộ, vận chuyển xe đến xưởng sửa chữa (nếu có).
+     + Tổn thất do giá trị thương mại của tài sản bị giảm sút hoặc thu nhập thực tế bị mất gắn liền với việc sử dụng, khai thác phương tiện trong thời gian sửa chữa.
+3. **Căn cứ 3: Có mối quan hệ nhân quả giữa hành vi trái pháp luật và thiệt hại thực tế**:
+   - Hành vi thiếu chú ý quan sát của ${actorA} là nguyên nhân trực tiếp, tất yếu dẫn đến vụ va chạm giao thông và làm hư hỏng các phương tiện. Nếu ${actorA} tập trung quan sát và điều khiển xe cẩn trọng thì vụ tai nạn và thiệt hại hư hỏng xe đã không xảy ra.
+4. **Căn cứ 4: Có yếu tố lỗi của người gây thiệt hại**:
+   - ${actorA} có **lỗi vô ý do cẩu thả**: Khi tham gia giao thông, ${actorA} buộc phải thấy trước hành vi thiếu chú ý có thể dẫn đến va chạm làm hư hỏng tài sản nhưng đã không chú ý quan sát. Theo nguyên tắc bồi thường thiệt hại dân sự, người gây thiệt hại có lỗi vô ý vẫn phải bồi thường toàn bộ thiệt hại.
+
+---
+
+### IV. KẾT LUẬN VÀ PHƯƠNG ÁN GIẢI QUYẾT CỤ THỂ TRONG THỰC TIỄN
+1. **Xác định chi phí sửa chữa**: Các bên đưa các phương tiện bị hư hỏng đến trung tâm bảo hành, xưởng sửa chữa uy tín để giám định thiệt hại và lập báo giá sửa chữa chính xác.
+2. **Thực hiện bồi thường**: ${actorA} có nghĩa vụ chi trả toàn bộ chi phí sửa chữa cho ${actorB} và chủ phương tiện thứ ba.
+3. **Trường hợp lỗi hỗn hợp**: Nếu cơ quan Công an kết luận người thứ ba cũng có một phần lỗi trong vụ va chạm, căn cứ **Khoản 4 Điều 585 BLDS 2015**, trách nhiệm bồi thường thiệt hại sẽ được phân chia tương ứng với mức độ lỗi của mỗi bên.`;
+    }
+
+    // === NHÁNH 2: TÌNH HUỐNG MƯỢN LAPTOP / THIẾT BỊ LÀM RƠI VỠ ===
     return `### I. CĂN CỨ PHÁP LÝ PHÁT SINH TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI
 Quan hệ giữa ${actorA} và ${actorB} là quan hệ **Hợp đồng mượn tài sản** theo quy định tại **Điều 494 Bộ luật Dân sự 2015** (sử dụng tài sản không phải trả tiền và phải hoàn trả nguyên vẹn tài sản khi hết thời hạn mượn).
 
 Trách nhiệm bồi thường thiệt hại phát sinh dựa trên 4 căn cứ luật định (**Điều 584 và Điều 585 Bộ luật Dân sự 2015**):
-1. **Có hành vi vi phạm nghĩa vụ/gây thiệt hại**: ${actorA} làm rơi vỡ chiếc laptop của ${actorB}.
-2. **Có thiệt hại thực tế xảy ra**: Chiếc laptop bị hư hỏng, nứt vỡ, suy giảm hoặc mất hoàn toàn giá trị sử dụng và giá trị kinh tế.
-3. **Mối quan hệ nhân quả**: Hành vi làm rơi của ${actorA} là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả laptop bị vỡ.
-4. **Yếu tố lỗi**: ${actorA} có lỗi trong việc bảo quản và sử dụng tài sản mượn.
+1. **Có hành vi vi phạm nghĩa vụ/gây thiệt hại**: ${actorA} làm rơi vỡ ${propertyName} của ${actorB}.
+2. **Có thiệt hại thực tế xảy ra**: ${propertyName} bị hư hỏng, nứt vỡ, suy giảm hoặc mất hoàn toàn giá trị sử dụng và giá trị kinh tế.
+3. **Mối quan hệ nhân quả**: Hành vi làm rơi của ${actorA} là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả ${propertyName} bị vỡ.
+4. **Yếu tố lỗi**: ${actorA} có lỗi vô ý trong việc bảo quản và sử dụng tài sản mượn.
 
 ---
 
-### II. PHÂN TÍCH YẾU TỐ LỖI VÀ ĐÁNH GIÁ LẬP LUẬN CỦA ${actorA}
-**Kết luận: Lập luận của ${actorA} cho rằng "đây là tai nạn nên không cần bồi thường" là HOÀN TOÀN SAI và không có căn cứ pháp lý.**
+### II. PHÂN TÍCH YẾU TỐ LỖI VÀ NGHĨA VỤ CỦA ${actorA.toUpperCase()}
+**Kết luận: ${actorA} BẮT BUỘC PHẢI BỒI THƯỜNG THIỆT HẠI.**
 
 1. **Phân biệt "tai nạn sinh hoạt" và "Sự kiện bất khả kháng"**:
    - Căn cứ **Khoản 1 Điều 156 Bộ luật Dân sự 2015**: Sự kiện bất khả kháng là sự kiện xảy ra một cách khách quan, **không thể lường trước được** và **không thể khắc phục được** mặc dù đã áp dụng mọi biện pháp cần thiết và khả năng cho phép (ví dụ: động đất, sóng thần, sét đánh...).
-   - Việc cầm, di chuyển hoặc đặt để laptop không cẩn thận dẫn đến rơi vỡ là rủi ro trong sinh hoạt thường nhật, **hoàn toàn có thể lường trước và phòng tránh được** nếu có sự cẩn trọng hợp lý.
+   - Việc cầm, di chuyển hoặc đặt để ${propertyName} không cẩn thận dẫn đến rơi vỡ là rủi ro trong sinh hoạt thường nhật, **hoàn toàn có thể lường trước và phòng tránh được** nếu có sự cẩn trọng hợp lý.
 2. **Xác định hình thức lỗi**:
-   - Hành vi làm rơi vỡ laptop của ${actorA} mang **yếu tố lỗi vô ý** (do cẩu thả, bất cẩn, thiếu chú ý quan sát hoặc quá tự tin khi cầm nắm tài sản).
+   - Hành vi làm rơi vỡ ${propertyName} của ${actorA} mang **yếu tố lỗi vô ý** (do cẩu thả, bất cẩn, thiếu chú ý quan sát hoặc quá tự tin khi cầm nắm tài sản).
    - Theo nguyên tắc chung của pháp luật Dân sự (Khoản 1 Điều 584 BLDS 2015), người gây thiệt hại dù có lỗi cố ý hay lỗi vô ý đều **bắt buộc phải bồi thường thiệt hại**. ${actorA} không thuộc trường hợp được miễn trừ trách nhiệm.
 
 ---
@@ -3782,23 +4013,23 @@ Căn cứ **Điều 496 Bộ luật Dân sự 2015** quy định về nghĩa v�
 
 ### IV. NHỮNG DỮ KIỆN CẦN XÁC MINH TRONG THỰC TẾ
 Để giải quyết vụ việc một cách khách quan, chính xác và công bằng, các bên cần làm rõ các dữ kiện sau:
-1. **Tình trạng của laptop trước thời điểm cho mượn**:
-   - Máy có đang hoạt động bình thường không? Trước khi mượn đã có vết nứt, vỡ hay lỗi phần cứng nào từ trước hay chưa?
+1. **Tình trạng của ${propertyName} trước thời điểm cho mượn**:
+   - Tài sản có đang hoạt động bình thường không? Trước khi mượn đã có vết nứt, vỡ hay lỗi phần cứng nào từ trước hay chưa?
 2. **Nguyên nhân và diễn biến trực tiếp gây ra việc rơi vỡ**:
-   - Có sự tác động, va chạm từ người thứ ba (ví dụ: bị người khác xô đẩy, va quẹt) hay do lỗi hoàn toàn xuất phát từ sự bất cẩn của ${actorA}?
+   - Có sự tác động từ người thứ ba (ví dụ: bị người khác xô đẩy, va quẹt) hay do lỗi hoàn toàn xuất phát từ sự bất cẩn của ${actorA}?
    - Trường hợp nếu có người thứ ba xô ngã, người thứ ba đó cũng phải liên đới chịu trách nhiệm bồi thường theo Điều 587 BLDS 2015.
 3. **Mức độ hư hỏng và chi phí khắc phục thực tế**:
-   - Mang máy đến trung tâm bảo hành/kỹ thuật uy tín để giám định thiệt hại:
-     + Nếu sửa chữa, thay thế được (màn hình, vỏ): Chi phí sửa chữa là bao nhiêu?
-     + Nếu hỏng hoàn toàn không thể sửa chữa: Xác định giá trị khấu hao thực tế còn lại của chiếc laptop tại thời điểm bị vỡ để làm căn cứ bồi thường (không tính theo giá mua mới ban đầu).
+   - Mang tài sản đến trung tâm bảo hành/kỹ thuật uy tín để giám định thiệt hại:
+     + Nếu sửa chữa, thay thế được: Chi phí sửa chữa thực tế là bao nhiêu?
+     + Nếu hỏng hoàn toàn không thể sửa chữa: Xác định giá trị khấu hao thực tế còn lại của tài sản tại thời điểm bị vỡ để làm căn cứ bồi thường (không tính theo giá mua mới ban đầu).
 
 ---
 
-### V. KẾT LUẬN VÀ PHƯƠNG ÁN GIẢI QUYẾT CHO ${actorB}
-1. **Trách nhiệm của ${actorA}**: ${actorA} có nghĩa vụ bồi thường toàn bộ chi phí sửa chữa hoặc bồi thường giá trị thực tế của laptop cho ${actorB} theo quy định tại **Điều 585 Bộ luật Dân sự 2015**.
+### V. KẾT LUẬN VÀ PHƯƠNG ÁN GIẢI QUYẾT CHO ${actorB.toUpperCase()}
+1. **Trách nhiệm của ${actorA}**: ${actorA} có nghĩa vụ bồi thường toàn bộ chi phí sửa chữa hoặc bồi thường giá trị thực tế của ${propertyName} cho ${actorB} theo quy định tại **Điều 585 và Điều 589 Bộ luật Dân sự 2015**.
 2. **Phương thức giải quyết**:
-   - **Thương lượng (ưu tiên)**: Hai bên cùng mang máy đi kiểm tra thiệt hại và thỏa thuận phương án bồi thường (A thanh toán tiền sửa chữa hoặc đền một chiếc máy có giá trị tương đương).
-   - **Khởi kiện dân sự**: Nếu ${actorA} tiếp tục từ chối bồi thường, ${actorB} có quyền khởi kiện yêu cầu Tòa án nhân dân có thẩm quyền buộc ${actorA} bồi thường thiệt hại ngoài hợp đồng.`;
+   - **Thương lượng (ưu tiên)**: Hai bên cùng mang máy đi kiểm tra thiệt hại và thỏa thuận phương án bồi thường (${actorA} thanh toán tiền sửa chữa hoặc đền một tài sản có giá trị và cấu hình tương đương).
+   - **Khởi kiện dân sự**: Nếu ${actorA} tiếp tục từ chối bồi thường, ${actorB} có quyền khởi kiện yêu cầu Tòa án nhân dân có thẩm quyền buộc ${actorA} bồi thường thiệt hại theo quy định pháp luật.`;
   }
 
   // --- DẠNG MỚI: HỢP ĐỒNG & TRANH CHẤP VAY TÀI SẢN (CIVIL_CONTRACT) ---
