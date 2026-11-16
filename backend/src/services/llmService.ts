@@ -1967,8 +1967,8 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       effectiveIntent === 'VPPL_4_ELEMENTS' ||
       effectiveIntent === 'CIVIL_INHERIT' ||
       effectiveIntent === 'COMPARISON';
-    // Đảm bảo số lượng tokens đủ để mô hình sinh bài giải trọn vẹn, không bị ngắt cụt giữa chừng
-    const adaptiveMaxTokens = isComplexQuery ? 750 : 550;
+    // Đảm bảo số lượng tokens vừa đủ súc tích, tránh CPU sinh rườm rà làm chậm tốc độ phản hồi
+    const adaptiveMaxTokens = isComplexQuery ? 480 : 320;
     // Timeout 4 phút (240.000ms): Cho phép CPU hoàn tất việc sinh câu trả lời tối đa 4 phút, biên độ an toàn tuyệt đối, không bao giờ bị abort sớm
     const adaptiveTimeoutMs = 240000;
 
@@ -2006,7 +2006,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             },
             {
               role: 'user',
-              content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Dựa vào các căn cứ pháp luật và nguyên lý trên, hãy phân tích và trả lời câu hỏi một cách chuẩn xác, đầy đủ:`
+              content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Yêu cầu giải đáp: Đi thẳng vào trọng tâm đề bài bằng các đề mục rõ ràng, căn cứ đúng điều luật thực định, lập luận chặt chẽ và súc tích:`
             }
           ],
           temperature: 0.0,

@@ -25,12 +25,12 @@ if exist "models\vietlaw_lora_adapter.gguf" goto :with_lora
 
 :no_lora
 echo [INFO] Dang khoi chay llama-server tren cong 8088...
-tools\llama\llama-server.exe -m models\qwen2.5-3b-legal-vn-Q4_K_M.gguf --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 4
+tools\llama\llama-server.exe -m models\qwen2.5-3b-legal-vn-Q4_K_M.gguf --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 6
 goto :end
 
 :with_lora
 echo [INFO] Nap kem LoRA adapter: models\vietlaw_lora_adapter.gguf
-tools\llama\llama-server.exe -m models\qwen2.5-3b-legal-vn-Q4_K_M.gguf --lora models\vietlaw_lora_adapter.gguf --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 4
+tools\llama\llama-server.exe -m models\qwen2.5-3b-legal-vn-Q4_K_M.gguf --lora models\vietlaw_lora_adapter.gguf --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 6
 goto :end
 
 :end

@@ -1,4 +1,4 @@
-# VietLawAssist - Local LLM Server (Qwen2.5-3B)
+﻿# VietLawAssist - Local LLM Server (Qwen2.5-3B)
 $Host.UI.RawUI.WindowTitle = "VietLawAssist - Local LLM Server (Qwen2.5-3B)"
 
 $rootDir = $PSScriptRoot
@@ -28,9 +28,9 @@ if (-not (Test-Path $llamaExe)) {
 
 if (Test-Path $loraPath) {
     Write-Host "[INFO] Nạp kèm LoRA adapter: $loraPath" -ForegroundColor Magenta
-    & $llamaExe -m $modelPath --lora $loraPath --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 4
+    & $llamaExe -m $modelPath --lora $loraPath --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 6
 } else {
     Write-Host "[INFO] Khởi chạy mô hình trên cổng 8088..." -ForegroundColor Green
-    & $llamaExe -m $modelPath --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 4
+    & $llamaExe -m $modelPath --host 127.0.0.1 --port 8088 -c 1024 -np 1 -t 6
 }
 

@@ -51,7 +51,7 @@ export class LlamaManager {
           '--port', '8088',
           '-c', '1024',
           '-np', '1',
-          '-t', '4',
+          '-t', '6',
           '--log-disable'
         ],
         {
