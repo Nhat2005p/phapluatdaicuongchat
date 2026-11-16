@@ -49,7 +49,7 @@ export class LlamaManager {
           '-m', MODEL_GGUF,
           '--host', '127.0.0.1',
           '--port', '8088',
-          '-c', '1024',
+          '-c', '4096',
           '-np', '1',
           '-t', '6',
           '--log-disable'

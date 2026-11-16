@@ -2016,12 +2016,13 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     if (topTextbooks.length > 0) {
       for (const t of topTextbooks.slice(0, 2)) {
         if (t.chunk && t.chunk.baremContent) {
-          compactLlmContext += `[Barem Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle}]\n${t.chunk.baremContent.trim()}\n\n`;
+          const chunkSnippet = t.chunk.baremContent.slice(0, 600).trim();
+          compactLlmContext += `[Barem Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle}]\n${chunkSnippet}\n\n`;
         }
       }
     }
     if (!compactLlmContext) {
-      compactLlmContext = fullRagContext.slice(0, 1500);
+      compactLlmContext = fullRagContext.slice(0, 1000);
     }
 
     try {
