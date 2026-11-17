@@ -46,6 +46,20 @@ export class QueryController {
         await user.save();
       }
 
+      const sanitizedQuery = RagService.sanitizeSecurityPayload(query);
+      if (!sanitizedQuery) {
+        res.status(400).json({ success: false, message: 'Nội dung câu hỏi không hợp lệ sau khi lọc bảo mật.' });
+        return;
+      }
+
+      // Hỗ trợ Stop Generation (AbortController) khi phía Frontend hủy request giữa chừng
+      const reqAbort = new AbortController();
+      res.on('close', () => {
+        if (!res.writableEnded) {
+          reqAbort.abort();
+        }
+      });
+
       const startTime = Date.now();
 
       // Nâng cấp 4: Tự động kế thừa ngữ cảnh hội thoại từ lượt hỏi liền trước (bao gồm cả câu hỏi và câu trả lời trước)
@@ -60,7 +74,7 @@ export class QueryController {
           recentPrevResponse = lastRecord.response || null;
         }
       }
-      const { effectiveQuery } = RagService.contextualizeQueryWithHistory(query, recentPrevQuery, recentPrevResponse);
+      const { effectiveQuery } = RagService.contextualizeQueryWithHistory(sanitizedQuery, recentPrevQuery, recentPrevResponse);
 
       // BƯỚC 01: REWRITE & ROUTING (Query Rewriting, Expansion, Intent Detection, Multi-Query)
       const routingPlan = RagService.buildRoutingPlan(effectiveQuery, categoryId);
@@ -69,14 +83,23 @@ export class QueryController {
       // BƯỚC 02 & 03: HYBRID + MULTI-VECTOR / COLBERT RETRIEVAL & CROSS-ENCODER RERANKING
       const ragContext = await RagService.retrieveContext(routingPlan.rewrittenQuery, intentCode);
 
+      if (reqAbort.signal.aborted) {
+        return;
+      }
+
       // BƯỚC 04: CONTEXT FUSION & GENERATION (SFT + RAG + Fine-tuned LLM / Dynamic Solver)
       const llmResult = await LlmService.generate(
         routingPlan.rewrittenQuery,
         intentCode,
         ragContext.promptContext,
         ragContext.articles,
-        categoryId
+        categoryId,
+        reqAbort.signal
       );
+
+      if (reqAbort.signal.aborted || res.writableEnded) {
+        return;
+      }
 
       // BƯỚC 05: EVALUATION & CITATION GUARDRAIL (Đo lường chất lượng & Kiểm định điều luật)
       const guardrailResult = await GuardrailService.scanAndVerify(llmResult.text);
@@ -88,7 +111,7 @@ export class QueryController {
         const historyItem = await QueryHistory.create({
           userId: req.user.id,
           userEmail: req.user.email?.toLowerCase(),
-          query,
+          query: sanitizedQuery,
           intentCode,
           response: llmResult.text,
           activityType: 'solver',

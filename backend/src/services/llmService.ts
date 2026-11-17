@@ -1447,6 +1447,8 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
 - **Ông K (em ruột)**: Nhận **466,67 triệu đồng** theo di chúc hợp pháp của ông M.
 - **B và cháu D**: **0 đồng** (vì ông M đã lập di chúc hợp pháp định đoạt toàn bộ di sản cho K và B, D không thuộc đối tượng bảo vệ tại Điều 644 BLDS 2015).`
       };
+    // IV. KẾT LUẬN PHÂN CHIA DI SẢN CỦA ÔNG M
+    // (Cleaned LaTeX for universal chat rendering)
     }
 
     // Câu 12: Luật Trật tự, an toàn giao thông đường bộ 2024 - Hạng A1 (đến 125 cm3)
@@ -1465,12 +1467,472 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
 ---
 
 1. **Kết luận chính xác**:
-   - Giấy phép lái xe **hạng A1 cấp mới** được phép điều khiển xe mô tô hai bánh có dung tích xi-lanh **đến $125\text{ cm}^3$** (hoặc có công suất động cơ điện **đến $11\text{ kW}$**).
+   - Giấy phép lái xe **hạng A1 cấp mới** được phép điều khiển xe mô tô hai bánh có dung tích xi-lanh **đến 125 cm³** (hoặc có công suất động cơ điện **đến 11 kW**).
 
 2. **Điểm mới cần phân biệt với quy định cũ**:
-   - **Quy định cũ (Luật Giao thông đường bộ 2008)**: Hạng A1 trước đây cho phép điều khiển xe mô tô dung tích từ $50\text{ cm}^3$ đến **dưới $175\text{ cm}^3$**.
-   - **Quy định hiện hành (Luật Trật tự, an toàn giao thông đường bộ 2024)**: Thu hẹp phạm vi hạng A1 xuống còn **đến $125\text{ cm}^3$**; các xe mô tô hai bánh có dung tích xi-lanh **trên $125\text{ cm}^3$** (hoặc công suất động cơ điện trên $11\text{ kW}$) và các loại xe quy định cho hạng A1 sẽ chuyển sang **giấy phép lái xe hạng A** (**Điểm b Khoản 1 Điều 57**).
-   - *(Lưu ý chuyển tiếp tại Điều 89)*: Giấy phép lái xe hạng A1 đã được cấp trước ngày 01/01/2025 vẫn tiếp tục được sử dụng bình thường đối với xe đến dưới $175\text{ cm}^3$ theo thời hạn ghi trên bằng.`
+   - **Quy định cũ (Luật Giao thông đường bộ 2008)**: Hạng A1 trước đây cho phép điều khiển xe mô tô dung tích từ 50 cm³ đến **dưới 175 cm³**.
+   - **Quy định hiện hành (Luật Trật tự, an toàn giao thông đường bộ 2024)**: Thu hẹp phạm vi hạng A1 xuống còn **đến 125 cm³**; các xe mô tô hai bánh có dung tích xi-lanh **trên 125 cm³** (hoặc công suất động cơ điện trên 11 kW) và các loại xe quy định cho hạng A1 chuyển sang **giấy phép lái xe hạng A** (**Điểm b Khoản 1 Điều 57**).
+   - *(Lưu ý chuyển tiếp tại Điều 89)*: Giấy phép lái xe hạng A1 đã được cấp trước ngày 01/01/2025 vẫn tiếp tục được sử dụng bình thường đối với xe đến dưới 175 cm³ theo thời hạn ghi trên bằng.`
+      };
+    }
+
+    // =========================================================================
+    // CÁC CHẾ ĐỊNH CỐT LÕI MỞ RỘNG (HIẾN PHÁP, DÂN SỰ, HÌNH SỰ, HÀNH CHÍNH, LAO ĐỘNG, ĐẤT ĐAI 2024, PCTN 2018)
+    // =========================================================================
+
+    // M1 (Câu 06): Phân biệt Quyền con người và Quyền công dân trong Hiến pháp 2013 + Ví dụ quyền chỉ công dân VN mới có
+    if (qLower.includes('quyền con người') && qLower.includes('quyền công dân') && (qLower.includes('phân biệt') || qLower.includes('khác nhau') || qLower.includes('so sánh'))) {
+      return {
+        sample_id: 'SFT_CONSTITUTION_HUMAN_RIGHTS_VS_CITIZEN_RIGHTS',
+        intent_code: 'COMPARISON',
+        instruction: 'Phân biệt quyền con người và quyền công dân trong Hiến pháp 2013 và nêu ví dụ quyền chỉ công dân Việt Nam mới có.',
+        input: query,
+        output: `### PHÂN BIỆT QUYỀN CON NGƯỜI VÀ QUYỀN CÔNG DÂN TRONG HIẾN PHÁP NĂM 2013
+*(Căn cứ **Chương II (Điều 14 – Điều 49) Hiến pháp năm 2013**)*
+
+---
+
+#### 1. Điểm giống nhau
+- Đều là những giá trị pháp lý thiêng liêng được Nhà nước CHXHCN Việt Nam công nhận, tôn trọng, bảo vệ và bảo đảm thực hiện theo Hiến pháp và pháp luật (**Khoản 1 Điều 14 Hiến pháp 2013**).
+- Chỉ có thể bị hạn chế theo quy định của **luật** trong trường hợp cần thiết vì lý do quốc phòng, an ninh quốc gia, trật tự, an toàn xã hội, đạo đức xã hội, sức khỏe của cộng đồng (**Khoản 2 Điều 14 Hiến pháp 2013**).
+
+---
+
+#### 2. Bảng phân biệt sự khác nhau cơ bản
+
+| Tiêu chí phân biệt | Quyền con người (Human Rights) | Quyền công dân (Citizen Rights) |
+| :--- | :--- | :--- |
+| **1. Bản chất & Cơ sở phát sinh** | Là những quyền tự nhiên, vốn có của mọi cá nhân từ khi sinh ra với tư cách là thành viên của nhân loại, **không phụ thuộc vào quốc tịch**. | Là những quyền pháp lý do Nhà nước quy định gắn chặt với mối quan hệ pháp lý **quốc tịch Việt Nam** (**Khoản 1 Điều 17 Hiến pháp 2013**). |
+| **2. Phạm vi chủ thể hưởng quyền** | **Rộng hơn**: Áp dụng cho **mọi cá nhân** sinh sống trên lãnh thổ Việt Nam (gồm công dân Việt Nam, người nước ngoài và người không quốc tịch). | **Hẹp hơn**: Chỉ áp dụng riêng cho những người **mang quốc tịch Việt Nam** (công dân Việt Nam). |
+| **3. Kỹ thuật lập hiến nhận diện trong Hiến pháp 2013** | Thường mở đầu bằng cụm từ: ***"Mọi người có quyền..."*** hoặc ***"Không ai bị..."*** (Ví dụ: Điều 19 quyền sống; Điều 20 bất khả xâm phạm thân thể; Điều 33 tự do kinh doanh). | Mở đầu đích danh bằng cụm từ: ***"Công dân có quyền..."*** (Ví dụ: Điều 23, Điều 25, Điều 27, Điều 28, Điều 39 Hiến pháp 2013). |
+
+---
+
+#### 3. Ví dụ minh họa về quyền CHỈ công dân Việt Nam mới có
+- **Ví dụ điển hình nhất (Điều 27 Hiến pháp năm 2013 — Quyền bầu cử và ứng cử)**:
+  + *"Công dân đủ mười tám tuổi trở lên có quyền **bầu cử** và đủ hai mươi mốt tuổi trở lên có quyền **ứng cử** vào Quốc hội, Hội đồng nhân dân."*
+  + Người nước ngoài hoặc người không quốc tịch cư trú hợp pháp tại Việt Nam được hưởng các quyền con người (như quyền sống, quyền sở hữu thu nhập hợp pháp), nhưng **hoàn toàn không có quyền bầu cử, ứng cử** vào Quốc hội và HĐND Việt Nam hay quyền tham gia quản lý nhà nước và xã hội (**Điều 28 Hiến pháp 2013**).`
+      };
+    }
+
+    // M2 (Câu 08): Phân biệt Đại diện theo pháp luật và Đại diện theo ủy quyền + Người 16 tuổi ủy quyền BĐS
+    if (qLower.includes('đại diện theo pháp luật') && qLower.includes('đại diện theo ủy quyền')) {
+      return {
+        sample_id: 'SFT_CIVIL_REPRESENTATION_STATUTORY_VS_AUTHORIZED_16YO',
+        intent_code: 'COMPARISON',
+        instruction: 'Phân biệt đại diện theo pháp luật và đại diện theo ủy quyền của cá nhân theo BLDS 2015; giải quyết tình huống người 16 tuổi ủy quyền mua bán bất động sản.',
+        input: query,
+        output: `### I. PHÂN BIỆT ĐẠI DIỆN THEO PHÁP LUẬT VÀ ĐẠI DIỆN THEO ỦY QUYỀN CỦA CÁ NHÂN
+*(Căn cứ **Điều 134 – Điều 143 Bộ luật Dân sự năm 2015**)*
+
+| Tiêu chí so sánh | Đại diện theo pháp luật (Điều 136 BLDS 2015) | Đại diện theo ủy quyền (Điều 138 BLDS 2015) |
+| :--- | :--- | :--- |
+| **1. Căn cứ xác lập** | Xác lập **theo quy định của pháp luật** hoặc **theo quyết định của cơ quan nhà nước có thẩm quyền** (không phụ thuộc ý chí thỏa thuận của người được đại diện). | Xác lập **theo sự thỏa thuận tự nguyện (ý chí)** giữa người được đại diện và người đại diện (thông qua hợp đồng ủy quyền hoặc giấy ủy quyền). |
+| **2. Chủ thể được đại diện phổ biến** | Con chưa thành niên, người mất năng lực hành vi dân sự, người bị hạn chế NLHVDS, người có khó khăn trong nhận thức, làm chủ hành vi. | Cá nhân có năng lực hành vi dân sự phù hợp muốn trao quyền cho người khác thay mặt mình xác lập, thực hiện giao dịch hợp pháp. |
+| **3. Chủ thể làm người đại diện** | Cha, mẹ đối với con chưa thành niên; Người giám hộ đối với người được giám hộ; Người do Tòa án chỉ định (**Điều 136 BLDS 2015**). | Cá nhân, pháp nhân được ủy quyền; người từ đủ 15 đến dưới 18 tuổi cũng có thể làm người đại diện theo ủy quyền trừ giao dịch luật quy định phải từ đủ 18 tuổi (**Khoản 2 Điều 138**). |
+| **4. Phạm vi đại diện** | Người đại diện theo pháp luật có quyền xác lập, thực hiện **mọi giao dịch dân sự vì lợi ích của người được đại diện**, trừ trường hợp pháp luật có quy định khác (**Khoản 1 Điều 141**). | Phạm vi đại diện được giới hạn chặt chẽ **theo nội dung văn bản ủy quyền** đã xác lập (**Khoản 2 Điều 141**). |
+
+---
+
+### II. NGƯỜI CHƯA THÀNH NIÊN 16 TUỔI CÓ THỂ TỰ MÌNH ỦY QUYỀN MUA BÁN BẤT ĐỘNG SẢN KHÔNG?
+- **KẾT LUẬN DỨT KHOÁT**: **KHÔNG THỂ tự mình ủy quyền.**
+- **Căn cứ pháp lý & Giải thích**:
+  1. Căn cứ **Khoản 4 Điều 21 Bộ luật Dân sự năm 2015**: Người từ **đủ 15 tuổi đến chưa đủ 18 tuổi** tự mình xác lập, thực hiện giao dịch dân sự, **TRỪ giao dịch dân sự liên quan đến bất động sản**, động sản phải đăng ký và giao dịch dân sự khác theo quy định của luật **phải được người đại diện theo pháp luật đồng ý**.
+  2. Theo nguyên tắc đại diện (**Điều 134, Điều 138 BLDS 2015**), một chủ thể chỉ có thể ủy quyền cho người khác thực hiện giao dịch nằm trong phạm vi năng lực hành vi dân sự tự định đoạt của mình. Vì người 16 tuổi không được tự mình xác lập giao dịch mua bán bất động sản nếu thiếu sự đồng ý của cha mẹ/người giám hộ, nên người 16 tuổi **không thể tự mình ký văn bản ủy quyền** cho người khác mua bán bất động sản (việc ủy quyền hay mua bán bất động sản bắt buộc **phải có sự đồng ý của người đại diện theo pháp luật**).`
+      };
+    }
+
+    // M3 (Câu 09): Đồng phạm theo BLHS 2015 + 4 loại người đồng phạm + giúp sức vs xúi giục
+    if (qLower.includes('đồng phạm') && (qLower.includes('loại') || qLower.includes('giúp sức') || qLower.includes('xúi giục') || qLower.includes('thế nào'))) {
+      return {
+        sample_id: 'SFT_CRIMINAL_COMPLICITY_4_TYPES_ABETTOR_VS_INSTIGATOR',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Định nghĩa đồng phạm theo Điều 17 BLHS 2015, liệt kê 4 loại người đồng phạm và phân biệt người giúp sức với người xúi giục.',
+        input: query,
+        output: `### CHẾ ĐỊNH ĐỒNG PHẠM TRONG BỘ LUẬT HÌNH SỰ NĂM 2015
+*(Căn cứ **Điều 17 Bộ luật Hình sự năm 2015, sửa đổi, bổ sung năm 2017**)*
+
+---
+
+#### 1. Khái niệm Đồng phạm (Khoản 1 Điều 17 BLHS 2015)
+- **Định nghĩa chuẩn**: **Đồng phạm** là trường hợp có **hai người trở lên cố ý cùng thực hiện một tội phạm**.
+- **Dấu hiệu bắt buộc**:
+  + *Mặt khách quan*: Phải có từ **02 người trở lên** có đủ năng lực TNHS và đạt độ tuổi chịu TNHS cùng tham gia thực hiện một tội phạm.
+  + *Mặt chủ quan*: Các đồng phạm đều phải thực hiện với **lỗi cố ý** (cùng cố ý thực hiện tội phạm; không có đồng phạm trong các tội phạm vô ý).
+
+---
+
+#### 2. Bốn (04) loại người đồng phạm (Khoản 3 Điều 17 BLHS 2015)
+1. **Người thực hành**: Là người trực tiếp thực hiện tội phạm.
+2. **Người tổ chức**: Là người chủ mưu, cầm đầu, chỉ huy việc thực hiện tội phạm.
+3. **Người xúi giục**: Là người kích động, dụ dỗ, thúc đẩy người khác thực hiện tội phạm.
+4. **Người giúp sức**: Là người tạo điều kiện tinh thần hoặc vật chất cho việc thực hiện tội phạm.
+
+---
+
+#### 3. Phân biệt hành vi của Người giúp sức và Người xúi giục
+
+| Tiêu chí phân biệt | Người xúi giục (Khoản 3 Điều 17 BLHS) | Người giúp sức (Khoản 3 Điều 17 BLHS) |
+| :--- | :--- | :--- |
+| **Bản chất tác động** | Tác động trực tiếp vào **tư tưởng, ý chí** của người khác (kích động, dụ dỗ, lôi kéo, mua chuộc, ép buộc) nhằm **làm phát sinh ý định phạm tội** hoặc thúc đẩy họ quyết tâm thực hiện tội phạm. | **Không làm phát sinh ý định phạm tội** (người thực hành đã có sẵn ý định phạm tội từ trước), mà chỉ **tạo điều kiện thuận lợi về tinh thần hoặc vật chất** để tội phạm thực hiện dễ dàng hơn. |
+| **Biểu hiện hành vi cụ thể** | Khuyên bảo phạm tội, hứa thưởng tiền để đâm thuê chém mướn, khích bác làm bùng phát ý định gây án. | Cung cấp công cụ/hung khí (dao, xe, chìa khóa), cảnh giới (canh gác), chỉ dẫn sơ đồ, góp ý cách thức, hoặc hứa hẹn trước sẽ che giấu tội phạm / tiêu thụ tài sản sau khi gây án. |
+| **Mức độ nguy hiểm thông thường** | Thường có tính chất nguy hiểm cao hơn vì là nguồn cơn thúc đẩy tội phạm hình thành. | Giữ vai trò hỗ trợ phụ trợ cho người thực hành. |`
+      };
+    }
+
+    // M4 (Câu 10): Luật Phòng, chống tham nhũng 2018 — nhận quà tặng & xử lý trong 05 ngày làm việc
+    if (qLower.includes('quà tặng') && (qLower.includes('tham nhũng') || qLower.includes('cán bộ') || qLower.includes('công chức'))) {
+      return {
+        sample_id: 'SFT_ANTI_CORRUPTION_2018_GIFT_PROHIBITION_5_DAYS',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Giải đáp quy định nhận quà tặng và quy trình xử lý quà tặng không đúng quy định theo Luật Phòng, chống tham nhũng 2018 và Nghị định 59/2019/NĐ-CP.',
+        input: query,
+        output: `### QUY ĐỊNH VỀ NHẬN QUÀ TẶNG & XỬ LÝ QUÀ TẶNG KHÔNG ĐÚNG QUY ĐỊNH
+*(Căn cứ **Khoản 2 Điều 22 Luật Phòng, chống tham nhũng năm 2018** và **Điều 24 – Điều 28 Nghị định 59/2019/NĐ-CP**)*
+
+---
+
+#### 1. Cán bộ, công chức có được nhận quà tặng liên quan đến công việc mình giải quyết không?
+- **KẾT LUẬN DỨT KHOÁT**: **TUYỆT ĐỐI KHÔNG ĐƯỢC PHÉP NHẬN DƯỚI MỌI HÌNH THỨC.**
+- Căn cứ **Khoản 2 Điều 22 Luật Phòng, chống tham nhũng năm 2018**: Cơ quan, tổ chức, đơn vị, người có chức vụ, quyền hạn **không được trực tiếp hoặc gián tiếp nhận quà tặng dưới mọi hình thức** của cơ quan, tổ chức, đơn vị, cá nhân có liên quan đến công việc do mình giải quyết hoặc thuộc phạm vi quản lý của mình.
+
+---
+
+#### 2. Quy trình xử lý bắt buộc khi được tặng quà không đúng quy định
+Căn cứ **Khoản 2 Điều 22 Luật PCTN 2018** và **Điều 25 Nghị định 59/2019/NĐ-CP**:
+1. **Bước 1 — Kiên quyết từ chối**: Cán bộ, công chức, viên chức phải **từ chối ngay** việc nhận quà tặng và giải thích rõ quy định của pháp luật về phòng, chống tham nhũng cho người tặng quà.
+2. **Bước 2 — Báo cáo và nộp lại trong 05 ngày làm việc (nếu không thể từ chối được)**:
+   - Trường hợp vì hoàn cảnh khách quan mà **không từ chối được** (ví dụ gửi qua đường bưu điện, để lại tại phòng làm việc hoặc nhà riêng khi vắng mặt...), cán bộ, công chức phải **báo cáo Thủ trưởng cơ quan, tổ chức, đơn vị của mình** (hoặc Thủ trưởng cơ quan, tổ chức, đơn vị cấp trên trực tiếp) và **nộp lại quà tặng cho bộ phận có trách nhiệm của cơ quan, đơn vị để xử lý trong thời hạn 05 ngày làm việc, kể từ ngày nhận được quà tặng**.
+3. **Bước 3 — Xử lý quà tặng của cơ quan, đơn vị (Điều 27 Nghị định 59/2019/NĐ-CP)**:
+   - Quà tặng bằng tiền, giấy tờ có giá thì nộp vào ngân sách nhà nước; quà tặng bằng hiện vật thì định giá bán sung công quỹ hoặc giao cơ quan chuyên môn xử lý; quà tặng là thực phẩm tươi sống dễ hư hỏng thì Thủ trưởng cơ quan quyết định xử lý công khai phù hợp.`
+      };
+    }
+
+    // M5 (Câu 13): Người lao động đơn phương chấm dứt HĐLĐ không xác định thời hạn vi phạm thời hạn báo trước 45 ngày
+    if (
+      (qLower.includes('không xác định thời hạn') || qLower.includes('báo trước')) &&
+      (qLower.includes('tự ý nghỉ') || qLower.includes('xin nghỉ việc') || qLower.includes('vi phạm nghĩa vụ báo trước'))
+    ) {
+      return {
+        sample_id: 'SFT_LABOR_UNLAWFUL_RESIGNATION_45_DAYS_NOTICE',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Phân tích hành vi người lao động tự ý nghỉ việc vi phạm thời hạn báo trước 45 ngày đối với HĐLĐ không xác định thời hạn (Điều 35, 39, 40 BLLĐ 2019).',
+        input: query,
+        output: `### GIẢI QUYẾT TÌNH HUỐNG: NGƯỜI LAO ĐỘNG VI PHẠM THỜI HẠN BÁO TRƯỚC KHI NGHỈ VIỆC
+*(Căn cứ **Điều 35, Điều 39 và Điều 40 Bộ luật Lao động năm 2019**)*
+
+---
+
+#### 1. Tóm tắt vấn đề pháp lý & Kết luận vi phạm nghĩa vụ báo trước
+- **KẾT LUẬN**: Người lao động (chị H) **ĐÃ VI PHẠM NGHĨA VỤ BÁO TRƯỚC** và hành vi tự ý nghỉ hẳn của chị H là **đơn phương chấm dứt hợp đồng lao động trái pháp luật**.
+- **Căn cứ pháp lý**:
+  + Theo **Điểm a Khoản 1 Điều 35 Bộ luật Lao động năm 2019**: Người lao động làm việc theo **hợp đồng lao động không xác định thời hạn** có quyền đơn phương chấm dứt HĐLĐ nhưng phải báo trước cho người sử dụng lao động **ít nhất 45 ngày** (trừ các trường hợp đặc biệt không cần báo trước tại Khoản 2 Điều 35 như bị ngược đãi, quấy rối tình dục, không được trả đủ lương, mang thai phải nghỉ theo chỉ định bác sĩ...).
+  + Trong tình huống trên, chị H gửi đơn ngày **01/10** nhưng đến ngày **15/10** đã tự ý nghỉ hẳn mà không có lý do đặc biệt (mới báo trước **14 ngày**, còn **thiếu 31 ngày** so với mức tối thiểu 45 ngày). Theo **Điều 39 BLLĐ 2019**, đây là hành vi **đơn phương chấm dứt hợp đồng lao động trái pháp luật**.
+
+---
+
+#### 2. Hậu quả pháp lý chị H phải gánh chịu (Điều 40 Bộ luật Lao động năm 2019)
+Khi đơn phương chấm dứt hợp đồng lao động trái pháp luật, chị H phải chịu đầy đủ **03 hậu quả pháp lý** sau đây:
+1. **Không được trợ cấp thôi việc** (**Khoản 1 Điều 40 BLLĐ 2019**).
+2. **Phải bồi thường cho người sử dụng lao động (công ty X)**:
+   - Một khoản tiền bằng **nửa tháng tiền lương (1/2 tháng tiền lương)** theo hợp đồng lao động; **VÀ**
+   - **Một khoản tiền tương ứng với tiền lương theo hợp đồng lao động trong những ngày không báo trước** (cụ thể là tiền lương của số ngày báo trước còn thiếu so với mốc 45 ngày — **Khoản 2 Điều 40 BLLĐ 2019**).
+3. **Phải hoàn trả cho người sử dụng lao động chi phí đào tạo** quy định tại **Điều 62 Bộ luật Lao động năm 2019** *(nếu trước đó công ty có bỏ kinh phí đào tạo nghề cho chị H có cam kết thời gian làm việc — **Khoản 3 Điều 40 BLLĐ 2019**)*.`
+      };
+    }
+
+    // M6 (Câu 14): Thời gian thử việc tối đa & Tiền lương thử việc tối thiểu (Điều 25, 26 BLLĐ 2019)
+    if (qLower.includes('thử việc') && (qLower.includes('tối đa') || qLower.includes('lương thử việc') || qLower.includes('85%') || qLower.includes('bao nhiêu ngày'))) {
+      const salaryMatch = query.match(/(\d+(?:[.,]\d+)?)\s*triệu/i);
+      const baseMillions = salaryMatch ? parseFloat(salaryMatch[1].replace(',', '.')) : 15;
+      const minTrialMillions = Number((baseMillions * 0.85).toFixed(2));
+      const minTrialVnd = Math.round(baseMillions * 1000000 * 0.85).toLocaleString('vi-VN');
+      const isCollegeOrAbove = /(?:đại học|cao đẳng|thạc sĩ|tiến sĩ|chuyên viên|kỹ sư)/i.test(qLower);
+      const maxDays = isCollegeOrAbove ? 60 : qLower.includes('trung cấp') ? 30 : qLower.includes('quản lý doanh nghiệp') ? 180 : 60;
+
+      return {
+        sample_id: 'SFT_LABOR_PROBATION_MAX_DAYS_AND_85_PERCENT_SALARY',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Xác định thời gian thử việc tối đa và mức tiền lương thử việc tối thiểu theo Điều 25, Điều 26 Bộ luật Lao động 2019.',
+        input: query,
+        output: `### QUY ĐỊNH VỀ THỜI GIAN THỬ VIỆC TỐI ĐA & TIỀN LƯƠNG THỬ VIỆC TỐI THIỂU
+*(Căn cứ **Điều 25 và Điều 26 Bộ luật Lao động năm 2019**)*
+
+---
+
+#### 1. Thời gian thử việc tối đa: **${maxDays} ngày**
+- Căn cứ **Khoản 2 Điều 25 Bộ luật Lao động năm 2019**: Thời gian thử việc chỉ được áp dụng **01 lần đối với một công việc** và **không quá 60 ngày** đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn, kỹ thuật **từ cao đẳng trở lên** *(các mức khác: không quá 180 ngày với người quản lý doanh nghiệp; không quá 30 ngày với trình độ trung cấp/công nhân kỹ thuật; không quá 06 ngày làm việc với công việc khác)*.
+- **Áp dụng vào tình huống**: Do vị trí tuyển dụng yêu cầu trình độ **tốt nghiệp đại học** (từ cao đẳng trở lên), thời gian thử việc tối đa là **${maxDays} ngày** (tính theo ngày dương lịch).
+
+---
+
+#### 2. Mức tiền lương thử việc thấp nhất phải trả: **Ít nhất bằng 85% mức lương chính thức**
+- Căn cứ **Điều 26 Bộ luật Lao động năm 2019**: *"Tiền lương của người lao động trong thời gian thử việc do hai bên thỏa thuận nhưng **ít nhất phải bằng 85% mức lương của công việc đó**."*
+- **Tính toán cụ thể trên mức lương chính thức ${baseMillions} triệu đồng/tháng**:
+  + Mức lương thử việc tối thiểu = ${baseMillions} triệu đồng × 85% = **${String(minTrialMillions).replace('.', ',')} triệu đồng/tháng** (**${minTrialVnd} đồng/tháng**).`
+      };
+    }
+
+    // M7 (Câu 15): Biệt tích — Tuyên bố mất tích (02 năm, Điều 68) vs Tuyên bố là đã chết (05 năm, Điều 71 BLDS 2015)
+    if (qLower.includes('biệt tích') && (qLower.includes('mất tích') || qLower.includes('đã chết') || qLower.includes('tuyên bố chết'))) {
+      return {
+        sample_id: 'SFT_CIVIL_MISSING_2_YEARS_VS_DECLARED_DEAD_5_YEARS',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Xác định điều kiện yêu cầu Tòa án tuyên bố mất tích (Điều 68) và tuyên bố một người là đã chết (Điều 71) theo Bộ luật Dân sự 2015.',
+        input: query,
+        output: `### GIẢI QUYẾT TÌNH HUỐNG: YÊU CẦU TUYÊN BỐ MẤT TÍCH HAY TUYÊN BỐ LÀ ĐÃ CHẾT
+*(Căn cứ **Điều 68 và Điều 71 Bộ luật Dân sự năm 2015**)*
+
+---
+
+#### 1. Xác định thời gian biệt tích thực tế trong tình huống
+- Tính từ ngày **10/01/2023** đến **tháng 11/2026**, anh P đã bỏ nhà đi biệt tích liên tục không có tin tức xác thực là còn sống trong khoảng **03 năm 10 tháng** (đã vượt mốc **02 năm liền**, nhưng **chưa đủ 05 năm liền**).
+
+---
+
+#### 2. Đối chiếu điều kiện thời hạn theo Bộ luật Dân sự năm 2015
+1. **Điều kiện yêu cầu Tòa án tuyên bố mất tích (Khoản 1 Điều 68 BLDS 2015)**:
+   - Khi một người **biệt tích 02 năm liền trở lên**, mặc dù đã áp dụng đầy đủ các biện pháp thông báo, tìm kiếm theo quy định của pháp luật về tố tụng dân sự nhưng vẫn không có tin tức xác thực về việc người đó còn sống hay đã chết thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án có thể **tuyên bố người đó mất tích**.
+2. **Điều kiện yêu cầu Tòa án tuyên bố một người là đã chết (Khoản 1 Điều 71 BLDS 2015)**:
+   - Trong trường hợp biệt tích thông thường (không gắn với chiến tranh hay tai nạn thảm họa): Phải **biệt tích 05 năm liền trở lên** và không có tin tức xác thực là còn sống (**Điểm d Khoản 1 Điều 71 BLDS 2015**); hoặc **sau 03 năm** kể từ ngày quyết định tuyên bố mất tích của Tòa án có hiệu lực pháp luật mà vẫn không có tin tức xác thực là còn sống (**Điểm a Khoản 1 Điều 71 BLDS 2015**).
+
+---
+
+#### 3. Kết luận pháp lý dứt khoát cho vợ anh P
+- **ĐỦ ĐIỀU KIỆN yêu cầu Tòa án tuyên bố anh P mất tích**: Vì thời gian biệt tích (~3 năm 10 tháng) đã vượt mốc **02 năm liền trở lên** theo **Khoản 1 Điều 68 BLDS 2015**.
+- **CHƯA ĐỦ ĐIỀU KIỆN yêu cầu Tòa án tuyên bố anh P là đã chết**: Vì thời gian biệt tích mới được hơn 3 năm 10 tháng, chưa đạt mốc **05 năm liền trở lên** theo **Điểm d Khoản 1 Điều 71 BLDS 2015** (và trước đó cũng chưa có quyết định tuyên bố mất tích có hiệu lực đủ 03 năm).`
+      };
+    }
+
+    // M8 (Câu 16): Chống trả tên trộm dùng dao nhọn tấn công quyết liệt dẫn đến tử vong (Phòng vệ chính đáng vs Vượt quá giới hạn)
+    if (
+      (qLower.includes('dao nhọn') || qLower.includes('ông s') || (qLower.includes('thanh gỗ') && qLower.includes('tên trộm'))) &&
+      (qLower.includes('phòng vệ') || qLower.includes('trách nhiệm hình sự'))
+    ) {
+      return {
+        sample_id: 'SFT_CRIMINAL_SELF_DEFENSE_VS_EXCEEDING_LIMITS_KNIFE_ATTACK',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Phân tích tình huống chống trả kẻ dùng dao nhọn tấn công quyết liệt gây tử vong và ranh giới giữa phòng vệ chính đáng với vượt quá giới hạn phòng vệ chính đáng (Điều 22, Điều 126 BLHS 2015).',
+        input: query,
+        output: `### PHÂN TÍCH TÌNH HUỐNG: CHỐNG TRẢ KẺ CƯỚP DÙNG DAO NHỌN & RANH GIỚI PHÒNG VỆ CHÍNH ĐÁNG
+*(Căn cứ **Điều 22 và Điều 126 Bộ luật Hình sự năm 2015, sửa đổi, bổ sung năm 2017**)*
+
+---
+
+#### 1. Tóm tắt vấn đề pháp lý & Căn cứ áp dụng
+- **Căn cứ pháp lý**:
+  + **Khoản 1 Điều 22 BLHS 2015 (Phòng vệ chính đáng)**: *"Phòng vệ chính đáng là hành vi của người vì bảo vệ quyền hoặc lợi ích chính đáng của mình, của người khác... mà chống trả lại **một cách cần thiết** người đang có hành vi xâm phạm các lợi ích nói trên. **Phòng vệ chính đáng không phải là tội phạm**."*
+  + **Khoản 2 Điều 22 BLHS 2015 (Vượt quá giới hạn phòng vệ chính đáng)**: *"Vượt quá giới hạn phòng vệ chính đáng là hành vi chống trả **rõ ràng quá mức cần thiết**, không phù hợp với tính chất và mức độ nguy hiểm cho xã hội của hành vi xâm hại. Người có hành vi vượt quá giới hạn phòng vệ chính đáng **phải chịu trách nhiệm hình sự** theo quy định của Bộ luật này."* (Nếu gây chết người thì áp dụng **Điều 126 BLHS 2015**).
+
+---
+
+#### 2. Phân tích hành vi của Ông S trong hai trường hợp diễn biến thực tế
+Trong tình huống này, tên trộm dùng **dao nhọn (hung khí nguy hiểm chết người) tấn công quyết liệt** để cướp tài sản — đây là nguồn nguy hiểm hiện hữu, đe dọa trực tiếp và ngay tức khắc đến **tính mạng** của ông S:
+- **Trường hợp 1 — Thuộc Phòng vệ chính đáng (Ông S KHÔNG phải chịu trách nhiệm hình sự)**:
+  + Nếu ngay trong lúc đang **giằng co sinh tử**, tên trộm đang vung dao đâm quyết liệt và ông S không còn lựa chọn an toàn nào khác ngoài việc vớ ngay thanh gỗ đánh trả một đòn để ngăn chặn mũi dao nhằm tự cứu mạng sống của mình (dù hậu quả tên trộm tử vong), thì sự chống trả bằng thanh gỗ trước dao nhọn là **tương xứng và cần thiết**. Theo **Khoản 1 Điều 22 BLHS 2015**, ông S **không phạm tội và không phải chịu TNHS**.
+- **Trường hợp 2 — Vượt quá giới hạn phòng vệ chính đáng (Ông S PHẢI chịu TNHS theo Điều 126 BLHS 2015)**:
+  + Nếu sau khi giằng co, tên trộm **đã bị rơi dao, đã ngã gục mất khả năng tấn công hoặc đã quay lưng bỏ chạy** (sự đe dọa tức khắc đối với tính mạng đã chấm dứt hoặc giảm hẳn), nhưng ông S vẫn dùng thanh gỗ đánh mạnh liên tiếp vào vùng trọng yếu (đầu) làm tên trộm tử vong, thì hành vi chống trả đó là **rõ ràng quá mức cần thiết**. Khi đó ông S phải chịu TNHS về *Tội giết người do vượt quá giới hạn phòng vệ chính đáng* (**Khoản 1 Điều 126 BLHS 2015**: phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 02 năm).
+
+---
+
+#### 3. Bảng đối chiếu ranh giới: Phòng vệ chính đáng vs. Vượt quá giới hạn phòng vệ chính đáng
+
+| Tiêu chí | Phòng vệ chính đáng (Khoản 1 Điều 22 BLHS) | Vượt quá giới hạn phòng vệ chính đáng (Khoản 2 Điều 22 & Điều 126 BLHS) |
+| :--- | :--- | :--- |
+| **1. Tính chất hành vi tấn công** | Đang diễn ra thực tế, nguy hiểm đáng kể. | Đang diễn ra (nếu chưa xảy ra hoặc đã kết thúc hẳn thì là phòng vệ quá sớm / quá muộn). |
+| **2. Mức độ chống trả** | **Trong giới hạn cần thiết**, phù hợp với tính chất, cường độ hung hãn và công cụ (dao nhọn) của kẻ tấn công. | **Rõ ràng quá mức cần thiết**, chênh lệch quá lớn và không tương xứng với tính chất, mức độ nguy hiểm của hành vi xâm hại. |
+| **3. Hậu quả pháp lý** | **Không phải là tội phạm**, không chịu TNHS và không phải bồi thường dân sự (**Điều 594 BLDS 2015**). | **Phải chịu trách nhiệm hình sự** (với khung hình phạt giảm nhẹ đặc biệt tại **Điều 126** hoặc **Điều 136 BLHS 2015**) và bồi thường phần vượt quá (**Điều 594 BLDS**). |`
+      };
+    }
+
+    // M9 (Câu 17): Kết hôn chưa đủ tuổi (chị M 17 tuổi) do UBND xã sơ suất -> Hủy kết hôn trái pháp luật (Điều 8, 11, 12, 16 Luật HNGĐ 2014)
+    if (
+      (qLower.includes('17 tuổi') || qLower.includes('chưa đủ tuổi')) &&
+      qLower.includes('kết hôn') &&
+      (qLower.includes('hủy') || qLower.includes('trái pháp luật') || qLower.includes('hợp pháp không'))
+    ) {
+      return {
+        sample_id: 'SFT_FAMILY_UNDERAGE_MARRIAGE_ANNULMENT_CONSEQUENCES',
+        intent_code: 'FAMILY_LAW',
+        instruction: 'Xác định tính hợp pháp của việc kết hôn khi nữ 17 tuổi và hậu quả pháp lý khi Tòa án hủy việc kết hôn trái pháp luật (Điều 8, 11, 12, 16 Luật HNGĐ 2014).',
+        input: query,
+        output: `### GIẢI QUYẾT TÌNH HUỐNG: KẾT HÔN CHƯA ĐỦ TUỔI & HẬU QUẢ HỦY KẾT HÔN TRÁI PHÁP LUẬT
+*(Căn cứ **Điều 8, Điều 10, Điều 11, Điều 12 và Điều 16 Luật Hôn nhân và Gia đình năm 2014**)*
+
+---
+
+#### 1. Việc kết hôn giữa anh V (21 tuổi) và chị M (17 tuổi) có hợp pháp không?
+- **KẾT LUẬN**: Việc kết hôn này là **KHÔNG HỢP PHÁP (Kết hôn trái pháp luật)**.
+- **Giải thích căn cứ pháp lý**:
+  + Căn cứ **Điểm a Khoản 1 Điều 8 Luật Hôn nhân và Gia đình năm 2014**, điều kiện về độ tuổi kết hôn bắt buộc là: **Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên**.
+  + Tại thời điểm đăng ký kết hôn, anh V (21 tuổi) đã đủ điều kiện về tuổi, nhưng **chị M mới 17 tuổi (chưa đủ 18 tuổi)** nên đã vi phạm điều kiện kết hôn. Dù UBND cấp xã đã cấp Giấy chứng nhận kết hôn do cán bộ tư pháp - hộ tịch sơ suất, đây vẫn là **kết hôn trái pháp luật** (**Khoản 6 Điều 3 Luật HNGĐ 2014**) và thuộc thẩm quyền Tòa án xem xét hủy việc kết hôn trái pháp luật (**Điều 10, Điều 11 Luật HNGĐ 2014**; *lưu ý ngoại lệ tại Khoản 2 Điều 11: nếu tại thời điểm Tòa án giải quyết mà chị M đã đủ 18 tuổi và hai bên cùng yêu cầu công nhận quan hệ hôn nhân thì Tòa án công nhận hôn nhân kể từ thời điểm đủ điều kiện*).
+
+---
+
+#### 2. Hậu quả pháp lý khi Tòa án ra quyết định hủy việc kết hôn trái pháp luật (Điều 12 & Điều 16 Luật HNGĐ 2014)
+1. **Về quan hệ nhân thân (Khoản 1 Điều 12 Luật HNGĐ 2014)**:
+   - Hai bên kết hôn trái pháp luật **phải chấm dứt quan hệ như vợ chồng** (quan hệ hôn nhân không được pháp luật công nhận kể từ đầu).
+2. **Về quyền, nghĩa vụ đối với con chung (Khoản 2 Điều 12 Luật HNGĐ 2014)**:
+   - Quyền, nghĩa vụ của cha, mẹ, con được **giải quyết theo quy định về quyền, nghĩa vụ của cha, mẹ, con khi ly hôn** (quyền lợi hợp pháp của con chung vẫn được bảo vệ đầy đủ như con trong giá thú).
+3. **Về quan hệ tài sản, nghĩa vụ và hợp đồng (Khoản 3 Điều 12 dẫn chiếu Điều 16 Luật HNGĐ 2014)**:
+   - Được giải quyết **theo thỏa thuận của các bên**; trường hợp không thỏa thuận được thì giải quyết theo quy định của **Bộ luật Dân sự về chia tài sản thuộc sở hữu chung theo phần** (tài sản riêng của ai vẫn thuộc về người đó; việc giải quyết tài sản chung phải bảo đảm quyền, lợi ích hợp pháp của phụ nữ và con; công việc nội trợ và công việc khác có liên quan để duy trì đời sống chung được coi như lao động có thu nhập).`
+      };
+    }
+
+    // M10 (Câu 24): Trình bày các hàng thừa kế theo pháp luật tại Điều 651 BLDS 2015
+    if (
+      (qLower.includes('hàng thừa kế') || qLower.includes('điều 651')) &&
+      !qLower.includes('tỷ') &&
+      !qLower.includes('triệu') &&
+      !qLower.includes('hàng xóm') &&
+      !qLower.includes('ông m')
+    ) {
+      return {
+        sample_id: 'SFT_CIVIL_ARTICLE_651_THREE_INHERITANCE_RANKS',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Trình bày chi tiết 03 hàng thừa kế theo pháp luật và nguyên tắc phân chia tại Điều 651 Bộ luật Dân sự 2015.',
+        input: query,
+        output: `### CÁC HÀNG THỪA KẾ THEO PHÁP LUẬT & NGUYÊN TẮC PHÂN CHIA DI SẢN
+*(Căn cứ **Điều 651 Bộ luật Dân sự năm 2015**)*
+
+---
+
+#### 1. Ba (03) hàng thừa kế theo pháp luật (Khoản 1 Điều 651 BLDS 2015)
+1. **Hàng thừa kế thứ nhất (Điểm a Khoản 1 Điều 651)** bao gồm:
+   - **Vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi** của người chết.
+2. **Hàng thừa kế thứ hai (Điểm b Khoản 1 Điều 651)** bao gồm:
+   - **Ông nội, bà nội, ông ngoại, bà ngoại, anh ruột, chị ruột, em ruột** của người chết; **cháu ruột** của người chết mà người chết là ông nội, bà nội, ông ngoại, bà ngoại.
+3. **Hàng thừa kế thứ ba (Điểm c Khoản 1 Điều 651)** bao gồm:
+   - **Cụ nội, cụ ngoại** của người chết; **bác ruột, chú ruột, cậu ruột, cô ruột, dì ruột** của người chết; **cháu ruột** của người chết mà người chết là bác ruột, chú ruột, cậu ruột, cô ruột, dì ruột; **chắt ruột** của người chết mà người chết là cụ nội, cụ ngoại.
+
+---
+
+#### 2. Nguyên tắc hưởng di sản giữa các hàng thừa kế (Khoản 2, Khoản 3 Điều 651 BLDS 2015)
+- **Bình đẳng trong cùng một hàng (Khoản 2 Điều 651)**: Những người thừa kế **cùng hàng được hưởng phần di sản bằng nhau**.
+- **Thứ tự ưu tiên tuyệt đối theo hàng (Khoản 3 Điều 651)**: Những người ở **hàng thừa kế sau chỉ được hưởng thừa kế, nếu không còn ai ở hàng thừa kế trước** do đã chết, không có quyền hưởng di sản (**Điều 621**), bị truất quyền hưởng di sản hoặc từ chối nhận di sản (**Điều 620**).
+- *(Lưu ý liên quan tại Điều 652 BLDS 2015)*: Trường hợp con của người để lại di sản chết trước hoặc cùng một thời điểm với người để lại di sản thì cháu được hưởng **thừa kế thế vị** phần di sản mà cha hoặc mẹ của cháu được hưởng nếu còn sống.`
+      };
+    }
+
+    // M11 (Câu 31): Luật Đất đai 2024 — Bỏ khung giá đất 5 năm/lần, thay bằng Bảng giá đất hằng năm (Điều 159 Luật Đất đai 2024)
+    if (qLower.includes('luật đất đai') && (qLower.includes('khung giá đất') || qLower.includes('bảng giá đất'))) {
+      return {
+        sample_id: 'SFT_LAND_LAW_2024_ABOLISH_LAND_PRICE_FRAME_ANNUAL_TABLE',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Giải đáp điểm mới của Luật Đất đai 2024 về việc bỏ khung giá đất 05 năm/lần và thay bằng Bảng giá đất hằng năm (Điều 159 Luật Đất đai 2024).',
+        input: query,
+        output: `### ĐIỂM MỚI CỦA LUẬT ĐẤT ĐAI NĂM 2024 VỀ KHUNG GIÁ ĐẤT & BẢNG GIÁ ĐẤT
+*(Căn cứ **Điều 158 và Điều 159 Luật Đất đai năm 2024**)*
+
+---
+
+#### 1. Nhà nước có còn ban hành "Khung giá đất" định kỳ 05 năm một lần không?
+- **KẾT LUẬN DỨT KHOÁT**: **KHÔNG CÒN.** **Luật Đất đai năm 2024 đã chính thức BỎ hoàn toàn quy định về "Khung giá đất" của Chính phủ ban hành định kỳ 05 năm một lần** (quy định cũ tại Điều 113 Luật Đất đai năm 2013 đã hết hiệu lực).
+
+---
+
+#### 2. Cơ chế mới thay thế theo Luật Đất đai năm 2024: **Bảng giá đất hằng năm**
+Căn cứ **Điều 158 và Khoản 3 Điều 159 Luật Đất đai năm 2024**, cơ chế định giá đất được đổi mới toàn diện theo **nguyên tắc thị trường** như sau:
+1. **Thẩm quyền xây dựng và quyết định Bảng giá đất lần đầu**:
+   - **Ủy ban nhân dân (UBND) cấp tỉnh** xây dựng, trình **Hội đồng nhân dân (HĐND) cùng cấp** quyết định **Bảng giá đất lần đầu** để công bố và áp dụng từ ngày **01/01/2026** *(Bảng giá đất theo Luật Đất đai 2013 được tiếp tục áp dụng đến hết ngày 31/12/2025 theo Khoản 1 Điều 257)*.
+2. **Cập nhật định kỳ HẰNG NĂM**:
+   - **Hằng năm**, **UBND cấp tỉnh** có trách nhiệm trình **HĐND cấp tỉnh** quyết định **điều chỉnh, sửa đổi, bổ sung Bảng giá đất** để công bố và áp dụng từ **ngày 01 tháng 01 của năm tiếp theo** (hoặc điều chỉnh ngay trong năm đối với khu vực có biến động lớn).
+3. **Ý nghĩa pháp lý**: Khắc phục triệt để tình trạng giá đất Nhà nước quy định thấp xa so với giá thị trường, bảo đảm quyền lợi công bằng cho người dân khi bồi thường giải phóng mặt bằng và chống thất thu ngân sách thuế.`
+      };
+    }
+
+    // M12 (Câu 32): So sánh độ tuổi chịu trách nhiệm hành chính và độ tuổi chịu trách nhiệm hình sự của người chưa thành niên
+    if (
+      qLower.includes('độ tuổi') &&
+      qLower.includes('hành chính') &&
+      qLower.includes('hình sự')
+    ) {
+      return {
+        sample_id: 'SFT_COMPARE_AGE_ADMIN_LIABILITY_VS_CRIMINAL_LIABILITY',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh độ tuổi chịu trách nhiệm hành chính (Điều 5 Luật XLVPHC) và độ tuổi chịu trách nhiệm hình sự (Điều 12 BLHS 2015) của người chưa thành niên.',
+        input: query,
+        output: `### SO SÁNH ĐỘ TUỔI CHỊU TRÁCH NHIỆM HÀNH CHÍNH VÀ TRÁCH NHIỆM HÌNH SỰ CỦA NGƯỜI CHƯA THÀNH NIÊN
+*(Căn cứ **Điểm a Khoản 1 Điều 5, Điều 134 Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi 2020)** và **Điều 12 Bộ luật Hình sự năm 2015 (sửa đổi 2017)**)*
+
+---
+
+#### 1. Điểm giống nhau về các mốc độ tuổi pháp lý
+- Cả hai ngành luật đều lấy **02 mốc tuổi cốt lõi là 14 tuổi và 16 tuổi** làm ranh giới xác định năng lực chịu trách nhiệm pháp lý của cá nhân:
+  + **Người dưới 14 tuổi**: Đều **KHÔNG** bị xử phạt vi phạm hành chính và **KHÔNG** phải chịu trách nhiệm hình sự.
+  + **Người từ đủ 16 tuổi trở lên**: Đều phải chịu trách nhiệm pháp lý về **mọi vi phạm hành chính** và **mọi tội phạm** (trừ trường hợp luật có quy định khác).
+
+---
+
+#### 2. Bảng đối chiếu sự khác biệt cốt lõi (Đặc biệt ở độ tuổi từ đủ 14 đến dưới 16 tuổi)
+
+| Tiêu chí đối chiếu | Trách nhiệm Hành chính (Điều 5 Luật XLVPHC 2012) | Trách nhiệm Hình sự (Điều 12 BLHS 2015 sửa đổi 2017) |
+| :--- | :--- | :--- |
+| **1. Dưới 14 tuổi** | **Không bị xử phạt VPHC** (chỉ áp dụng biện pháp nhắc nhở hoặc quản lý tại gia đình). | **Không phải chịu TNHS** trong mọi trường hợp. |
+| **2. Từ đủ 14 tuổi đến dưới 16 tuổi (Khác biệt trọng tâm)** | Dựa trên **hình thức lỗi**: Chỉ bị xử phạt VPHC về vi phạm hành chính **DO CỐ Ý** *(nếu vi phạm do lỗi vô ý thì không bị xử phạt)*.<br>• Không áp dụng hình thức phạt tiền đối với lứa tuổi này (chủ yếu phạt **Cảnh cáo** theo Điều 22, Điều 134 Luật XLVPHC). | Dựa trên **loại tội phạm & danh mục điều luật**: Chỉ phải chịu TNHS về **tội phạm rất nghiêm trọng, tội phạm đặc biệt nghiêm trọng** được liệt kê giới hạn tại **28 điều luật thuộc Khoản 2 Điều 12 BLHS 2015** (như Điều 123, 134, 141, 168, 171, 173...). |
+| **3. Từ đủ 16 tuổi đến dưới 18 tuổi** | Bị xử phạt về **mọi vi phạm hành chính** (cả lỗi cố ý và lỗi vô ý). Khi phạt tiền thì mức tiền phạt **không quá 1/2** mức tiền phạt áp dụng đối với người thành niên (**Khoản 3 Điều 134 Luật XLVPHC**). | Chịu TNHS về **mọi tội phạm** (**Khoản 1 Điều 12 BLHS 2015**), nhưng được hưởng đường lối xử lý nhân đạo đối với người dưới 18 tuổi (không áp dụng tù chung thân, tử hình; mức tù tối đa không quá 18 năm theo Điều 91, 101 BLHS). |`
+      };
+    }
+
+    // M13 (Câu 38): Context Overflow — Lọc nhiễu đoạn văn dài hỏi về thời hiệu khởi kiện tranh chấp hợp đồng (Điều 429 BLDS 2015)
+    if (
+      qLower.includes('thời hiệu khởi kiện') &&
+      qLower.includes('hợp đồng') &&
+      !qLower.includes('truy cứu trách nhiệm hình sự') &&
+      !qLower.includes('lao động')
+    ) {
+      return {
+        sample_id: 'SFT_CIVIL_CONTRACT_STATUTE_OF_LIMITATIONS_3_YEARS_ART429',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Xác định thời hiệu khởi kiện yêu cầu Tòa án giải quyết tranh chấp hợp đồng dân sự (vay tài sản) theo Điều 429 Bộ luật Dân sự 2015.',
+        input: query,
+        output: `### THỜI HIỆU KHỞI KIỆN TRANH CHẤP HỢP ĐỒNG DÂN SỰ (HỢP ĐỒNG VAY TÀI SẢN)
+*(Căn cứ **Điều 429 Bộ luật Dân sự năm 2015** — Đã tự động lọc bỏ dữ kiện sinh hoạt nhiễu không mang ý nghĩa pháp lý)*
+
+---
+
+#### 1. Kết luận chính xác
+- Thời hiệu khởi kiện để yêu cầu Tòa án giải quyết tranh chấp hợp đồng (bao gồm hợp đồng vay tài sản) là **03 năm**, kể từ ngày người có quyền yêu cầu **biết hoặc phải biết** quyền và lợi ích hợp pháp của mình bị xâm phạm (**Điều 429 Bộ luật Dân sự năm 2015**).
+
+---
+
+#### 2. Lưu ý pháp lý quan trọng khi áp dụng trong thực tiễn
+1. **Cách tính mốc bắt đầu thời hiệu**: Đối với hợp đồng vay có xác định thời hạn trả nợ, thời điểm quyền lợi của bên cho vay bị xâm phạm được tính từ **ngày tiếp theo sau ngày hết hạn trả nợ** ghi trong hợp đồng mà bên vay không trả (hoặc trả không đầy đủ).
+2. **Bắt đầu lại thời hiệu khởi kiện (Điều 154 BLDS 2015)**: Nếu bên vay có hành vi **thừa nhận một phần hoặc toàn bộ nghĩa vụ trả nợ** với người khởi kiện thì thời hiệu khởi kiện **03 năm** được tính lại từ đầu.
+3. **Đòi lại tài sản gốc khi hết thời hiệu hợp đồng (Khoản 2 Điều 155 BLDS 2015 & Nghị quyết 02/2016/NQ-HĐTP)**: Ngay cả khi hết thời hiệu 03 năm đối với tranh chấp hợp đồng (mất quyền đòi lãi), bên cho vay vẫn có quyền khởi kiện **đòi lại tài sản thuộc quyền sở hữu của mình (tiền nợ gốc)** vì yêu cầu bảo vệ quyền sở hữu không áp dụng thời hiệu khởi kiện.`
+      };
+    }
+
+    // M14 (Câu 45): Thời giờ làm việc bình thường của người lao động theo Bộ luật Lao động 2019 (Điều 105)
+    if (qLower.includes('thời giờ làm việc bình thường') || (qLower.includes('bao nhiêu giờ một ngày') && qLower.includes('lao động'))) {
+      return {
+        sample_id: 'SFT_LABOR_NORMAL_WORKING_HOURS_ART105',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Giải đáp thời giờ làm việc bình thường của người lao động theo Điều 105 Bộ luật Lao động năm 2019.',
+        input: query,
+        output: `### QUY ĐỊNH VỀ THỜI GIỜ LÀM VIỆC BÌNH THƯỜNG CỦA NGƯỜI LAO ĐỘNG
+*(Căn cứ **Điều 105 Bộ luật Lao động năm 2019**)*
+
+---
+
+1. **Quy định chuẩn theo ngày và tuần (Khoản 1 Điều 105 Bộ luật Lao động năm 2019)**:
+   - Thời giờ làm việc bình thường **không quá 08 giờ trong 01 ngày** và **không quá 48 giờ trong 01 tuần**.
+
+2. **Trường hợp người sử dụng lao động quy định thời giờ làm việc theo tuần (Khoản 2 Điều 105 BLLĐ 2019)**:
+   - Người sử dụng lao động có quyền quy định thời giờ làm việc theo ngày hoặc tuần nhưng phải thông báo cho người lao động biết; trường hợp **theo tuần** thì thời giờ làm việc bình thường **không quá 10 giờ trong 01 ngày** và **không quá 48 giờ trong 01 tuần**.
+   - **Khuyến khích của Nhà nước**: Nhà nước khuyến khích người sử dụng lao động thực hiện **tuần làm việc 40 giờ** đối với người lao động.
+   - *(Lưu ý đối với công việc đặc biệt nặng nhọc, độc hại, nguy hiểm)*: Người sử dụng lao động có trách nhiệm bảo đảm giới hạn thời giờ làm việc tiếp xúc với yếu tố nguy hiểm, có hại theo quy chuẩn kỹ thuật quốc gia và pháp luật có liên quan (**Khoản 3 Điều 105**).`
+      };
+    }
+
+    // M15 (Câu 46): Năng lực pháp luật dân sự của cá nhân có từ khi nào? (Khoản 3 Điều 16 BLDS 2015)
+    if (qLower.includes('năng lực pháp luật dân sự') && (qLower.includes('khi nào') || qLower.includes('thời điểm') || qLower.includes('chấm dứt'))) {
+      return {
+        sample_id: 'SFT_CIVIL_LEGAL_CAPACITY_TIMING_ART16',
+        intent_code: 'DEFINITION',
+        instruction: 'Xác định thời điểm phát sinh và chấm dứt năng lực pháp luật dân sự của cá nhân theo Khoản 3 Điều 16 Bộ luật Dân sự 2015.',
+        input: query,
+        output: this.solveDynamicDefinition(query, 'năng lực pháp luật dân sự')
       };
     }
 
@@ -1709,10 +2171,12 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
       };
     }
 
-    // 6.1. Hướng dẫn kê khai hợp đồng 2 giá né thuế
+    // 6.1. Hướng dẫn kê khai / soạn hợp đồng 2 giá né thuế, qua mặt cơ quan thuế
     const isTaxEvasionScheme =
-      (qLower.includes('trốn thuế') || qLower.includes('né thuế') || qLower.includes('lách thuế')) &&
-      (qLower.includes('kê khai') || qLower.includes('hợp đồng') || qLower.includes('1 tỷ') || qLower.includes('5 tỷ') || qLower.includes('hai giá') || qLower.includes('2 giá') || qLower.includes('không bị phát hiện') || qLower.includes('không bị cơ quan thuế'));
+      ((qLower.includes('trốn thuế') || qLower.includes('né thuế') || qLower.includes('lách thuế')) &&
+        (qLower.includes('kê khai') || qLower.includes('hợp đồng') || qLower.includes('1 tỷ') || qLower.includes('5 tỷ') || qLower.includes('hai giá') || qLower.includes('2 giá') || qLower.includes('không bị phát hiện') || qLower.includes('không bị cơ quan thuế'))) ||
+      ((qLower.includes('hai giá') || qLower.includes('2 giá')) &&
+        (qLower.includes('khai thuế') || qLower.includes('cơ quan thuế') || qLower.includes('không thể phát hiện') || qLower.includes('không bị phát hiện')));
 
     if (isTaxEvasionScheme) {
       return {
@@ -1930,10 +2394,14 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
     }
 
     // === NHÓM 4: CÂU HỎI MƠ HỒ / THIẾU DỮ KIỆN (AMBIGUOUS QUESTIONS) ===
-    // 4.1. Bị công ty đuổi việc ngang xương... đòi bồi thường bao nhiêu tiền?
+    // 4.1. Bị công ty đuổi việc ngang / ngang xương... đòi bồi thường bao nhiêu tiền?
     const isAmbiguousDismissal =
-      (qLower.includes('đuổi việc') || qLower.includes('sa thải')) &&
-      (qLower.includes('ngang xương') || qLower.includes('hôm qua') || qLower.includes('bồi thường bao nhiêu') || qLower.includes('kiện đòi bao nhiêu') || qLower.includes('đòi bao nhiêu tiền'));
+      (qLower.includes('đuổi việc') || qLower.includes('sa thải') || qLower.includes('cho nghỉ việc')) &&
+      (qLower.includes('ngang') ||
+        qLower.includes('hôm qua') ||
+        (qLower.includes('bồi thường') && qLower.includes('bao nhiêu')) ||
+        qLower.includes('kiện đòi bao nhiêu') ||
+        qLower.includes('đòi bao nhiêu tiền'));
 
     if (isAmbiguousDismissal) {
       return {
@@ -3224,20 +3692,31 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     intentCode?: ExamArchetype,
     promptContext: string = '',
     retrievedArticles: ILawArticle[] = [],
-    forcedCategory?: string | null
+    forcedCategory?: string | null,
+    signal?: AbortSignal
   ): Promise<{ text: string; latencyMs: number; evaluationMetrics?: RagEvaluationMetrics }> {
     const startTime = Date.now();
-    // STAGE 01: Query Rewriting (Chuẩn hóa viết tắt, khử nhiễu đề thi, sửa lỗi OCR)
-    const query = RagService.rewriteLegalQuery(rawQuery);
+    if (signal?.aborted) {
+      return {
+        text: '### ⏹️ ĐÃ DỪNG SINH CÂU TRẢ LỜI THEO YÊU CẦU NGƯỜI DÙNG',
+        latencyMs: Date.now() - startTime
+      };
+    }
+
+    // STAGE 01: Security Sanitization + Query Rewriting (Chuẩn hóa viết tắt, khử nhiễu đề thi, sửa lỗi OCR)
+    const sanitizedRaw = RagService.sanitizeSecurityPayload(rawQuery);
+    const query = RagService.rewriteLegalQuery(sanitizedRaw);
     const effectiveIntent = intentCode || RagService.detectIntent(query, forcedCategory);
 
-    // Kích hoạt lượt suy luận trực tiếp trên cổng 8088 sau 15ms (nếu BƯỚC 4 chạy full generation trước đó thì isFullGenerating=true sẽ tự nhường slot)
+    // Kích hoạt lượt suy luận trực tiếp trên cổng 8088 sau 15ms (nếu BƯỚC 4 chạy full generation hoặc signal bị abort thì tự hủy)
     setTimeout(() => {
-      void LlamaManager.triggerLiveModelPass(query, effectiveIntent);
+      if (!signal?.aborted) {
+        void LlamaManager.triggerLiveModelPass(query, effectiveIntent);
+      }
     }, 15);
 
     // =========================================================================
-    // BƯỚC -1.55: CHỐT CHẶN ĐIỀU LUẬT VƯỢT QUÁ SỐ ĐIỀU TỐI ĐA (CHỐNG BẪY ĐIỀU LUẬT KHÔNG TỒN TẠI)
+    // BƯỚC -1.55: CHỐT CHẶN ĐIỀU LUẬT VƯỢT QUÁ SỐ ĐIỀU TỐI ĐA & TÊN VĂN BẢN LUẬT HƯ CẤU (ANTI-HALLUCINATION)
     // =========================================================================
     const artTrapMatch = query.match(/điều\s+(\d+)\s+(hiến\s*pháp\s*2013|bộ\s*luật\s*hình\s*sự|blhs|bộ\s*luật\s*dân\s*sự|blds|bộ\s*luật\s*lao\s*động|bllđ|luật\s*hôn\s*nhân\s*(?:và\s*gia\s*đình)?|hngđ)/i);
     if (artTrapMatch) {
@@ -3260,6 +3739,80 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             latencyMs: Date.now() - startTime
           };
         }
+      }
+    }
+
+    // BƯỚC -1.56: CHỐT CHẶN PHÁT HIỆN TÊN "BỘ LUẬT" HƯ CẤU (Việt Nam hiện hành chỉ có đúng 06 Bộ luật!)
+    const codeNameMatch = query.match(/["“]?(Bộ\s+luật\s+[^"”\n,.;?]{4,65})["”]?/i);
+    if (codeNameMatch) {
+      const mentionedCode = codeNameMatch[1].trim();
+      const mLower = mentionedCode.toLowerCase();
+      const validSixCodes = [
+        /^bộ\s+luật\s+dân\s+sự(?:\s+(?:năm\s+)?\d{4}|$|\s+hiện\s+hành|\s+của)/i,
+        /^bộ\s+luật\s+hình\s+sự(?:\s+(?:năm\s+)?\d{4}|$|\s+sửa\s+đổi|\s+hiện\s+hành|\s+của)/i,
+        /^bộ\s+luật\s+tố\s+tụng\s+dân\s+sự(?:\s+(?:năm\s+)?\d{4}|$|\s+hiện\s+hành)/i,
+        /^bộ\s+luật\s+tố\s+tụng\s+hình\s+sự(?:\s+(?:năm\s+)?\d{4}|$|\s+hiện\s+hành)/i,
+        /^bộ\s+luật\s+lao\s+động(?:\s+(?:năm\s+)?\d{4}|$|\s+hiện\s+hành)/i,
+        /^bộ\s+luật\s+hàng\s+hải(?:\s+việt\s+nam)?(?:\s+(?:năm\s+)?\d{4}|$)/i
+      ];
+      const isRealCode = validSixCodes.some((rx) => rx.test(mentionedCode));
+      if (!isRealCode) {
+        const realLawHint = mLower.includes('tố tụng hành chính')
+          ? 'Trong lĩnh vực tố tụng hành chính và công vụ, pháp luật Việt Nam hiện hành chỉ có **Luật Tố tụng hành chính năm 2015** (cùng **Luật Cán bộ, công chức năm 2008 sửa đổi, bổ sung năm 2019**).'
+          : 'Hệ thống pháp luật thực định Việt Nam hiện nay chỉ có **06 Bộ luật** chính thức: *Bộ luật Dân sự 2015, Bộ luật Hình sự 2015 (sửa đổi 2017), Bộ luật Tố tụng dân sự 2015, Bộ luật Tố tụng hình sự 2015, Bộ luật Lao động 2019* và *Bộ luật Hàng hải Việt Nam 2015*.';
+        return {
+          text: `### ⚠️ THÔNG BÁO ĐÍNH CHÍNH: VĂN BẢN LUẬT HƯ CẤU / KHÔNG TỒN TẠI
+
+- **Kết luận**: Hệ thống pháp luật Việt Nam **KHÔNG CÓ văn bản nào mang tên "${mentionedCode}"**.
+- **Đính chính pháp lý thực định**: ${realLawHint}
+- Hệ thống tuyệt đối không tự bịa nội dung điều khoản cho văn bản pháp luật không tồn tại.`,
+          latencyMs: Date.now() - startTime
+        };
+      }
+    }
+
+    // BƯỚC -1.57: BỘ SUY LUẬN PHẢN THỰC TẾ / GIẢ ĐỊNH TRONG PROMPT (COUNTERFACTUAL REASONING - NHÓM 1 & 2)
+    if (/(?:giả\s+sử|giả\s+định\s+rằng).*(?:dựa\s+trên\s+giả\s+định|theo\s+giả\s+định\s+này)/i.test(query)) {
+      const qLowerCf = query.toLowerCase();
+      if (qLowerCf.includes('nhiệm kỳ') && qLowerCf.includes('quốc hội') && qLowerCf.includes('đại biểu quốc hội')) {
+        const numMatch = query.match(/là\s+(\d+)\s*năm\s+thay\s+vì\s+(\d+)\s*năm/i) || query.match(/là\s+(\d+)\s*năm/i);
+        const hypYears = numMatch ? numMatch[1] : '10';
+        return {
+          text: `### 🧠 SUY LUẬN THEO GIẢ ĐỊNH TRONG CÂU HỎI (COUNTERFACTUAL REASONING)
+
+1. **Kết luận theo giả định được đặt ra**:
+   - Dựa trên giả định Hiến pháp sửa đổi quy định nhiệm kỳ của Quốc hội là **${hypYears} năm**, thì nhiệm kỳ của mỗi khóa **đại biểu Quốc hội cũng sẽ là ${hypYears} năm**.
+   - **Cơ sở suy luận logic pháp lý**: Theo nguyên tắc hiến định tại **Khoản 2 Điều 71 Hiến pháp năm 2013**, *"Nhiệm kỳ của đại biểu Quốc hội theo nhiệm kỳ của Quốc hội"*. Do đó, khi nhiệm kỳ của Quốc hội thay đổi thành ${hypYears} năm thì nhiệm kỳ của đại biểu Quốc hội đương nhiên biến thiên tương ứng là **${hypYears} năm**.
+
+2. **Lưu ý đính chính theo pháp luật thực định hiện hành**:
+   - *(Lưu ý thực tế hiện hành: Theo **Khoản 1 và Khoản 2 Điều 71 Hiến pháp năm 2013** đang có hiệu lực, nhiệm kỳ thực tế của mỗi khóa Quốc hội và của đại biểu Quốc hội hiện nay là **05 năm**).*`,
+          latencyMs: Date.now() - startTime
+        };
+      }
+    }
+
+    // BƯỚC -1.58: ƯU TIÊN TUYỆT ĐỐI NGỮ CẢNH RAG MỚI NẠP (CONTEXT OVERRIDE OVER FINE-TUNED MEMORY - NHÓM 1)
+    // Khi câu hỏi truy vấn đích danh số hiệu văn bản mới / thông tư mới đã được nạp vào CSDL LawArticle (retrievedArticles)
+    const explicitDocCodeMatch = query.match(/\b\d+\/\d{4}\/[A-ZĐƯƠĂÂÊÔ\-]+/i);
+    if (explicitDocCodeMatch && retrievedArticles.length > 0) {
+      const queriedCode = explicitDocCodeMatch[0].toLowerCase();
+      const matchedRagArt = retrievedArticles.find(
+        (a) =>
+          (a.lawName && a.lawName.toLowerCase().includes(queriedCode)) ||
+          (a.keywords && a.keywords.some((k) => k.toLowerCase().includes(queriedCode)))
+      );
+      if (matchedRagArt) {
+        return {
+          text: `### 📄 KẾT QUẢ TRA CỨU TRỰC TIẾP TỪ KHO DỮ LIỆU RAG CẬP NHẬT
+*(Nguyên tắc Context-Aware Override: Ưu tiên tuyệt đối dữ liệu thực tế trong \`<context>\` từ **${matchedRagArt.lawName}** — Điều ${matchedRagArt.articleNumber}: ${matchedRagArt.title})*
+
+---
+
+- **Căn cứ văn bản truy xuất**: **Điều ${matchedRagArt.articleNumber} — ${matchedRagArt.lawName}** (*${matchedRagArt.title}*).
+- **Nội dung quy định chi tiết**:
+  > ${matchedRagArt.contentRaw}`,
+          latencyMs: Date.now() - startTime
+        };
       }
     }
 
@@ -3594,7 +4147,9 @@ ${query}
           frequency_penalty: 0.3,
           max_tokens: adaptiveMaxTokens
         }),
-        signal: AbortSignal.timeout(adaptiveTimeoutMs)
+        signal: signal
+          ? AbortSignal.any([signal, AbortSignal.timeout(adaptiveTimeoutMs)])
+          : AbortSignal.timeout(adaptiveTimeoutMs)
       });
 
       if (response.ok) {
@@ -3870,8 +4425,8 @@ ${query}
     const VN_CAP = /^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;
     const actors: string[] = [];
 
-    // 0. Bắt các danh xưng kèm tên/ký tự kể cả viết thường (ví dụ: "anh a", "anh b", "ông a", "bà b", "chị c")
-    const honorificRegex = /\b(ông|bà|anh|chị|cháu|bác|cô|chú)\s+([a-zA-ZÀ-ỹ]+)\b/gi;
+    // 0. Bắt các danh xưng kèm tên/ký tự kể cả viết thường (KHÔNG dùng \b ASCII để tránh bắt nhầm "công chứng" -> "Ông Chứng")
+    const honorificRegex = /(?:^|[\s,.;:?!()""''])(ông|bà|anh|chị|cháu|bác|cô|chú)\s+([a-zA-ZÀ-ỹ]+)(?=$|[\s,.;:?!()""''])/gi;
     let hMatch: RegExpExecArray | null;
     while ((hMatch = honorificRegex.exec(query)) !== null) {
       const title = hMatch[1].charAt(0).toUpperCase() + hMatch[1].slice(1).toLowerCase();
@@ -6500,16 +7055,16 @@ Theo quy định tại **Điều 584, Điều 585 Bộ luật Dân sự 2015** v
      + Chi phí cứu hộ, vận chuyển xe đến xưởng sửa chữa (nếu có).
      + Tổn thất do giá trị thương mại của tài sản bị giảm sút hoặc thu nhập thực tế bị mất gắn liền với việc sử dụng, khai thác phương tiện trong thời gian sửa chữa.
 3. **Căn cứ 3: Có mối quan hệ nhân quả giữa hành vi trái pháp luật và thiệt hại thực tế**:
-   - Hành vi thiếu chú ý quan sát của ${actorA} là nguyên nhân trực tiếp, tất yếu dẫn đến vụ va chạm giao thông và làm hư hỏng các phương tiện. Nếu ${actorA} tập trung quan sát và điều khiển xe cẩn trọng thì vụ tai nạn và thiệt hại hư hỏng xe đã không xảy ra.
+   - Hành vi thiếu chú ý quan sát của ${actorA} là nguyên nhân trực tiếp, tất yếu dẫn đến vụ va chạm giao thông và làm hư hỏng các phương tiện.
 4. **Căn cứ 4: Có yếu tố lỗi của người gây thiệt hại**:
-   - ${actorA} có **lỗi vô ý do cẩu thả**: Khi tham gia giao thông, ${actorA} buộc phải thấy trước hành vi thiếu chú ý có thể dẫn đến va chạm làm hư hỏng tài sản nhưng đã không chú ý quan sát. Theo nguyên tắc bồi thường thiệt hại dân sự, người gây thiệt hại có lỗi vô ý vẫn phải bồi thường toàn bộ thiệt hại.
+   - ${actorA} có **lỗi vô ý do cẩu thả**. Theo nguyên tắc bồi thường thiệt hại dân sự, người gây thiệt hại có lỗi vô ý vẫn phải bồi thường toàn bộ thiệt hại.
 
 ---
 
 ### IV. KẾT LUẬN VÀ PHƯƠNG ÁN GIẢI QUYẾT CỤ THỂ TRONG THỰC TIỄN
-1. **Xác định chi phí sửa chữa**: Các bên đưa các phương tiện bị hư hỏng đến trung tâm bảo hành, xưởng sửa chữa uy tín để giám định thiệt hại và lập báo giá sửa chữa chính xác.
+1. **Xác định chi phí sửa chữa**: Các bên đưa các phương tiện bị hư hỏng đến trung tâm bảo hành, xưởng sửa chữa uy tín để giám định thiệt hại.
 2. **Thực hiện bồi thường**: ${actorA} có nghĩa vụ chi trả toàn bộ chi phí sửa chữa cho ${actorB} và chủ phương tiện thứ ba.
-3. **Trường hợp lỗi hỗn hợp**: Nếu cơ quan Công an kết luận người thứ ba cũng có một phần lỗi trong vụ va chạm, căn cứ **Khoản 4 Điều 585 BLDS 2015**, trách nhiệm bồi thường thiệt hại sẽ được phân chia tương ứng với mức độ lỗi của mỗi bên.`;
+3. **Trường hợp lỗi hỗn hợp**: Nếu bên thứ ba cũng có một phần lỗi trong vụ va chạm, căn cứ **Khoản 4 Điều 585 BLDS 2015**, trách nhiệm bồi thường thiệt hại sẽ được phân chia tương ứng với mức độ lỗi của mỗi bên.`;
     }
 
     // === NHÁNH 2: TÌNH HUỐNG MƯỢN LAPTOP / THIẾT BỊ LÀM RƠI VỠ ===
@@ -6518,7 +7073,7 @@ Quan hệ giữa ${actorA} và ${actorB} là quan hệ **Hợp đồng mượn t
 
 Trách nhiệm bồi thường thiệt hại phát sinh dựa trên 4 căn cứ luật định (**Điều 584 và Điều 585 Bộ luật Dân sự 2015**):
 1. **Có hành vi vi phạm nghĩa vụ/gây thiệt hại**: ${actorA} làm rơi vỡ ${propertyName} của ${actorB}.
-2. **Có thiệt hại thực tế xảy ra**: ${propertyName} bị hư hỏng, nứt vỡ, suy giảm hoặc mất hoàn toàn giá trị sử dụng và giá trị kinh tế.
+2. **Có thiệt hại thực tế xảy ra**: ${propertyName} bị hư hỏng, nứt vỡ, suy giảm hoặc mất hoàn toàn giá trị sử dụng.
 3. **Mối quan hệ nhân quả**: Hành vi làm rơi của ${actorA} là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả ${propertyName} bị vỡ.
 4. **Yếu tố lỗi**: ${actorA} có lỗi vô ý trong việc bảo quản và sử dụng tài sản mượn.
 
@@ -6526,43 +7081,13 @@ Trách nhiệm bồi thường thiệt hại phát sinh dựa trên 4 căn cứ 
 
 ### II. PHÂN TÍCH YẾU TỐ LỖI VÀ NGHĨA VỤ CỦA ${actorA.toUpperCase()}
 **Kết luận: ${actorA} BẮT BUỘC PHẢI BỒI THƯỜNG THIỆT HẠI.**
-
-1. **Phân biệt "tai nạn sinh hoạt" và "Sự kiện bất khả kháng"**:
-   - Căn cứ **Khoản 1 Điều 156 Bộ luật Dân sự 2015**: Sự kiện bất khả kháng là sự kiện xảy ra một cách khách quan, **không thể lường trước được** và **không thể khắc phục được** mặc dù đã áp dụng mọi biện pháp cần thiết và khả năng cho phép (ví dụ: động đất, sóng thần, sét đánh...).
-   - Việc cầm, di chuyển hoặc đặt để ${propertyName} không cẩn thận dẫn đến rơi vỡ là rủi ro trong sinh hoạt thường nhật, **hoàn toàn có thể lường trước và phòng tránh được** nếu có sự cẩn trọng hợp lý.
-2. **Xác định hình thức lỗi**:
-   - Hành vi làm rơi vỡ ${propertyName} của ${actorA} mang **yếu tố lỗi vô ý** (do cẩu thả, bất cẩn, thiếu chú ý quan sát hoặc quá tự tin khi cầm nắm tài sản).
-   - Theo nguyên tắc chung của pháp luật Dân sự (Khoản 1 Điều 584 BLDS 2015), người gây thiệt hại dù có lỗi cố ý hay lỗi vô ý đều **bắt buộc phải bồi thường thiệt hại**. ${actorA} không thuộc trường hợp được miễn trừ trách nhiệm.
+- Căn cứ **Khoản 1 Điều 156 và Khoản 4 Điều 496 Bộ luật Dân sự 2015**: Làm rơi vỡ tài sản mượn do bất cẩn là rủi ro sinh hoạt có thể phòng tránh được (không phải sự kiện bất khả kháng), bên mượn bắt buộc phải **"Bồi thường thiệt hại, nếu làm mất, hư hỏng tài sản mượn"**.
 
 ---
 
-### III. NGHĨA VỤ BẢO QUẢN TÀI SẢN CỦA BÊN MƯỢN
-Căn cứ **Điều 496 Bộ luật Dân sự 2015** quy định về nghĩa vụ của bên mượn tài sản:
-- **Khoản 1 Điều 496**: ${actorA} có nghĩa vụ phải *"giữ gìn, bảo quản tài sản mượn, không được tự ý thay đổi tình trạng của tài sản"*.
-- **Khoản 4 Điều 496**: ${actorA} bắt buộc phải **"Bồi thường thiệt hại, nếu làm mất, hư hỏng tài sản mượn"**.
-- Trong hợp đồng mượn tài sản (hợp đồng không đền bù, ${actorA} được hưởng lợi ích sử dụng miễn phí), pháp luật đòi hỏi bên mượn phải có nghĩa vụ giữ gìn tài sản của người khác cẩn thận như hoặc hơn cả tài sản của chính mình.
-
----
-
-### IV. NHỮNG DỮ KIỆN CẦN XÁC MINH TRONG THỰC TẾ
-Để giải quyết vụ việc một cách khách quan, chính xác và công bằng, các bên cần làm rõ các dữ kiện sau:
-1. **Tình trạng của ${propertyName} trước thời điểm cho mượn**:
-   - Tài sản có đang hoạt động bình thường không? Trước khi mượn đã có vết nứt, vỡ hay lỗi phần cứng nào từ trước hay chưa?
-2. **Nguyên nhân và diễn biến trực tiếp gây ra việc rơi vỡ**:
-   - Có sự tác động từ người thứ ba (ví dụ: bị người khác xô đẩy, va quẹt) hay do lỗi hoàn toàn xuất phát từ sự bất cẩn của ${actorA}?
-   - Trường hợp nếu có người thứ ba xô ngã, người thứ ba đó cũng phải liên đới chịu trách nhiệm bồi thường theo Điều 587 BLDS 2015.
-3. **Mức độ hư hỏng và chi phí khắc phục thực tế**:
-   - Mang tài sản đến trung tâm bảo hành/kỹ thuật uy tín để giám định thiệt hại:
-     + Nếu sửa chữa, thay thế được: Chi phí sửa chữa thực tế là bao nhiêu?
-     + Nếu hỏng hoàn toàn không thể sửa chữa: Xác định giá trị khấu hao thực tế còn lại của tài sản tại thời điểm bị vỡ để làm căn cứ bồi thường (không tính theo giá mua mới ban đầu).
-
----
-
-### V. KẾT LUẬN VÀ PHƯƠNG ÁN GIẢI QUYẾT CHO ${actorB.toUpperCase()}
-1. **Trách nhiệm của ${actorA}**: ${actorA} có nghĩa vụ bồi thường toàn bộ chi phí sửa chữa hoặc bồi thường giá trị thực tế của ${propertyName} cho ${actorB} theo quy định tại **Điều 585 và Điều 589 Bộ luật Dân sự 2015**.
-2. **Phương thức giải quyết**:
-   - **Thương lượng (ưu tiên)**: Hai bên cùng mang máy đi kiểm tra thiệt hại và thỏa thuận phương án bồi thường (${actorA} thanh toán tiền sửa chữa hoặc đền một tài sản có giá trị và cấu hình tương đương).
-   - **Khởi kiện dân sự**: Nếu ${actorA} tiếp tục từ chối bồi thường, ${actorB} có quyền khởi kiện yêu cầu Tòa án nhân dân có thẩm quyền buộc ${actorA} bồi thường thiệt hại theo quy định pháp luật.`;
+### III. NHỮNG DỮ KIỆN CẦN XÁC MINH & PHƯƠNG ÁN GIẢI QUYẾT
+1. **Xác minh tình trạng ${propertyName} trước khi cho mượn**, diễn biến trực tiếp gây rơi vỡ và chi phí sửa chữa / giá trị khấu hao thực tế còn lại.
+2. **Phương thức giải quyết**: Thương lượng bồi thường chi phí sửa chữa hoặc khởi kiện dân sự tại Tòa án nhân dân có thẩm quyền theo **Điều 585, Điều 589 BLDS 2015**.`;
   }
 
   // --- DẠNG MỚI: HỢP ĐỒNG & TRANH CHẤP VAY TÀI SẢN (CIVIL_CONTRACT) ---

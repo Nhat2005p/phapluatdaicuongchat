@@ -277,9 +277,11 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     return typeof window !== 'undefined' ? window.innerWidth >= 1024 : true;
   });
 
-  // Typing Animation: Hiệu ứng hoạt ảnh mô phỏng quá trình gõ chữ từng ký tự theo thời gian thực
+  // Typing Animation & Stop Generation (AbortController + Request Token Isolation)
   const [typingMessageId, setTypingMessageId] = useState<string | null>(null);
   const typingIntervalRef = useRef<any>(null);
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const requestIdRef = useRef<number>(0);
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -575,10 +577,33 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     loadHistory();
   }, [isAuthenticated]);
 
+  // Stop Generation handler (Câu 46: Ngắt ngay tiến trình đang chạy hoặc đang gõ chữ mà không trôi chữ sang câu sau)
+  const handleStopGeneration = () => {
+    requestIdRef.current += 1;
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
+    if (typingIntervalRef.current) {
+      clearInterval(typingIntervalRef.current);
+      typingIntervalRef.current = null;
+    }
+    setIsLoading(false);
+    setTypingMessageId(null);
+    setTimeout(() => {
+      textareaRef.current?.focus();
+    }, 50);
+  };
+
   // Send message handler
   const handleSend = async (overrideText?: string) => {
     const textToSend = (overrideText !== undefined ? overrideText : query).trim();
-    if (!textToSend || isLoading) return;
+    if (!textToSend) return;
+
+    // Nếu người dùng gửi câu mới ngay khi câu cũ đang chạy -> tự động ngắt tiến trình cũ sạch sẽ
+    if (isLoading || typingMessageId !== null) {
+      handleStopGeneration();
+    }
 
     if (!isAuthenticated) {
       onOpenAuth?.('login');
@@ -625,8 +650,15 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
       textareaRef.current.style.height = 'auto';
     }
 
+    const currentReqId = ++requestIdRef.current;
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
-      const res = await api.solveQuery(textToSend, selectedCategoryId, previousQueryText);
+      const res = await api.solveQuery(textToSend, selectedCategoryId, previousQueryText, controller.signal);
+      if (currentReqId !== requestIdRef.current || controller.signal.aborted) {
+        return;
+      }
       if (res.success) {
         setIsLoading(false);
         const fullContent = res.response || '';
@@ -685,6 +717,13 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         };
 
         typingIntervalRef.current = setInterval(() => {
+          if (currentReqId !== requestIdRef.current) {
+            if (typingIntervalRef.current) {
+              clearInterval(typingIntervalRef.current);
+              typingIntervalRef.current = null;
+            }
+            return;
+          }
           charIndex += step;
           if (charIndex >= fullContent.length) {
             if (typingIntervalRef.current) {
@@ -715,12 +754,18 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         setErrorMessage(res.message || 'Không thể xử lý bài tập. Vui lòng thử lại.');
       }
     } catch (err: any) {
+      if (err?.name === 'AbortError' || controller.signal.aborted || currentReqId !== requestIdRef.current) {
+        return;
+      }
       setErrorMessage(err.message || 'Lỗi kết nối máy chủ backend.');
     } finally {
-      setIsLoading(false);
-      setTimeout(() => {
-        textareaRef.current?.focus();
-      }, 100);
+      if (currentReqId === requestIdRef.current) {
+        setIsLoading(false);
+        abortControllerRef.current = null;
+        setTimeout(() => {
+          textareaRef.current?.focus();
+        }, 100);
+      }
     }
   };
 
@@ -1906,16 +1951,27 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                   )}
                 </button>
 
-                {/* 21st.dev Style Gradient Action Button with Radiant Glow */}
-                <button
-                  type="button"
-                  onClick={() => handleSend()}
-                  disabled={!query.trim() || isLoading || !isAuthenticated}
-                  className="relative overflow-hidden w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm cursor-pointer group"
-                >
-                  <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5 group-hover:scale-110" />
-                  <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 pointer-events-none"></span>
-                </button>
+                {/* Stop Generation (■) when active OR Send Button (↑) when idle */}
+                {isLoading || typingMessageId !== null ? (
+                  <button
+                    type="button"
+                    onClick={handleStopGeneration}
+                    title="Dừng sinh câu trả lời ngay lập tức (Stop ■)"
+                    className="relative overflow-hidden w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-rose-600 hover:bg-rose-500 text-white flex items-center justify-center transition-all duration-200 hover:scale-105 shadow-md shadow-rose-500/25 active:scale-95 cursor-pointer"
+                  >
+                    <span className="w-3.5 h-3.5 rounded-[3px] bg-white inline-block" />
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => handleSend()}
+                    disabled={!query.trim() || !isAuthenticated}
+                    className="relative overflow-hidden w-9 h-9 sm:w-10 sm:h-10 rounded-2xl bg-slate-900 hover:bg-slate-800 dark:bg-indigo-600 dark:hover:bg-indigo-500 text-white flex items-center justify-center transition-all duration-300 hover:scale-105 hover:shadow-lg hover:shadow-indigo-500/25 active:scale-95 disabled:opacity-20 disabled:cursor-not-allowed disabled:hover:scale-100 shadow-sm cursor-pointer group"
+                  >
+                    <ArrowUp className="w-5 h-5 transition-transform group-hover:-translate-y-0.5 group-hover:scale-110" />
+                    <span className="absolute inset-0 -translate-x-full group-hover:translate-x-full bg-gradient-to-r from-transparent via-white/30 to-transparent transition-transform duration-700 pointer-events-none"></span>
+                  </button>
+                )}
               </div>
             </div>
 

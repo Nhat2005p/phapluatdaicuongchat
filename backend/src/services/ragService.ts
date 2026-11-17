@@ -63,6 +63,27 @@ export interface QueryRoutingPlan {
 
 export class RagService {
   /**
+   * BỘ LỌC LÀM SẠCH MÃ ĐỘC XSS / SQL INJECTION / NOSQL INJECTION & GIỚI HẠN ĐỘ DÀI AN TOÀN
+   * Bảo vệ cả Backend lẫn Frontend khỏi thẻ <script>, event handler, và chuỗi SQLi/NoSQLi nhưng vẫn giữ nguyên câu hỏi pháp lý phía sau.
+   */
+  public static sanitizeSecurityPayload(raw: string): string {
+    if (!raw || typeof raw !== 'string') return '';
+    return raw
+      .slice(0, 8000)
+      .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, ' ')
+      .replace(/<\/?(?:script|iframe|object|embed|svg|img|style|link|meta)[^>]*>/gi, ' ')
+      .replace(/\bon\w+\s*=\s*["'][^"']*["']/gi, ' ')
+      .replace(/javascript\s*:/gi, ' ')
+      .replace(/(?:['"`]\s*)?\bOR\b\s+\d+\s*=\s*\d+\s*;?/gi, ' ')
+      .replace(/\b(?:DROP|TRUNCATE|ALTER)\s+TABLE\s+[\w.`"'\[\]]+\s*;?/gi, ' ')
+      .replace(/\bUNION\s+(?:ALL\s+)?SELECT\b[^;?.!\n]*/gi, ' ')
+      .replace(/--\s+/g, ' ')
+      .replace(/\$(?:where|gt|gte|lt|lte|ne|regex)\b/gi, ' ')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  /**
    * =========================================================================
    * STAGE 01: QUERY REWRITING — CHUẨN HÓA VIẾT TẮT, SỬA LỖI OCR & KHỬ NHIỄU
    * Biến câu hỏi viết tắt/đời thường thành truy vấn pháp lý chuẩn xác hơn.
@@ -70,7 +91,8 @@ export class RagService {
    */
   public static rewriteLegalQuery(query: string): string {
     if (!query) return '';
-    let res = query;
+    let res = this.sanitizeSecurityPayload(query);
+    res = res.replace(/^(?:khoan\s+đã[,.\s]*)?(?:bỏ\s+qua\s+câu\s+(?:trên|trước|vừa\s+rồi)(?:\s+đi)?|đổi\s+chủ\s+đề|sang\s+câu\s+hỏi\s+khác)[,.:!\s]*/i, '').trim();
 
     // 1. Sửa các lỗi OCR dính chữ 'đ' phổ biến trong đề thi (ví dụ: "quânđ ội" -> "quân đội", "quanđ ến" -> "quan đến", "quyếtđ ịnh" -> "quyết định")
     const vnLower = 'a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ';
@@ -260,7 +282,9 @@ export class RagService {
     }
 
     const illegalAssistPatterns = [
-      /(?:hướng dẫn|bày cách|chỉ cách|làm sao để)\s+(?:làm giả giấy tờ|làm giả con dấu|rửa tiền|trốn thuế|lách thuế|tẩu tán tài sản)/i
+      /(?:hướng dẫn|bày cách|chỉ cách|chỉ cho tôi cách|làm sao để)\s+(?:làm giả giấy tờ|làm giả con dấu|rửa tiền|trốn thuế|lách thuế|tẩu tán tài sản)/i,
+      /(?:soạn|lập|làm)\s+hợp\s+đồng[^.?]{0,50}(?:hai\s+giá|2\s+giá)/i,
+      /(?:hai\s+giá|2\s+giá)[^.?]{0,120}(?:khai\s+thuế|cơ\s+quan\s+thuế|không\s+thể\s+phát\s+hiện|không\s+bị\s+phát\s+hiện)/i
     ];
     for (const rx of illegalAssistPatterns) {
       if (rx.test(q)) {
@@ -408,7 +432,9 @@ export class RagService {
       // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
       'hiến pháp', 'luật hiến pháp', 'quốc hội', 'chính phủ', 'chủ tịch nước', 'tòa án', 'viện kiểm sát',
       'hội đồng nhân dân', 'ủy ban nhân dân', 'quyền con người', 'quyền công dân', 'nghĩa vụ công dân',
-      'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'sa thải', 'hợp đồng lao động',
+      'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'mức lương', 'thử việc', 'tuyển dụng',
+      'lương thử việc', 'trợ cấp thôi việc', 'trợ cấp thất nghiệp', 'thời giờ làm việc', 'biệt tích', 'mất tích',
+      'sa thải', 'hợp đồng lao động',
       'đuổi việc', 'nghỉ việc', 'trốn thuế', 'né thuế', 'đòi nợ', 'laptop', 'xe ô tô', 'ô tô', 'ủy quyền ly hôn', 'ủy quyền ra tòa'
     ];
 
@@ -815,6 +841,16 @@ export class RagService {
     }
 
     const qLower = cleanCurrent.toLowerCase();
+
+    // Nếu người dùng chủ động đổi chủ đề ("Khoan đã, bỏ qua câu trên đi...", "Sang câu khác...", "Đổi chủ đề...") -> XÓA BỎ NGỮ CẢNH CŨ!
+    const topicResetRegex = /^(?:khoan\s+đã[,.\s]*)?(?:bỏ\s+qua\s+câu\s+(?:trên|trước|vừa\s+rồi)(?:\s+đi)?|đổi\s+chủ\s+đề|sang\s+câu\s+hỏi\s+khác|hỏi\s+câu\s+khác\s+nhé)[,.:!\s]*/i;
+    if (topicResetRegex.test(cleanCurrent)) {
+      const strippedReset = cleanCurrent.replace(topicResetRegex, '').trim();
+      return {
+        effectiveQuery: strippedReset || cleanCurrent,
+        isContextualized: false
+      };
+    }
 
     // Các cụm đại từ chỉ định tham chiếu trực tiếp tới câu trước
     const anaphoraPatterns = [

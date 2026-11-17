@@ -98,7 +98,12 @@ export const api = {
   },
 
   // --- Student Query & History ---
-  async solveQuery(query: string, categoryId?: string | null, previousQuery?: string | null): Promise<QueryResponse> {
+  async solveQuery(
+    query: string,
+    categoryId?: string | null,
+    previousQuery?: string | null,
+    signal?: AbortSignal
+  ): Promise<QueryResponse> {
     const res = await fetch(`${API_BASE}/query/solve`, {
       method: 'POST',
       headers: getAuthHeaders(),
@@ -106,7 +111,8 @@ export const api = {
         query,
         categoryId: categoryId || null,
         previousQuery: previousQuery || null
-      })
+      }),
+      signal
     });
     return res.json();
   },

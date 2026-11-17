@@ -817,6 +817,150 @@ export async function runSeed(): Promise<void> {
       title: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
       contentRaw: 'Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô, xe gắn máy không đội "mũ bảo hiểm cho người đi mô tô, xe máy" hoặc đội mũ bảo hiểm không cài quai đúng quy cách khi tham gia giao thông trên đường bộ (Điểm h Khoản 2 Điều 7). Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng và trừ 04 điểm giấy phép lái xe đối với hành vi không chấp hành hiệu lệnh của đèn tín hiệu giao thông (Điểm c Khoản 7 Điều 7).',
       keywords: ['không đội mũ bảo hiểm', 'nghị định 168', '400.000 đồng đến 600.000 đồng', 'vượt đèn đỏ xe máy']
+    },
+    {
+      articleId: 'HP2013_D27',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 27,
+      title: 'Quyền bầu cử và quyền ứng cử của công dân',
+      contentRaw: 'Công dân đủ mười tám tuổi trở lên có quyền bầu cử và đủ hai mươi mốt tuổi trở lên có quyền ứng cử vào Quốc hội, Hội đồng nhân dân. Việc thực hiện các quyền này do luật định.',
+      keywords: ['quyền công dân', 'quyền con người', 'quyền bầu cử', 'quyền ứng cử', 'quốc tịch việt nam']
+    },
+    {
+      articleId: 'HP2013_D71',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 71,
+      title: 'Nhiệm kỳ của Quốc hội và đại biểu Quốc hội',
+      contentRaw: '1. Nhiệm kỳ của mỗi khóa Quốc hội là năm năm.\n2. Sáu mươi ngày trước khi Quốc hội hết nhiệm kỳ, Quốc hội khóa mới phải được bầu xong. Nhiệm kỳ của đại biểu Quốc hội theo nhiệm kỳ của Quốc hội.',
+      keywords: ['nhiệm kỳ của quốc hội', 'nhiệm kỳ đại biểu quốc hội', '5 năm', 'điều 71 hiến pháp']
+    },
+    {
+      articleId: 'XLVPHC2012_D5',
+      lawCode: 'XLVPHC2012',
+      lawName: 'Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020)',
+      articleNumber: 5,
+      title: 'Đối tượng bị xử phạt vi phạm hành chính (Độ tuổi chịu trách nhiệm hành chính)',
+      contentRaw: '1. Các đối tượng bị xử phạt vi phạm hành chính bao gồm: a) Người từ đủ 14 tuổi đến dưới 16 tuổi bị xử phạt vi phạm hành chính về vi phạm hành chính do cố ý; người từ đủ 16 tuổi trở lên bị xử phạt vi phạm hành chính về mọi vi phạm hành chính.',
+      keywords: ['độ tuổi chịu trách nhiệm hành chính', '14 đến dưới 16 tuổi cố ý', 'điều 5 luật xử lý vi phạm hành chính']
+    },
+    {
+      articleId: 'XLVPHC2012_D21',
+      lawCode: 'XLVPHC2012',
+      lawName: 'Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020)',
+      articleNumber: 21,
+      title: 'Các hình thức xử phạt vi phạm hành chính và nguyên tắc áp dụng',
+      contentRaw: '1. Các hình thức xử phạt vi phạm hành chính bao gồm: a) Cảnh cáo; b) Phạt tiền; c) Tước quyền sử dụng giấy phép, chứng chỉ hành nghề có thời hạn hoặc đình chỉ hoạt động có thời hạn; d) Tịch thu tang vật vi phạm hành chính, phương tiện được sử dụng để vi phạm hành chính; đ) Trục xuất.\n3. Đối với mỗi vi phạm hành chính, cá nhân, tổ chức vi phạm hành chính chỉ bị áp dụng một hình thức xử phạt chính; có thể bị áp dụng một hoặc nhiều hình thức xử phạt bổ sung.',
+      keywords: ['hình thức xử phạt chính', '5 hình thức xử phạt hành chính', 'chỉ bị áp dụng một hình thức xử phạt chính']
+    },
+    {
+      articleId: 'BLDS2015_D68',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 68,
+      title: 'Tuyên bố mất tích',
+      contentRaw: '1. Khi một người biệt tích 02 năm liền trở lên, mặc dù đã áp dụng đầy đủ các biện pháp thông báo, tìm kiếm theo quy định của pháp luật về tố tụng dân sự nhưng vẫn không có tin tức xác thực về việc người đó còn sống hay đã chết thì theo yêu cầu của người có quyền, lợi ích liên quan, Tòa án có thể tuyên bố người đó mất tích.',
+      keywords: ['tuyên bố mất tích', 'biệt tích 02 năm liền trở lên', 'điều 68 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D71',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 71,
+      title: 'Tuyên bố một người là đã chết',
+      contentRaw: '1. Người có quyền, lợi ích liên quan có thể yêu cầu Tòa án ra quyết định tuyên bố một người là đã chết trong trường hợp sau đây: a) Sau 03 năm, kể từ ngày quyết định tuyên bố mất tích của Tòa án có hiệu lực pháp luật mà vẫn không có tin tức xác thực là còn sống; ... d) Biệt tích 05 năm liền trở lên và không có tin tức xác thực là còn sống.',
+      keywords: ['tuyên bố đã chết', 'biệt tích 05 năm liền trở lên', 'điều 71 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D136',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 136,
+      title: 'Đại diện theo pháp luật của cá nhân và Đại diện theo ủy quyền (Điều 138)',
+      contentRaw: 'Điều 136: Đại diện theo pháp luật của cá nhân gồm: 1. Cha, mẹ đối với con chưa thành niên; 2. Người giám hộ đối với người được giám hộ; 3. Người do Tòa án chỉ định.\nĐiều 138: Cá nhân, pháp nhân có thể ủy quyền cho cá nhân, pháp nhân khác xác lập, thực hiện giao dịch dân sự. Người từ đủ mười lăm tuổi đến chưa đủ mười tám tuổi có thể là người đại diện theo ủy quyền, trừ trường hợp pháp luật quy định giao dịch dân sự phải do người từ đủ mười tám tuổi trở lên xác lập, thực hiện.',
+      keywords: ['đại diện theo pháp luật', 'đại diện theo ủy quyền', '16 tuổi ủy quyền bất động sản']
+    },
+    {
+      articleId: 'BLDS2015_D429',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 429,
+      title: 'Thời hiệu khởi kiện về hợp đồng',
+      contentRaw: 'Thời hiệu khởi kiện để yêu cầu Tòa án giải quyết tranh chấp hợp đồng là 03 năm, kể từ ngày người có quyền yêu cầu biết hoặc phải biết quyền và lợi ích hợp pháp của mình bị xâm phạm.',
+      keywords: ['thời hiệu khởi kiện hợp đồng', '03 năm', '3 năm', 'điều 429 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLHS2015_D17',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 17,
+      title: 'Đồng phạm',
+      contentRaw: '1. Đồng phạm là trường hợp có hai người trở lên cố ý cùng thực hiện một tội phạm.\n3. Người đồng phạm bao gồm người tổ chức, người thực hành, người xúi giục, người giúp sức. Người thực hành là người trực tiếp thực hiện tội phạm. Người tổ chức là người chủ mưu, cầm đầu, chỉ huy việc thực hiện tội phạm. Người xúi giục là người kích động, dụ dỗ, thúc đẩy người khác thực hiện tội phạm. Người giúp sức là người tạo điều kiện tinh thần hoặc vật chất cho việc thực hiện tội phạm.',
+      keywords: ['đồng phạm', 'người thực hành', 'người tổ chức', 'người xúi giục', 'người giúp sức', 'điều 17 blhs']
+    },
+    {
+      articleId: 'BLHS2015_D126',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 126,
+      title: 'Tội giết người do vượt quá giới hạn phòng vệ chính đáng',
+      contentRaw: '1. Người nào giết người trong trường hợp vượt quá giới hạn phòng vệ chính đáng hoặc trong trường hợp vượt quá mức cần thiết khi bắt giữ người phạm tội, thì bị phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 02 năm.',
+      keywords: ['vượt quá giới hạn phòng vệ chính đáng', 'rõ ràng quá mức cần thiết', 'điều 126 blhs']
+    },
+    {
+      articleId: 'PCTN2018_D22',
+      lawCode: 'PCTN2018',
+      lawName: 'Luật Phòng, chống tham nhũng năm 2018 (và Nghị định 59/2019/NĐ-CP)',
+      articleNumber: 22,
+      title: 'Việc tặng quà và nhận quà tặng của cán bộ, công chức, viên chức',
+      contentRaw: 'Khoản 2 Điều 22 Luật PCTN 2018: Cơ quan, tổ chức, đơn vị, người có chức vụ, quyền hạn không được trực tiếp hoặc gián tiếp nhận quà tặng dưới mọi hình thức của cơ quan, tổ chức, đơn vị, cá nhân có liên quan đến công việc do mình giải quyết hoặc thuộc phạm vi quản lý của mình. Trường hợp không từ chối được thì cơ quan, tổ chức, đơn vị phải tổ chức quản lý, xử lý quà tặng; người có chức vụ, quyền hạn phải báo cáo Thủ trưởng cơ quan, đơn vị và nộp lại quà tặng để xử lý trong thời hạn 05 ngày làm việc kể từ ngày nhận được quà tặng (Điều 25 Nghị định 59/2019/NĐ-CP).',
+      keywords: ['nhận quà tặng', 'luật phòng chống tham nhũng 2018', '05 ngày làm việc', 'nộp lại quà tặng']
+    },
+    {
+      articleId: 'BLLD2019_D25',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 25,
+      title: 'Thời gian thử việc và Tiền lương thử việc (Điều 26)',
+      contentRaw: 'Điều 25: Thời gian thử việc căn cứ vào tính chất và mức độ phức tạp của công việc nhưng chỉ được thử việc một lần đối với một công việc và bảo đảm điều kiện: 1. Không quá 180 ngày đối với công việc của người quản lý doanh nghiệp; 2. Không quá 60 ngày đối với công việc có chức danh nghề nghiệp cần trình độ chuyên môn, kỹ thuật từ cao đẳng trở lên; 3. Không quá 30 ngày đối với trình độ trung cấp, công nhân kỹ thuật; 4. Không quá 06 ngày làm việc đối với công việc khác.\nĐiều 26: Tiền lương của người lao động trong thời gian thử việc do hai bên thỏa thuận nhưng ít nhất phải bằng 85% mức lương của công việc đó.',
+      keywords: ['thời gian thử việc', '60 ngày', 'tiền lương thử việc', '85%', 'tốt nghiệp đại học']
+    },
+    {
+      articleId: 'BLLD2019_D35',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 35,
+      title: 'Quyền đơn phương chấm dứt HĐLĐ của người lao động và nghĩa vụ khi chấm dứt trái pháp luật (Điều 40)',
+      contentRaw: 'Khoản 1 Điều 35: Người lao động có quyền đơn phương chấm dứt hợp đồng lao động nhưng phải báo trước cho người sử dụng lao động: a) Ít nhất 45 ngày nếu làm việc theo hợp đồng lao động không xác định thời hạn; b) Ít nhất 30 ngày nếu HĐLĐ xác định thời hạn từ 12 đến 36 tháng; c) Ít nhất 03 ngày làm việc nếu HĐLĐ dưới 12 tháng.\nĐiều 40: Nghĩa vụ của người lao động khi đơn phương chấm dứt HĐLĐ trái pháp luật: 1. Không được trợ cấp thôi việc; 2. Phải bồi thường cho người sử dụng lao động nửa tháng tiền lương theo HĐLĐ và một khoản tiền tương ứng với tiền lương theo HĐLĐ trong những ngày không báo trước; 3. Phải hoàn trả cho người sử dụng lao động chi phí đào tạo quy định tại Điều 62 của Bộ luật này.',
+      keywords: ['báo trước 45 ngày', 'tự ý nghỉ việc', 'đơn phương chấm dứt hợp đồng trái pháp luật', 'nửa tháng tiền lương', 'chi phí đào tạo']
+    },
+    {
+      articleId: 'BLLD2019_D105',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 105,
+      title: 'Thời giờ làm việc bình thường',
+      contentRaw: '1. Thời giờ làm việc bình thường không quá 08 giờ trong 01 ngày và không quá 48 giờ trong 01 tuần.\n2. Người sử dụng lao động có quyền quy định thời giờ làm việc theo ngày hoặc tuần nhưng phải thông báo cho người lao động biết; trường hợp theo tuần thì thời giờ làm việc bình thường không quá 10 giờ trong 01 ngày và không quá 48 giờ trong 01 tuần.',
+      keywords: ['thời giờ làm việc bình thường', '8 giờ', '48 giờ', 'điều 105 bộ luật lao động 2019']
+    },
+    {
+      articleId: 'HNGD2014_D12',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình năm 2014',
+      articleNumber: 12,
+      title: 'Hậu quả pháp lý của việc hủy kết hôn trái pháp luật',
+      contentRaw: '1. Khi việc kết hôn trái pháp luật bị hủy thì hai bên kết hôn phải chấm dứt quan hệ như vợ chồng.\n2. Quyền, nghĩa vụ của cha, mẹ, con được giải quyết theo quy định về quyền, nghĩa vụ của cha, mẹ, con khi ly hôn.\n3. Quan hệ tài sản, nghĩa vụ và hợp đồng giữa các bên được giải quyết theo quy định tại Điều 16 của Luật này (theo thỏa thuận của các bên; nếu không thỏa thuận được thì giải quyết theo quy định của Bộ luật Dân sự về chia tài sản thuộc sở hữu chung theo phần, bảo đảm quyền lợi chính đáng của phụ nữ và con).',
+      keywords: ['hủy việc kết hôn trái pháp luật', 'chưa đủ tuổi kết hôn', 'chấm dứt quan hệ như vợ chồng', 'điều 12 luật hôn nhân']
+    },
+    {
+      articleId: 'LDD2024_D159',
+      lawCode: 'LDD2024',
+      lawName: 'Luật Đất đai năm 2024',
+      articleNumber: 159,
+      title: 'Bảng giá đất hằng năm (Bỏ khung giá đất 05 năm/lần)',
+      contentRaw: 'Luật Đất đai năm 2024 đã bãi bỏ hoàn toàn quy định về Khung giá đất của Chính phủ ban hành định kỳ 05 năm một lần. Theo Khoản 3 Điều 159 Luật Đất đai 2024, Ủy ban nhân dân cấp tỉnh xây dựng, trình Hội đồng nhân dân cùng cấp quyết định Bảng giá đất lần đầu để công bố và áp dụng từ ngày 01/01/2026; hằng năm, Ủy ban nhân dân cấp tỉnh có trách nhiệm trình Hội đồng nhân dân cấp tỉnh quyết định điều chỉnh, sửa đổi, bổ sung Bảng giá đất để công bố và áp dụng từ ngày 01 tháng 01 của năm tiếp theo.',
+      keywords: ['luật đất đai 2024', 'khung giá đất', 'bảng giá đất hằng năm', 'điều 159 luật đất đai']
     }
   ];
 

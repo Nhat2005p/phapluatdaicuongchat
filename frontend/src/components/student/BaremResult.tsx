@@ -67,6 +67,30 @@ export const BaremResult: React.FC<BaremResultProps> = ({ result, query }) => {
     color: 'text-blue-700'
   };
 
+  const renderSafeInline = (rawCell: string) => {
+    const subLines = rawCell.split(/<br\s*\/?>|\n/gi);
+    return subLines.map((sub, sIdx) => {
+      const parts = sub.split(/(\*\*[^*]+\*\*|`[^`]+`|\*[^*]+\*)/g);
+      return (
+        <React.Fragment key={sIdx}>
+          {sIdx > 0 && <br />}
+          {parts.map((part, pIdx) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return <strong key={pIdx} className="font-semibold text-slate-900">{part.slice(2, -2)}</strong>;
+            }
+            if (part.startsWith('`') && part.endsWith('`')) {
+              return <code key={pIdx} className="px-1 py-0.5 rounded bg-slate-100 font-mono text-[11px] text-blue-700">{part.slice(1, -1)}</code>;
+            }
+            if (part.startsWith('*') && part.endsWith('*') && part.length > 2) {
+              return <em key={pIdx} className="italic">{part.slice(1, -1)}</em>;
+            }
+            return part;
+          })}
+        </React.Fragment>
+      );
+    });
+  };
+
   // Convert markdown tables and headers to clean styled JSX
   const formatMarkdown = (text: string) => {
     const lines = text.split('\n');
@@ -89,13 +113,13 @@ export const BaremResult: React.FC<BaremResultProps> = ({ result, query }) => {
           elements.push(
             <h3 key={idx} className="text-base font-bold text-blue-700 mt-5 mb-2 flex items-center gap-2">
               <span className="w-1.5 h-4 bg-blue-600 rounded-full inline-block"></span>
-              {line.replace('### ', '')}
+              {renderSafeInline(line.replace('### ', ''))}
             </h3>
           );
         } else if (line.startsWith('## ')) {
           elements.push(
             <h2 key={idx} className="text-lg font-bold text-slate-900 mt-6 mb-3 border-b border-slate-200 pb-1.5">
-              {line.replace('## ', '')}
+              {renderSafeInline(line.replace('## ', ''))}
             </h2>
           );
         } else if (line.trim() === '---') {
@@ -103,13 +127,13 @@ export const BaremResult: React.FC<BaremResultProps> = ({ result, query }) => {
         } else if (line.trim().startsWith('- ') || line.trim().startsWith('• ')) {
           elements.push(
             <li key={idx} className="text-slate-700 ml-4 list-disc text-sm my-1 leading-relaxed">
-              {line.replace(/^[-•]\s*/, '')}
+              {renderSafeInline(line.replace(/^[-•]\s*/, ''))}
             </li>
           );
         } else if (line.trim()) {
           elements.push(
             <p key={idx} className="text-slate-800 text-sm my-2 leading-relaxed">
-              {line}
+              {renderSafeInline(line)}
             </p>
           );
         }
@@ -143,7 +167,7 @@ export const BaremResult: React.FC<BaremResultProps> = ({ result, query }) => {
             <tr>
               {headerRow.map((col, i) => (
                 <th key={i} className="px-4 py-3 border-r border-blue-200/60 last:border-r-0">
-                  {col}
+                  {renderSafeInline(col)}
                 </th>
               ))}
             </tr>
@@ -153,7 +177,7 @@ export const BaremResult: React.FC<BaremResultProps> = ({ result, query }) => {
               <tr key={rIdx} className="hover:bg-blue-50/30 transition-colors">
                 {row.map((cell, cIdx) => (
                   <td key={cIdx} className="px-4 py-3 align-top border-r border-slate-100 last:border-r-0 leading-relaxed">
-                    <span dangerouslySetInnerHTML={{ __html: cell.replace(/<br>/g, '<br/>') }} />
+                    {renderSafeInline(cell)}
                   </td>
                 ))}
               </tr>
