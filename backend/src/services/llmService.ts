@@ -1233,6 +1233,99 @@ Hệ thống xác nhận **không tìm thấy văn bản quy phạm pháp luật
   }
 
   /**
+   * Chuyên đề: Phân tích bản chất giai cấp và bản chất xã hội của Pháp luật. Tại sao nói pháp luật vừa mang tính giai cấp, vừa mang tính xã hội?
+   */
+  public static solveDynamicLawNatureAndOrigin(query?: string): string {
+    return `### PHÂN TÍCH BẢN CHẤT GIAI CẤP VÀ BẢN CHẤT XÃ HỘI CỦA PHÁP LUẬT
+*(Theo Giáo trình Pháp luật Đại cương — Trường Đại học Thương Mại 2021, Chương 2, Mục 2.1.2, tr. 35 – 38 & Hiến pháp năm 2013)*
+
+---
+
+#### I. KHÁI QUÁT VỀ KHÁI NIỆM VÀ BẢN CHẤT CỦA PHÁP LUẬT
+- **Khái niệm Pháp luật**: Pháp luật là hệ thống các quy tắc xử sự mang tính bắt buộc chung do Nhà nước ban hành hoặc thừa nhận, thể hiện ý chí của giai cấp thống trị và nhu cầu khách quan của xã hội, nhằm điều chỉnh các quan hệ xã hội và được Nhà nước bảo đảm thực hiện bằng các biện pháp giáo dục, thuyết phục và cưỡng chế.
+- **Bản chất của Pháp luật**: Theo học thuyết Mác – Lênin về Nhà nước và Pháp luật, bản chất của pháp luật được hợp thành bởi hai thuộc tính thống nhất biện chứng: **Bản chất giai cấp (Tính giai cấp)** và **Bản chất xã hội (Tính xã hội)**.
+
+---
+
+#### II. PHÂN TÍCH BẢN CHẤT GIAI CẤP (TÍNH GIAI CẤP) CỦA PHÁP LUẬT
+Tính giai cấp là thuộc tính phản ánh bản chất chính trị sâu sắc của pháp luật trong xã hội có phân chia giai cấp, thể hiện ở **03 nội dung cốt lõi**:
+
+1. **Pháp luật phản ánh ý chí của giai cấp thống trị (giai cấp cầm quyền)**:
+   - Giai cấp nắm giữ tư liệu sản xuất chủ yếu trong xã hội đồng thời nắm quyền lực nhà nước. Thông qua Nhà nước, giai cấp thống trị nâng ý chí của giai cấp mình lên thành **ý chí nhà nước** dưới hình thức các quy phạm pháp luật có tính bắt buộc chung đối với mọi thành viên trong xã hội (như C.Mác và Ph.Ăngghen đã khẳng định: *"Pháp luật của các ông chỉ là ý chí của giai cấp các ông được đề lên thành luật"*).
+2. **Pháp luật là công cụ bảo vệ lợi ích và củng cố sự thống trị của giai cấp cầm quyền**:
+   - Mục đích điều chỉnh của pháp luật trước hết hướng tới việc xác lập, duy trì và bảo vệ một trật tự xã hội phù hợp với lợi ích kinh tế, chính trị, tư tưởng của giai cấp thống trị; trấn áp sự phản kháng của các giai cấp, lực lượng đối kháng.
+3. **Biểu hiện cụ thể qua các kiểu pháp luật trong lịch sử**:
+   - *Pháp luật chủ nô, phong kiến, tư sản*: Bảo vệ chế độ tư hữu tư liệu sản xuất và quyền thống trị của thiểu số bóc lột đối với đa số nhân dân lao động.
+   - *Pháp luật xã hội chủ nghĩa Việt Nam*: Thể hiện ý chí và bảo vệ lợi ích của giai cấp công nhân cùng đại đa số nhân dân lao động (**Điều 2, Điều 8 Hiến pháp năm 2013**).
+
+---
+
+#### III. PHÂN TÍCH BẢN CHẤT XÃ HỘI (TÍNH XÃ HỘI) CỦA PHÁP LUẬT
+Bên cạnh tính giai cấp, pháp luật luôn mang bản chất xã hội sâu sắc, thể hiện ở **03 khía cạnh cơ bản**:
+
+1. **Pháp luật bắt nguồn từ nhu cầu khách quan của đời sống xã hội**:
+   - Các quy phạm pháp luật là sự ghi nhận những cách xử sự hợp lý, khách quan đã được kiểm nghiệm trong thực tiễn đời sống xã hội, phản ánh những quy luật vận động tự nhiên của kinh tế, văn hóa, đạo đức và truyền thống cộng đồng.
+2. **Pháp luật là công cụ tổ chức, quản lý các công việc chung vì lợi ích toàn xã hội**:
+   - Pháp luật không chỉ phục vụ riêng giai cấp cầm quyền mà còn điều chỉnh các quan hệ xã hội thiết yếu nhằm duy trì sự tồn tại và phát triển ổn định của toàn cộng đồng (ví dụ: pháp luật về an toàn giao thông, bảo vệ môi trường, phòng chống thiên tai và dịch bệnh, y tế, giáo dục, an sinh xã hội, bảo vệ trẻ em và người yếu thế theo **Điều 14, Điều 20 Hiến pháp năm 2013**).
+3. **Pháp luật là thước đo hành vi con người và chuẩn mực công bằng xã hội**:
+   - Pháp luật tạo dựng khuôn khổ chuẩn mực để phân định hành vi hợp pháp và trái pháp luật, giải quyết các tranh chấp phát sinh, giữ gìn trật tự công cộng và thúc đẩy sự hợp tác giữa các chủ thể trong xã hội.
+
+---
+
+#### IV. TẠI SAO NÓI PHÁP LUẬT VỪA MANG TÍNH GIAI CẤP, VỪA MANG TÍNH XÃ HỘI?
+Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội trong một chỉnh thể thống nhất biện chứng vì **03 lý do trọng tâm** sau:
+
+1. **Xuất phát từ bản chất kép của Nhà nước — chủ thể ban hành pháp luật**:
+   - Pháp luật do Nhà nước ban hành và bảo đảm thực hiện. Bản thân Nhà nước vừa là bộ máy thống trị chính trị của giai cấp cầm quyền, vừa là tổ chức công quyền đại diện chính thức cho toàn xã hội để quản lý các công việc chung. Do đó, pháp luật tất yếu mang trong mình cả hai thuộc tính giai cấp và xã hội.
+2. **Sự thống nhất và chế ước lẫn nhau giữa hai thuộc tính**:
+   - *Không có pháp luật nào chỉ mang tính giai cấp thuần túy*: Nếu pháp luật chỉ bảo vệ lợi ích ích kỷ của giai cấp cầm quyền mà chà đạp hoàn toàn lợi ích sống còn của xã hội thì sẽ vấp phải sự phản kháng dữ dội của quần chúng nhân dân, khiến pháp luật không thể thi hành và dẫn đến sự sụp đổ của chính quyền.
+   - *Không có pháp luật nào chỉ mang tính xã hội thuần túy (phi giai cấp)*: Trong xã hội có giai cấp, mọi quy tắc pháp luật đều chịu sự chi phối bởi đường lối chính trị và lợi ích căn bản của lực lượng nắm quyền lực nhà nước.
+   - *Tác động qua lại*: Tính giai cấp định hướng mục tiêu chính trị của pháp luật; trong khi tính xã hội tạo nên cơ sở xã hội rộng rãi, tính khả thi và sự đồng thuận tự giác thực thi của nhân dân.
+3. **Sự thống nhất cao độ trong Pháp luật Cộng hòa xã hội chủ nghĩa Việt Nam**:
+   - Căn cứ **Điều 2 và Điều 8 Hiến pháp năm 2013**: Nhà nước ta là Nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân. Trong hệ thống pháp luật Việt Nam hiện nay, tính giai cấp và tính xã hội thống nhất chặt chẽ ở mức độ cao nhất vì lợi ích của giai cấp công nhân hoàn toàn thống nhất với lợi ích của nhân dân lao động và toàn dân tộc.`;
+  }
+
+  /**
+   * Chuyên đề: So sánh sự khác nhau giữa Quy phạm pháp luật (hoặc Văn bản QPPL) và Văn bản áp dụng pháp luật theo 4 tiêu chí
+   */
+  public static solveDynamicCompareQpplAndVbadpl(query?: string): string {
+    return `### SO SÁNH QUY PHẠM PHÁP LUẬT VÀ VĂN BẢN ÁP DỤNG PHÁP LUẬT
+*(Theo Giáo trình Pháp luật Đại cương — Trường Đại học Thương Mại 2021, Chương 2 & Chương 3, tr. 42 – 52, 71 – 89 & Luật Ban hành VBQPPL 2015)*
+
+---
+
+#### I. KHÁI NIỆM PHÁP LÝ CƠ BẢN
+1. **Quy phạm pháp luật (và Văn bản quy phạm pháp luật — VBQPPL)**:
+   - Căn cứ **Điều 2 và Khoản 1 Điều 3 Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)**: *Quy phạm pháp luật* là quy tắc xử sự chung, có hiệu lực bắt buộc chung, được áp dụng lặp đi lặp lại nhiều lần đối với cơ quan, tổ chức, cá nhân trong phạm vi cả nước hoặc đơn vị hành chính nhất định, do cơ quan nhà nước, người có thẩm quyền ban hành và được Nhà nước bảo đảm thực hiện. *Văn bản quy phạm pháp luật* là văn bản có chứa quy phạm pháp luật.
+2. **Văn bản áp dụng pháp luật (Văn bản pháp lý cá biệt)**:
+   - Là văn bản pháp lý mang tính quyền lực nhà nước do cơ quan nhà nước, người có thẩm quyền ban hành theo trình tự, thủ tục luật định trên cơ sở các quy phạm pháp luật hiện hành, nhằm **cá biệt hóa** quy phạm pháp luật để giải quyết một vụ việc cụ thể đối với những cá nhân, tổ chức xác định rõ danh tính.
+
+---
+
+#### II. ĐIỂM GIỐNG NHAU
+1. **Về nguồn gốc quyền lực**: Đều do cơ quan nhà nước hoặc cá nhân có thẩm quyền nhân danh Nhà nước ban hành theo trình tự, thủ tục do pháp luật quy định.
+2. **Về tính chất bắt buộc**: Đều mang tính quyền lực nhà nước, có giá trị bắt buộc phải tôn trọng và thi hành đối với các chủ thể có liên quan, được Nhà nước bảo đảm thực hiện bằng các biện pháp cưỡng chế khi cần thiết (**Điều 8 Hiến pháp năm 2013**).
+3. **Về mục đích**: Đều nhằm điều chỉnh các quan hệ xã hội, bảo vệ trật tự pháp luật, quyền và lợi ích hợp pháp của Nhà nước, tổ chức và công dân.
+
+---
+
+#### III. PHÂN BIỆT SỰ KHÁC NHAU DỰA TRÊN 04 TIÊU CHÍ TRỌNG TÂM
+
+| Tiêu chí so sánh | Quy phạm pháp luật / Văn bản quy phạm pháp luật (VBQPPL) | Văn bản áp dụng pháp luật (Văn bản cá biệt) |
+| :--- | :--- | :--- |
+| **1. Chủ thể ban hành** | **Phạm vi chủ thể hẹp, được luật định chặt chẽ**: Chỉ những cơ quan nhà nước, người có thẩm quyền lập pháp và lập quy được liệt kê tại **Điều 4 Luật Ban hành VBQPPL năm 2015** mới có quyền ban hành (Quốc hội, UBTVQH, Chủ tịch nước, Chính phủ, Thủ tướng, Hội đồng Thẩm phán TANDTC, Chánh án TANDTC, Viện trưởng VKSNDTC, Bộ trưởng, Tổng Kiểm toán NN, HĐND và UBND các cấp). | **Phạm vi chủ thể rộng hơn rất nhiều**: Bao gồm mọi cơ quan nhà nước, tổ chức, cá nhân, cán bộ, công chức được trao thẩm quyền quản lý hành chính, điều tra, truy tố, xét xử, xử phạt cụ thể (ví dụ: Thẩm phán/Hội đồng xét xử, Thủ trưởng cơ quan công an, Chiến sĩ Cảnh sát giao thông đang thi hành công vụ, Chủ tịch UBND, Giám đốc Sở, Hiệu trưởng...). |
+| **2. Tính chất áp dụng (Một lần hay nhiều lần)** | **Áp dụng NHIỀU LẦN (lặp đi lặp lại)**: Được áp dụng thường xuyên, liên tục mỗi khi trong thực tế phát sinh hoàn cảnh, điều kiện mà quy phạm đã dự liệu. Hiệu lực kéo dài cho đến khi bị sửa đổi, bổ sung, thay thế hoặc bãi bỏ. | **Chỉ áp dụng MỘT LẦN DUY NHẤT**: Chỉ có hiệu lực giải quyết đối với một vụ việc cá biệt cụ thể. Ngay sau khi quyết định đó đã được thi hành xong trên thực tế thì hiệu lực của văn bản đương nhiên chấm dứt. |
+| **3. Đối tượng tác động (Phạm vi chủ thể)** | **Chủ thể chung, KHÔNG xác định danh tính cụ thể từ trước**: Tác động tới một phạm vi rộng lớn các cá nhân, tổ chức trong phạm vi cả nước hoặc một địa phương. Bất kỳ ai rơi vào điều kiện giả định của quy phạm đều phải chịu sự điều chỉnh. | **Chủ thể cá biệt, XÁC ĐỊNH RÕ DANH TÍNH cụ thể**: Tác động trực tiếp đến một hoặc một số cá nhân, tổ chức cụ thể được ghi rõ họ tên, ngày sinh, địa chỉ (hoặc tên tổ chức, mã số) ngay trong văn bản để xác lập quyền, nghĩa vụ hoặc áp dụng chế tài. |
+| **4. Ví dụ minh họa thực tiễn** | - **Bộ luật Dân sự năm 2015**, **Bộ luật Hình sự năm 2015**, **Luật Giao thông đường bộ**.<br>- **Nghị định số 100/2019/NĐ-CP** của Chính phủ quy định xử phạt VPHC trong lĩnh vực giao thông.<br>- Quy phạm tại **Khoản 1 Điều 173 Bộ luật Hình sự năm 2015** quy định khung hình phạt chung đối với tội trộm cắp tài sản. | - **Bản án hình sự sơ thẩm số 45/2025/HS-ST** của TAND Quận X tuyên phạt bị cáo *Nguyễn Văn A* 02 năm tù về tội trộm cắp tài sản.<br>- **Quyết định xử phạt VPHC số 102/QĐ-XPHC** của CSGT phạt anh *Trần Văn B* 4.000.000đ vì vượt đèn đỏ.<br>- **Quyết định bổ nhiệm cán bộ**, **Giấy chứng nhận đăng ký kết hôn**, **Giấy chứng nhận quyền sử dụng đất**. |
+
+---
+
+#### IV. MỐI QUAN HỆ PHÁP LÝ GIỮA HAI LOẠI VĂN BẢN
+- **Quy phạm pháp luật (và VBQPPL)** là **cơ sở pháp lý gốc (tiền đề)**: Không có quy phạm pháp luật thì không có căn cứ để ban hành văn bản áp dụng pháp luật.
+- **Văn bản áp dụng pháp luật** là **phương tiện hiện thực hóa quy phạm**: Đưa các quy tắc xử sự chung trong văn bản quy phạm pháp luật vào từng trường hợp cụ thể của đời sống xã hội. Mọi văn bản áp dụng pháp luật trái với văn bản quy phạm pháp luật đều bị đình chỉ hoặc hủy bỏ.`;
+  }
+
+  /**
    * Đối sánh độ tương đồng từ khóa trên tập SFT Barem chuẩn
    */
   private static matchSftSample(rawQuery: string, intentCode?: ExamArchetype): SftSample | null {
@@ -1786,6 +1879,46 @@ Hệ thống xác nhận **không tìm thấy văn bản quy phạm pháp luật
         instruction: 'Trình bày nguồn gốc ra đời, bản chất và các đặc trưng cơ bản của Nhà nước theo Giáo trình Pháp luật Đại cương.',
         input: query,
         output: this.solveDynamicStateComprehensive(query)
+      };
+    }
+
+    // 0.01b. Nhánh chuyên biệt: Phân tích Bản chất giai cấp và Bản chất xã hội của Pháp luật / Tại sao Pháp luật vừa mang tính giai cấp, vừa mang tính xã hội?
+    const isLawClassAndSocialNature =
+      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      !qLower.includes('nhà nước') &&
+      !qLower.includes('đúng hay sai') &&
+      !qLower.includes('nhận định') &&
+      (qLower.includes('bản chất giai cấp') ||
+        qLower.includes('bản chất xã hội') ||
+        qLower.includes('tính giai cấp') ||
+        qLower.includes('tính xã hội') ||
+        qLower.includes('bản chất của pháp luật') ||
+        qLower.includes('bản chất pháp luật'));
+
+    if (isLawClassAndSocialNature) {
+      return {
+        sample_id: 'SFT_THEORY_LAW_CLASS_AND_SOCIAL_NATURE',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Phân tích bản chất giai cấp và bản chất xã hội của pháp luật. Giải thích tại sao pháp luật vừa mang tính giai cấp, vừa mang tính xã hội.',
+        input: query,
+        output: this.solveDynamicLawNatureAndOrigin(query)
+      };
+    }
+
+    // 0.01c. Nhánh chuyên biệt: So sánh Quy phạm pháp luật (hoặc Văn bản QPPL) và Văn bản áp dụng pháp luật
+    const isCompareQpplAndVbadpl =
+      (qLower.includes('quy phạm pháp luật') || qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl')) &&
+      (qLower.includes('văn bản áp dụng pháp luật') || qLower.includes('văn bản áp dụng') || qLower.includes('văn bản cá biệt') || (qLower.includes('áp dụng pháp luật') && qLower.includes('văn bản'))) &&
+      !qLower.includes('đúng hay sai') &&
+      !qLower.includes('đều là');
+
+    if (isCompareQpplAndVbadpl) {
+      return {
+        sample_id: 'SFT_COMPARE_QPPL_VS_VBADPL',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh sự khác nhau giữa Quy phạm pháp luật và Văn bản áp dụng pháp luật dựa trên các tiêu chí: Chủ thể ban hành, Tính chất áp dụng (một lần hay nhiều lần), Đối tượng tác động và Ví dụ minh họa.',
+        input: query,
+        output: this.solveDynamicCompareQpplAndVbadpl(query)
       };
     }
 
@@ -3061,19 +3194,45 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
 - Trích dẫn điều luật hoặc bài học thực tiễn minh họa.`;
     }
 
-    // BƯỚC 3: NÂNG CẤP 5 — Gọi mô hình Fine-tuned LLM (Qwen2.5-3B-Legal-VN) với Adaptive Timeout & Max Tokens
-    const isComplexQuery =
-      query.length > 180 ||
-      effectiveIntent === 'CASE_ANALYSIS' ||
-      effectiveIntent === 'VPPL_4_ELEMENTS' ||
-      effectiveIntent === 'CIVIL_INHERIT' ||
-      effectiveIntent === 'COMPARISON';
-    // Điều chỉnh số lượng tokens hợp lý cho CPU (2.2 t/s) để tránh timeout và sinh câu trả lời súc tích
-    const adaptiveMaxTokens = isComplexQuery ? 220 : 160;
-    // Timeout an toàn 2.5 phút (150.000ms): Đảm bảo CPU hoàn thành trong thời hạn
+    // BƯỚC 3: ƯU TIÊN BỘ GIẢI ĐỘNG RAG & BAREM GIÁO TRÌNH CHUẨN MỰC (Đảm bảo trả lời đầy đủ 100%, tốc độ < 20ms, không bao giờ bị ngắt giữa chừng do hết token)
+    let generatedRaw = this.generateDynamicRagSolution(query, effectiveIntent, fullRagContext, retrievedArticles, forcedCategory);
+    if (
+      generatedRaw.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG') &&
+      topTextbooks.length > 0 &&
+      topTextbooks[0].score >= 12
+    ) {
+      generatedRaw = TextbookKnowledgeService.buildTextbookResponse(query, topTextbooks[0]);
+    }
+
+    const isGenericFallbackOnly =
+      generatedRaw.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG') &&
+      (!topTextbooks.length || topTextbooks[0].score < 12);
+
+    if (!isGenericFallbackOnly) {
+      const { bodyWithoutCitation } = this.splitEmbeddedCitation(generatedRaw);
+      const enrichedGenerated = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
+      const extraCitation =
+        topTextbooks.length > 0 && topTextbooks[0].score >= 8
+          ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles, displayQuery)
+          : '';
+      const evalRes = this.evaluateAndSelfCorrect(
+        query,
+        enrichedGenerated + extraCitation,
+        effectiveIntent,
+        topTextbooks.length,
+        retrievedArticles.length
+      );
+      return {
+        text: evalRes.correctedText,
+        latencyMs: Date.now() - startTime,
+        evaluationMetrics: evalRes.metrics
+      };
+    }
+
+    // BƯỚC 4: DỰ PHÒNG GỌI FINE-TUNED LLM (Qwen2.5-3B-Legal-VN) KÈM CƠ CHẾ CHỐNG NGẮT QUÃNG TOKEN (ANTI-TRUNCATION GUARD)
+    const adaptiveMaxTokens = 600;
     const adaptiveTimeoutMs = 150000;
 
-    // Ngữ cảnh tinh gọn kết hợp Căn cứ thực định và Barem giáo trình chuyên sâu (Concise Context):
     let compactLlmContext = '';
     if (retrievedArticles.length > 0) {
       const topArts = retrievedArticles.slice(0, 2);
@@ -3094,7 +3253,6 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     }
 
     try {
-      // Tự động kiểm tra và khởi chạy Llama-Server nếu chưa sẵn sàng
       if (!(await LlamaManager.isHealthy())) {
         await LlamaManager.ensureRunning();
       }
@@ -3108,11 +3266,11 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             {
               role: 'system',
               content:
-                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy giải đáp chính xác, đúng trọng tâm đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNêu rõ Căn cứ pháp lý (Điều luật, Tên văn bản luật), phân tích chặt chẽ và đưa ra kết luận dứt khoát.`
+                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy giải đáp chính xác, đầy đủ và trọn vẹn tất cả các ý của đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNêu rõ Căn cứ pháp lý (Điều luật, Tên văn bản luật), phân tích chặt chẽ và đưa ra kết luận dứt khoát.`
             },
             {
               role: 'user',
-              content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Yêu cầu giải đáp: Đi thẳng vào trọng tâm đề bài bằng các đề mục rõ ràng, căn cứ đúng điều luật thực định, lập luận chặt chẽ và súc tích:`
+              content: `--- CĂN CỨ PHÁP LÝ & BAREM GIÁO TRÌNH ĐỐI CHIẾU ---\n${compactLlmContext}\n\n--- CÂU HỎI / ĐỀ BÀI CẦN GIẢI ĐÁP ---\n${query}\n\n${modeRule ? modeRule + '\n\n' : ''}Yêu cầu giải đáp: Đi thẳng vào trọng tâm đề bài bằng các đề mục rõ ràng, hoàn thành trọn vẹn mọi tiêu chí và câu hỏi được nêu:`
             }
           ],
           temperature: 0.0,
@@ -3124,10 +3282,18 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       if (response.ok) {
         const data: any = await response.json();
         const text = data.choices?.[0]?.message?.content;
-        if (text && text.trim().length > 60) {
-          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải từ ngữ cảnh Giáo trình trong ${Date.now() - startTime}ms.`);
-          const { bodyWithoutCitation } = this.splitEmbeddedCitation(this.sanitizeTruncatedTail(this.cleanRubricText(text.trim())));
-          const enrichedText = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
+        const finishReason = data.choices?.[0]?.finish_reason;
+        if (text && text.trim().length > 100) {
+          const cleanedLlm = this.sanitizeTruncatedTail(this.cleanRubricText(text.trim()));
+          const { bodyWithoutCitation } = this.splitEmbeddedCitation(cleanedLlm);
+          const hasDanglingHeader = /(?:^|\n)\s*(?:\d+[.)]?|[IVX]+[.)]?|[a-z][.)]|[-•*])\s*[^\n.!?]{0,45}:?\s*$/i.test(bodyWithoutCitation);
+          const isTruncated = finishReason === 'length' || hasDanglingHeader || bodyWithoutCitation.length < 250;
+
+          const { bodyWithoutCitation: fallbackBody } = this.splitEmbeddedCitation(generatedRaw);
+          const finalBody = isTruncated ? `${bodyWithoutCitation}\n\n${fallbackBody}` : bodyWithoutCitation;
+
+          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
+          const enrichedText = this.enrichCompoundSingleAnswer(query, finalBody, retrievedArticles);
           const extraCitation =
             topTextbooks.length > 0 && topTextbooks[0].score >= 8
               ? TextbookKnowledgeService.buildDetailedCitation(topTextbooks[0].chunk, retrievedArticles, displayQuery)
@@ -3147,11 +3313,9 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         }
       }
     } catch (err: any) {
-      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Kích hoạt Bộ giải Động trên ngữ cảnh Giáo trình.`);
+      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Sử dụng Bộ giải Động RAG.`);
     }
 
-    // BƯỚC 4: HYBRID FALLBACK: Sử dụng Bộ giải ĐỘNG (Dynamic RAG Solver) + Bổ sung đa yêu cầu (Compound Enrichment)
-    const generatedRaw = this.generateDynamicRagSolution(query, effectiveIntent, fullRagContext, retrievedArticles, forcedCategory);
     const { bodyWithoutCitation } = this.splitEmbeddedCitation(generatedRaw);
     const enrichedGenerated = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
     const extraCitation =
@@ -5967,6 +6131,14 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
 
+    // 0.0. So sánh Quy phạm pháp luật (hoặc Văn bản QPPL) và Văn bản áp dụng pháp luật
+    if (
+      (qLower.includes('quy phạm pháp luật') || qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl')) &&
+      (qLower.includes('văn bản áp dụng') || qLower.includes('văn bản cá biệt') || (qLower.includes('áp dụng pháp luật') && qLower.includes('văn bản')))
+    ) {
+      return this.solveDynamicCompareQpplAndVbadpl(query);
+    }
+
     // 0.1. So sánh Pháp luật và Đạo đức
     if ((qLower.includes('pháp luật') || qLower.includes('pl')) && qLower.includes('đạo đức')) {
       return this.solveDynamicLawVsMorality(query);
@@ -6124,6 +6296,14 @@ ${contextContent ? `\n---\n**TÀI LIỆU GIÁO TRÌNH THAM CHIẾU**:\n${context
         qLower.includes('tính xã hội'))
     ) {
       return this.solveDynamicStateComprehensive(query);
+    }
+
+    // 0.1. Ưu tiên câu hỏi về Bản chất giai cấp và Bản chất xã hội của Pháp luật
+    if (
+      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      (qLower.includes('bản chất') || qLower.includes('tính giai cấp') || qLower.includes('tính xã hội'))
+    ) {
+      return this.solveDynamicLawNatureAndOrigin(query);
     }
 
     // Kiểm tra ưu tiên nếu là câu hỏi định nghĩa / khái niệm

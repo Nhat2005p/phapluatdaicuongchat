@@ -158,9 +158,9 @@ II. BẢNG TIÊU CHÍ PHÂN BIỆT QUYỀN LỰC NHÀ NƯỚC VÀ QUYỀN LỰC 
       sectionCode: '2.1.1_2.1.4',
       sectionTitle: 'Khái niệm, Nguồn gốc, Bản chất và 4 Đặc trưng của Pháp luật',
       pageRange: 'tr. 33 - 39',
-      keywords: ['khái niệm pháp luật', 'nguồn gốc pháp luật', 'bản chất pháp luật', '4 đặc trưng pháp luật', 'tính quyền lực', 'tính ý chí', 'tính bắt buộc chung', 'tính quy phạm phổ biến'],
+      keywords: ['khái niệm pháp luật', 'nguồn gốc pháp luật', 'bản chất pháp luật', 'bản chất giai cấp', 'bản chất xã hội', 'tính giai cấp', 'tính xã hội', '4 đặc trưng pháp luật', 'tính quyền lực', 'tính ý chí', 'tính bắt buộc chung', 'tính quy phạm phổ biến'],
       summary: 'Khái niệm pháp luật, bản chất giai cấp và xã hội, 4 đặc trưng cốt lõi theo giáo trình ĐH Thương Mại.',
-      legalBasis: ['Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 34-38)'],
+      legalBasis: ['Hiến pháp năm 2013 (Điều 2, Điều 8)', 'Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 34-38)'],
       baremContent: `I. KHÁI NIỆM VÀ BẢN CHẤT CỦA PHÁP LUẬT:
 - Khái niệm: Pháp luật là hệ thống các quy tắc xử sự mang tính bắt buộc chung do Nhà nước ban hành hoặc thừa nhận, nhằm điều chỉnh các quan hệ xã hội theo mục tiêu, định hướng cụ thể và được bảo đảm thực hiện bằng sức mạnh quyền lực nhà nước.
 - Bản chất của pháp luật:
@@ -282,9 +282,9 @@ II. CƠ CẤU 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT:
       sectionCode: '3.2.1_3.2.2',
       sectionTitle: 'Bốn hình thức Thực hiện pháp luật và Áp dụng pháp luật',
       pageRange: 'tr. 80 - 89',
-      keywords: ['thực hiện pháp luật', '4 hình thức thực hiện', 'tuân thủ', 'thi hành', 'sử dụng', 'áp dụng pháp luật', 'văn bản áp dụng pháp luật'],
+      keywords: ['thực hiện pháp luật', '4 hình thức thực hiện', 'tuân thủ', 'thi hành', 'sử dụng', 'áp dụng pháp luật', 'văn bản áp dụng pháp luật', 'quy phạm pháp luật và văn bản áp dụng pháp luật'],
       summary: 'So sánh 4 hình thức thực hiện pháp luật (Tuân thủ, Thi hành, Sử dụng, Áp dụng); 5 trường hợp áp dụng pháp luật và 4 giai đoạn áp dụng.',
-      legalBasis: ['Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 80-88)'],
+      legalBasis: ['Luật Ban hành văn bản quy phạm pháp luật năm 2015 (Điều 2, Điều 4)', 'Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 80-88)'],
       baremContent: `I. BỐN HÌNH THỨC THỰC HIỆN PHÁP LUẬT:
 1. Tuân theo (Tuân thủ) pháp luật: Chủ thể kiềm chế không thực hiện điều pháp luật cấm (Hành vi thụ động, dạng không hành động. Ví dụ: Không vượt đèn đỏ, không buôn ma túy).
 2. Thi hành (Chấp hành) pháp luật: Chủ thể chủ động thực hiện nghĩa vụ pháp lý bắt buộc (Hành vi tích cực, dạng hành động. Ví dụ: Đi nghĩa vụ quân sự, đóng thuế đầy đủ).
@@ -1337,10 +1337,17 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         finalScore -= 40;
       }
 
-      // F. Nếu hỏi về "hình thức pháp luật", "hình thức thể hiện của pháp luật", "hình thức của pháp luật", "đặc điểm pháp luật" -> Ưu tiên Chương 2, PHẠT NẶNG Chương 1 (Hình thức nhà nước)
+      // F. Nếu hỏi về "hình thức pháp luật", "đặc điểm pháp luật", "bản chất pháp luật", "tính giai cấp / tính xã hội của pháp luật", "nguồn gốc pháp luật" -> Ưu tiên Chương 2, PHẠT NẶNG Chương 1 (Nhà nước)
       if (
-        (rawQueryText.includes('hình thức') || rawQueryText.includes('đặc điểm') || rawQueryText.includes('đặc trưng')) &&
+        (rawQueryText.includes('hình thức') ||
+          rawQueryText.includes('đặc điểm') ||
+          rawQueryText.includes('đặc trưng') ||
+          rawQueryText.includes('bản chất') ||
+          rawQueryText.includes('tính giai cấp') ||
+          rawQueryText.includes('tính xã hội') ||
+          rawQueryText.includes('nguồn gốc')) &&
         rawQueryText.includes('pháp luật') &&
+        !rawQueryText.includes('nhà nước') &&
         !rawQueryText.includes('thực hiện pháp luật') &&
         !rawQueryText.includes('hình thức thực hiện') &&
         !rawQueryText.includes('áp dụng pháp luật') &&
@@ -1350,8 +1357,8 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
         !rawQueryText.includes('chính thể') &&
         !rawQueryText.includes('cấu trúc nhà nước')
       ) {
-        if (c.chapterNumber === 1) finalScore -= 45;
-        if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.4'))) finalScore += 55;
+        if (c.chapterNumber === 1) finalScore -= 60;
+        if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.4'))) finalScore += 75;
       }
 
       // H. Nếu hỏi về Quan hệ pháp luật (Chủ thể, Khách thể, Nội dung, Sự kiện pháp lý) -> Ưu tiên tuyệt đối Chương 4 (Mục 4.1_4.2)

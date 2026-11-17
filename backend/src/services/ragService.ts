@@ -493,7 +493,7 @@ export class RagService {
       q.includes('chế tài') ||
       q.includes('bộ phận quy định') ||
       (q.includes('quy định') && (q.includes('cơ cấu') || q.includes('3 bộ phận') || q.includes('xác định quy định'))) ||
-      q.includes('quy phạm pháp luật') ||
+      (q.includes('quy phạm pháp luật') && !q.includes('văn bản quy phạm pháp luật')) ||
       q.includes('cơ cấu của quy phạm') ||
       q.includes('3 bộ phận') ||
       q.includes('quan hệ pháp luật') ||
@@ -1041,20 +1041,38 @@ export class RagService {
             ]
           }).limit(2);
         } else if (
+          qL.includes('văn bản quy phạm') ||
+          qL.includes('vbqppl') ||
+          qL.includes('văn bản áp dụng') ||
+          (qL.includes('quy phạm') && qL.includes('văn bản'))
+        ) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'VBQPPL2015_D4' },
+              { articleId: 'VBQPPL2015_D156' },
+              { articleId: 'HP2013_D8' }
+            ]
+          }).limit(3);
+        } else if (
           qL.includes('nhà nước') ||
           qL.includes('chủ quyền') ||
           qL.includes('chính thể') ||
           qL.includes('bộ máy') ||
-          qL.includes('nguồn gốc')
+          qL.includes('nguồn gốc') ||
+          qL.includes('bản chất') ||
+          qL.includes('giai cấp') ||
+          qL.includes('tính xã hội') ||
+          qL.includes('đặc trưng') ||
+          (qL.includes('pháp luật') && !qL.includes('dân sự') && !qL.includes('pháp nhân'))
         ) {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'HP2013_D1' },
               { articleId: 'HP2013_D2' },
-              { articleId: 'HP2013_D8' }
+              { articleId: 'HP2013_D8' },
+              { articleId: 'HP2013_D1' }
             ]
           }).limit(3);
-        } else if (qL.includes('pháp luật') || qL.includes('quy phạm') || qL.includes('văn bản')) {
+        } else if (qL.includes('pháp nhân') || qL.includes('dân sự')) {
           matchedArticles = await LawArticle.find({
             $or: [
               { articleId: 'BLDS2015_D1' },
@@ -1065,7 +1083,7 @@ export class RagService {
           matchedArticles = await LawArticle.find({
             $or: [
               { articleId: 'HP2013_D2' },
-              { articleId: 'BLDS2015_D1' }
+              { articleId: 'HP2013_D8' }
             ]
           }).limit(2);
         }
@@ -1084,6 +1102,20 @@ export class RagService {
               { articleId: 'BLHS2015_D28' }
             ]
           }).limit(5);
+        } else if (
+          qL.includes('quy phạm') ||
+          qL.includes('văn bản') ||
+          qL.includes('vbqppl') ||
+          qL.includes('áp dụng pháp luật') ||
+          qL.includes('thực hiện pháp luật')
+        ) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'VBQPPL2015_D4' },
+              { articleId: 'VBQPPL2015_D156' },
+              { articleId: 'HP2013_D8' }
+            ]
+          }).limit(3);
         } else if (qL.includes('đạo đức') || qL.includes('tập quán')) {
           matchedArticles = await LawArticle.find({
             $or: [
@@ -1108,8 +1140,8 @@ export class RagService {
         } else {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'BLDS2015_D1' },
-              { articleId: 'BLDS2015_D3' }
+              { articleId: 'HP2013_D2' },
+              { articleId: 'HP2013_D8' }
             ]
           }).limit(2);
         }
@@ -1119,8 +1151,8 @@ export class RagService {
       case 'DEFINITION':
         matchedArticles = await LawArticle.find({
           $or: [
-            { articleId: 'BLDS2015_D1' },
-            { articleId: 'BLDS2015_D3' }
+            { articleId: 'HP2013_D2' },
+            { articleId: 'HP2013_D8' }
           ]
         }).limit(2);
         break;
@@ -1130,8 +1162,8 @@ export class RagService {
         if (qL.includes('văn bản') || qL.includes('quy phạm pháp luật') || qL.includes('áp dụng pháp luật')) {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'BLDS2015_D1' },
-              { articleId: 'BLDS2015_D74' }
+              { articleId: 'VBQPPL2015_D4' },
+              { articleId: 'VBQPPL2015_D156' }
             ]
           }).limit(2);
         } else if (qL.includes('thực hiện pháp luật') || qL.includes('tuân thủ') || qL.includes('thi hành')) {
