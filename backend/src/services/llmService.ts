@@ -270,7 +270,9 @@ export class LlmService {
       }
     }
 
-    // Bảo vệ cách ly: Câu hỏi lý thuyết thuần túy tuyệt đối KHÔNG khớp bài tập tình huống thực tế
+    // Bảo vệ cách ly 2 chiều:
+    // 1. Câu hỏi lý thuyết thuần túy tuyệt đối KHÔNG khớp bài tập tình huống thực tế
+    // 2. Câu hỏi tình huống thực tế (có nhân vật ông/bà/anh/chị/công ty hoặc hành vi phạm tội cụ thể) tuyệt đối KHÔNG khớp bài lý thuyết thuần túy
     const qLower = query.toLowerCase();
     const isScenarioQuery =
       qLower.includes('tình huống') ||
@@ -286,7 +288,8 @@ export class LlmService {
       qLower.includes('bà ') ||
       qLower.includes('anh ') ||
       qLower.includes('chị ') ||
-      qLower.includes('công ty ');
+      qLower.includes('công ty ') ||
+      /\b(giết chết|đâm chết|chém chết|bắn chết)\b/i.test(qLower);
 
     const sLower = sText.toLowerCase();
     const isScenarioSample =
@@ -298,10 +301,27 @@ export class LlmService {
       sLower.includes('công ty tnhh') ||
       sLower.includes('xả thải') ||
       sLower.includes('vedan') ||
+      sLower.includes('ông ') ||
+      sLower.includes('bà ') ||
+      sLower.includes('anh ') ||
+      sLower.includes('chị ') ||
       Boolean(sample.output && (sample.output.includes('hành vi của Công ty') || sample.output.includes('hành vi của anh ') || sample.output.includes('hành vi của ông ')));
 
     if (!isScenarioQuery && isScenarioSample) {
       return false;
+    }
+    if (isScenarioQuery && !isScenarioSample) {
+      return false;
+    }
+
+    // Nếu câu hỏi tình huống có hành vi cụ thể (giết, đâm, chém, trộm, cướp, lừa đảo, hiếp dâm), mẫu SFT bắt buộc phải có cùng hành vi đó
+    if (isScenarioQuery) {
+      const specificActs = ['giết', 'đâm', 'chém', 'bắn', 'trộm', 'cướp', 'lừa đảo', 'hiếp dâm', 'xả thải', 'đập phá'];
+      for (const act of specificActs) {
+        if (qLower.includes(act) && !sLower.includes(act)) {
+          return false;
+        }
+      }
     }
 
     return true;
@@ -6499,21 +6519,6 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 | Tiêu chí so sánh | Thừa kế theo di chúc (Điều 624 BLDS 2015) | Thừa kế theo pháp luật (Điều 649 BLDS 2015) |
 | :--- | :--- | :--- |
 | **1. Khái niệm & Cơ sở dịch chuyển** | Là việc dịch chuyển di sản của người đã chết cho người khác còn sống theo **ý chí định đoạt của người đó khi còn sống** được thể hiện trong di chúc hợp pháp. | Là thừa kế theo **hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định** (không phụ thuộc vào di chúc). |
-| **2. Trường hợp áp dụng** | Áp dụng ưu tiên khi người chết có để lại **di chúc hợp pháp** (**Điều 630 BLDS 2015**) và người được chỉ định trong di chúc còn sống, không từ chối nhận di sản. | Chỉ áp dụng trong các trường hợp tại **Điều 650 BLDS 2015**: Không có di chúc; di chúc không hợp pháp; người thừa kế theo di chúc chết trước/cùng thời điểm với người lập di chúc hoặc từ chối nhận di sản; phần di sản không được định đoạt trong di chúc. |
-| **3. Chủ thể nhận di sản** | Bất kỳ **cá nhân hoặc tổ chức nào** (kể cả người ngoài gia đình, quỹ từ thiện...) do người lập di chúc tự do chỉ định, trừ những người không được quyền hưởng di sản tại Điều 621. | Chỉ giới hạn trong những **cá nhân có quan hệ hôn nhân, huyết thống hoặc nuôi dưỡng** với người để lại di sản, xếp theo **03 hàng thừa kế** tại **Điều 651 BLDS 2015**. |
-| **4. Tỷ lệ phân chia di sản** | Phụ thuộc vào **sự phân định của người lập di chúc**; tuy nhiên bị giới hạn bởi quyền của **Người thừa kế không phụ thuộc vào nội dung di chúc** (vợ/chồng, cha/mẹ, con chưa thành niên, con thành niên mất khả năng lao động được hưởng ít nhất 2/3 một suất theo luật - **Điều 644 BLDS 2015**). | Những người thừa kế **cùng hàng được hưởng phần di sản bằng nhau**; hàng sau chỉ được hưởng khi không còn ai ở hàng trước (**Khoản 2, Khoản 3 Điều 651 BLDS 2015**). |
-| **5. Thừa kế thế vị** | **Không áp dụng thừa kế thế vị** (nếu người thừa kế theo di chúc chết trước người lập di chúc thì phần di chúc đó không phát sinh hiệu lực và được chia theo pháp luật). | **Có áp dụng thừa kế thế vị** theo **Điều 652 BLDS 2015** (con chết trước/cùng thời điểm thì cháu được hưởng thay phần của cha/mẹ). |`;
-    }
-
-    // 1. So sánh Phòng vệ chính đáng vs Tình thế cấp thiết
-    if (
-      (qLower.includes('phòng vệ') || qLower.includes('chính đáng')) &&
-      (qLower.includes('cấp thiết') || qLower.includes('tình thế'))
-    ) {
-      return `### BẢNG SO SÁNH: PHÒNG VỆ CHÍNH ĐÁNG VS TÌNH THẾ CẤP THIẾT
-
-| Tiêu chí so sánh | Phòng vệ chính đáng (Điều 22 BLHS 2015) | Tình thế cấp thiết (Điều 23 BLHS 2015) |
-| :--- | :--- | :--- |
 | **Bản chất pháp lý** | Hành vi chống trả người đang có hành vi xâm hại quyền, lợi ích hợp pháp | Hành vi nhằm tránh một nguy cơ đang thực tế đe dọa lợi ích hợp pháp |
 | **Nguồn gốc nguy hiểm** | Xuất phát từ **hành vi tấn công trái pháp luật của con người** | Xuất phát từ con người, thiên tai, súc vật hoặc sự cố kỹ thuật |
 | **Đối tượng tác động** | Tác động trực tiếp vào **chính người đang có hành vi tấn công** | Tác động gây thiệt hại cho **người thứ ba vô tội** |

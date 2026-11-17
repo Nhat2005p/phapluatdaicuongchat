@@ -1,4 +1,4 @@
-# VietLawAssist - Local LLM Server (Qwen2.5-3B)
+﻿# VietLawAssist - Local LLM Server (Qwen2.5-3B)
 $Host.UI.RawUI.WindowTitle = "VietLawAssist - Local LLM Server (Qwen2.5-3B)"
 
 $rootDir = $PSScriptRoot
@@ -25,6 +25,10 @@ if (-not (Test-Path $llamaExe)) {
     pause
     exit 1
 }
+
+# Giải phóng cổng 8088 nếu đã có tiến trình llama-server chạy ngầm trước đó
+Get-Process -Name "llama-server" -ErrorAction SilentlyContinue | Stop-Process -Force -ErrorAction SilentlyContinue
+Start-Sleep -Milliseconds 500
 
 if (Test-Path $loraPath) {
     Write-Host "[INFO] Nạp kèm LoRA adapter: $loraPath" -ForegroundColor Magenta

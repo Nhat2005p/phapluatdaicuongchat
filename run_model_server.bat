@@ -21,6 +21,8 @@ if not exist "tools\llama\llama-server.exe" (
     exit /b 1
 )
 
+taskkill /F /IM llama-server.exe >nul 2>&1
+
 if exist "models\vietlaw_lora_adapter.gguf" goto :with_lora
 
 :no_lora
