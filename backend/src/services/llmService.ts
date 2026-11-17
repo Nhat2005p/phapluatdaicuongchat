@@ -318,6 +318,7 @@ export class LlmService {
       .replace(/Thu\s*gọn\s*tất\s*cả/gi, '')
       .replace(/Thu\s*gọn/gi, '')
       .replace(/(?:^|\n)\s*Ý\s*chính\s*(?::|\n)/gi, '\n')
+      .replace(/Luật\s+Ban\s+hành\s+văn\s+bản\s+quy\s+phạm\s+pháp\s+luật\s+2025/gi, 'Luật Ban hành văn bản quy phạm pháp luật 2015')
       .replace(/\(Thang điểm:\s*[\d.]+\s*điểm\)/gi, '')
       .replace(/\(\s*[\d.]+\s*điểm\s*\)/gi, '')
       .replace(/Thang điểm:\s*[\d.]+\s*điểm/gi, '')
@@ -2123,7 +2124,12 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
       !qLower.includes('điều kiện có hiệu lực') &&
       !qLower.includes('hậu quả pháp lý') &&
       (qLower.includes('chủ thể của quan hệ pháp luật') || (qLower.includes('chủ thể') && qLower.includes('khách thể') && qLower.includes('nội dung'))) &&
-      (qLower.includes('sự kiện pháp lý') || qLower.includes('ký hợp đồng') || qLower.includes('hãy xác định') || (/\ba[.)]\s+/i.test(query) && /\bb[.)]\s+/i.test(query)));
+      (qLower.includes('ký hợp đồng') ||
+        qLower.includes('tình huống') ||
+        qLower.includes('công ty') ||
+        qLower.includes('mua bán') ||
+        qLower.includes('hãy xác định') ||
+        (/\ba[.)]\s+/i.test(query) && /\bb[.)]\s+/i.test(query)));
 
     if (isLegalRelationCase) {
       return {
@@ -2136,14 +2142,23 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
     }
 
     // 0.0.4. So sánh 3 hình thức của pháp luật (Tập quán pháp, Tiền lệ pháp, Văn bản QPPL)
-    // Tuyệt đối loại trừ "thực hiện pháp luật" và "áp dụng pháp luật"
+    // Tuyệt đối loại trừ "thực hiện pháp luật", "áp dụng pháp luật" và "hình thức lỗi"
     const isThreeFormsOfLaw =
       !qLower.includes('thực hiện pháp luật') &&
       !qLower.includes('hình thức thực hiện') &&
       !qLower.includes('áp dụng pháp luật') &&
       !qLower.includes('tuân thủ') &&
       !qLower.includes('thi hành') &&
-      (qLower.includes('tập quán pháp') || qLower.includes('tiền lệ pháp') || (qLower.includes('hình thức') && qLower.includes('pháp luật'))) &&
+      !qLower.includes('hình thức lỗi') &&
+      !qLower.includes('vi phạm pháp luật') &&
+      !qLower.includes('cố ý') &&
+      !qLower.includes('vô ý') &&
+      !qLower.includes('thừa kế') &&
+      (qLower.includes('tập quán pháp') ||
+        qLower.includes('tiền lệ pháp') ||
+        qLower.includes('hình thức của pháp luật') ||
+        qLower.includes('hình thức pháp luật') ||
+        qLower.includes('3 hình thức')) &&
       (qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl') || qLower.includes('chủ yếu ở việt nam') || qLower.includes('vì sao') || qLower.includes('tại sao') || qLower.includes('so sánh') || qLower.includes('phân biệt'));
 
     if (isThreeFormsOfLaw) {
@@ -2664,6 +2679,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         if (!this.matchFactGuard(query, item)) continue;
 
         // BẢO VỆ CHẶT CHẼ THEO INTENT CODE (Archetype Isolation)
+        if (icStr === 'COMPARISON' && item.intent_code !== 'COMPARISON') {
+          continue;
+        }
+        if (icStr === 'GENERAL_THEORY' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'CASE_ANALYSIS')) {
+          continue;
+        }
         if (icStr === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
           continue;
         }
@@ -2862,6 +2883,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         if (!this.matchFactGuard(query, item)) continue;
 
         // BẢO VỆ CHẶT CHẼ THEO INTENT CODE (Archetype Isolation)
+        if (icStr === 'COMPARISON' && item.intent_code !== 'COMPARISON') {
+          continue;
+        }
+        if (icStr === 'GENERAL_THEORY' && (item.intent_code === 'TRUE_FALSE' || item.intent_code === 'CASE_ANALYSIS')) {
+          continue;
+        }
         if (icStr === 'DEFINITION' && (item.intent_code === 'CASE_ANALYSIS' || item.intent_code === 'TRUE_FALSE' || item.intent_code === 'VPPL_4_ELEMENTS')) {
           continue;
         }
@@ -3538,6 +3565,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       'phân', 'tích', 'yếu', 'tố', 'cấu', 'thành', 'thực', 'hiện', 'tội', 'phạm', 'trách', 'nhiệm',
       'đèn', 'đỏ', 'xe', 'máy', 'ô', 'tô', 'va', 'chạm', 'giao', 'thông',
       'thiệt', 'hại', 'tế', 'mặt', 'khách', 'chủ', 'thể', 'quan', 'nhận', 'định', 'quyền', 'lực', 'xã', 'hội',
+      'nội', 'dung', 'sự', 'kiện', 'biến', 'khái', 'niệm', 'đặc', 'điểm', 'trưng', 'nguồn', 'gốc',
       'các', 'những', 'mọi', 'tất', 'cả', 'theo', 'việc', 'người', 'cơ', 'cấu', 'so', 'sánh', 'hãy', 'xác',
       'nêu', 'cho', 'biết', 'sao', 'bản', 'chất', 'nguyên', 'nhân', 'hậu', 'quả', 'tình', 'huống', 'tội',
       'danh', 'mức', 'án', 'hình', 'phạt', 'biện', 'pháp', 'áp', 'dụng', 'ngữ', 'cảnh', 'câu', 'trước', 'trộm', 'cắp', 'cướp'
@@ -5752,6 +5780,17 @@ Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt bu
   }
 
   private static solveDynamicQppl(query: string, articles: ILawArticle[]): string {
+    const qLower = query.toLowerCase();
+    if (
+      qLower.includes('quan hệ pháp luật') ||
+      qLower.includes('quan hệ dân sự') ||
+      (qLower.includes('chủ thể') && qLower.includes('khách thể'))
+    ) {
+      if (qLower.includes('sự kiện pháp lý') || qLower.includes('sự biến')) {
+        return `${this.solveDynamicCivilRelation(query, articles)}\n\n---\n\n${this.solveDynamicLegalEventDeath(query)}`;
+      }
+      return this.solveDynamicCivilRelation(query, articles);
+    }
     return this.solveDynamicQpplDetailed(query, articles);
   }
 
@@ -6075,25 +6114,78 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 3. **Yêu cầu áp dụng biện pháp khẩn cấp tạm thời**: Để tránh việc ${actorA} tẩu tán tài sản trong quá trình giải quyết vụ án, ${actorB} có quyền làm đơn yêu cầu Tòa án phong tỏa tài khoản ngân hàng hoặc kê biên tài sản của ${actorA} theo Bộ luật Tố tụng Dân sự 2015.`;
   }
 
-  // --- DẠNG ĐẶC BIỆT: ĐỊNH NGHĨA & KHÁI NIỆM PHÁP LÝ CHUẨN XÁC 100% (KHÔNG TRẢ VỀ NHIỀU Ý) ---
+  // --- DẠNG ĐẶC BIỆT: ĐỊNH NGHĨA & KHÁI NIỆM PHÁP LÝ CHUẨN XÁC 100% ---
   public static solveDynamicDefinition(query: string, concept: string | null): string {
     const qLower = query.toLowerCase();
+
+    // 1. Ưu tiên các câu hỏi định nghĩa kết hợp phân tích chuyên sâu
+    if (
+      qLower.includes('quan hệ pháp luật') &&
+      (qLower.includes('cơ cấu') || qLower.includes('chủ thể') || qLower.includes('khách thể') || qLower.includes('nội dung') || qLower.includes('sự kiện pháp lý'))
+    ) {
+      if (qLower.includes('sự kiện pháp lý') || qLower.includes('sự biến')) {
+        return `${this.solveDynamicCivilRelation(query, [])}\n\n---\n\n${this.solveDynamicLegalEventDeath(query)}`;
+      }
+      return this.solveDynamicCivilRelation(query, []);
+    }
+
+    if (qLower.includes('sự kiện pháp lý') || (qLower.includes('sự biến') && qLower.includes('hành vi'))) {
+      return this.solveDynamicLegalEventDeath(query);
+    }
+
+    if (qLower.includes('án lệ') || qLower.includes('tiền lệ pháp')) {
+      return this.solveDynamicPrecedentConceptAndConditions(query);
+    }
+
+    if (qLower.includes('hệ thống pháp luật') || qLower.includes('ngành luật')) {
+      return this.solveDynamicLegalSystem(query);
+    }
+
+    if (
+      qLower.includes('nhà nước') &&
+      (qLower.includes('nguồn gốc') || qLower.includes('bản chất') || qLower.includes('đặc trưng') || qLower.includes('đặc điểm'))
+    ) {
+      return this.solveDynamicStateComprehensive(query);
+    }
+
+    if (
+      (qLower.includes('pháp luật') || qLower.includes('pl')) &&
+      (qLower.includes('bản chất giai cấp') || qLower.includes('bản chất xã hội') || qLower.includes('tính giai cấp') || qLower.includes('tính xã hội'))
+    ) {
+      return this.solveDynamicLawNatureAndOrigin(query);
+    }
+
     if (
       concept === 'luật hình sự' ||
       qLower.includes('luật hình sự') ||
       qLower.includes('pháp luật hình sự') ||
-      (qLower.includes('hình sự') && (qLower.includes('nguyên tắc') || qLower.includes('nguồn') || qLower.includes('khái niệm')))
+      (qLower.includes('hình sự') && (qLower.includes('nguyên tắc') || qLower.includes('nguồn') || qLower.includes('đối tượng')))
     ) {
       return this.solveDynamicCriminalLawTheory(query);
     }
 
     if (
-      concept === 'vi phạm pháp luật' &&
+      (concept === 'vi phạm pháp luật' || qLower.includes('vi phạm pháp luật')) &&
       (qLower.includes('4 yếu tố') || qLower.includes('cấu thành') || qLower.includes('yếu tố cấu thành'))
     ) {
       return this.solveDynamicVpplTheory(query);
     }
 
+    if (
+      qLower.includes('vi phạm pháp luật') &&
+      qLower.includes('dấu hiệu')
+    ) {
+      return this.solveDynamicVpplSigns(query);
+    }
+
+    if (
+      qLower.includes('trách nhiệm pháp lý') &&
+      (qLower.includes('các loại') || qLower.includes('phân loại') || qLower.includes('từng loại'))
+    ) {
+      return this.solveDynamicLegalLiabilityTypes(query);
+    }
+
+    // 2. Nếu là câu hỏi định nghĩa ngắn gọn thuộc 7 khái niệm gốc cơ bản
     const normalizedConcept = (concept || '').toLowerCase().replace(/\s+/g, '_');
     const map: Record<string, string> = {
       pháp_luật: 'SFT_LLM_DEF_PHAP_LUAT',
@@ -6119,15 +6211,35 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       'tài sản': 'SFT_LLM_DEF_TAI_SAN',
     };
     const targetKey = map[normalizedConcept] || (concept ? map[concept] : undefined);
+    const isMultiTopicQuery =
+      qLower.includes('phân biệt') ||
+      qLower.includes('so sánh') ||
+      qLower.includes('điều kiện') ||
+      qLower.includes('nguyên tắc') ||
+      qLower.includes('các hình thức') ||
+      qLower.includes('các hành vi');
+
+    if (targetKey && !isMultiTopicQuery) {
+      const item = this.masterCorpus.find((s) => s.sample_id === targetKey);
+      if (item) return item.output;
+    }
+
+    // 3. Tìm kiếm trực tiếp trên Kho Tri Thức Giáo Trình Pháp Luật Đại Cương (Đầy đủ 9 Chương)
+    const topTb = TextbookKnowledgeService.searchTopChunks(query, 1);
+    if (topTb.length > 0 && topTb[0].score >= 10) {
+      return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
+    }
+
     if (targetKey) {
       const item = this.masterCorpus.find((s) => s.sample_id === targetKey);
       if (item) return item.output;
     }
+
     const defSample = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_DEF_PHAP_LUAT');
     return defSample ? defSample.output : 'Pháp luật là hệ thống quy tắc xử sự do nhà nước ban hành và bảo đảm thực hiện.';
   }
 
-  
+
   public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
 
@@ -6139,8 +6251,22 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       return this.solveDynamicCompareQpplAndVbadpl(query);
     }
 
-    // 0.1. So sánh Pháp luật và Đạo đức
-    if ((qLower.includes('pháp luật') || qLower.includes('pl')) && qLower.includes('đạo đức')) {
+    // 0.0b. So sánh Sự biến pháp lý và Hành vi pháp lý
+    if (qLower.includes('sự biến') && qLower.includes('hành vi')) {
+      return this.solveDynamicLegalEventDeath(query);
+    }
+
+    // 0.0c. So sánh Quyền lực Nhà nước và Quyền lực Xã hội
+    if (qLower.includes('quyền lực nhà nước') && qLower.includes('quyền lực xã hội')) {
+      const topTb = TextbookKnowledgeService.searchTopChunks('quyền lực nhà nước và quyền lực xã hội', 1);
+      if (topTb.length > 0) return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
+    }
+
+    // 0.1. So sánh Pháp luật và Đạo đức / Tập quán
+    if ((qLower.includes('pháp luật') || qLower.includes('pl') || qLower.includes('qppl')) && (qLower.includes('đạo đức') || qLower.includes('tập quán'))) {
+      if (qLower.includes('tập quán') && qLower.includes('đạo đức')) {
+        return this.solveDynamicLawVsMoralityAndCustom(query);
+      }
       return this.solveDynamicLawVsMorality(query);
     }
 
@@ -6157,9 +6283,15 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
     if (
       !qLower.includes('thực hiện pháp luật') &&
       !qLower.includes('áp dụng pháp luật') &&
+      !qLower.includes('hình thức lỗi') &&
+      !qLower.includes('cố ý') &&
+      !qLower.includes('vô ý') &&
+      !qLower.includes('thừa kế') &&
       (qLower.includes('tập quán pháp') ||
         qLower.includes('tiền lệ pháp') ||
-        (qLower.includes('hình thức') && (qLower.includes('pháp luật') || qLower.includes('văn bản quy phạm'))))
+        qLower.includes('hình thức của pháp luật') ||
+        qLower.includes('hình thức pháp luật') ||
+        (qLower.includes('hình thức') && qLower.includes('văn bản quy phạm')))
     ) {
       return this.solveDynamicThreeFormsOfLaw(query);
     }
@@ -6170,6 +6302,45 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       (qLower.includes('luật nội dung') && qLower.includes('luật hình thức'))
     ) {
       return this.solveDynamicPublicVsPrivateLaw(query);
+    }
+
+    // 0.4. So sánh Lỗi cố ý trực tiếp vs Lỗi cố ý gián tiếp / Các hình thức lỗi
+    if (
+      (qLower.includes('cố ý trực tiếp') && qLower.includes('cố ý gián tiếp')) ||
+      (qLower.includes('vô ý vì quá tự tin') && qLower.includes('vô ý do cẩu thả')) ||
+      (qLower.includes('vô ý quá tự tin') && qLower.includes('vô ý cẩu thả')) ||
+      (qLower.includes('hình thức lỗi') || (qLower.includes('lỗi cố ý') && qLower.includes('lỗi vô ý')))
+    ) {
+      if (qLower.includes('cố ý trực tiếp') && qLower.includes('cố ý gián tiếp') && !qLower.includes('vô ý')) {
+        return this.getIntentionalFaultComparison(query);
+      }
+      const topTb = TextbookKnowledgeService.searchTopChunks('phân biệt 4 hình thức lỗi cố ý trực tiếp cố ý gián tiếp vô ý quá tự tin vô ý cẩu thả', 1);
+      if (topTb.length > 0) return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
+    }
+
+    // 0.5. So sánh Thừa kế theo di chúc và Thừa kế theo pháp luật
+    if (qLower.includes('thừa kế') && qLower.includes('di chúc') && qLower.includes('pháp luật')) {
+      return `### SO SÁNH THỪA KẾ THEO DI CHÚC VÀ THỪA KẾ THEO PHÁP LUẬT
+*(Căn cứ Chương XXII và Chương XXIII Bộ luật Dân sự năm 2015)*
+
+---
+
+#### I. ĐIỂM GIỐNG NHAU
+1. **Bản chất pháp lý**: Đều là hình thức dịch chuyển tài sản (di sản) của người đã chết cho những người còn sống theo quy định tại **Bộ luật Dân sự năm 2015**.
+2. **Thời điểm và địa điểm mở thừa kế**: Đều mở tại thời điểm người có tài sản chết (**Khoản 1 Điều 611 BLDS 2015**).
+3. **Nghĩa vụ của người thừa kế**: Những người hưởng thừa kế (dù theo di chúc hay theo pháp luật) đều có nghĩa vụ thực hiện nghĩa vụ tài sản do người chết để lại trong phạm vi di sản mình nhận được (**Điều 615 BLDS 2015**).
+
+---
+
+#### II. BẢNG PHÂN BIỆT THỪA KẾ THEO DI CHÚC VÀ THỪA KẾ THEO PHÁP LUẬT
+
+| Tiêu chí so sánh | Thừa kế theo di chúc (Điều 624 BLDS 2015) | Thừa kế theo pháp luật (Điều 649 BLDS 2015) |
+| :--- | :--- | :--- |
+| **1. Khái niệm & Cơ sở dịch chuyển** | Là việc dịch chuyển di sản của người đã chết cho người khác còn sống theo **ý chí định đoạt của người đó khi còn sống** được thể hiện trong di chúc hợp pháp. | Là thừa kế theo **hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định** (không phụ thuộc vào di chúc). |
+| **2. Trường hợp áp dụng** | Áp dụng ưu tiên khi người chết có để lại **di chúc hợp pháp** (**Điều 630 BLDS 2015**) và người được chỉ định trong di chúc còn sống, không từ chối nhận di sản. | Chỉ áp dụng trong các trường hợp tại **Điều 650 BLDS 2015**: Không có di chúc; di chúc không hợp pháp; người thừa kế theo di chúc chết trước/cùng thời điểm với người lập di chúc hoặc từ chối nhận di sản; phần di sản không được định đoạt trong di chúc. |
+| **3. Chủ thể nhận di sản** | Bất kỳ **cá nhân hoặc tổ chức nào** (kể cả người ngoài gia đình, quỹ từ thiện...) do người lập di chúc tự do chỉ định, trừ những người không được quyền hưởng di sản tại Điều 621. | Chỉ giới hạn trong những **cá nhân có quan hệ hôn nhân, huyết thống hoặc nuôi dưỡng** với người để lại di sản, xếp theo **03 hàng thừa kế** tại **Điều 651 BLDS 2015**. |
+| **4. Tỷ lệ phân chia di sản** | Phụ thuộc vào **sự phân định của người lập di chúc**; tuy nhiên bị giới hạn bởi quyền của **Người thừa kế không phụ thuộc vào nội dung di chúc** (vợ/chồng, cha/mẹ, con chưa thành niên, con thành niên mất khả năng lao động được hưởng ít nhất 2/3 một suất theo luật - **Điều 644 BLDS 2015**). | Những người thừa kế **cùng hàng được hưởng phần di sản bằng nhau**; hàng sau chỉ được hưởng khi không còn ai ở hàng trước (**Khoản 2, Khoản 3 Điều 651 BLDS 2015**). |
+| **5. Thừa kế thế vị** | **Không áp dụng thừa kế thế vị** (nếu người thừa kế theo di chúc chết trước người lập di chúc thì phần di chúc đó không phát sinh hiệu lực và được chia theo pháp luật). | **Có áp dụng thừa kế thế vị** theo **Điều 652 BLDS 2015** (con chết trước/cùng thời điểm thì cháu được hưởng thay phần của cha/mẹ). |`;
     }
 
     // 1. So sánh Phòng vệ chính đáng vs Tình thế cấp thiết

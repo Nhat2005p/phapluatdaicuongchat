@@ -716,6 +716,190 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
 4. Minh bạch tài sản, thu nhập: Kê khai tài sản hàng năm của bản thân, vợ/chồng, con chưa thành niên và giải trình nguồn gốc tài sản tăng thêm.
 5. Đề cao trách nhiệm và xử lý nghiêm trách nhiệm của người đứng đầu khi để xảy ra tham nhũng trong cơ quan.
 6. Cải cách hành chính, đổi mới công nghệ quản lý và thanh toán không dùng tiền mặt qua hệ thống ngân hàng.`
+    },
+    {
+      chapterNumber: 1,
+      chapterTitle: 'Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam & Luật Hiến pháp',
+      sectionCode: '1.3',
+      sectionTitle: 'Ngành Luật Hiến pháp Việt Nam, Quyền con người, Quyền và Nghĩa vụ cơ bản của công dân',
+      pageRange: 'tr. 25 - 32',
+      keywords: [
+        'luật hiến pháp',
+        'khái niệm luật hiến pháp',
+        'đối tượng điều chỉnh luật hiến pháp',
+        'quyền con người',
+        'quyền và nghĩa vụ cơ bản của công dân',
+        'quyền công dân',
+        'nghĩa vụ công dân',
+        'đạo luật cơ bản',
+        'hiệu lực pháp lý tối cao'
+      ],
+      summary: 'Khái niệm ngành Luật Hiến pháp, vị trí tối cao của Hiến pháp 2013 (Điều 119), chế độ chính trị và các nhóm quyền con người, quyền và nghĩa vụ cơ bản của công dân.',
+      legalBasis: ['Hiến pháp năm 2013 (Điều 1, Điều 2, Điều 14, Điều 19, Điều 20, Điều 27, Điều 31, Điều 35, Điều 39, Điều 119)'],
+      baremContent: `I. KHÁI NIỆM, ĐỐI TƯỢNG VÀ PHƯƠNG PHÁP ĐIỀU CHỈNH CỦA LUẬT HIẾN PHÁP:
+1. Khái niệm: Luật Hiến pháp là ngành luật chủ đạo (ngành luật gốc) trong hệ thống pháp luật Việt Nam, tổng hợp các quy phạm pháp luật điều chỉnh những quan hệ xã hội cơ bản và quan trọng nhất gắn liền với việc xác định chế độ chính trị, kinh tế, văn hóa - xã hội, quốc phòng - an ninh, quyền con người, quyền và nghĩa vụ cơ bản của công dân, cũng như nguyên tắc tổ chức và hoạt động của bộ máy nhà nước.
+2. Vị trí tối cao của Hiến pháp (Điều 119 Hiến pháp năm 2013): Hiến pháp là luật cơ bản của nước Cộng hòa xã hội chủ nghĩa Việt Nam, có hiệu lực pháp lý cao nhất. Mọi văn bản pháp luật khác phải phù hợp với Hiến pháp; mọi hành vi vi phạm Hiến pháp đều bị xử lý.
+
+II. QUYỀN CON NGƯỜI, QUYỀN VÀ NGHĨA VỤ CƠ BẢN CỦA CÔNG DÂN (CHƯƠNG II HIẾN PHÁP 2013):
+1. Nguyên tắc hiến định (Điều 14 Hiến pháp 2013): Quyền con người, quyền công dân về chính trị, dân sự, kinh tế, văn hóa, xã hội được công nhận, tôn trọng, bảo vệ, bảo đảm theo Hiến pháp và pháp luật; chỉ có thể bị hạn chế theo quy định của luật trong trường hợp cần thiết vì lý do quốc phòng, an ninh quốc gia, trật tự, an toàn xã hội, đạo đức xã hội, sức khỏe của cộng đồng.
+2. Các nhóm quyền cơ bản:
+   - Nhóm quyền về chính trị: Quyền bầu cử (từ đủ 18 tuổi) và ứng cử (từ đủ 21 tuổi) vào Quốc hội, HĐND (Điều 27); quyền tham gia quản lý nhà nước và xã hội; quyền tự do ngôn luận, tự do báo chí, hội họp, biểu tình theo luật định.
+   - Nhóm quyền về dân sự, nhân thân: Quyền sống (Điều 19); quyền bất khả xâm phạm về thân thể, được bảo hộ sức khỏe, danh dự, nhân phẩm (Điều 20); quyền suy đoán vô tội (Điều 31); quyền bất khả xâm phạm về chỗ ở và đời sống riêng tư.
+   - Nhóm quyền về kinh tế, văn hóa, xã hội: Quyền sở hữu tư nhân và quyền thừa kế (Điều 32); quyền tự do kinh doanh; quyền làm việc (Điều 35); quyền và nghĩa vụ học tập (Điều 39).
+3. Các nghĩa vụ cơ bản của công dân: Nghĩa vụ trung thành với Tổ quốc; nghĩa vụ bảo vệ Tổ quốc và thực hiện nghĩa vụ quân sự; nghĩa vụ tuân theo Hiến pháp và pháp luật; nghĩa vụ nộp thuế theo luật định.`
+    },
+    {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự',
+      sectionCode: '6.1',
+      sectionTitle: 'Khái niệm, Đối tượng, Phương pháp điều chỉnh của Luật Dân sự & Năng lực Chủ thể (Cá nhân, Pháp nhân)',
+      pageRange: 'tr. 122 - 135',
+      keywords: [
+        'luật dân sự',
+        'khái niệm luật dân sự',
+        'đối tượng điều chỉnh của luật dân sự',
+        'phương pháp điều chỉnh của luật dân sự',
+        'quan hệ tài sản',
+        'quan hệ nhân thân',
+        'năng lực pháp luật dân sự',
+        'năng lực hành vi dân sự',
+        'người thành niên',
+        'người chưa thành niên',
+        'mất năng lực hành vi',
+        'hạn chế năng lực hành vi',
+        'pháp nhân điều 74'
+      ],
+      summary: 'Khái niệm, đối tượng (quan hệ tài sản & nhân thân), phương pháp bình đẳng - tự nguyện của Luật Dân sự; phân loại mức độ năng lực hành vi dân sự theo độ tuổi (Điều 16-24) và 4 điều kiện Pháp nhân (Điều 74 BLDS 2015).',
+      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 1, Điều 3, Điều 16, Điều 19, Điều 20, Điều 21, Điều 22, Điều 23, Điều 24, Điều 74)'],
+      baremContent: `I. KHÁI NIỆM, ĐỐI TƯỢNG VÀ PHƯƠNG PHÁP ĐIỀU CHỈNH CỦA LUẬT DÂN SỰ (ĐIỀU 1, ĐIỀU 3 BLDS 2015):
+1. Khái niệm: Luật Dân sự là ngành luật độc lập trong hệ thống pháp luật Việt Nam, tổng hợp các quy phạm pháp luật điều chỉnh các quan hệ tài sản và quan hệ nhân thân được hình thành trên cơ sở bình đẳng, tự do ý chí, độc lập về tài sản và tự chịu trách nhiệm của các chủ thể.
+2. Đối tượng điều chỉnh (Điều 1 BLDS 2015):
+   - Quan hệ tài sản: Quan hệ giữa người với người thông qua một tài sản cụ thể, mang tính chất hàng hóa - tiền tệ và đền bù tương đương (quyền sở hữu, hợp đồng dân sự, bồi thường thiệt hại, thừa kế).
+   - Quan hệ nhân thân: Quan hệ gắn liền với giá trị tinh thần của chủ thể (danh dự, nhân phẩm, uy tín, họ tên, hình ảnh, quyền tác giả), về nguyên tắc không tính được thành tiền và không thể chuyển giao.
+3. Phương pháp điều chỉnh: Phương pháp bình đẳng, tự định đoạt, tự do cam kết thỏa thuận (không vi phạm điều cấm của luật, không trái đạo đức xã hội) và tự chịu trách nhiệm bằng tài sản.
+
+II. NĂNG LỰC CHỦ THỂ CỦA CÁ NHÂN VÀ PHÁP NHÂN TRONG LUẬT DÂN SỰ:
+1. Năng lực pháp luật dân sự của cá nhân (Điều 16 BLDS 2015): Khả năng có quyền dân sự và nghĩa vụ dân sự; mọi cá nhân đều có như nhau từ khi sinh ra và chấm dứt khi chết.
+2. Các mức độ Năng lực hành vi dân sự của cá nhân (Điều 19 - 24 BLDS 2015):
+   - Người chưa đủ 06 tuổi (Khoản 2 Điều 21): Chưa có năng lực hành vi dân sự; mọi giao dịch dân sự đều do người đại diện theo pháp luật xác lập, thực hiện.
+   - Người từ đủ 06 tuổi đến chưa đủ 15 tuổi (Khoản 3 Điều 21): Khi xác lập, thực hiện giao dịch dân sự phải được người đại diện theo pháp luật đồng ý, trừ giao dịch phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi.
+   - Người từ đủ 15 tuổi đến chưa đủ 18 tuổi (Khoản 4 Điều 21): Tự mình xác lập, thực hiện giao dịch dân sự, trừ giao dịch liên quan đến bất động sản, động sản phải đăng ký và giao dịch khác theo quy định của luật phải được người đại diện theo pháp luật đồng ý.
+   - Người thành niên từ đủ 18 tuổi trở lên (Điều 20): Có năng lực hành vi dân sự đầy đủ, trừ trường hợp bị Tòa án tuyên mất NLHVDS (Điều 22 - do bệnh tâm thần), có khó khăn trong nhận thức làm chủ hành vi (Điều 23) hoặc hạn chế NLHVDS (Điều 24 - do nghiện ma túy, chất kích thích dẫn đến phá tán tài sản gia đình).
+3. Pháp nhân (Điều 74 BLDS 2015): Một tổ chức được công nhận là pháp nhân khi có đủ 04 điều kiện: (1) Được thành lập hợp pháp; (2) Có cơ cấu tổ chức chặt chẽ; (3) Có tài sản độc lập với cá nhân, pháp nhân khác và tự chịu trách nhiệm bằng tài sản của mình; (4) Nhân danh mình tham gia quan hệ pháp luật một cách độc lập.`
+    },
+    {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Hôn nhân và Gia đình',
+      sectionCode: '6.7',
+      sectionTitle: 'Luật Hôn nhân và Gia đình năm 2014 (Kết hôn, Cấm kết hôn, Hôn nhân trái pháp luật và Ly hôn)',
+      pageRange: 'tr. 142 - 148',
+      keywords: [
+        'luật hôn nhân và gia đình',
+        'khái niệm hôn nhân',
+        'điều kiện kết hôn',
+        'tuổi kết hôn',
+        'cấm kết hôn',
+        'tảo hôn',
+        'kết hôn giả tạo',
+        'kết hôn trái pháp luật',
+        'ly hôn',
+        'thuận tình ly hôn',
+        'quyền yêu cầu giải quyết ly hôn'
+      ],
+      summary: 'Khái niệm hôn nhân, 4 điều kiện kết hôn theo Điều 8 Luật HNGĐ 2014, các hành vi bị cấm (Khoản 2 Điều 5), xử lý kết hôn trái pháp luật và quy định về ly hôn (Điều 51, 56).',
+      legalBasis: ['Luật Hôn nhân và Gia đình năm 2014 (Điều 5, Điều 8, Điều 9, Điều 10, Điều 11, Điều 51, Điều 56, Điều 81)'],
+      baremContent: `I. KHÁI NIỆM HÔN NHÂN VÀ ĐIỀU KIỆN KẾT HÔN (ĐIỀU 8, ĐIỀU 9 LUẬT HNGĐ 2014):
+1. Khái niệm: Hôn nhân là quan hệ giữa vợ và chồng sau khi kết hôn, tuân theo nguyên tắc hôn nhân tự nguyện, tiến bộ, một vợ một chồng, vợ chồng bình đẳng.
+2. Bốn điều kiện kết hôn hợp pháp (Khoản 1 Điều 8 Luật HNGĐ 2014):
+   - Độ tuổi: Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên.
+   - Sự tự nguyện: Việc kết hôn do nam và nữ tự nguyện quyết định, không bên nào được ép buộc, lừa dối, cản trở.
+   - Năng lực hành vi: Không bị mất năng lực hành vi dân sự.
+   - Không thuộc các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d Khoản 2 Điều 5 của Luật này:
+     + Kết hôn giả tạo, ly hôn giả tạo;
+     + Tảo hôn, cưỡng ép kết hôn, lừa dối kết hôn, cản trở kết hôn;
+     + Người đang có vợ, có chồng mà kết hôn hoặc chung sống như vợ chồng với người khác;
+     + Kết hôn hoặc chung sống như vợ chồng giữa những người cùng dòng máu về trực hệ; giữa những người có họ trong phạm vi ba đời; giữa cha, mẹ nuôi với con nuôi; giữa người đã từng là cha, mẹ nuôi với con nuôi, cha chồng với con dâu, mẹ vợ với con rể, cha dượng với con riêng của vợ, mẹ kế với con riêng của chồng.
+   *Lưu ý (Khoản 2 Điều 8)*: Nhà nước không thừa nhận hôn nhân giữa những người cùng giới tính. Việc kết hôn phải được đăng ký tại cơ quan nhà nước có thẩm quyền (Điều 9).
+
+II. CHẤM DỨT HÔN NHÂN VÀ QUYỀN YÊU CẦU LY HÔN (ĐIỀU 51, 56, 81 LUẬT HNGĐ 2014):
+1. Quyền yêu cầu giải quyết ly hôn (Điều 51):
+   - Vợ, chồng hoặc cả hai người có quyền yêu cầu Tòa án giải quyết ly hôn.
+   - Cha, mẹ, người thân thích khác có quyền yêu cầu Tòa án giải quyết ly hôn khi một bên vợ, chồng do bị bệnh tâm thần hoặc mắc bệnh khác mà không thể nhận thức, làm chủ được hành vi của mình, đồng thời là nạn nhân của bạo lực gia đình do chồng, vợ của họ gây ra.
+   - **Hạn chế quyền ly hôn của người chồng (Khoản 3 Điều 51)**: Chồng KHÔNG có quyền yêu cầu ly hôn trong trường hợp vợ đang có thai, sinh con hoặc đang nuôi con dưới 12 tháng tuổi (không phân biệt người vợ có thai, sinh con với ai; ngược lại người vợ vẫn có quyền yêu cầu ly hôn).
+2. Quyền nuôi con sau khi ly hôn (Điều 81):
+   - Con dưới 36 tháng tuổi được giao cho mẹ trực tiếp nuôi, trừ trường hợp người mẹ không đủ điều kiện hoặc cha mẹ có thỏa thuận khác.
+   - Con từ đủ 07 tuổi trở lên thì phải xem xét nguyện vọng của con.`
+    },
+    {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Pháp luật Lao động',
+      sectionCode: '6.8',
+      sectionTitle: 'Bộ luật Lao động năm 2019 (Hợp đồng lao động, Thử việc, Chấm dứt HĐLĐ và Kỷ luật lao động)',
+      pageRange: 'tr. 145 - 155',
+      keywords: [
+        'luật lao động',
+        'bộ luật lao động',
+        'hợp đồng lao động',
+        'thử việc',
+        'thời gian thử việc',
+        'đơn phương chấm dứt hợp đồng lao động',
+        'kỷ luật lao động',
+        'hình thức kỷ luật sa thải',
+        'thời giờ làm việc',
+        'tiền lương'
+      ],
+      summary: 'Khái niệm và 2 loại Hợp đồng lao động (Điều 13, 20), thời gian thử việc (Điều 25), quyền đơn phương chấm dứt HĐLĐ (Điều 35, 36) và 4 hình thức kỷ luật lao động (Điều 124, 125 BLLĐ 2019).',
+      legalBasis: ['Bộ luật Lao động năm 2019 (Điều 13, Điều 17, Điều 25, Điều 35, Điều 36, Điều 41, Điều 122, Điều 124, Điều 125)'],
+      baremContent: `I. HỢP ĐỒNG LAO ĐỘNG VÀ THỬ VIỆC (BỘ LUẬT LAO ĐỘNG NĂM 2019):
+1. Khái niệm Hợp đồng lao động (Điều 13): Là sự thỏa thuận giữa người lao động và người sử dụng lao động về việc làm có trả công, tiền lương, điều kiện lao động, quyền và nghĩa vụ của mỗi bên trong quan hệ lao động. Trường hợp hai bên thỏa thuận bằng tên gọi khác nhưng có nội dung thể hiện về việc làm có trả công, tiền lương và sự quản lý, điều hành, giám sát của một bên thì được coi là hợp đồng lao động.
+2. Hai loại Hợp đồng lao động:
+   - Hợp đồng lao động không xác định thời hạn;
+   - Hợp đồng lao động xác định thời hạn (thời hạn không quá 36 tháng).
+3. Thời gian thử việc tối đa (Điều 25 BLLĐ 2019): Chỉ được thử việc 01 lần đối với một công việc:
+   - Không quá 180 ngày đối với công việc của người quản lý doanh nghiệp;
+   - Không quá 60 ngày đối với công việc cần trình độ chuyên môn, kỹ thuật từ cao đẳng trở lên;
+   - Không quá 30 ngày đối với công việc cần trình độ trung cấp, công nhân kỹ thuật, nhân viên nghiệp vụ;
+   - Không quá 06 ngày làm việc đối với công việc khác. Tiền lương thử việc ít nhất bằng 85% mức lương của công việc đó.
+
+II. ĐƠN PHƯƠNG CHẤM DỨT HỢP ĐỒNG LAO ĐỘNG VÀ KỶ LUẬT LAO ĐỘNG:
+1. Quyền đơn phương chấm dứt HĐLĐ của Người lao động (Điều 35): Người lao động có quyền đơn phương chấm dứt hợp đồng lao động không cần lý do nhưng phải báo trước: ít nhất 45 ngày (nếu làm theo HĐLĐ không xác định thời hạn); ít nhất 30 ngày (HĐLĐ xác định thời hạn từ 12 - 36 tháng); ít nhất 03 ngày làm việc (HĐLĐ dưới 12 tháng). Các trường hợp đặc biệt (bị ngược đãi, quấy rối tình dục, không được trả đủ lương, lao động nữ mang thai phải nghỉ theo chỉ định bác sĩ...) được nghỉ ngay không cần báo trước.
+2. Quyền đơn phương chấm dứt HĐLĐ của Người sử dụng lao động (Điều 36): Chỉ được đơn phương chấm dứt khi có căn cứ luật định (NLĐ thường xuyên không hoàn thành công việc theo quy chế, tự ý bỏ việc 05 ngày làm việc liên tục trở lên...) và phải tuân thủ thời hạn báo trước.
+3. Bốn hình thức xử lý kỷ luật lao động (Điều 124, Điều 125 BLLĐ 2019):
+   - (1) Khiển trách; (2) Kéo dài thời hạn nâng lương không quá 06 tháng; (3) Cách chức; (4) Sa thải.
+   - Hình thức Sa thải (Điều 125) chỉ áp dụng khi NLĐ có hành vi trộm cắp, tham ô, đánh bạc, cố ý gây thương tích, sử dụng ma túy tại nơi làm việc; tiết lộ bí mật kinh doanh/công nghệ; hoặc tự ý bỏ việc 05 ngày cộng dồn trong 30 ngày hoặc 20 ngày cộng dồn trong 365 ngày mà không có lý do chính đáng.`
+    },
+    {
+      chapterNumber: 6,
+      chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự',
+      sectionCode: '6.9',
+      sectionTitle: 'Trách nhiệm Bồi thường thiệt hại ngoài hợp đồng (Điều 584 - 608 BLDS 2015)',
+      pageRange: 'tr. 140 - 147',
+      keywords: [
+        'bồi thường thiệt hại ngoài hợp đồng',
+        'trách nhiệm bồi thường thiệt hại',
+        'căn cứ phát sinh trách nhiệm bồi thường',
+        'năng lực chịu trách nhiệm bồi thường',
+        'nguồn nguy hiểm cao độ',
+        'điều 584',
+        'điều 585',
+        'điều 586',
+        'điều 601'
+      ],
+      summary: 'Căn cứ phát sinh trách nhiệm bồi thường thiệt hại ngoài hợp đồng (Điều 584), nguyên tắc bồi thường (Điều 585), năng lực chịu trách nhiệm theo độ tuổi (Điều 586) và nguồn nguy hiểm cao độ (Điều 601 BLDS 2015).',
+      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 584, Điều 585, Điều 586, Điều 589, Điều 590, Điều 591, Điều 592, Điều 601)'],
+      baremContent: `I. CĂN CỨ PHÁT SINH VÀ NGUYÊN TẮC BỒI THƯỜNG THIỆT HẠI NGOÀI HỢP ĐỒNG (ĐIỀU 584, 585 BLDS 2015):
+1. Căn cứ phát sinh (Điều 584 BLDS 2015): Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường.
+   - Các trường hợp được miễn trách nhiệm bồi thường (Khoản 2 Điều 584): Thiệt hại phát sinh là do sự kiện bất khả kháng hoặc hoàn toàn do lỗi của bên bị thiệt hại (trừ trường hợp có thỏa thuận khác hoặc luật có quy định khác).
+2. Nguyên tắc bồi thường (Điều 585 BLDS 2015): Thiệt hại thực tế phải được bồi thường toàn bộ và kịp thời; người chịu trách nhiệm bồi thường có thể được giảm mức bồi thường nếu không có lỗi hoặc có lỗi vô ý và thiệt hại quá lớn so với khả năng kinh tế của mình.
+
+II. NĂNG LỰC CHỊU TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI CỦA CÁ NHÂN (ĐIỀU 586 BLDS 2015):
+1. Người từ đủ 18 tuổi trở lên gây thiệt hại thì phải tự mình bồi thường.
+2. Người chưa đủ 15 tuổi gây thiệt hại mà còn cha, mẹ thì cha, mẹ phải bồi thường toàn bộ thiệt hại; nếu tài sản của cha, mẹ không đủ để bồi thường mà con chưa thành niên gây thiệt hại có tài sản riêng thì lấy tài sản đó để bồi thường phần còn thiếu.
+3. Người từ đủ 15 tuổi đến chưa đủ 18 tuổi gây thiệt hại thì phải bồi thường bằng tài sản của mình; nếu không đủ tài sản để bồi thường thì cha, mẹ phải bồi thường phần còn thiếu bằng tài sản của mình.
+
+III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐIỀU 601 BLDS 2015):
+- Nguồn nguy hiểm cao độ gồm phương tiện giao thông vận tải cơ giới (ô tô, xe máy...), hệ thống tải điện, nhà máy công nghiệp đang hoạt động, vũ khí, chất nổ, chất cháy, chất độc, thú dữ...
+- Chủ sở hữu, người chiếm hữu, sử dụng nguồn nguy hiểm cao độ phải bồi thường thiệt hại cả khi KHÔNG CÓ LỖI, trừ 02 trường hợp: (a) Thiệt hại xảy ra hoàn toàn do lỗi cố ý của người bị thiệt hại; (b) Thiệt hại xảy ra trong trường hợp bất khả kháng hoặc tình thế cấp thiết.`
     }
   ];
 
@@ -1407,6 +1591,57 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       ) {
         if (c.chapterNumber === 1) finalScore -= 40;
         if (c.sectionCode.includes('2.1.1_2.1.4')) finalScore += 55;
+      }
+
+      // L. Nếu hỏi về đối tượng/phương pháp điều chỉnh của Luật Dân sự, năng lực pháp luật/năng lực hành vi dân sự, pháp nhân -> Ưu tiên Mục 6.1
+      if (
+        rawQueryText.includes('luật dân sự') ||
+        rawQueryText.includes('năng lực pháp luật dân sự') ||
+        rawQueryText.includes('năng lực hành vi dân sự') ||
+        rawQueryText.includes('pháp nhân')
+      ) {
+        if (c.sectionCode === '6.1') finalScore += 75;
+      }
+
+      // M. Nếu hỏi về điều kiện kết hôn, cấm kết hôn, tảo hôn, ly hôn, quyền yêu cầu ly hôn -> Ưu tiên Mục 6.7
+      if (
+        rawQueryText.includes('điều kiện kết hôn') ||
+        rawQueryText.includes('cấm kết hôn') ||
+        rawQueryText.includes('tảo hôn') ||
+        rawQueryText.includes('quyền yêu cầu giải quyết ly hôn') ||
+        rawQueryText.includes('luật hôn nhân và gia đình')
+      ) {
+        if (c.sectionCode === '6.7') finalScore += 75;
+      }
+
+      // N. Nếu hỏi về hợp đồng lao động, thử việc, kỷ luật lao động, sa thải, đơn phương chấm dứt HĐLĐ -> Ưu tiên Mục 6.8
+      if (
+        rawQueryText.includes('hợp đồng lao động') ||
+        rawQueryText.includes('thử việc') ||
+        rawQueryText.includes('kỷ luật lao động') ||
+        rawQueryText.includes('sa thải') ||
+        rawQueryText.includes('luật lao động') ||
+        rawQueryText.includes('bộ luật lao động')
+      ) {
+        if (c.sectionCode === '6.8') finalScore += 80;
+      }
+
+      // O. Nếu hỏi về bồi thường thiệt hại ngoài hợp đồng, nguồn nguy hiểm cao độ -> Ưu tiên Mục 6.9
+      if (
+        rawQueryText.includes('bồi thường thiệt hại ngoài hợp đồng') ||
+        rawQueryText.includes('nguồn nguy hiểm cao độ') ||
+        rawQueryText.includes('năng lực chịu trách nhiệm bồi thường')
+      ) {
+        if (c.sectionCode === '6.9') finalScore += 80;
+      }
+
+      // P. Nếu hỏi về ngành luật hiến pháp, quyền con người, quyền và nghĩa vụ cơ bản của công dân -> Ưu tiên Mục 1.3
+      if (
+        rawQueryText.includes('luật hiến pháp') ||
+        rawQueryText.includes('quyền con người') ||
+        rawQueryText.includes('quyền và nghĩa vụ cơ bản của công dân')
+      ) {
+        if (c.sectionCode === '1.3') finalScore += 75;
       }
 
       return { chunk: c, score: finalScore };
