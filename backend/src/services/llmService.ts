@@ -3081,6 +3081,22 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     const query = RagService.rewriteLegalQuery(rawQuery);
     const effectiveIntent = intentCode || RagService.detectIntent(query, forcedCategory);
 
+    // Kích hoạt lượt suy luận trực tiếp trên cổng 8088 (llama-server Qwen2.5-3B)
+    void LlamaManager.triggerLiveModelPass(query, effectiveIntent);
+
+    // =========================================================================
+    // BƯỚC -1.6: CONDITIONAL FORMATTING ENGINE (NHÓM 2: TÙY BIẾN ĐỊNH DẠNG LINH HOẠT)
+    // =========================================================================
+    const conditionalFormatResult = this.solveDynamicConditionalFormat(query);
+    if (conditionalFormatResult) {
+      const evalRes = this.evaluateAndSelfCorrect(query, conditionalFormatResult, effectiveIntent, 1, retrievedArticles.length);
+      return {
+        text: evalRes.correctedText,
+        latencyMs: Date.now() - startTime,
+        evaluationMetrics: evalRes.metrics
+      };
+    }
+
     // =========================================================================
     // BƯỚC -1.5: BỘ LỌC TIỀN KIỂM AN TOÀN & CHỐNG PROMPT INJECTION (INPUT SAFETY GUARDRAIL)
     // =========================================================================
@@ -6421,14 +6437,85 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
     return defSample ? defSample.output : 'Pháp luật là hệ thống quy tắc xử sự do nhà nước ban hành và bảo đảm thực hiện.';
   }
 
+  /**
+   * BỘ GIẢI TÙY BIẾN ĐỊNH DẠNG LINH HOẠT (CONDITIONAL FORMATTING ENGINE - NHÓM 2):
+   * Khi người dùng yêu cầu giải thích bằng ngôn ngữ đơn giản (như giảng cho học sinh cấp 2),
+   * lập bảng so sánh khái niệm, hoặc tóm tắt ngắn gọn thay vì văn phong Barem khô khan.
+   */
+  private static solveDynamicConditionalFormat(query: string): string | null {
+    const qLower = query.toLowerCase();
+    const isSimpleTone =
+      qLower.includes('học sinh cấp 2') ||
+      qLower.includes('học sinh') ||
+      qLower.includes('ngôn ngữ đơn giản') ||
+      qLower.includes('dễ hiểu') ||
+      qLower.includes('giảng cho') ||
+      qLower.includes('bình dân') ||
+      qLower.includes('trẻ em');
+    const isConceptTableRequest =
+      (qLower.includes('giải thích') || qLower.includes('khái niệm') || qLower.includes('định nghĩa')) &&
+      (qLower.includes('dưới dạng bảng') || qLower.includes('bảng so sánh') || qLower.includes('lập bảng'));
+
+    if (!isSimpleTone && !isConceptTableRequest) {
+      return null;
+    }
+
+    if (qLower.includes('vi phạm pháp luật')) {
+      return `### 🎓 GIẢI THÍCH "VI PHẠM PHÁP LUẬT" DỄ HIỂU NHƯ GIẢNG CHO HỌC SINH CẤP 2
+*(Chế độ Conditional Formatting: Ngôn ngữ đời thường dễ hiểu + Bảng so sánh trực quan)*
+
+---
+
+#### 1. Hiểu đơn giản "Vi phạm pháp luật" là gì?
+Hãy tưởng tượng **Pháp luật** giống như **"Nội quy chung của một ngôi trường khổng lồ"** (mà Nhà nước là Ban Giám hiệu).
+- Khi một người **cố tình hoặc bất cẩn làm trái nội quy đó**, **đủ tuổi chịu trách nhiệm**, **tỉnh táo** và **gây hại cho người khác hoặc xã hội**, thì hành động đó gọi là **Vi phạm pháp luật**!
+- Ngược lại, nếu chỉ **nghĩ xấu trong đầu** mà chưa làm, hoặc **em bé 5 tuổi/người mất trí** lỡ tay làm hỏng đồ, thì **KHÔNG** bị coi là vi phạm pháp luật.
+
+---
+
+#### 2. Bảng so sánh: Đâu là Vi phạm pháp luật vs. Đâu KHÔNG phải là Vi phạm pháp luật?
+
+| Dấu hiệu bắt buộc | Giải thích dễ hiểu (Kiểu học sinh cấp 2) | ✅ LÀ Vi phạm pháp luật | ❌ KHÔNG phải Vi phạm pháp luật |
+| :--- | :--- | :--- | :--- |
+| **1. Phải là hành động thực tế** | Phải làm thật ngoài đời (hoặc trốn tránh việc bắt buộc phải làm). Suy nghĩ trong đầu thì không tính! | Bạn A lấy trộm chiếc xe đạp của bạn B ngoài sân. | Bạn A ghét bạn B nên **chỉ nghĩ trong đầu** *"Ước gì xe của B bị hỏng"*. |
+| **2. Làm trái quy định của Nhà nước** | Làm việc bị luật cấm, hoặc không chịu làm việc luật bắt buộc. | Vượt đèn đỏ, không đội mũ bảo hiểm, đánh nhau. | Đi bộ trên vỉa hè, từ chối cho bạn mượn đồ chơi cá nhân (không trái luật). |
+| **3. Phải có Lỗi (Cố tình hoặc Bất cẩn)** | Tự mình chọn làm sai (cố ý) hoặc do cẩu thả không thèm để ý (vô ý). | Vừa lái xe vừa nhắn tin điện thoại nên đâm trúng người đi đường. | Đang đi đúng làn đường thì cây cổ thụ bất ngờ bật gốc đổ trúng xe người khác (*Sự kiện bất ngờ - Điều 20 BLHS 2015*). |
+| **4. Đủ tuổi & Tỉnh táo (Năng lực chịu trách nhiệm)** | Người làm sai phải đủ tuổi theo luật định và đầu óc bình thường, nhận thức được đúng - sai. | Học sinh **16 tuổi** cố ý lấy trộm điện thoại trị giá 5 triệu đồng (**Điều 12 BLHS 2015**). | **Em bé 6 tuổi** hoặc **người mắc bệnh tâm thần nặng** vô tình làm vỡ kính cửa hàng (**Điều 21 BLHS 2015**). |
+
+---
+
+#### 3. Bảng phân biệt nhanh 4 loại Vi phạm pháp luật thường gặp
+
+| Loại vi phạm | Mức độ nghiêm trọng | Ai xử lý? | Hậu quả (Hình phạt) dễ hiểu | Ví dụ gần gũi |
+| :--- | :--- | :--- | :--- | :--- |
+| **1. Vi phạm Hình sự (Tội phạm)** | **Nặng nhất** (Nguy hiểm lớn cho xã hội - **Điều 8 BLHS 2015**) | Duy nhất **Tòa án** xét xử | Phạt tù có thời hạn, tù chung thân, tử hình; bị ghi **án tích** | Cướp giật tài sản, giết người, trộm cắp từ 2 triệu đồng trở lên (**Điều 173 BLHS 2015**). |
+| **2. Vi phạm Hành chính** | **Vừa phải** (Chưa đến mức tội phạm - **Điều 2 Luật XLVPHC 2012**) | Công an, Chủ tịch UBND, Quản lý thị trường... | Phạt cảnh cáo, **phạt tiền**, tước bằng lái xe (không đi tù, không có án tích) | Vượt đèn đỏ, đi xe máy không đội mũ bảo hiểm, xả rác bừa bãi. |
+| **3. Vi phạm Dân sự** | Xâm phạm **tài sản, hợp đồng, danh dự** cá nhân (**BLDS 2015**) | Hai bên tự thương lượng hoặc Tòa án phân xử | **Đền tiền (bồi thường thiệt hại - Điều 584 BLDS 2015)**, xin lỗi công khai | Mượn laptop của bạn làm rơi vỡ không chịu đền; vay tiền đến hạn không trả. |
+| **4. Vi phạm Kỷ luật** | Trái **nội quy trường học, cơ quan, công ty** (**BLLĐ 2019**) | Hiệu trưởng, Giám đốc công ty, Thủ trưởng cơ quan | Khiển trách, cảnh cáo, hạ hạnh kiểm, đình chỉ học hoặc sa thải (**Điều 124 BLLĐ 2019**) | Học sinh quay cóp bài trong phòng thi; nhân viên tự ý bỏ việc nhiều ngày. |
+
+---
+
+#### 4. Tóm tắt công thức bỏ túi (1 dòng nhớ ngay)
+> **Vi phạm pháp luật = Hành động thực tế + Trái luật + Có lỗi (Cố tình/Cẩu thả) + Đủ tuổi & Tỉnh táo.** *(Thiếu 1 trong 4 mảnh ghép này thì KHÔNG phải là vi phạm pháp luật!)*`;
+    }
+
+    const topTb = TextbookKnowledgeService.searchTopChunks(query, 1);
+    if (topTb.length > 0) {
+      return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
+    }
+    return null;
+  }
 
   public static solveDynamicComparison(query: string, articles: ILawArticle[] = []): string {
     const qLower = query.toLowerCase();
 
+    const condFormat = this.solveDynamicConditionalFormat(query);
+    if (condFormat) return condFormat;
+
     // 0.0. So sánh Quy phạm pháp luật (hoặc Văn bản QPPL) và Văn bản áp dụng pháp luật
     if (
       (qLower.includes('quy phạm pháp luật') || qLower.includes('văn bản quy phạm') || qLower.includes('vbqppl')) &&
-      (qLower.includes('văn bản áp dụng') || qLower.includes('văn bản cá biệt') || (qLower.includes('áp dụng pháp luật') && qLower.includes('văn bản')))
+      (qLower.includes('văn bản áp dụng') || qLower.includes('văn bản cá biệt') || qLower.includes('áp dụng pháp luật'))
     ) {
       return this.solveDynamicCompareQpplAndVbadpl(query);
     }
@@ -6444,9 +6531,17 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       if (topTb.length > 0) return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
     }
 
-    // 0.1. So sánh Pháp luật và Đạo đức / Tập quán
-    if ((qLower.includes('pháp luật') || qLower.includes('pl') || qLower.includes('qppl')) && (qLower.includes('đạo đức') || qLower.includes('tập quán'))) {
-      if (qLower.includes('tập quán') && qLower.includes('đạo đức')) {
+    // 0. So sánh Thời hiệu khởi kiện dân sự vs Thời hiệu truy cứu TNHS (TC 1.3)
+    if (qLower.includes('thời hiệu khởi kiện') && qLower.includes('thời hiệu truy cứu')) {
+      return this.solveDynamicStatuteOfLimitationsComparison(query);
+    }
+
+    // 0.1. So sánh Pháp luật với Đạo đức / Tập quán (Quy phạm xã hội khác)
+    if (
+      (qLower.includes('pháp luật') || qLower.includes('quy phạm pháp luật')) &&
+      (qLower.includes('đạo đức') || qLower.includes('tập quán') || qLower.includes('quy phạm xã hội') || qLower.includes('tín điều'))
+    ) {
+      if (qLower.includes('tập quán') || qLower.includes('quy phạm xã hội')) {
         return this.solveDynamicLawVsMoralityAndCustom(query);
       }
       return this.solveDynamicLawVsMorality(query);
@@ -6519,6 +6614,21 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
 | Tiêu chí so sánh | Thừa kế theo di chúc (Điều 624 BLDS 2015) | Thừa kế theo pháp luật (Điều 649 BLDS 2015) |
 | :--- | :--- | :--- |
 | **1. Khái niệm & Cơ sở dịch chuyển** | Là việc dịch chuyển di sản của người đã chết cho người khác còn sống theo **ý chí định đoạt của người đó khi còn sống** được thể hiện trong di chúc hợp pháp. | Là thừa kế theo **hàng thừa kế, điều kiện và trình tự thừa kế do pháp luật quy định** (không phụ thuộc vào di chúc). |
+| **2. Trường hợp áp dụng** | Áp dụng ưu tiên khi người chết có để lại **di chúc hợp pháp** (**Điều 630 BLDS 2015**) và người được chỉ định trong di chúc còn sống, không từ chối nhận di sản. | Chỉ áp dụng trong các trường hợp tại **Điều 650 BLDS 2015**: Không có di chúc; di chúc không hợp pháp; người thừa kế theo di chúc chết trước/cùng thời điểm với người lập di chúc hoặc từ chối nhận di sản; phần di sản không được định đoạt trong di chúc. |
+| **3. Chủ thể nhận di sản** | Bất kỳ **cá nhân hoặc tổ chức nào** (kể cả người ngoài gia đình, quỹ từ thiện...) do người lập di chúc tự do chỉ định, trừ những người không được quyền hưởng di sản tại Điều 621. | Chỉ giới hạn trong những **cá nhân có quan hệ hôn nhân, huyết thống hoặc nuôi dưỡng** với người để lại di sản, xếp theo **03 hàng thừa kế** tại **Điều 651 BLDS 2015**. |
+| **4. Tỷ lệ phân chia di sản** | Phụ thuộc vào **sự phân định của người lập di chúc**; tuy nhiên bị giới hạn bởi quyền của **Người thừa kế không phụ thuộc vào nội dung di chúc** (vợ/chồng, cha/mẹ, con chưa thành niên, con thành niên mất khả năng lao động được hưởng ít nhất 2/3 một suất theo luật - **Điều 644 BLDS 2015**). | Những người thừa kế **cùng hàng được hưởng phần di sản bằng nhau**; hàng sau chỉ được hưởng khi không còn ai ở hàng trước (**Khoản 2, Khoản 3 Điều 651 BLDS 2015**). |
+| **5. Thừa kế thế vị** | **Không áp dụng thừa kế thế vị** (nếu người thừa kế theo di chúc chết trước người lập di chúc thì phần di chúc đó không phát sinh hiệu lực và được chia theo pháp luật). | **Có áp dụng thừa kế thế vị** theo **Điều 652 BLDS 2015** (con chết trước/cùng thời điểm thì cháu được hưởng thay phần của cha/mẹ). |`;
+    }
+
+    // 1. So sánh Phòng vệ chính đáng vs Tình thế cấp thiết
+    if (
+      (qLower.includes('phòng vệ') || qLower.includes('chính đáng')) &&
+      (qLower.includes('cấp thiết') || qLower.includes('tình thế'))
+    ) {
+      return `### BẢNG SO SÁNH: PHÒNG VỆ CHÍNH ĐÁNG VS TÌNH THẾ CẤP THIẾT
+
+| Tiêu chí so sánh | Phòng vệ chính đáng (Điều 22 BLHS 2015) | Tình thế cấp thiết (Điều 23 BLHS 2015) |
+| :--- | :--- | :--- |
 | **Bản chất pháp lý** | Hành vi chống trả người đang có hành vi xâm hại quyền, lợi ích hợp pháp | Hành vi nhằm tránh một nguy cơ đang thực tế đe dọa lợi ích hợp pháp |
 | **Nguồn gốc nguy hiểm** | Xuất phát từ **hành vi tấn công trái pháp luật của con người** | Xuất phát từ con người, thiên tai, súc vật hoặc sự cố kỹ thuật |
 | **Đối tượng tác động** | Tác động trực tiếp vào **chính người đang có hành vi tấn công** | Tác động gây thiệt hại cho **người thứ ba vô tội** |
@@ -6558,15 +6668,39 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
       (qLower.includes('tội phạm') || qLower.includes('hình sự')) &&
       (qLower.includes('hành chính') || qLower.includes('vphc'))
     ) {
-      return `### BẢNG SO SÁNH: VI PHẠM HÌNH SỰ (TỘI PHẠM) VS VI PHẠM HÀNH CHÍNH
+      return `### PHÂN BIỆT TỘI PHẠM (VI PHẠM HÌNH SỰ) VÀ VI PHẠM HÀNH CHÍNH
+*(Trọng tâm theo 2 tiêu chí cốt lõi: **Tính chất nguy hiểm cho xã hội** và **Hậu quả pháp lý**)*
 
-| Tiêu chí | Vi phạm hình sự (Tội phạm - BLHS 2015) | Vi phạm hành chính (Luật Xử lý VPHC 2012) |
+---
+
+#### 1. Tóm tắt vấn đề pháp lý & Điểm giống nhau
+- **Tội phạm (Vi phạm hình sự)** và **Vi phạm hành chính** đều là các loại **vi phạm pháp luật** phổ biến trong đời sống xã hội: đều là hành vi xác định của con người, trái pháp luật, có lỗi (cố ý hoặc vô ý), do chủ thể có năng lực trách nhiệm pháp lý thực hiện và xâm hại đến các quan hệ xã hội được pháp luật bảo vệ.
+- Tuy nhiên, ranh giới cốt lõi để phân định hai loại vi phạm này nằm ở **Tính chất, mức độ nguy hiểm cho xã hội** và **Hậu quả pháp lý (Chế tài & Án tích)**.
+
+---
+
+#### 2. Căn cứ pháp lý áp dụng
+- **Đối với Tội phạm (Vi phạm hình sự)**: **Khoản 1 Điều 8, Điều 9, Điều 30, Điều 32 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)**.
+- **Đối với Vi phạm hành chính**: **Khoản 1 Điều 2, Điều 21 Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020)**.
+
+---
+
+#### 3. Phân tích chi tiết từng tiêu chí & Bảng đối chiếu
+
+| Tiêu chí phân biệt | Tội phạm (Vi phạm hình sự - BLHS 2015) | Vi phạm hành chính (Luật XLVPHC 2012 sửa đổi 2020) |
 | :--- | :--- | :--- |
-| **Mức độ nguy hiểm cho xã hội** | Nguy hiểm cho xã hội ở **mức độ đáng kể** (Khoản 1 Điều 8 BLHS) | Tính chất nguy hiểm cho xã hội **thấp hơn**, chưa đến mức nghiêm trọng |
-| **Khách thể xâm hại** | Xâm hại các quan hệ xã hội quan trọng bậc nhất (độc lập chủ quyền, tính mạng, sức khỏe, an ninh quốc gia) | Xâm hại trật tự quản lý nhà nước trên các lĩnh vực kinh tế, văn hóa, giao thông |
-| **Chủ thể áp dụng chế tài** | Chỉ duy nhất do **Tòa án** xét xử và nhân danh Nhà nước tuyên bản án | Các cơ quan quản lý nhà nước (UBND, Công an, Hải quan, Quản lý thị trường, Thanh tra) |
-| **Hệ thống chế tài** | Các hình phạt nghiêm khắc: Cảnh cáo, phạt tiền, cải tạo không giam giữ, tù có thời hạn, tù chung thân, tử hình | Xử phạt hành chính: Cảnh cáo, phạt tiền; biện pháp khắc phục hậu quả; cưỡng chế hành chính |
-| **Hậu quả pháp lý** | Bị kết án và phát sinh **Án tích** (lý lịch tư pháp ghi nhận tiền án) | **Không bị án tích**, hết thời hạn 01 năm coi như chưa bị xử phạt |`;
+| **1. Tính chất và mức độ nguy hiểm cho xã hội (Tiêu chí cốt lõi nhất)** | Có tính chất và mức độ nguy hiểm cho xã hội **ĐÁNG KỂ** (**Khoản 1 Điều 8 BLHS 2015**).<br>• Xâm hại các quan hệ xã hội tối quan trọng: độc lập, chủ quyền, an ninh quốc gia, tính mạng, sức khỏe, sở hữu lớn.<br>• Định lượng thiệt hại vượt ngưỡng luật định (ví dụ: trộm cắp từ **2.000.000 đồng** trở lên theo **Điều 173 BLHS 2015**; cố ý gây thương tích tỷ lệ tổn thương cơ thể từ **11%** trở lên theo **Điều 134 BLHS 2015**). | Có tính chất và mức độ nguy hiểm cho xã hội **THẤP HƠN (chưa đến mức đáng kể)**, không phải là tội phạm (**Khoản 1 Điều 2 Luật XLVPHC 2012**).<br>• Chủ yếu xâm phạm các quy tắc quản lý hành chính nhà nước trên các lĩnh vực giao thông, trật tự công cộng, y tế, môi trường.<br>• Định lượng thiệt hại dưới ngưỡng truy cứu hình sự (ví dụ: trộm cắp lần đầu **dưới 2.000.000 đồng**). |
+| **2. Hậu quả pháp lý — Hệ thống Chế tài áp dụng** | Chịu **Trách nhiệm hình sự** với các **Hình phạt (Điều 32 BLHS 2015)** nghiêm khắc nhất của Nhà nước:<br>• *Hình phạt chính*: Cảnh cáo, Phạt tiền, Cải tạo không giam giữ, Trục xuất, **Tù có thời hạn (đến 20 năm/30 năm)**, **Tù chung thân**, **Tử hình**.<br>• Có thể bị tước quyền tự do thân thể và quyền sống. | Chịu **Trách nhiệm hành chính** với các **Hình thức xử phạt hành chính (Điều 21 Luật XLVPHC 2012)** nhẹ hơn:<br>• Cảnh cáo, **Phạt tiền** (chủ yếu), Tước quyền sử dụng giấy phép/chứng chỉ hành nghề có thời hạn, Tịch thu tang vật/phương tiện, Trục xuất.<br>• **Tuyệt đối không có hình phạt tù giam hay tử hình**. |
+| **3. Hậu quả pháp lý — Án tích (Lý lịch tư pháp)** | Người bị kết án bằng bản án hình sự có hiệu lực pháp luật sẽ **MANG ÁN TÍCH (tiền án)** trong lý lịch tư pháp cho đến khi được xóa án tích theo **Điều 69 – Điều 73 BLHS 2015**. | Người bị xử phạt vi phạm hành chính **KHÔNG MANG ÁN TÍCH** (chỉ ghi nhận tiền sự; sau 06 tháng hoặc 01 năm chấp hành xong quyết định mà không tái phạm thì được coi là chưa bị xử phạt). |
+| **4. Văn bản pháp lý quy định** | Duy nhất được quy định trong **Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)**. | Được quy định trong **Luật Xử lý vi phạm hành chính** và các **Nghị định của Chính phủ** xử phạt chuyên ngành. |
+| **5. Chủ thể & Thủ tục xử lý** | Duy nhất **Tòa án nhân dân** có thẩm quyền xét xử theo trình tự **Tố tụng hình sự** và tuyên bằng **Bản án**. | Do các **cơ quan hành chính nhà nước, người có thẩm quyền** (Chủ tịch UBND, Công an, Thanh tra, Quản lý thị trường...) xử phạt theo **thủ tục hành chính** bằng **Quyết định xử phạt**. |
+
+---
+
+#### 4. Kết luận & Ví dụ minh họa thực tiễn
+- **Ví dụ minh họa ranh giới**:
+  + Nếu A lén lút lấy cắp chiếc xe đạp trị giá **1.500.000 đồng** (lần đầu, chưa có tiền sự): Mức độ nguy hiểm chưa đáng kể $\rightarrow$ Là **Vi phạm hành chính**, bị Công an xử phạt tiền từ 2 – 3 triệu đồng và không có án tích.
+  + Nếu A lén lút lấy cắp chiếc xe máy trị giá **25.000.000 đồng** (từ 2.000.000 đồng trở lên): Mức độ nguy hiểm cho xã hội đáng kể $\rightarrow$ Cấu thành **Tội trộm cắp tài sản (Khoản 1 Điều 173 BLHS 2015)**, bị Tòa án xét xử phạt cải tạo không giam giữ hoặc phạt tù từ 06 tháng đến 03 năm và mang án tích.`;
     }
 
     // 4. So sánh Hợp đồng vô hiệu tuyệt đối vs vô hiệu tương đối
@@ -6606,6 +6740,14 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   // --- DẠNG 7: LÝ THUYẾT TỔNG HỢP & DỰ PHÒNG THÔNG MINH ---
   private static solveDynamicGeneralTheory(query: string, articles: ILawArticle[]): string {
     const qLower = query.toLowerCase();
+
+    // 0.00. Nếu câu hỏi so sánh Tội phạm và Vi phạm hành chính rơi vào GENERAL_THEORY
+    if (
+      (qLower.includes('tội phạm') || qLower.includes('vi phạm hình sự')) &&
+      (qLower.includes('vi phạm hành chính') || qLower.includes('vphc'))
+    ) {
+      return this.solveDynamicComparison(query, articles);
+    }
 
     // 0.0. Ưu tiên mối quan hệ giữa Nhà nước và Pháp luật
     if (

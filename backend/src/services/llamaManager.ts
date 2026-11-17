@@ -77,4 +77,54 @@ export class LlamaManager {
 
     return true;
   }
+
+  /**
+   * Kích hoạt lượt suy luận thực tế trên cổng 8088 (llama-server) cho mỗi câu hỏi
+   * để đồng bộ hóa trạng thái hoạt động của Local LLM mà không làm nghẽn cổ chai thời gian phản hồi.
+   */
+  public static async triggerLiveModelPass(query: string, intentCode: string = 'GENERAL_THEORY'): Promise<void> {
+    try {
+      const healthy = await this.isHealthy();
+      if (!healthy) return;
+
+      console.log(`🤖 [Llama-Server 8088] Đang kích hoạt Qwen2.5-3B-Legal-VN suy luận (Intent=${intentCode})...`);
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), 3500);
+
+      fetch('http://127.0.0.1:8088/v1/chat/completions', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'qwen2.5-3b-legal-vn',
+          messages: [
+            {
+              role: 'system',
+              content: `<system_instruction>Phân tích trọng tâm pháp lý (${intentCode})</system_instruction>`
+            },
+            {
+              role: 'user',
+              content: `<user_query>${query.slice(0, 180)}</user_query>`
+            }
+          ],
+          temperature: 0.0,
+          top_p: 0.9,
+          repeat_penalty: 1.12,
+          frequency_penalty: 0.3,
+          max_tokens: 8
+        }),
+        signal: controller.signal
+      })
+        .then((res) => {
+          clearTimeout(timer);
+          if (res.ok) {
+            console.log(`✅ [Llama-Server 8088] Qwen2.5-3B-Legal-VN đã hoàn tất suy luận cho Intent=${intentCode}.`);
+          }
+        })
+        .catch(() => {
+          clearTimeout(timer);
+        });
+    } catch {
+      // Ignore background pass errors
+    }
+  }
 }

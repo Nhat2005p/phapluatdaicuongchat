@@ -55,8 +55,11 @@ export class RagService {
     // 1.1 Khử dấu gạch chéo ngược trailing do gõ nhầm (ví dụ: "không\", "gì\\")
     res = res.replace(/\\+$/g, '').trim();
 
-    // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu thường gặp
-    res = res.replace(/\bphap\s+luat\b/gi, 'pháp luật')
+    // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu / gõ nhầm phổ biến
+    res = res.replace(/(?:^|\s)hân\s+biệt\b/gi, ' Phân biệt')
+             .replace(/\bkhonog\b/gi, 'không')
+             .replace(/\bkhong\b/gi, 'không')
+             .replace(/\bphap\s+luat\b/gi, 'pháp luật')
              .replace(/\bphap\s+ly\b/gi, 'pháp lý')
              .replace(/\bvi\s+pham\b/gi, 'vi phạm')
              .replace(/\bnghi\s+dinh\b/gi, 'nghị định')

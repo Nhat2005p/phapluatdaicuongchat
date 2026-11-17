@@ -2037,14 +2037,23 @@ ${lines.join('\n')}
     }
 
     const top1Score = topMatches[0].score;
-    // Chọn tối đa Top-N = 5 Chunks có độ liên quan cao (>= 65% so với Chunk 1 và khác mã mục)
+    const qLower = query.toLowerCase();
+    const isExplicitCompoundQuery =
+      qLower.includes('đồng thời') ||
+      qLower.includes('kết hợp') ||
+      qLower.includes('ngoài ra') ||
+      /\b(và|cùng với)\b.*\b(trình bày|phân tích|nêu|giải thích|so sánh)\b/i.test(qLower);
+
+    // Chỉ ghép nối đa Chunk trên giao diện hiển thị khi câu hỏi thực sự hỏi gộp nhiều chuyên đề khác nhau
     const selected = [topMatches[0]];
-    const seenCodes = new Set<string>([topMatches[0].chunk.sectionCode]);
-    for (let i = 1; i < Math.min(topMatches.length, 5); i++) {
-      const candidate = topMatches[i];
-      if (!seenCodes.has(candidate.chunk.sectionCode) && candidate.score >= top1Score * 0.65 && candidate.score >= 42) {
-        seenCodes.add(candidate.chunk.sectionCode);
-        selected.push(candidate);
+    if (isExplicitCompoundQuery) {
+      const seenCodes = new Set<string>([topMatches[0].chunk.sectionCode]);
+      for (let i = 1; i < Math.min(topMatches.length, 2); i++) {
+        const candidate = topMatches[i];
+        if (!seenCodes.has(candidate.chunk.sectionCode) && candidate.score >= top1Score * 0.85 && candidate.score >= 70) {
+          seenCodes.add(candidate.chunk.sectionCode);
+          selected.push(candidate);
+        }
       }
     }
 
