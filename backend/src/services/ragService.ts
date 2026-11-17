@@ -319,7 +319,8 @@ export class RagService {
       // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
       'hiến pháp', 'luật hiến pháp', 'quốc hội', 'chính phủ', 'chủ tịch nước', 'tòa án', 'viện kiểm sát',
       'hội đồng nhân dân', 'ủy ban nhân dân', 'quyền con người', 'quyền công dân', 'nghĩa vụ công dân',
-      'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'sa thải', 'hợp đồng lao động'
+      'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'sa thải', 'hợp đồng lao động',
+      'đuổi việc', 'nghỉ việc', 'trốn thuế', 'né thuế', 'đòi nợ', 'laptop', 'xe ô tô', 'ô tô'
     ];
 
     for (const kw of legalKeywords) {
@@ -621,6 +622,7 @@ export class RagService {
       'quy phạm này', 'quy phạm đó', 'quan hệ này', 'quan hệ đó',
       'chế định này', 'loại này', 'loại đó', 'ngành luật này',
       'người này', 'người đó', 'anh ta', 'chị ta', 'ông ta', 'bà ta', 'họ phải',
+      'các yếu tố đó', 'yếu tố đó', 'yếu tố nào', 'yếu tố trên', 'bộ phận đó', 'bộ phận này',
       'chủ thể này', 'khái niệm này', 'vấn đề này', 'điều luật này', 'điều này'
     ];
 
