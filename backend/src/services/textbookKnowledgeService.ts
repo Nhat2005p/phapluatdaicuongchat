@@ -1671,6 +1671,13 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
         if (c.sectionCode === '1.3') finalScore += 75;
       }
 
+      // Q. Chốt chặn Cross-Encoder cho lĩnh vực viễn tưởng / ngoài phạm vi cơ sở dữ liệu (Mặt Trăng, Sao Hỏa, Vũ trụ, Ngoài hành tinh...)
+      if (
+        /\b(mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000)\b/i.test(rawQueryText)
+      ) {
+        finalScore = 0;
+      }
+
       const rerankScoreNormalized = Math.max(0, Math.min(1.0, Number((finalScore / 55).toFixed(3))));
       return { chunk: c, score: finalScore, rerankScoreNormalized };
     });

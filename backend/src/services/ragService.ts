@@ -57,6 +57,8 @@ export class RagService {
 
     // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu / gõ nhầm phổ biến
     res = res.replace(/(?:^|\s)hân\s+biệt\b/gi, ' Phân biệt')
+             .replace(/(?:^|\s)iải\s+thích\b/gi, ' Giải thích')
+             .replace(/(?:^|\s)ỏ\s+qua\b/gi, ' Bỏ qua')
              .replace(/\bkhonog\b/gi, 'không')
              .replace(/\bkhong\b/gi, 'không')
              .replace(/\bphap\s+luat\b/gi, 'pháp luật')
@@ -213,12 +215,13 @@ export class RagService {
   } {
     const q = (query || '').toLowerCase();
     const injectionPatterns = [
-      /bỏ qua (?:tất cả )?(?:các )?hướng dẫn/i,
-      /ignore (?:all )?(?:previous )?instructions/i,
-      /in ra system prompt/i,
-      /hiển thị system prompt/i,
-      /system prompt của bạn là gì/i,
-      /hãy đóng vai (?:một )?(?:tội phạm|trùm xã hội đen|kẻ lừa đảo|luật sư đen)/i
+      /(?:bỏ|ỏ)\s*qua\s+(?:mọi\s+|tất\s+cả\s+|toàn\s+bộ\s+|các\s+|hết\s+)?(?:hướng\s+dẫn|quy\s+tắc|chỉ\s+thị|lệnh)/i,
+      /quên\s+(?:hết\s+|mọi\s+|tất\s+cả\s+)?(?:các\s+)?(?:quy\s+tắc|hướng\s+dẫn)/i,
+      /ignore\s+(?:all\s+)?(?:previous\s+)?instructions/i,
+      /system\s*prompt/i,
+      /in\s+(?:nguyên\s+văn\s+|ra\s+|toàn\s+bộ\s+)?(?:system\s*prompt|cấu\s+trúc\s+barem|cấu\s+hình\s+nội\s+bộ)/i,
+      /hiển\s+thị\s+system\s*prompt/i,
+      /hãy\s+đóng\s+vai\s+(?:một\s+)?(?:tội\s+phạm|trùm\s+xã\s+hội\s+đen|kẻ\s+lừa\s+đảo|luật\s+sư\s+đen|chủ\s+nợ)/i
     ];
     for (const rx of injectionPatterns) {
       if (rx.test(q)) {
@@ -689,7 +692,8 @@ export class RagService {
       'chế định này', 'loại này', 'loại đó', 'ngành luật này',
       'người này', 'người đó', 'anh ta', 'chị ta', 'ông ta', 'bà ta', 'họ phải',
       'các yếu tố đó', 'yếu tố đó', 'yếu tố nào', 'yếu tố trên', 'bộ phận đó', 'bộ phận này',
-      'chủ thể này', 'khái niệm này', 'vấn đề này', 'điều luật này', 'điều này'
+      'chủ thể này', 'khái niệm này', 'vấn đề này', 'điều luật này', 'điều này',
+      'vừa nêu', 'điều kiện thứ', 'điều kiện số', 'giao dịch đó', 'giao dịch này', 'ý thứ', 'mục thứ'
     ];
 
     const hasAnaphora = anaphoraPatterns.some((p) => qLower.includes(p));
@@ -744,10 +748,14 @@ export class RagService {
 
     const rawLower = raw.toLowerCase();
 
-    // 1. Không tách bài tập 4 câu trích dẫn QPPL kinh điển (đã có bộ giải chuyên biệt solveDynamicQpplDetailed)
+    // 1. Không tách bài tập 4 câu trích dẫn QPPL kinh điển hoặc yêu cầu tóm tắt 1 đoạn điều luật dán vào / chọn 1 đáp án trắc nghiệm
     if (
-      rawLower.includes('điều 39') &&
-      (rawLower.includes('điểm a khoản 1 điều 8') || rawLower.includes('điều 102') || rawLower.includes('điều 52'))
+      (rawLower.includes('điều 39') &&
+        (rawLower.includes('điểm a khoản 1 điều 8') || rawLower.includes('điều 102') || rawLower.includes('điều 52'))) ||
+      rawLower.includes('tóm tắt đoạn') ||
+      rawLower.includes('tóm tắt quy định') ||
+      rawLower.includes('gạch đầu dòng ngắn gọn') ||
+      rawLower.includes('chỉ chọn 1 đáp án')
     ) {
       return [raw];
     }

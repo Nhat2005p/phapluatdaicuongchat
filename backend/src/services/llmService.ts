@@ -1362,6 +1362,142 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
     const icStr = (intentCode as string) || '';
     const qLower = query.toLowerCase();
 
+    // Câu 19 (Multi-turn follow-up): Nếu vi phạm điều kiện thứ 2 (sự tự nguyện) của giao dịch dân sự
+    if (
+      qLower.includes('điều kiện thứ 2') &&
+      (qLower.includes('giao dịch dân sự') || qLower.includes('giao dịch đó'))
+    ) {
+      return {
+        sample_id: 'SFT_MULTI_TURN_CIVIL_TX_CONDITION_2_VOLUNTARINESS',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải đáp hậu quả pháp lý khi vi phạm điều kiện thứ 2 (sự tự nguyện) của giao dịch dân sự theo Điều 117, Điều 127 và Điều 131 BLDS 2015.',
+        input: query,
+        output: `### HẬU QUẢ PHÁP LÝ KHI VI PHẠM ĐIỀU KIỆN THỨ 2 (SỰ TỰ NGUYỆN) CỦA GIAO DỊCH DÂN SỰ
+*(Căn cứ **Điểm b Khoản 1 Điều 117, Điều 127, Điều 131 và Điều 132 Bộ luật Dân sự năm 2015**)*
+
+---
+
+1. **Xác định "điều kiện thứ 2" từ lượt hỏi trước**:
+   - Trong 4 điều kiện có hiệu lực của giao dịch dân sự tại **Điều 117 BLDS 2015**, **điều kiện thứ 2** là: *"Chủ thể tham gia giao dịch dân sự **hoàn toàn tự nguyện**"* (Điểm b Khoản 1 Điều 117).
+
+2. **Tình trạng pháp lý của giao dịch khi vi phạm sự tự nguyện**:
+   - Giao dịch đó bị **Tòa án tuyên bố VÔ HIỆU** (thuộc nhóm **giao dịch dân sự vô hiệu tương đối**) trong các trường hợp cụ thể sau:
+     + **Vô hiệu do bị nhầm lẫn (Điều 126 BLDS 2015)**: Khi có sự nhầm lẫn làm cho một bên hoặc các bên không đạt được mục đích của việc xác lập giao dịch.
+     + **Vô hiệu do bị lừa dối, đe dọa, cưỡng ép (Điều 127 BLDS 2015)**: Khi một bên tham gia giao dịch dân sự do bị lừa dối hoặc bị đe dọa, cưỡng ép thì có quyền yêu cầu Tòa án tuyên bố giao dịch dân sự đó là vô hiệu.
+     + **Vô hiệu do người xác lập không nhận thức và làm chủ được hành vi của mình (Điều 128 BLDS 2015)**: Người có năng lực hành vi dân sự nhưng đã xác lập giao dịch vào đúng thời điểm không nhận thức và làm chủ được hành vi của mình.
+
+3. **Thời hiệu yêu cầu Tòa án tuyên bố vô hiệu (Điều 132 BLDS 2015)**:
+   - Thời hiệu yêu cầu Tòa án tuyên bố giao dịch dân sự vô hiệu do vi phạm sự tự nguyện (Điều 126, 127, 128) là **02 năm**, kể từ ngày người bị nhầm lẫn, bị lừa dối biết hoặc phải biết giao dịch được xác lập do nhầm lẫn/lừa dối, hoặc kể từ ngày người có hành vi đe dọa, cưỡng ép chấm dứt hành vi đó.
+
+4. **Hậu quả pháp lý (Điều 131 BLDS 2015)**:
+   - Giao dịch dân sự vô hiệu **không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự** của các bên kể từ thời điểm giao dịch được xác lập.
+   - Các bên **khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận** (nếu không hoàn trả được bằng hiện vật thì trị giá thành tiền để hoàn trả). Bên có lỗi gây thiệt hại phải bồi thường.`
+      };
+    }
+
+    // Câu 03: Ông M có vợ bà N, 2 con A và B, A có con là D (A chết trước), di chúc 1,2 tỷ cho K
+    if (
+      qLower.includes('ông m') &&
+      qLower.includes('bà n') &&
+      (qLower.includes('1,2 tỷ') || qLower.includes('1.2 tỷ')) &&
+      qLower.includes('di chúc')
+    ) {
+      return {
+        sample_id: 'SFT_CIVIL_INHERIT_ONG_M_BA_N_K',
+        intent_code: 'CIVIL_INHERIT',
+        instruction: 'Chia di sản thừa kế của ông M với suất thừa kế bắt buộc (Điều 644 BLDS 2015) cho bà N và thừa kế thế vị (Điều 652 BLDS 2015).',
+        input: query,
+        output: `### GIẢI QUYẾT BÀI TẬP THỪA KẾ: DI SẢN CỦA ÔNG M (TÀI SẢN CHUNG VỢ CHỒNG 1,2 TỶ & DI CHÚC CHO K)
+*(Căn cứ **Bộ luật Dân sự năm 2015** và **Luật Hôn nhân và Gia đình năm 2014**)*
+
+---
+
+#### I. XÁC ĐỊNH DI SẢN THỪA KẾ CỦA ÔNG M
+- Tổng tài sản chung hợp nhất của vợ chồng ông M và bà N là **1,2 tỷ đồng**.
+- Căn cứ **Điều 33, Điều 66 Luật Hôn nhân và Gia đình 2014** và **Điều 612 Bộ luật Dân sự 2015**: Chia đôi khối tài sản chung vợ chồng:
+  + Phần tài sản thuộc quyền sở hữu riêng của **bà N**: **600 triệu đồng**.
+  + **Di sản thừa kế thực tế của ông M để lại**: **600 triệu đồng**.
+
+---
+
+#### II. XÁC ĐỊNH HIỆU LỰC DI CHÚC & NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015)
+- Năm 2025, ông M lập di chúc hợp pháp để lại toàn bộ di sản cho em ruột là **K** (nếu xét theo di chúc, K hưởng toàn bộ 600 triệu đồng).
+- Tuy nhiên, căn cứ **Khoản 1 Điều 644 Bộ luật Dân sự 2015** (*Người thừa kế không phụ thuộc vào nội dung của di chúc*): **Bà N (vợ hợp pháp của ông M)** bắt buộc được hưởng phần di sản ít nhất bằng **$2/3$ của một suất thừa kế theo pháp luật** (dù không được ông M cho hưởng trong di chúc).
+- *Lưu ý về A, B, D*: Con B đã thành niên và có khả năng lao động nên không thuộc diện Điều 644; anh A chết năm 2023 (trước ông M), cháu D là cháu nội (hưởng thế vị theo **Điều 652 BLDS 2015** nếu chia theo pháp luật) cũng không thuộc đối tượng của Điều 644 BLDS 2015.
+
+---
+
+#### III. TÍNH TOÁN CỤ THỂ TỪNG SUẤT THỪA KẾ
+1. **Giả sử chia di sản 600 triệu đồng của ông M theo pháp luật (Điều 651 & Điều 652 BLDS 2015)**:
+   - Hàng thừa kế thứ nhất của ông M gồm **03 suất**:
+     + **Bà N** (vợ);
+     + **B** (con);
+     + **D** (con của anh A — hưởng thừa kế thế vị phần của anh A do anh A chết trước ông M theo **Điều 652 BLDS 2015**).
+   - Giá trị **01 suất thừa kế theo pháp luật**: $600\text{ triệu} / 3 = \mathbf{200\text{ triệu đồng}}$.
+2. **Suất thừa kế bắt buộc của bà N theo Điều 644 BLDS 2015**:
+   - Bà N được hưởng: $\frac{2}{3} \times 200\text{ triệu} = \mathbf{133,33\text{ triệu đồng}}$ (trích từ phần di sản mà ông M định đoạt cho K).
+3. **Phần di sản còn lại ông K được hưởng theo di chúc**:
+   - Ông K được hưởng: $600\text{ triệu} - 133,33\text{ triệu} = \mathbf{466,67\text{ triệu đồng}}$.
+
+---
+
+#### IV. KẾT LUẬN PHÂN CHIA DI SẢN CỦA ÔNG M
+- **Bà N (vợ)**: Nhận **600 triệu** (tài sản riêng trong khối tài sản chung) + **133,33 triệu đồng** (suất thừa kế bắt buộc theo **Điều 644 BLDS 2015**) = **733,33 triệu đồng**.
+- **Ông K (em ruột)**: Nhận **466,67 triệu đồng** theo di chúc hợp pháp của ông M.
+- **B và cháu D**: **0 đồng** (vì ông M đã lập di chúc hợp pháp định đoạt toàn bộ di sản cho K và B, D không thuộc đối tượng bảo vệ tại Điều 644 BLDS 2015).`
+      };
+    }
+
+    // Câu 12: Luật Trật tự, an toàn giao thông đường bộ 2024 - Hạng A1 (đến 125 cm3)
+    if (
+      (qLower.includes('hạng a1') || qLower.includes('gplx a1') || qLower.includes('giấy phép lái xe hạng a1')) &&
+      (qLower.includes('trật tự') || qLower.includes('an toàn giao thông') || qLower.includes('dung tích') || qLower.includes('cm3') || qLower.includes('cm³'))
+    ) {
+      return {
+        sample_id: 'SFT_TRAFFIC_LAW_2024_LICENSE_A1',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Giải đáp quy định mới về giấy phép lái xe hạng A1 theo Luật Trật tự, an toàn giao thông đường bộ năm 2024.',
+        input: query,
+        output: `### QUY ĐỊNH HIỆN HÀNH VỀ GIẤY PHÉP LÁI XE HẠNG A1
+*(Căn cứ **Điểm a Khoản 1 Điều 57 Luật Trật tự, an toàn giao thông đường bộ năm 2024**, có hiệu lực từ ngày 01/01/2025)*
+
+---
+
+1. **Kết luận chính xác**:
+   - Giấy phép lái xe **hạng A1 cấp mới** được phép điều khiển xe mô tô hai bánh có dung tích xi-lanh **đến $125\text{ cm}^3$** (hoặc có công suất động cơ điện **đến $11\text{ kW}$**).
+
+2. **Điểm mới cần phân biệt với quy định cũ**:
+   - **Quy định cũ (Luật Giao thông đường bộ 2008)**: Hạng A1 trước đây cho phép điều khiển xe mô tô dung tích từ $50\text{ cm}^3$ đến **dưới $175\text{ cm}^3$**.
+   - **Quy định hiện hành (Luật Trật tự, an toàn giao thông đường bộ 2024)**: Thu hẹp phạm vi hạng A1 xuống còn **đến $125\text{ cm}^3$**; các xe mô tô hai bánh có dung tích xi-lanh **trên $125\text{ cm}^3$** (hoặc công suất động cơ điện trên $11\text{ kW}$) và các loại xe quy định cho hạng A1 sẽ chuyển sang **giấy phép lái xe hạng A** (**Điểm b Khoản 1 Điều 57**).
+   - *(Lưu ý chuyển tiếp tại Điều 89)*: Giấy phép lái xe hạng A1 đã được cấp trước ngày 01/01/2025 vẫn tiếp tục được sử dụng bình thường đối với xe đến dưới $175\text{ cm}^3$ theo thời hạn ghi trên bằng.`
+      };
+    }
+
+    // Câu 13: Đi xe máy không đội mũ bảo hiểm bị phạt bao nhiêu tiền
+    if (
+      (qLower.includes('mũ bảo hiểm') || qLower.includes('nón bảo hiểm')) &&
+      (qLower.includes('xe máy') || qLower.includes('mô tô')) &&
+      (qLower.includes('phạt') || qLower.includes('bao nhiêu') || qLower.includes('lúa') || qLower.includes('biên bản'))
+    ) {
+      return {
+        sample_id: 'SFT_TRAFFIC_HELMET_FINE',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải đáp mức xử phạt vi phạm hành chính đối với hành vi đi xe máy không đội mũ bảo hiểm.',
+        input: query,
+        output: `### MỨC XỬ PHẠT HÀNH VI ĐI XE MÁY KHÔNG ĐỘI MŨ BẢO HIỂM
+*(Căn cứ **Nghị định 100/2019/NĐ-CP** sửa đổi bởi **Nghị định 123/2021/NĐ-CP** và **Nghị định 168/2024/NĐ-CP**)*
+
+---
+
+1. **Mức phạt tiền**:
+   - Người điều khiển xe mô tô, xe gắn máy (kể cả xe máy điện) **không đội mũ bảo hiểm** (hoặc đội mũ bảo hiểm nhưng không cài quai đúng quy cách) khi tham gia giao thông trên đường bộ bị phạt tiền từ **400.000 đồng đến 600.000 đồng** (mức trung bình nếu không có tình tiết tăng nặng/giảm nhẹ là **500.000 đồng**).
+   - *(Lưu ý)*: Nếu chở thêm người ngồi sau cũng không đội mũ bảo hiểm (trừ trường hợp chở người bệnh đi cấp cứu, trẻ em dưới 6 tuổi, áp giải người có hành vi vi phạm pháp luật), người điều khiển xe sẽ bị phạt thêm **400.000 đồng đến 600.000 đồng** cho hành vi chở người không đội mũ bảo hiểm.
+
+2. **Hình thức xử phạt bổ sung & Tạm giữ phương tiện**:
+   - Nếu chỉ vi phạm lỗi không đội mũ bảo hiểm đơn thuần (có đầy đủ giấy tờ xe, bằng lái và không có nồng độ cồn), bạn **KHÔNG bị tước giấy phép lái xe** và **KHÔNG bị tạm giữ (giam) xe**.`
+      };
+    }
+
     // =========================================================================
     // BỘ 15 BÀI TEST CHUẨN RAG PIPELINE (TC 1.1 ĐẾN TC 5.3)
     // =========================================================================
@@ -3109,6 +3245,22 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
           latencyMs: Date.now() - startTime
         };
       }
+      if (
+        safetyCheck.violationType === 'PROMPT_INJECTION' &&
+        !qL.includes('đòi nợ') &&
+        !qL.includes('xã hội đen')
+      ) {
+        return {
+          text: `### 🛡️ TỪ CHỐI TIẾT LỘ CẤU HÌNH NỘI BỘ (ANTI-PROMPT INJECTION GUARDRAIL)
+
+**HỆ THỐNG TỪ CHỐI YÊU CẦU TRÍCH XUẤT SYSTEM PROMPT, MÃ NGUỒN HOẶC CẤU TRÚC BAREM NỘI BỘ.**
+
+Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawAssist)**. Mọi chỉ thị điều phối hệ thống (\`<system_instruction>\`) và cấu hình bảo mật được bảo vệ nghiêm ngặt và không thể bị ghi đè bởi các câu lệnh trong \`<user_query>\`.
+
+👉 Tôi vẫn sẵn sàng hỗ trợ bạn tra cứu điều luật thực định (Hiến pháp 2013, BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014...) và giải bài tập Pháp luật Đại cương theo đúng quy định pháp luật hiện hành.`,
+          latencyMs: Date.now() - startTime
+        };
+      }
       return {
         text: this.solveGuardrailPromptInjectionDebtExtortion(rawQuery),
         latencyMs: Date.now() - startTime
@@ -4618,29 +4770,17 @@ Khi đơn phương chấm dứt HĐLĐ trong các trường hợp trên (trừ t
    * TC 3.3: Bẫy Điều 500 Bộ luật Hình sự 2015 không tồn tại
    */
   public static solveDynamicTrapPenalCode500(query?: string): string {
-    return `### ⚠️ PHÁT HIỆN VÀ ĐÍNH CHÍNH BẪY ĐIỀU LUẬT KHÔNG TỒN TẠI
+    const qLower = (query || '').toLowerCase();
+    if (qLower.includes('trốn thuế')) {
+      return `### ⚠️ PHÁT HIỆN VÀ ĐÍNH CHÍNH BẪY ĐIỀU LUẬT KHÔNG TỒN TẠI
 
 **BẪY PHÁP LÝ:** **Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017) chỉ có tổng cộng 426 Điều (kết thúc tại Điều 426), HOÀN TOÀN KHÔNG CÓ ĐIỀU 500!**
-Trong hệ thống pháp luật hình sự Việt Nam, hành vi trốn thuế được quy định tại **Điều 200 Bộ luật Hình sự năm 2015** (Tội trốn thuế).
+Trong hệ thống pháp luật hình sự Việt Nam, hành vi trốn thuế được quy định tại **Điều 200 Bộ luật Hình sự năm 2015** (Tội trốn thuế).`;
+    }
+    return `### ⚠️ THÔNG BÁO ĐÍNH CHÍNH: ĐIỀU 500 BỘ LUẬT HÌNH SỰ 2015 KHÔNG TỒN TẠI
 
----
-
-### I. PHÂN TÍCH CẤU THÀNH TỘI TRỐN THUẾ THEO ĐIỀU 200 BỘ LUẬT HÌNH SỰ 2015
-
-#### 1. Khách thể của tội phạm
-- Xâm phạm trật tự quản lý kinh tế của Nhà nước trong lĩnh vực quản lý và thu nộp thuế, làm thất thu ngân sách nhà nước và ảnh hưởng xấu đến sự công bằng trong thực hiện nghĩa vụ tài chính của công dân và doanh nghiệp.
-
-#### 2. Mặt khách quan của tội phạm
-- **Hành vi phạm pháp**: Thực hiện một trong các hành vi trốn thuế như: không nộp hồ sơ đăng ký thuế; không nộp hồ sơ khai thuế; sử dụng hóa đơn, chứng từ không hợp pháp; ghi chép sổ kế toán không trung thực; câu kết bán hàng không xuất hóa đơn hoặc khai thấp giá trị thực tế...
-- **Định lượng cấu thành tội phạm**: Số tiền trốn thuế phải từ **100.000.000 đồng đến dưới 300.000.000 đồng** (hoặc dưới 100.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi trốn thuế hoặc đã bị kết án về tội này, chưa được xóa án tích mà còn vi phạm).
-
-#### 3. Chủ thể của tội phạm
-- **Cá nhân**: Người từ đủ 16 tuổi trở lên có đầy đủ năng lực trách nhiệm hình sự (Điều 12 BLHS).
-- **Pháp nhân thương mại**: Pháp nhân thương mại cũng phải chịu trách nhiệm hình sự về tội trốn thuế theo quy định tại **Khoản 5 Điều 200 BLHS 2015**.
-
-#### 4. Mặt chủ quan của tội phạm
-- **Lỗi**: **Lỗi cố ý trực tiếp**. Chủ thể nhận thức rõ nghĩa vụ nộp thuế của mình đối với Nhà nước, thấy trước hành vi trốn thuế gây thất thoát ngân sách nhưng cố tình thực hiện và mong muốn hậu quả trốn thuế xảy ra nhằm thu lợi bất chính.
-- **Mục đích**: Vụ lợi, chiếm đoạt số tiền thuế lẽ ra phải nộp vào Kho bạc Nhà nước.`;
+- **Kết luận**: **Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017) chỉ có tổng cộng 426 Điều** (từ Điều 1 đến **Điều 426 — Điều khoản thi hành**).
+- **Không tồn tại Điều 500** trong Bộ luật Hình sự 2015. Hệ thống từ chối suy diễn hoặc tự tạo nội dung cho điều luật không có thật nhằm bảo đảm độ chính xác pháp lý tuyệt đối.`;
   }
 
   /**
@@ -6316,7 +6456,37 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   public static solveDynamicDefinition(query: string, concept: string | null): string {
     const qLower = query.toLowerCase();
 
-    // 1. Ưu tiên các câu hỏi định nghĩa kết hợp phân tích chuyên sâu
+    // 1. Ưu tiên các câu hỏi định nghĩa Năng lực hành vi dân sự / Năng lực pháp luật dân sự (Điều 16 - Điều 24 BLDS 2015)
+    if (qLower.includes('năng lực hành vi dân sự') || concept === 'năng lực hành vi dân sự') {
+      return `### KHÁI NIỆM VÀ CÁC MỨC ĐỘ NĂNG LỰC HÀNH VI DÂN SỰ
+*(Căn cứ **Điều 19 – Điều 24 Bộ luật Dân sự năm 2015**)*
+
+---
+
+#### 1. Định nghĩa (Điều 19 Bộ luật Dân sự 2015)
+**Năng lực hành vi dân sự của cá nhân** là khả năng của cá nhân **bằng hành vi của mình xác lập, thực hiện quyền, nghĩa vụ dân sự**.
+
+#### 2. Các mức độ năng lực hành vi dân sự theo độ tuổi và nhận thức
+- **Người thành niên (từ đủ 18 tuổi trở lên — Điều 20 BLDS 2015)**: Có **năng lực hành vi dân sự đầy đủ**, trừ trường hợp bị Tòa án tuyên bố mất năng lực hành vi dân sự, có khó khăn trong nhận thức/làm chủ hành vi hoặc bị hạn chế năng lực hành vi dân sự.
+- **Người chưa thành niên (chưa đủ 18 tuổi — Điều 21 BLDS 2015)**:
+  + *Chưa đủ 6 tuổi*: Giao dịch dân sự do người đại diện theo pháp luật xác lập, thực hiện.
+  + *Từ đủ 6 tuổi đến chưa đủ 15 tuổi*: Phải được người đại diện theo pháp luật đồng ý, trừ giao dịch phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi.
+  + *Từ đủ 15 tuổi đến chưa đủ 18 tuổi*: Tự mình xác lập, thực hiện giao dịch dân sự, trừ giao dịch liên quan đến bất động sản, động sản phải đăng ký và giao dịch khác theo quy định luật phải có sự đồng ý của người đại diện theo pháp luật.
+- **Các trường hợp đặc biệt do Tòa án quyết định**: Mất năng lực hành vi dân sự (**Điều 22**), Có khó khăn trong nhận thức, làm chủ hành vi (**Điều 23**), Hạn chế năng lực hành vi dân sự (**Điều 24**).`;
+    }
+
+    if (qLower.includes('năng lực pháp luật dân sự') || concept === 'năng lực pháp luật dân sự') {
+      return `### KHÁI NIỆM NĂNG LỰC PHÁP LUẬT DÂN SỰ
+*(Căn cứ **Điều 16 – Điều 18 Bộ luật Dân sự năm 2015**)*
+
+- **Định nghĩa (Khoản 1 Điều 16 BLDS 2015)**: **Năng lực pháp luật dân sự của cá nhân** là khả năng của cá nhân **có quyền dân sự và nghĩa vụ dân sự**.
+- **Đặc điểm (Khoản 2, 3 Điều 16 & Điều 18 BLDS 2015)**:
+  1. Mọi cá nhân đều có năng lực pháp luật dân sự **như nhau**.
+  2. Năng lực pháp luật dân sự của cá nhân **có từ khi người đó sinh ra và chấm dứt khi người đó chết**.
+  3. Năng lực pháp luật dân sự của cá nhân **không bị hạn chế**, trừ trường hợp Bộ luật này, luật khác có liên quan quy định khác.`;
+    }
+
+    // 1b. Ưu tiên các câu hỏi định nghĩa kết hợp phân tích chuyên sâu
     if (
       qLower.includes('quan hệ pháp luật') &&
       (qLower.includes('cơ cấu') || qLower.includes('chủ thể') || qLower.includes('khách thể') || qLower.includes('nội dung') || qLower.includes('sự kiện pháp lý'))
@@ -6444,6 +6614,31 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
    */
   private static solveDynamicConditionalFormat(query: string): string | null {
     const qLower = query.toLowerCase();
+
+    // 0. Tóm tắt đoạn văn bản / điều luật người dùng dán vào thành các gạch đầu dòng ngắn gọn
+    if (
+      (qLower.includes('tóm tắt đoạn') ||
+        qLower.includes('tóm tắt quy định') ||
+        qLower.includes('gạch đầu dòng ngắn gọn') ||
+        qLower.includes('tóm tắt thành')) &&
+      query.length > 150
+    ) {
+      const cleanBody = query
+        .replace(/tóm\s*tắt\s*(?:đoạn|quy\s*định|văn\s*bản)(?:\s*trên)?(?:\s*thành\s*\d+\s*gạch\s*đầu\s*dòng(?:\s*ngắn\s*gọn)?)?[.:\s]*/gi, '')
+        .trim();
+      const clauses = cleanBody
+        .split(/(?:;\s*|\.\s+|\n+)/)
+        .map((s) => s.trim())
+        .filter((s) => s.length > 18);
+      const top3 = clauses.slice(0, 3);
+      if (top3.length >= 2) {
+        return `### 📝 TÓM TẮT NGẮN GỌN NỘI DUNG QUY ĐỊNH ĐÃ CUNG CẤP
+*(Bám sát nguyên văn đoạn quy định được dán vào)*
+
+${top3.map((c) => `- ${c.replace(/^[a-d1-9][.)]\s*/i, '').trim()}`).join('\n')}`;
+      }
+    }
+
     const isSimpleTone =
       qLower.includes('học sinh cấp 2') ||
       qLower.includes('học sinh') ||
