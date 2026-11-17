@@ -1,6 +1,7 @@
 import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import fs from 'fs';
+import os from 'os';
 
 // Resolve project root whether CWD is backend/ or legal-chatbot-local/
 const PROJECT_ROOT = fs.existsSync(path.join(process.cwd(), 'tools'))
@@ -9,10 +10,13 @@ const PROJECT_ROOT = fs.existsSync(path.join(process.cwd(), 'tools'))
 
 const LLAMA_EXE = path.join(PROJECT_ROOT, 'tools', 'llama', 'llama-server.exe');
 const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-3b-legal-vn-Q4_K_M.gguf');
+const LORA_GGUF = path.join(PROJECT_ROOT, 'models', 'vietlaw_lora_adapter.gguf');
 
 let llamaProcess: ChildProcess | null = null;
 
 export class LlamaManager {
+  public static isFullGenerating = false;
+
   public static async isHealthy(): Promise<boolean> {
     try {
       const res = await fetch('http://127.0.0.1:8088/health', {
@@ -40,26 +44,38 @@ export class LlamaManager {
       return false;
     }
 
-    console.log(`🚀 [Llama-Server] Đang khởi động mô hình: ${path.basename(MODEL_GGUF)}...`);
+    const logicalThreads = Math.max(4, os.cpus().length || 8);
+    const genThreads = Math.max(4, Math.floor(logicalThreads / 2));
+
+    const llamaArgs = [
+      '-m', MODEL_GGUF,
+      '--host', '127.0.0.1',
+      '--port', '8088',
+      '-c', '4096',
+      '-np', '1',
+      '-t', String(genThreads),
+      '-tb', String(logicalThreads),
+      '-b', '1024',
+      '-ub', '512',
+      '-fa', 'on',
+      '--cache-reuse', '64',
+      '--log-disable'
+    ];
+
+    if (fs.existsSync(LORA_GGUF)) {
+      llamaArgs.push('--lora', LORA_GGUF);
+    }
+
+    console.log(
+      `🚀 [Llama-Server] Đang khởi động ${path.basename(MODEL_GGUF)} (t=${genThreads}, tb=${logicalThreads}, FlashAttention=ON)...`
+    );
 
     try {
-      llamaProcess = spawn(
-        LLAMA_EXE,
-        [
-          '-m', MODEL_GGUF,
-          '--host', '127.0.0.1',
-          '--port', '8088',
-          '-c', '4096',
-          '-np', '1',
-          '-t', '6',
-          '--log-disable'
-        ],
-        {
-          detached: true,
-          stdio: 'ignore',
-          windowsHide: true
-        }
-      );
+      llamaProcess = spawn(LLAMA_EXE, llamaArgs, {
+        detached: true,
+        stdio: 'ignore',
+        windowsHide: true
+      });
 
       llamaProcess.unref();
 
@@ -84,8 +100,9 @@ export class LlamaManager {
    */
   public static async triggerLiveModelPass(query: string, intentCode: string = 'GENERAL_THEORY'): Promise<void> {
     try {
+      if (this.isFullGenerating) return;
       const healthy = await this.isHealthy();
-      if (!healthy) return;
+      if (!healthy || this.isFullGenerating) return;
 
       console.log(`🤖 [Llama-Server 8088] Đang kích hoạt Qwen2.5-3B-Legal-VN suy luận (Intent=${intentCode})...`);
       const controller = new AbortController();
@@ -96,14 +113,15 @@ export class LlamaManager {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           model: 'qwen2.5-3b-legal-vn',
+          cache_prompt: true,
           messages: [
             {
               role: 'system',
-              content: `<system_instruction>Phân tích trọng tâm pháp lý (${intentCode})</system_instruction>`
+              content: '<system_instruction>Bạn là trợ lý Pháp luật đại cương (VietLawAssist).</system_instruction>'
             },
             {
               role: 'user',
-              content: `<user_query>${query.slice(0, 180)}</user_query>`
+              content: `<user_query>[${intentCode}] ${query.slice(0, 160)}</user_query>`
             }
           ],
           temperature: 0.0,

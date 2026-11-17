@@ -24,6 +24,31 @@ export interface QuantifierPolarityFlags {
   matchedQuantifiers: string[];
 }
 
+export interface MultipleChoiceOption {
+  label: string;
+  text: string;
+}
+
+export interface StructuredQueryContext {
+  questionForm:
+    | 'MULTIPLE_CHOICE'
+    | 'SUMMARIZATION'
+    | 'QPPL_DISSECTION'
+    | 'STATUTE_LOOKUP'
+    | 'COMPARISON'
+    | 'TRUE_FALSE'
+    | 'AMBIGUOUS_CONSULT'
+    | 'CASE_STUDY'
+    | 'CONCEPT_EXPLANATION';
+  multipleChoiceOptions: MultipleChoiceOption[];
+  quotedClause: string | null;
+  comparisonPair: [string, string] | null;
+  mentionedArticles: Array<{ articleNumber: number; lawHint?: string }>;
+  isOutOfDatabaseDomain: boolean;
+  isAmbiguousMissingFacts: boolean;
+  conciseConstraint: boolean;
+}
+
 export interface QueryRoutingPlan {
   originalQuery: string;
   rewrittenQuery: string;
@@ -33,6 +58,7 @@ export interface QueryRoutingPlan {
   intentCode: ExamArchetype;
   targetSources: Array<'SFT_EXAM_CORPUS' | 'TEXTBOOK_KNOWLEDGE' | 'STATUTORY_LAWS' | 'DYNAMIC_CASE_SOLVER'>;
   quantifierFlags: QuantifierPolarityFlags;
+  queryContext?: StructuredQueryContext;
 }
 
 export class RagService {
@@ -261,9 +287,10 @@ export class RagService {
     const subQuestions = this.splitMultiQuestions(rewrittenQuery);
     const intentCode = this.detectIntent(rewrittenQuery, forcedCategory);
     const quantifierFlags = this.extractQuantifierAndPolarityFlags(rewrittenQuery);
+    const queryContext = this.analyzeQueryContext(rewrittenQuery);
 
     const targetSources: Array<'SFT_EXAM_CORPUS' | 'TEXTBOOK_KNOWLEDGE' | 'STATUTORY_LAWS' | 'DYNAMIC_CASE_SOLVER'> = [];
-    if (intentCode !== 'OUT_OF_SCOPE') {
+    if (intentCode !== 'OUT_OF_SCOPE' && !queryContext.isOutOfDatabaseDomain) {
       targetSources.push('SFT_EXAM_CORPUS', 'TEXTBOOK_KNOWLEDGE', 'STATUTORY_LAWS');
       if (
         intentCode === 'CASE_ANALYSIS' ||
@@ -285,7 +312,8 @@ export class RagService {
       subQuestions,
       intentCode,
       targetSources,
-      quantifierFlags
+      quantifierFlags,
+      queryContext
     };
   }
   /**
@@ -366,7 +394,9 @@ export class RagService {
       'phòng vệ', 'cấp thiết', 'sự kiện bất ngờ', 'độ tuổi', 'tuổi chịu', 'chưa thành niên',
       'chuẩn bị phạm tội', 'phạm tội chưa đạt', 'tự ý nửa chừng', 'tái phạm',
       'giết', 'tước đoạt tính mạng', 'đâm', 'chém', 'bắn', 'trộm', 'cướp', 'lừa đảo', 'chiếm đoạt',
+      'đánh người', 'hành hung', 'thương tích', 'đi tù', 'phạt tù', 'bị bắt',
       'tạm giam', 'bắt người', 'bắt người bị giữ', 'án lệ', 'kháng cáo', 'vu khống', 'bịa đặt',
+      'giấy viết tay', 'công chứng', 'chứng thực', 'mua đất', 'mua nhà', 'chuyển nhượng đất', 'sổ đỏ',
 
       // 4. Chương 8 & 9: Luật Hành chính & Phòng, chống tham nhũng
       'hành chính', 'quản lý nhà nước', 'xử phạt', 'vi phạm hành chính', 'xử phạt vi phạm hành chính',
@@ -665,9 +695,114 @@ export class RagService {
    * Tự động phát hiện câu hỏi nối tiếp (dùng đại từ chỉ định hoặc câu hỏi tỉnh lược chủ ngữ)
    * và ghép ngữ cảnh chủ đề pháp lý từ câu hỏi liền trước.
    */
+  /**
+   * =========================================================================
+   * STAGE 01.5: PHÂN TÍCH NGỮ CẢNH CÂU HỎI CÓ CẤU TRÚC (STRUCTURED QUERY CONTEXT)
+   * Tách dạng câu hỏi, lựa chọn trắc nghiệm, mệnh đề trích dẫn, cặp thực thể so sánh
+   * và phát hiện sớm câu hỏi thiếu dữ kiện hoặc ngoài kho dữ liệu.
+   * =========================================================================
+   */
+  public static analyzeQueryContext(rawQuery: string): StructuredQueryContext {
+    const query = this.rewriteLegalQuery(rawQuery || '');
+    const qLower = query.toLowerCase();
+
+    const isOutOfDatabaseDomain =
+      /\b(mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000|hàng không vũ trụ)\b/i.test(
+        qLower
+      );
+
+    // 1. Bóc tách các phương án trắc nghiệm A/B/C/D (ví dụ: "A. ... | B. ... | C. ... | D. ...")
+    const multipleChoiceOptions: MultipleChoiceOption[] = [];
+    const mcRegex = /(?:^|[\s|;,\n])([A-D])[.)]\s*([^|;\n]+?)(?=(?:[\s|;,\n]+[A-D][.)]\s)|$)/g;
+    let mcMatch: RegExpExecArray | null;
+    while ((mcMatch = mcRegex.exec(query)) !== null) {
+      const label = mcMatch[1].toUpperCase();
+      const text = mcMatch[2].replace(/[.|;\s]+$/g, '').trim();
+      if (text && !multipleChoiceOptions.some((o) => o.label === label)) {
+        multipleChoiceOptions.push({ label, text });
+      }
+    }
+
+    // 2. Bóc tách câu trích dẫn trong ngoặc kép (phục vụ bóc tách QPPL hoặc nhận định Đúng/Sai)
+    const quoteMatch = query.match(/"([^"]{12,350})"/) || query.match(/“([^”]{12,350})”/);
+    const quotedClause = quoteMatch ? quoteMatch[1].trim() : null;
+
+    // 3. Bóc tách cặp thực thể so sánh (ví dụ: "Phân biệt X và Y dựa trên...")
+    let comparisonPair: [string, string] | null = null;
+    const cmpMatch = query.match(
+      /(?:so\s+sánh|phân\s+biệt)(?:\s+sự\s+khác\s+nhau\s+giữa|\s+vị\s+trí,?\s+tính\s+chất\s+pháp\s+lý\s+của|\s+giữa)?\s+([^,.;?]+?)\s+(?:và|với|vs\.?)\s+([^,.;?]+?)(?=\s+(?:theo|dựa\s+trên|về|trong|đồng\s+thời)|[?.!]|$)/i
+    );
+    if (cmpMatch && cmpMatch[1] && cmpMatch[2]) {
+      comparisonPair = [cmpMatch[1].trim(), cmpMatch[2].trim()];
+    }
+
+    // 4. Bóc tách số Điều và Tên Luật được nhắc tới
+    const mentionedArticles: Array<{ articleNumber: number; lawHint?: string }> = [];
+    const artRegex = /điều\s+(\d+)(?:\s+([^\n,.;?]{3,45}))?/gi;
+    let aMatch: RegExpExecArray | null;
+    while ((aMatch = artRegex.exec(query)) !== null) {
+      mentionedArticles.push({
+        articleNumber: parseInt(aMatch[1], 10),
+        lawHint: aMatch[2] ? aMatch[2].trim() : undefined
+      });
+    }
+
+    // 5. Nhận diện câu hỏi tư vấn thực tế ngắn bị mơ hồ / thiếu dữ kiện định lượng (KHÔNG dùng \b của ASCII cho tiếng Việt có dấu như đ, ă, ơ, ư)
+    const hasQuantitativeFacts = /\d+\s*(?:%|triệu|tỷ|nghìn|tuổi|mg|lít|cm)\b/i.test(query);
+    const isAmbiguousMissingFacts =
+      !hasQuantitativeFacts &&
+      query.length < 160 &&
+      ((/(?:đánh người|hành hung|gây thương tích|chém người)/i.test(qLower) && /(?:mấy năm|bao nhiêu năm|đi tù|phạt|xử lý)/i.test(qLower)) ||
+        (/(?:ăn trộm|trộm cắp|lấy trộm)/i.test(qLower) && /(?:mấy năm|bao nhiêu năm|đi tù|bị phạt|phạt thế nào)/i.test(qLower)) ||
+        (/(?:giấy viết tay|giấy tay|không công chứng)/i.test(qLower) && /(?:mua đất|mua nhà|bán đất|chuyển nhượng|hợp lệ)/i.test(qLower)));
+
+    const conciseConstraint =
+      qLower.includes('chỉ chọn 1 đáp án') ||
+      qLower.includes('giải thích đúng 1 câu') ||
+      qLower.includes('ngắn gọn trong 1 câu') ||
+      qLower.includes('tóm tắt');
+
+    let questionForm: StructuredQueryContext['questionForm'] = 'CONCEPT_EXPLANATION';
+    if (multipleChoiceOptions.length >= 3) {
+      questionForm = 'MULTIPLE_CHOICE';
+    } else if (
+      (qLower.includes('tóm tắt') || qLower.includes('rút gọn') || qLower.includes('gạch đầu dòng ngắn gọn')) &&
+      query.length > 140
+    ) {
+      questionForm = 'SUMMARIZATION';
+    } else if (
+      (qLower.includes('giả định') || qLower.includes('chế tài') || qLower.includes('3 bộ phận') || qLower.includes('bộ phận nào bị ẩn')) &&
+      (quotedClause !== null || qLower.includes('quy phạm'))
+    ) {
+      questionForm = 'QPPL_DISSECTION';
+    } else if (isAmbiguousMissingFacts) {
+      questionForm = 'AMBIGUOUS_CONSULT';
+    } else if (qLower.includes('so sánh') || qLower.includes('phân biệt')) {
+      questionForm = 'COMPARISON';
+    } else if (qLower.includes('đúng hay sai') || qLower.includes('nhận định') || qLower.includes('đúng không')) {
+      questionForm = 'TRUE_FALSE';
+    } else if (mentionedArticles.length > 0 && (qLower.includes('nội dung') || qLower.includes('quy định gì') || qLower.includes('giải thích điều'))) {
+      questionForm = 'STATUTE_LOOKUP';
+    } else if (/\b(ông|bà|anh|chị|sinh viên|công ty|doanh nghiệp)\b/i.test(qLower)) {
+      questionForm = 'CASE_STUDY';
+    }
+
+    return {
+      questionForm,
+      multipleChoiceOptions,
+      quotedClause,
+      comparisonPair,
+      mentionedArticles,
+      isOutOfDatabaseDomain,
+      isAmbiguousMissingFacts,
+      conciseConstraint
+    };
+  }
+
   public static contextualizeQueryWithHistory(
     query: string,
-    previousQuery?: string | null
+    previousQuery?: string | null,
+    previousResponse?: string | null
   ): { effectiveQuery: string; isContextualized: boolean; contextTopic?: string } {
     const cleanCurrent = (query || '').trim();
     if (!previousQuery || !previousQuery.trim() || !cleanCurrent) {
@@ -693,12 +828,12 @@ export class RagService {
       'người này', 'người đó', 'anh ta', 'chị ta', 'ông ta', 'bà ta', 'họ phải',
       'các yếu tố đó', 'yếu tố đó', 'yếu tố nào', 'yếu tố trên', 'bộ phận đó', 'bộ phận này',
       'chủ thể này', 'khái niệm này', 'vấn đề này', 'điều luật này', 'điều này',
-      'vừa nêu', 'điều kiện thứ', 'điều kiện số', 'giao dịch đó', 'giao dịch này', 'ý thứ', 'mục thứ'
+      'vừa nêu', 'ở trên', 'điều kiện thứ', 'điều kiện số', 'giao dịch đó', 'giao dịch này', 'ý thứ', 'mục thứ', 'hình thức thứ'
     ];
 
     const hasAnaphora = anaphoraPatterns.some((p) => qLower.includes(p));
 
-    // Các câu hỏi nối tiếp ngắn gọn tỉnh lược chủ đề (ví dụ: "cho ví dụ minh họa", "phân tích kỹ hơn", "còn mặt chủ quan thì sao?")
+    // Các câu hỏi nối tiếp ngắn gọn tỉnh lược chủ đề
     const followUpPrefixes = [
       'cho ví dụ', 'lấy ví dụ', 'nêu ví dụ', 'ví dụ minh họa', 'cho tôi ví dụ', 'cho 1 ví dụ', 'cho một ví dụ',
       'phân tích kỹ hơn', 'giải thích rõ hơn', 'giải thích kỹ hơn', 'giải thích chi tiết', 'nói rõ hơn',
@@ -717,7 +852,6 @@ export class RagService {
       return { effectiveQuery: cleanCurrent, isContextualized: false };
     }
 
-    // Làm sạch previousQuery (bỏ phần hậu tố ngữ cảnh cũ và các từ nghi vấn "là gì?", "đúng hay sai?" để giữ chủ đề cốt lõi)
     const cleanPrev = previousQuery
       .replace(/\s*\(Ngữ cảnh câu hỏi trước:[\s\S]*?\)\s*$/i, '')
       .replace(/\s*(?:là gì|như thế nào|đúng hay sai|hãy phân tích|trình bày khái niệm)\s*\??\s*$/i, '')
@@ -729,8 +863,21 @@ export class RagService {
       return { effectiveQuery: cleanCurrent, isContextualized: false };
     }
 
+    // Trích xuất thêm mục số N từ câu trả lời trước nếu người dùng hỏi "điều kiện thứ N", "ý thứ N", "hình thức thứ N"
+    let extractedPrevItem = '';
+    const nthMatch = qLower.match(/(?:điều kiện|ý|mục|hình thức|trường hợp)\s*(?:thứ|số)\s*(\d+|nhất|hai|ba|tư|bốn)/i);
+    if (nthMatch && previousResponse) {
+      const wordToNum: Record<string, string> = { nhất: '1', hai: '2', ba: '3', tư: '4', bốn: '4' };
+      const targetNum = wordToNum[nthMatch[1].toLowerCase()] || nthMatch[1];
+      const itemRegex = new RegExp(`(?:^|\\n)\\s*(?:Điều kiện\\s*${targetNum}|${targetNum}[.)])\\s*[:\\-]?\\s*([^\\n]{8,160})`, 'i');
+      const foundLine = previousResponse.match(itemRegex);
+      if (foundLine && foundLine[1]) {
+        extractedPrevItem = ` | Nội dung mục ${targetNum} lượt trước: ${foundLine[1].replace(/[*_`]/g, '').trim()}`;
+      }
+    }
+
     return {
-      effectiveQuery: `${cleanCurrent} (Ngữ cảnh câu hỏi trước: ${cleanPrev})`,
+      effectiveQuery: `${cleanCurrent} (Ngữ cảnh câu hỏi trước: ${cleanPrev}${extractedPrevItem})`,
       isContextualized: true,
       contextTopic: cleanPrev
     };
@@ -1078,6 +1225,115 @@ export class RagService {
   }
 
   /**
+   * Động cơ Hybrid Search trên kho Điều luật Thực định (Exact Citation + Keyword Phrase + Bigram Scoring)
+   * Tuyệt đối KHÔNG trả về điều luật rác nếu điểm tương đồng dưới ngưỡng tin cậy (score < 18).
+   */
+  public static async hybridSearchLawArticles(query: string, topN: number = 5): Promise<ILawArticle[]> {
+    try {
+      const allArticles = await LawArticle.find({});
+      if (!allArticles || allArticles.length === 0) return [];
+
+      const qCtx = this.analyzeQueryContext(query);
+      if (qCtx.isOutOfDatabaseDomain) return [];
+
+      const qNorm = query
+        .toLowerCase()
+        .replace(/[.,;:?!"'“”()\[\]\-–—_/\\]/g, ' ')
+        .replace(/\s+/g, ' ')
+        .trim();
+
+      const stopWords = new Set([
+        'của', 'những', 'trong', 'theo', 'nào', 'hãy', 'cho', 'biết', 'trình', 'bày', 'phân', 'tích',
+        'giải', 'thích', 'đúng', 'sai', 'nhận', 'định', 'sau', 'đây', 'như', 'thế', 'nào', 'khi',
+        'được', 'phải', 'không', 'một', 'các', 'với', 'hoặc', 'người', 'pháp', 'luật', 'quy', 'định'
+      ]);
+      const qTokens = qNorm.split(' ').filter((w) => w.length > 2 && !stopWords.has(w));
+      const qBigrams = new Set<string>();
+      const rawWords = qNorm.split(' ').filter((w) => w.length > 1);
+      for (let i = 0; i < rawWords.length - 1; i++) {
+        qBigrams.add(`${rawWords[i]} ${rawWords[i + 1]}`);
+      }
+
+      const scored = allArticles.map((art) => {
+        let score = 0;
+        const titleLower = (art.title || '').toLowerCase();
+        const contentLower = (art.contentRaw || '').toLowerCase();
+
+        // 1. Khớp trực tiếp số Điều + Tên Luật
+        for (const m of qCtx.mentionedArticles) {
+          if (Number(art.articleNumber) === m.articleNumber) {
+            score += 45;
+            if (m.lawHint) {
+              const hint = m.lawHint.toLowerCase();
+              if (
+                (hint.includes('hiến pháp') && art.lawCode.includes('HP')) ||
+                ((hint.includes('hình sự') || hint.includes('blhs')) && art.lawCode.includes('BLHS')) ||
+                ((hint.includes('dân sự') || hint.includes('blds')) && art.lawCode.includes('BLDS')) ||
+                ((hint.includes('lao động') || hint.includes('bllđ')) && art.lawCode.includes('BLLD')) ||
+                ((hint.includes('hôn nhân') || hint.includes('hngđ')) && art.lawCode.includes('HNGD')) ||
+                ((hint.includes('hành chính') || hint.includes('xlvphc')) && art.lawCode.includes('XLVPHC')) ||
+                ((hint.includes('ban hành') || hint.includes('vbqppl')) && art.lawCode.includes('VBQPPL'))
+              ) {
+                score += 90;
+              } else {
+                score -= 30;
+              }
+            }
+          }
+        }
+
+        // 2. Khớp từ khóa chuyên ngành của điều luật (keywords)
+        if (Array.isArray(art.keywords)) {
+          for (const kw of art.keywords) {
+            const kwLower = kw.toLowerCase().trim();
+            if (kwLower.length >= 4 && qNorm.includes(kwLower)) {
+              score += kwLower.includes(' ') ? 26 : 12;
+            }
+          }
+        }
+
+        // 3. Khớp tiêu đề điều luật (title)
+        if (titleLower.length >= 5 && qNorm.includes(titleLower)) {
+          score += 38;
+        }
+
+        // 4. Khớp Bigram trên tiêu đề + nội dung
+        let bigramHits = 0;
+        qBigrams.forEach((bg) => {
+          if (titleLower.includes(bg)) bigramHits += 2;
+          else if (contentLower.includes(bg)) bigramHits += 1;
+        });
+        score += Math.min(36, bigramHits * 4.5);
+
+        // 5. Khớp Unigram có chọn lọc
+        let tokenHits = 0;
+        for (const t of qTokens) {
+          if (titleLower.includes(t)) tokenHits += 2;
+          else if (contentLower.includes(t)) tokenHits += 0.8;
+        }
+        score += Math.min(20, tokenHits * 2);
+
+        if (qNorm.includes('bộ luật hình sự') && !qNorm.includes('dân sự') && art.lawCode.includes('BLDS')) {
+          score -= 25;
+        }
+        if (qNorm.includes('bộ luật dân sự') && !qNorm.includes('hình sự') && !qNorm.includes('kết hôn') && art.lawCode.includes('BLHS')) {
+          score -= 25;
+        }
+
+        return { art, score };
+      });
+
+      return scored
+        .filter((s) => s.score >= 18)
+        .sort((a, b) => b.score - a.score)
+        .slice(0, topN)
+        .map((s) => s.art);
+    } catch {
+      return [];
+    }
+  }
+
+  /**
    * Giai đoạn 2: Truy xuất Ngữ cảnh Kép (Hybrid Retrieval)
    */
   public static async retrieveContext(query: string, intentCode: ExamArchetype): Promise<{
@@ -1085,7 +1341,8 @@ export class RagService {
     principle?: ITextbookPrinciple | null;
     promptContext: string;
   }> {
-    if (intentCode === 'OUT_OF_SCOPE') {
+    const qCtx = this.analyzeQueryContext(query);
+    if (intentCode === 'OUT_OF_SCOPE' || qCtx.isOutOfDatabaseDomain) {
       return {
         articles: [],
         principle: null,
@@ -1107,7 +1364,7 @@ export class RagService {
       principle = await TextbookPrinciple.findOne({ topicCode: intentCode });
     }
 
-    // 2. Quét văn bản luật thực định theo đặc thù dạng đề
+    // 2. Quét văn bản luật thực định theo đặc thù dạng đề (KHÔNG BAO GIỜ gán điều luật rác mặc định ở nhánh else!)
     let matchedArticles: ILawArticle[] = [];
 
     switch (intentCode) {
@@ -1115,73 +1372,32 @@ export class RagService {
         const qL = query.toLowerCase();
         if (qL.includes('thứ tự hiệu lực') || qL.includes('hiệu lực pháp lý') || (qL.includes('sắp xếp') && qL.includes('thứ tự')) || (qL.includes('hiến pháp') && qL.includes('nghị định'))) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D119' },
-              { articleId: 'VBQPPL2015_D4' },
-              { articleId: 'VBQPPL2015_D156' }
-            ]
+            $or: [{ articleId: 'HP2013_D119' }, { articleId: 'VBQPPL2015_D4' }, { articleId: 'VBQPPL2015_D156' }]
           }).limit(3);
-        } else if (qL.includes('sự kiện pháp lý') || qL.includes('sự biến') || qL.includes('tai nạn giao thông') || qL.includes('qua đời') || qL.includes('chết do')) {
+        } else if (qL.includes('sự kiện pháp lý') || qL.includes('sự biến')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLDS2015_D611' },
-              { articleId: 'BLDS2015_D591' },
-              { articleId: 'HNGD2014_D65' }
-            ]
+            $or: [{ articleId: 'BLDS2015_D611' }, { articleId: 'BLDS2015_D591' }, { articleId: 'HNGD2014_D65' }]
           }).limit(3);
         } else if (qL.includes('lao động 2012') || qL.includes('blld 2012')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLLD2019_D36' },
-              { articleId: 'VBQPPL2015_D156' }
-            ]
+            $or: [{ articleId: 'BLLD2019_D36' }, { articleId: 'VBQPPL2015_D156' }]
           }).limit(2);
-        } else if (
-          qL.includes('văn bản quy phạm') ||
-          qL.includes('vbqppl') ||
-          qL.includes('văn bản áp dụng') ||
-          (qL.includes('quy phạm') && qL.includes('văn bản'))
-        ) {
+        } else if (qL.includes('văn bản quy phạm') || qL.includes('vbqppl') || qL.includes('văn bản áp dụng')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'VBQPPL2015_D4' },
-              { articleId: 'VBQPPL2015_D156' },
-              { articleId: 'HP2013_D8' }
-            ]
+            $or: [{ articleId: 'VBQPPL2015_D4' }, { articleId: 'VBQPPL2015_D156' }, { articleId: 'HP2013_D8' }]
           }).limit(3);
         } else if (
           qL.includes('nhà nước') ||
           qL.includes('chủ quyền') ||
           qL.includes('chính thể') ||
           qL.includes('bộ máy') ||
-          qL.includes('nguồn gốc') ||
-          qL.includes('bản chất') ||
-          qL.includes('giai cấp') ||
-          qL.includes('tính xã hội') ||
-          qL.includes('đặc trưng') ||
-          (qL.includes('pháp luật') && !qL.includes('dân sự') && !qL.includes('pháp nhân'))
+          ((qL.includes('bản chất') || qL.includes('giai cấp') || qL.includes('tính xã hội')) && qL.includes('pháp luật'))
         ) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D2' },
-              { articleId: 'HP2013_D8' },
-              { articleId: 'HP2013_D1' }
-            ]
-          }).limit(3);
-        } else if (qL.includes('pháp nhân') || qL.includes('dân sự')) {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLDS2015_D1' },
-              { articleId: 'BLDS2015_D74' }
-            ]
+            $or: [{ articleId: 'HP2013_D2' }, { articleId: 'HP2013_D8' }]
           }).limit(2);
-        } else {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D2' },
-              { articleId: 'HP2013_D8' }
-            ]
-          }).limit(2);
+        } else if (qL.includes('pháp nhân')) {
+          matchedArticles = await LawArticle.find({ $or: [{ articleId: 'BLDS2015_D74' }] }).limit(1);
         }
         break;
       }
@@ -1198,128 +1414,47 @@ export class RagService {
               { articleId: 'BLHS2015_D28' }
             ]
           }).limit(5);
-        } else if (
-          qL.includes('quy phạm') ||
-          qL.includes('văn bản') ||
-          qL.includes('vbqppl') ||
-          qL.includes('áp dụng pháp luật') ||
-          qL.includes('thực hiện pháp luật')
-        ) {
+        } else if (qL.includes('quy phạm') || qL.includes('văn bản') || qL.includes('vbqppl') || qL.includes('áp dụng pháp luật')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'VBQPPL2015_D4' },
-              { articleId: 'VBQPPL2015_D156' },
-              { articleId: 'HP2013_D8' }
-            ]
-          }).limit(3);
-        } else if (qL.includes('đạo đức') || qL.includes('tập quán')) {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLDS2015_D5' },
-              { articleId: 'BLDS2015_D1' }
-            ]
+            $or: [{ articleId: 'VBQPPL2015_D4' }, { articleId: 'VBQPPL2015_D156' }]
           }).limit(2);
         } else if (qL.includes('phòng vệ') || qL.includes('cấp thiết')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLHS2015_D22' },
-              { articleId: 'BLHS2015_D23' }
-            ]
+            $or: [{ articleId: 'BLHS2015_D22' }, { articleId: 'BLHS2015_D23' }]
           }).limit(2);
         } else if (qL.includes('cố ý')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLHS2015_D10' },
-              { articleId: 'BLHS2015_D11' }
-            ]
-          }).limit(2);
-        } else {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D2' },
-              { articleId: 'HP2013_D8' }
-            ]
+            $or: [{ articleId: 'BLHS2015_D10' }, { articleId: 'BLHS2015_D11' }]
           }).limit(2);
         }
         break;
       }
 
       case 'DEFINITION':
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'HP2013_D2' },
-            { articleId: 'HP2013_D8' }
-          ]
-        }).limit(2);
+        matchedArticles = [];
         break;
 
       case 'TRUE_FALSE': {
         const qL = query.toLowerCase();
-        if (qL.includes('văn bản') || qL.includes('quy phạm pháp luật') || qL.includes('áp dụng pháp luật')) {
+        if (qL.includes('văn bản quy phạm') || qL.includes('áp dụng pháp luật')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'VBQPPL2015_D4' },
-              { articleId: 'VBQPPL2015_D156' }
-            ]
+            $or: [{ articleId: 'VBQPPL2015_D4' }, { articleId: 'VBQPPL2015_D156' }]
           }).limit(2);
-        } else if (qL.includes('thực hiện pháp luật') || qL.includes('tuân thủ') || qL.includes('thi hành')) {
+        } else if (qL.includes('năng lực hành vi') || qL.includes('năng lực pháp luật')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D8' },
-              { articleId: 'BLDS2015_D1' }
-            ]
-          }).limit(2);
-        } else if (qL.includes('năng lực hành vi') || qL.includes('18 tuổi') || qL.includes('dân sự')) {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLDS2015_D16' },
-              { articleId: 'BLDS2015_D19' },
-              { articleId: 'BLDS2015_D20' }
-            ]
+            $or: [{ articleId: 'BLDS2015_D16' }, { articleId: 'BLDS2015_D19' }, { articleId: 'BLDS2015_D20' }]
           }).limit(3);
         } else if (qL.includes('thừa kế') || qL.includes('di chúc') || qL.includes('di sản')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLDS2015_D651' },
-              { articleId: 'BLDS2015_D644' }
-            ]
+            $or: [{ articleId: 'BLDS2015_D651' }, { articleId: 'BLDS2015_D644' }]
           }).limit(2);
         } else if (qL.includes('kết hôn') || qL.includes('ly hôn') || qL.includes('vợ chồng') || qL.includes('hôn nhân')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HNGD2014_D8' },
-              { articleId: 'HNGD2014_D33' },
-              { articleId: 'HNGD2014_D59' }
-            ]
+            $or: [{ articleId: 'HNGD2014_D8' }, { articleId: 'HNGD2014_D33' }, { articleId: 'HNGD2014_D59' }]
           }).limit(3);
         } else if (qL.includes('lao động') || qL.includes('thử việc') || qL.includes('sa thải')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLLD2019_D36' },
-              { articleId: 'BLLD2019_D125' }
-            ]
-          }).limit(2);
-        } else if (
-          qL.includes('hình sự') ||
-          qL.includes('tội phạm') ||
-          qL.includes('hình phạt') ||
-          qL.includes('án treo') ||
-          qL.includes('lỗi cố ý') ||
-          qL.includes('phòng vệ')
-        ) {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLHS2015_D9' },
-              { articleId: 'BLHS2015_D12' },
-              { articleId: 'BLHS2015_D22' }
-            ]
-          }).limit(3);
-        } else {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HP2013_D2' },
-              { articleId: 'HP2013_D8' }
-            ]
+            $or: [{ articleId: 'BLLD2019_D36' }, { articleId: 'BLLD2019_D125' }]
           }).limit(2);
         }
         break;
@@ -1329,26 +1464,9 @@ export class RagService {
         const qL = query.toLowerCase();
         if (qL.includes('kết hôn') || qL.includes('tuổi kết hôn') || qL.includes('độ tuổi') || qL.includes('điều kiện kết hôn')) {
           matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'HNGD2014_D8' },
-              { articleId: 'BLDS2015_D20' }
-            ]
+            $or: [{ articleId: 'HNGD2014_D8' }, { articleId: 'BLDS2015_D20' }]
           }).limit(2);
-        } else if (
-          qL.includes('tài sản') ||
-          qL.includes('chia') ||
-          qL.includes('ly hôn') ||
-          qL.includes('ly dị') ||
-          qL.includes('cho') ||
-          qL.includes('tặng') ||
-          qL.includes('thừa kế') ||
-          qL.includes('nhà chồng') ||
-          qL.includes('nhà chông') ||
-          qL.includes('nhà vợ') ||
-          qL.includes('nhập') ||
-          qL.includes('riêng')
-        ) {
-          // Nhánh 1: Tài sản riêng, tài sản chung, phân chia tài sản khi ly hôn
+        } else if (qL.includes('tài sản') || qL.includes('chia') || qL.includes('ly hôn') || qL.includes('riêng')) {
           matchedArticles = await LawArticle.find({
             $or: [
               { articleId: 'HNGD2014_D43' },
@@ -1359,7 +1477,6 @@ export class RagService {
             ]
           }).limit(5);
         } else {
-          // Nhánh 2: Xác định cha mẹ con / Nhận con / Chung sống không kết hôn
           matchedArticles = await LawArticle.find({
             $or: [
               { articleId: 'HNGD2014_D14' },
@@ -1380,39 +1497,23 @@ export class RagService {
           matchedArticles = await LawArticle.find({
             $or: [{ articleId: 'BLHS2015_D155' }, { articleId: 'BLHS2015_D12' }]
           }).limit(2);
-        } else if (qL.includes('hiến pháp') || qL.includes('lực lượng vũ trang')) {
-          matchedArticles = await LawArticle.find({
-            $or: [{ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' }]
-          }).limit(2);
         } else if (qL.includes('lừa dối') || qL.includes('đe dọa') || qL.includes('giao dịch dân sự') || qL.includes('vô hiệu')) {
           matchedArticles = await LawArticle.find({
-            $or: [{ articleId: 'BLDS2015_D117' }, { articleId: 'BLDS2015_D119' }, { articleId: 'BLDS2015_D1' }]
-          }).limit(3);
-        } else {
-          matchedArticles = await LawArticle.find({
-            $or: [{ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' }, { articleId: 'BLDS2015_D117' }]
-          }).limit(3);
+            $or: [{ articleId: 'BLDS2015_D117' }, { articleId: 'BLDS2015_D119' }]
+          }).limit(2);
         }
         break;
       }
 
       case 'VPPL_4_ELEMENTS': {
         const qL = query.toLowerCase();
-        if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông')) {
+        if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('thương tích')) {
           matchedArticles = await LawArticle.find({
             $or: [{ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLHS2015_D12' }]
           }).limit(3);
         } else if (qL.includes('xả thải') || qL.includes('nhà máy đường') || qL.includes('môi trường')) {
           matchedArticles = await LawArticle.find({
             $or: [{ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' }]
-          }).limit(3);
-        } else {
-          matchedArticles = await LawArticle.find({
-            $or: [
-              { articleId: 'BLHS2015_D134' },
-              { articleId: 'BLHS2015_D12' },
-              { articleId: 'BLHS2015_D21' }
-            ]
           }).limit(3);
         }
         break;
@@ -1477,7 +1578,7 @@ export class RagService {
             { articleId: 'BLHS2015_D175' },
             { articleId: 'BLDS2015_D131' }
           );
-        } else if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông') || qL.includes('thương tích')) {
+        } else if (qL.includes('ném đá') || qL.includes('thương tích')) {
           articleOrList.push({ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLHS2015_D12' });
         } else if (qL.includes('xả thải') || qL.includes('nhà máy đường') || qL.includes('môi trường') || qL.includes('ô nhiễm')) {
           articleOrList.push({ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' });
@@ -1485,27 +1586,33 @@ export class RagService {
           articleOrList.push({ articleId: 'BLHS2015_D22' }, { articleId: 'BLHS2015_D23' }, { articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' });
         } else if (qL.includes('thời hiệu') || (qL.includes('khởi kiện') && qL.includes('truy cứu'))) {
           articleOrList.push({ articleId: 'BLDS2015_D149' }, { articleId: 'BLDS2015_D150' }, { articleId: 'BLDS2015_D157' }, { articleId: 'BLHS2015_D27' });
-        } else if (qL.includes('giam xe') || qL.includes('tạm giữ') || qL.includes('nồng độ cồn') || qL.includes('say') || qL.includes('nhậu')) {
+        } else if (qL.includes('giam xe') || qL.includes('nồng độ cồn') || qL.includes('say') || qL.includes('nhậu')) {
           articleOrList.push({ articleId: 'XLVPHC2012_D125' }, { articleId: 'XLVPHC2012_D5' }, { articleId: 'XLVPHC2012_D21' });
         } else if (qL.includes('trộm') || qL.includes('cướp')) {
           articleOrList.push({ articleId: 'BLHS2015_D168' }, { articleId: 'BLHS2015_D173' }, { articleId: 'BLHS2015_D12' });
-        } else {
-          articleOrList.push({ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' });
         }
 
-        matchedArticles = await LawArticle.find({ $or: articleOrList }).limit(4);
+        if (articleOrList.length > 0) {
+          matchedArticles = await LawArticle.find({ $or: articleOrList }).limit(4);
+        }
         break;
       }
 
       default:
-        matchedArticles = await LawArticle.find({
-          $or: [
-            { articleId: 'BLDS2015_D1' },
-            { articleId: 'BLDS2015_D74' },
-            { articleId: 'BLDS2015_D117' }
-          ]
-        }).limit(3);
+        matchedArticles = [];
         break;
+    }
+
+    // 2.05. Kết hợp Hybrid Statutory Search trên toàn bộ kho LawArticle (lọc cứng score >= 18)
+    if (intentCode !== 'DEFINITION') {
+      const hybridArticles = await this.hybridSearchLawArticles(query, 5);
+      const seenIds = new Set(matchedArticles.map((a) => a.articleId));
+      for (const hArt of hybridArticles) {
+        if (!seenIds.has(hArt.articleId) && matchedArticles.length < 5) {
+          matchedArticles.push(hArt);
+          seenIds.add(hArt.articleId);
+        }
+      }
     }
 
     // 2.1. Tìm kiếm bổ sung động theo từ khóa cốt lõi trong đề bài (Dynamic Lexical RAG)
@@ -1514,17 +1621,27 @@ export class RagService {
       const dynamicConditions: any[] = [];
 
       if (intentCode !== 'DEFINITION') {
-        if (qLower.includes('trộm cắp') || qLower.includes('trộm')) dynamicConditions.push({ articleId: 'BLHS2015_D173' });
+        if (qLower.includes('trộm cắp') || qLower.includes('ăn trộm') || qLower.includes('lấy trộm') || qLower.includes('trộm')) dynamicConditions.push({ articleId: 'BLHS2015_D173' });
         if (qLower.includes('cướp') || qLower.includes('vũ lực')) dynamicConditions.push({ articleId: 'BLHS2015_D168' });
-        if (qLower.includes('thương tích') || qLower.includes('đánh') || qLower.includes('gậy') || qLower.includes('hung khí')) dynamicConditions.push({ articleId: 'BLHS2015_D134' });
+        if (/(?:thương tích|đánh người|đánh đập|hành hung|dùng gậy|hung khí)/.test(qLower)) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D134' });
+        }
+        if (qLower.includes('vu khống') || qLower.includes('bịa đặt')) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D156' }, { articleId: 'BLDS2015_D584' });
+        }
         if (qLower.includes('phòng vệ') || qLower.includes('chống trả')) dynamicConditions.push({ articleId: 'BLHS2015_D22' });
         if (qLower.includes('cấp thiết')) dynamicConditions.push({ articleId: 'BLHS2015_D23' });
-        if (qLower.includes('nguồn nguy hiểm') || qLower.includes('xe máy') || qLower.includes('ô tô') || qLower.includes('tai nạn')) {
-          dynamicConditions.push({ articleId: 'BLDS2015_D601' });
-          dynamicConditions.push({ articleId: 'BLDS2015_D584' });
+        if (qLower.includes('nguồn nguy hiểm') || (qLower.includes('tai nạn') && (qLower.includes('xe máy') || qLower.includes('ô tô')))) {
+          dynamicConditions.push({ articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D584' });
         }
-        if (qLower.includes('vượt đèn đỏ') || qLower.includes('đèn đỏ') || (qLower.includes('giao thông') && qLower.includes('xử phạt'))) {
-          dynamicConditions.push({ articleId: 'GT2019_ND100' });
+        if (qLower.includes('hạng a1') || qLower.includes('bằng lái a1') || qLower.includes('125 cm3') || qLower.includes('phân khối')) {
+          dynamicConditions.push({ articleId: 'TTATGT2024_D57' });
+        }
+        if (qLower.includes('mũ bảo hiểm') || qLower.includes('nghị định 168')) {
+          dynamicConditions.push({ articleId: 'ND168_2024_D7' });
+        }
+        if (qLower.includes('vượt đèn đỏ') || qLower.includes('đèn đỏ')) {
+          dynamicConditions.push({ articleId: 'ND168_2024_D7' }, { articleId: 'GT2019_ND100' });
         }
         if (qLower.includes('giết') || qLower.includes('đâm chết') || qLower.includes('chém chết') || qLower.includes('tước đoạt mạng sống')) {
           dynamicConditions.push({ articleId: 'BLHS2015_D123' }, { articleId: 'BLHS2015_D12' });
@@ -1533,52 +1650,58 @@ export class RagService {
           dynamicConditions.push({ articleId: 'BLDS2015_D612' }, { articleId: 'BLDS2015_D651' }, { articleId: 'BLDS2015_D644' });
         }
         if (qLower.includes('tự ý bán') || (qLower.includes('bán') && (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('người khác')))) {
-          dynamicConditions.push({ articleId: 'BLDS2015_D166' });
-          dynamicConditions.push({ articleId: 'BLDS2015_D168' });
-          dynamicConditions.push({ articleId: 'BLHS2015_D175' });
-          dynamicConditions.push({ articleId: 'BLDS2015_D131' });
+          dynamicConditions.push(
+            { articleId: 'BLDS2015_D166' },
+            { articleId: 'BLDS2015_D168' },
+            { articleId: 'BLHS2015_D175' },
+            { articleId: 'BLDS2015_D131' }
+          );
         }
-      }
-      // Nhánh tài sản vợ chồng / ly hôn / tặng cho riêng
-      if (
-        (qLower.includes('tài sản') || qLower.includes('chia') || qLower.includes('ly hôn') || qLower.includes('ly dị') || qLower.includes('nhà chồng') || qLower.includes('nhà chông') || qLower.includes('nhà vợ') || qLower.includes('cho tặng') || qLower.includes('tặng cho') || qLower.includes('thừa kế riêng')) &&
-        (qLower.includes('vợ chồng') || qLower.includes('ly hôn') || qLower.includes('hôn nhân') || qLower.includes('chồng') || qLower.includes('vợ'))
-      ) {
-        dynamicConditions.push(
-          { articleId: 'HNGD2014_D43' },
-          { articleId: 'HNGD2014_D59' },
-          { articleId: 'HNGD2014_D33' },
-          { articleId: 'HNGD2014_D46' },
-          { articleId: 'BLDS2015_D457' }
-        );
-      } else if (
-        qLower.includes('chung sống') ||
-        qLower.includes('nhận con') ||
-        qLower.includes('khai sinh') ||
-        qLower.includes('hộ tịch') ||
-        qLower.includes('cha mẹ con')
-      ) {
-        dynamicConditions.push(
-          { articleId: 'HNGD2014_D14' },
-          { articleId: 'HNGD2014_D15' },
-          { articleId: 'HNGD2014_D88' },
-          { articleId: 'HNGD2014_D91' },
-          { articleId: 'HNGD2014_D101' }
-        );
-      }
-      if (qLower.includes('quan hệ pháp luật') || qLower.includes('quan hệ dân sự') || qLower.includes('pháp nhân')) {
-        dynamicConditions.push({ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' });
-      }
-      if (qLower.includes('tâm thần') || qLower.includes('mất nhận thức')) dynamicConditions.push({ articleId: 'BLHS2015_D21' });
-      if (qLower.includes('tuổi') || qLower.includes('thành niên')) dynamicConditions.push({ articleId: 'BLHS2015_D12' }, { articleId: 'BLHS2015_D9' });
-      if (qLower.includes('mượn') || qLower.includes('làm rơi') || qLower.includes('rơi vỡ')) {
-        dynamicConditions.push(
-          { articleId: 'BLDS2015_D494' },
-          { articleId: 'BLDS2015_D496' },
-          { articleId: 'BLDS2015_D584' },
-          { articleId: 'BLDS2015_D585' },
-          { articleId: 'BLDS2015_D156' }
-        );
+        if (
+          (qLower.includes('tài sản') || qLower.includes('chia') || qLower.includes('ly hôn') || qLower.includes('ly dị') || qLower.includes('nhà chồng') || qLower.includes('nhà chông') || qLower.includes('nhà vợ') || qLower.includes('cho tặng') || qLower.includes('tặng cho') || qLower.includes('thừa kế riêng')) &&
+          (qLower.includes('vợ chồng') || qLower.includes('ly hôn') || qLower.includes('hôn nhân') || qLower.includes('chồng') || qLower.includes('vợ'))
+        ) {
+          dynamicConditions.push(
+            { articleId: 'HNGD2014_D43' },
+            { articleId: 'HNGD2014_D59' },
+            { articleId: 'HNGD2014_D33' },
+            { articleId: 'HNGD2014_D46' },
+            { articleId: 'BLDS2015_D457' }
+          );
+        } else if (
+          qLower.includes('chung sống') ||
+          qLower.includes('nhận con') ||
+          qLower.includes('khai sinh') ||
+          qLower.includes('hộ tịch') ||
+          qLower.includes('cha mẹ con')
+        ) {
+          dynamicConditions.push(
+            { articleId: 'HNGD2014_D14' },
+            { articleId: 'HNGD2014_D15' },
+            { articleId: 'HNGD2014_D88' },
+            { articleId: 'HNGD2014_D91' },
+            { articleId: 'HNGD2014_D101' }
+          );
+        }
+        if (qLower.includes('quan hệ dân sự') || qLower.includes('pháp nhân')) {
+          dynamicConditions.push({ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' });
+        }
+        if (qLower.includes('tâm thần') || qLower.includes('mất nhận thức')) dynamicConditions.push({ articleId: 'BLHS2015_D21' });
+        if (
+          (qLower.includes('tuổi') || qLower.includes('thành niên')) &&
+          /(?:tội|hình sự|tnhs|trộm|cướp|giết|thương tích|phạt tù)/.test(qLower)
+        ) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D12' }, { articleId: 'BLHS2015_D9' });
+        }
+        if (qLower.includes('mượn') && (qLower.includes('làm rơi') || qLower.includes('rơi vỡ') || qLower.includes('hư hỏng'))) {
+          dynamicConditions.push(
+            { articleId: 'BLDS2015_D494' },
+            { articleId: 'BLDS2015_D496' },
+            { articleId: 'BLDS2015_D584' },
+            { articleId: 'BLDS2015_D585' },
+            { articleId: 'BLDS2015_D156' }
+          );
+        }
       }
 
       if (dynamicConditions.length > 0) {

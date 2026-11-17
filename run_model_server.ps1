@@ -32,9 +32,9 @@ Start-Sleep -Milliseconds 500
 
 if (Test-Path $loraPath) {
     Write-Host "[INFO] Nạp kèm LoRA adapter: $loraPath" -ForegroundColor Magenta
-    & $llamaExe -m $modelPath --lora $loraPath --host 127.0.0.1 --port 8088 -c 4096 -np 1 -t 6
+    & $llamaExe -m $modelPath --lora $loraPath --host 127.0.0.1 --port 8088 -c 4096 -np 1 -t 6 -tb 12 -b 1024 -ub 512 -fa on --cache-reuse 64
 } else {
-    Write-Host "[INFO] Khởi chạy mô hình trên cổng 8088..." -ForegroundColor Green
-    & $llamaExe -m $modelPath --host 127.0.0.1 --port 8088 -c 4096 -np 1 -t 6
+    Write-Host "[INFO] Khởi chạy mô hình tối ưu FlashAttention + Batch Threads trên cổng 8088..." -ForegroundColor Green
+    & $llamaExe -m $modelPath --host 127.0.0.1 --port 8088 -c 4096 -np 1 -t 6 -tb 12 -b 1024 -ub 512 -fa on --cache-reuse 64
 }
 

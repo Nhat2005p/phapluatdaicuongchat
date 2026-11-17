@@ -691,6 +691,132 @@ export async function runSeed(): Promise<void> {
       title: 'Tạm giữ tang vật, phương tiện, giấy phép, chứng chỉ hành nghề theo thủ tục hành chính',
       contentRaw: '1. Việc tạm giữ tang vật, phương tiện vi phạm hành chính chỉ được áp dụng trong trường hợp thật cần thiết sau đây: a) Để xác minh tình tiết mà nếu không tạm giữ thì không có căn cứ ra quyết định xử phạt... b) Để ngăn chặn ngay hành vi vi phạm hành chính mà nếu không tạm giữ thì sẽ gây hậu quả nghiêm trọng cho xã hội; c) Để bảo đảm thi hành quyết định xử phạt...\n8. Thời hạn tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề là 07 ngày, kể từ ngày tạm giữ. Thời hạn tạm giữ có thể được kéo dài đối với những vụ việc có nhiều tình tiết phức tạp, cần tiến hành xác minh nhưng tối đa không quá 30 ngày...',
       keywords: ['tạm giữ phương tiện', 'giam xe', 'tạm giữ 7 ngày', 'nồng độ cồn', 'ngăn chặn ngay vi phạm', 'xử lý vi phạm hành chính']
+    },
+    {
+      articleId: 'HP2013_D33',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 33,
+      title: 'Quyền tự do kinh doanh',
+      contentRaw: 'Mọi người có quyền tự do kinh doanh trong những ngành nghề mà pháp luật không cấm.',
+      keywords: ['tự do kinh doanh', 'điều 33 hiến pháp', 'ngành nghề pháp luật không cấm', 'quy phạm pháp luật khuyết chế tài']
+    },
+    {
+      articleId: 'HP2013_D69',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 69,
+      title: 'Vị trí, chức năng của Quốc hội',
+      contentRaw: 'Quốc hội là cơ quan đại biểu cao nhất của Nhân dân, cơ quan quyền lực nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam. Quốc hội thực hiện quyền lập hiến, quyền lập pháp, quyết định các vấn đề quan trọng của đất nước và giám sát tối cao đối với hoạt động của Nhà nước.',
+      keywords: ['quốc hội', 'cơ quan đại biểu cao nhất', 'cơ quan quyền lực nhà nước cao nhất', 'quyền lập hiến', 'quyền lập pháp', 'giám sát tối cao']
+    },
+    {
+      articleId: 'HP2013_D91',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 91,
+      title: 'Văn bản của Chủ tịch nước',
+      contentRaw: 'Chủ tịch nước ban hành lệnh, quyết định để thực hiện nhiệm vụ, quyền hạn của mình.',
+      keywords: ['chủ tịch nước', 'ban hành lệnh', 'lệnh quyết định của chủ tịch nước', 'điều 91 hiến pháp']
+    },
+    {
+      articleId: 'HP2013_D94',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 94,
+      title: 'Vị trí, chức năng của Chính phủ',
+      contentRaw: 'Chính phủ là cơ quan hành chính nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam, thực hiện quyền hành pháp, là cơ quan chấp hành của Quốc hội. Chính phủ chịu trách nhiệm trước Quốc hội và báo cáo công tác trước Quốc hội, Ủy ban thường vụ Quốc hội, Chủ tịch nước.',
+      keywords: ['chính phủ', 'cơ quan hành chính nhà nước cao nhất', 'quyền hành pháp', 'cơ quan chấp hành của quốc hội']
+    },
+    {
+      articleId: 'BLDS2015_D14',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 14,
+      title: 'Bảo vệ quyền dân sự thông qua cơ quan có thẩm quyền và giới hạn hạn chế quyền dân sự',
+      contentRaw: '1. Trường hợp quyền dân sự bị xâm phạm hoặc có tranh chấp thì việc bảo vệ quyền được thực hiện theo pháp luật tố tụng tại Tòa án hoặc trọng tài.\n2. Quyền dân sự chỉ có thể bị hạn chế theo quy định của luật trong trường hợp cần thiết vì lý do quốc phòng, an ninh quốc gia, trật tự, an toàn xã hội, đạo đức xã hội, sức khỏe của cộng đồng.',
+      keywords: ['khoản 1 điều 14', 'khoản 2 điều 14', 'bảo vệ quyền dân sự', 'hạn chế quyền dân sự', 'quốc phòng an ninh quốc gia']
+    },
+    {
+      articleId: 'BLDS2015_D16',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 16,
+      title: 'Năng lực pháp luật dân sự của cá nhân',
+      contentRaw: '1. Năng lực pháp luật dân sự của cá nhân là khả năng của cá nhân có quyền dân sự và nghĩa vụ dân sự.\n2. Mọi cá nhân đều có năng lực pháp luật dân sự như nhau.\n3. Năng lực pháp luật dân sự của cá nhân có từ khi người đó sinh ra và chấm dứt khi người đó chết.',
+      keywords: ['năng lực pháp luật dân sự', 'có từ khi sinh ra', 'chấm dứt khi chết']
+    },
+    {
+      articleId: 'BLDS2015_D19',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 19,
+      title: 'Năng lực hành vi dân sự của cá nhân',
+      contentRaw: 'Năng lực hành vi dân sự của cá nhân là khả năng của cá nhân bằng hành vi của mình xác lập, thực hiện quyền, nghĩa vụ dân sự.',
+      keywords: ['năng lực hành vi dân sự', 'bằng hành vi của mình xác lập thực hiện quyền nghĩa vụ dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D20',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 20,
+      title: 'Người thành niên',
+      contentRaw: '1. Người thành niên là người từ đủ mười tám tuổi trở lên.\n2. Người thành niên có năng lực hành vi dân sự đầy đủ, trừ trường hợp quy định tại các điều 22, 23 và 24 của Bộ luật này.',
+      keywords: ['người thành niên', 'đủ 18 tuổi', 'năng lực hành vi dân sự đầy đủ']
+    },
+    {
+      articleId: 'BLDS2015_D127',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 127,
+      title: 'Giao dịch dân sự vô hiệu do bị lừa dối, đe dọa, cưỡng ép',
+      contentRaw: 'Khi một bên tham gia giao dịch dân sự do bị lừa dối hoặc bị đe dọa, cưỡng ép thì có quyền yêu cầu Tòa án tuyên bố giao dịch dân sự đó là vô hiệu.',
+      keywords: ['lừa dối', 'đe dọa', 'cưỡng ép', 'vô hiệu do bị lừa dối']
+    },
+    {
+      articleId: 'BLDS2015_D129',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 129,
+      title: 'Giao dịch dân sự vô hiệu do không tuân thủ quy định về hình thức',
+      contentRaw: 'Giao dịch dân sự vi phạm quy định điều kiện có hiệu lực về hình thức thì vô hiệu, trừ trường hợp sau đây:\n1. Giao dịch dân sự đã được xác lập theo quy định phải bằng văn bản nhưng văn bản không đúng quy định của luật mà một bên hoặc các bên đã thực hiện ít nhất hai phần ba nghĩa vụ trong giao dịch thì theo yêu cầu của một bên hoặc các bên, Tòa án ra quyết định công nhận hiệu lực của giao dịch đó.\n2. Giao dịch dân sự đã được xác lập bằng văn bản nhưng vi phạm quy định bắt buộc về công chứng, chứng thực mà một bên hoặc các bên đã thực hiện ít nhất hai phần ba nghĩa vụ trong giao dịch thì theo yêu cầu của một bên hoặc các bên, Tòa án ra quyết định công nhận hiệu lực của giao dịch đó.',
+      keywords: ['vi phạm hình thức', 'giấy viết tay', 'công chứng chứng thực', 'hai phần ba nghĩa vụ', '2/3 nghĩa vụ']
+    },
+    {
+      articleId: 'BLHS2015_D156',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 156,
+      title: 'Tội vu khống',
+      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây, thì bị phạt tiền từ 10.000.000 đồng đến 50.000.000 đồng, phạt cải tạo không giam giữ đến 02 năm hoặc phạt tù từ 03 tháng đến 01 năm: a) Bịa đặt hoặc loan truyền những điều biết rõ là sai sự thật nhằm xúc phạm nghiêm trọng nhân phẩm, danh dự hoặc gây thiệt hại đến quyền, lợi ích hợp pháp của người khác; b) Bịa đặt người khác phạm tội và tố cáo họ trước cơ quan có thẩm quyền.',
+      keywords: ['tội vu khống', 'bịa đặt sai sự thật', 'loan truyền', 'xúc phạm danh dự nhân phẩm']
+    },
+    {
+      articleId: 'BLLD2019_D190',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 190,
+      title: 'Thời hiệu yêu cầu giải quyết tranh chấp lao động cá nhân',
+      contentRaw: '1. Thời hiệu yêu cầu Hòa giải viên lao động thực hiện hòa giải tranh chấp lao động cá nhân là 06 tháng kể từ ngày phát hiện ra hành vi mà bên tranh chấp cho rằng quyền và lợi ích hợp pháp của mình bị vi phạm.\n2. Thời hiệu yêu cầu Hội đồng trọng tài lao động giải quyết tranh chấp lao động cá nhân là 09 tháng.\n3. Thời hiệu yêu cầu Tòa án giải quyết tranh chấp lao động cá nhân là 01 năm kể từ ngày phát hiện ra hành vi mà bên tranh chấp cho rằng quyền và lợi ích hợp pháp của mình bị vi phạm.',
+      keywords: ['thời hiệu tranh chấp lao động', 'hòa giải viên lao động 6 tháng', 'trọng tài lao động 9 tháng', 'tòa án 1 năm', 'điều 190 bộ luật lao động']
+    },
+    {
+      articleId: 'TTATGT2024_D57',
+      lawCode: 'TTATGT2024',
+      lawName: 'Luật Trật tự, an toàn giao thông đường bộ năm 2024 (hiệu lực từ 01/01/2025)',
+      articleNumber: 57,
+      title: 'Giấy phép lái xe (Phân hạng A1, A từ 01/01/2025)',
+      contentRaw: '1. Các hạng giấy phép lái xe bao gồm:\na) Hạng A1 cấp cho người lái xe mô tô hai bánh có dung tích xi-lanh đến 125 cm3 hoặc có công suất động cơ điện đến 11 kW;\nb) Hạng A cấp cho người lái xe mô tô hai bánh có dung tích xi-lanh trên 125 cm3 hoặc có công suất động cơ điện trên 11 kW và các loại xe quy định cho giấy phép lái xe hạng A1.',
+      keywords: ['giấy phép lái xe hạng a1', 'bằng lái xe hạng a1', '125 cm3', '11 kw', 'luật trật tự an toàn giao thông đường bộ 2024']
+    },
+    {
+      articleId: 'ND168_2024_D7',
+      lawCode: 'ND168_2024',
+      lawName: 'Nghị định 168/2024/NĐ-CP (hiệu lực từ 01/01/2025)',
+      articleNumber: 7,
+      title: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
+      contentRaw: 'Phạt tiền từ 400.000 đồng đến 600.000 đồng đối với người điều khiển xe mô tô, xe gắn máy không đội "mũ bảo hiểm cho người đi mô tô, xe máy" hoặc đội mũ bảo hiểm không cài quai đúng quy cách khi tham gia giao thông trên đường bộ (Điểm h Khoản 2 Điều 7). Phạt tiền từ 4.000.000 đồng đến 6.000.000 đồng và trừ 04 điểm giấy phép lái xe đối với hành vi không chấp hành hiệu lệnh của đèn tín hiệu giao thông (Điểm c Khoản 7 Điều 7).',
+      keywords: ['không đội mũ bảo hiểm', 'nghị định 168', '400.000 đồng đến 600.000 đồng', 'vượt đèn đỏ xe máy']
     }
   ];
 

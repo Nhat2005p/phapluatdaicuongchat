@@ -48,15 +48,19 @@ export class QueryController {
 
       const startTime = Date.now();
 
-      // Nâng cấp 4: Tự động kế thừa ngữ cảnh hội thoại từ lượt hỏi liền trước (nếu câu hỏi hiện tại dùng đại từ chỉ định / hỏi nối tiếp)
+      // Nâng cấp 4: Tự động kế thừa ngữ cảnh hội thoại từ lượt hỏi liền trước (bao gồm cả câu hỏi và câu trả lời trước)
       let recentPrevQuery: string | null = typeof previousQuery === 'string' && previousQuery.trim() ? previousQuery.trim() : null;
-      if (!recentPrevQuery && req.user) {
+      let recentPrevResponse: string | null = null;
+      if (req.user) {
         const lastRecord = await QueryHistory.findOne({ userId: req.user.id }).sort({ createdAt: -1 });
         if (lastRecord && lastRecord.createdAt && Date.now() - new Date(lastRecord.createdAt).getTime() <= 15 * 60 * 1000) {
-          recentPrevQuery = lastRecord.query;
+          if (!recentPrevQuery) {
+            recentPrevQuery = lastRecord.query;
+          }
+          recentPrevResponse = lastRecord.response || null;
         }
       }
-      const { effectiveQuery } = RagService.contextualizeQueryWithHistory(query, recentPrevQuery);
+      const { effectiveQuery } = RagService.contextualizeQueryWithHistory(query, recentPrevQuery, recentPrevResponse);
 
       // BƯỚC 01: REWRITE & ROUTING (Query Rewriting, Expansion, Intent Detection, Multi-Query)
       const routingPlan = RagService.buildRoutingPlan(effectiveQuery, categoryId);
