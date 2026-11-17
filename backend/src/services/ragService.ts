@@ -191,11 +191,56 @@ export class RagService {
       .trim();
 
     const variants = new Set<string>();
-    if (rewritten) variants.add(rewritten);
-    if (coreStatement && coreStatement.length >= 10) variants.add(coreStatement);
-    if (expanded && expanded !== rewritten) variants.add(expanded);
+    if (rewritten) variants.add(rewritten.slice(0, 500));
+    if (coreStatement && coreStatement.length >= 10) variants.add(coreStatement.slice(0, 500));
+    if (expanded && expanded !== rewritten) variants.add(expanded.slice(0, 500));
 
-    return Array.from(variants);
+    // Giới hạn cứng tối đa 3 sub-queries để tránh lặp/chậm ở bước Query Transformation
+    return Array.from(variants).slice(0, 3);
+  }
+
+  /**
+   * BỘ LỌC TIỀN KIỂM AN TOÀN & CHỐNG PROMPT INJECTION (INPUT SAFETY GUARDRAIL)
+   * Phát hiện sớm các lệnh tấn công hệ thống (jailbreak, ignore instructions, lộ system prompt, hướng dẫn phạm tội)
+   */
+  public static checkInputSafetyAndInjection(query: string): {
+    isBlocked: boolean;
+    violationType?: 'PROMPT_INJECTION' | 'ILLEGAL_ASSISTANCE';
+    reason?: string;
+  } {
+    const q = (query || '').toLowerCase();
+    const injectionPatterns = [
+      /bỏ qua (?:tất cả )?(?:các )?hướng dẫn/i,
+      /ignore (?:all )?(?:previous )?instructions/i,
+      /in ra system prompt/i,
+      /hiển thị system prompt/i,
+      /system prompt của bạn là gì/i,
+      /hãy đóng vai (?:một )?(?:tội phạm|trùm xã hội đen|kẻ lừa đảo|luật sư đen)/i
+    ];
+    for (const rx of injectionPatterns) {
+      if (rx.test(q)) {
+        return {
+          isBlocked: true,
+          violationType: 'PROMPT_INJECTION',
+          reason: 'Phát hiện truy vấn chứa chỉ thị thao túng vai trò hệ thống (Prompt Injection).'
+        };
+      }
+    }
+
+    const illegalAssistPatterns = [
+      /(?:hướng dẫn|bày cách|chỉ cách|làm sao để)\s+(?:làm giả giấy tờ|làm giả con dấu|rửa tiền|trốn thuế|lách thuế|tẩu tán tài sản)/i
+    ];
+    for (const rx of illegalAssistPatterns) {
+      if (rx.test(q)) {
+        return {
+          isBlocked: true,
+          violationType: 'ILLEGAL_ASSISTANCE',
+          reason: 'Từ chối hỗ trợ hướng dẫn thực hiện hành vi vi phạm điều cấm của pháp luật.'
+        };
+      }
+    }
+
+    return { isBlocked: false };
   }
 
   /**

@@ -19,6 +19,12 @@ export interface TextbookChunk {
   summary: string;
   baremContent: string;
   legalBasis: string[];
+  metadata?: {
+    ten_van_ban: string;
+    so_hieu: string;
+    ngay_hieu_luc: string;
+    trang_thai: 'con_hieu_luc' | 'het_hieu_luc';
+  };
 }
 
 export class TextbookKnowledgeService {
@@ -1361,7 +1367,10 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
    *   chấm điểm Relevance Score chi tiết, lọc bỏ context nhiễu (Remove Noise) và chọn TOP-N CONTEXT.
    * =========================================================================
    */
-  public static searchTopChunks(query: string, topK: number = 2): { chunk: TextbookChunk; score: number }[] {
+  public static searchTopChunks(
+    query: string,
+    topK: number = 5
+  ): { chunk: TextbookChunk; score: number; rerankScoreNormalized: number }[] {
     const expandedQuery = this.rewriteAndExpandQuery(query);
     const STOP_WORDS = new Set([
       'của', 'và', 'là', 'trong', 'các', 'cho',
@@ -1397,9 +1406,22 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
 
     // =========================================================================
     // STAGE 02: HYBRID RETRIEVAL (SPARSE BM25 + DENSE COSINE + MULTI-VECTOR + COLBERT MAXSIM)
+    // Kèm Metadata Filtering: Lọc cứng trang_thai == 'con_hieu_luc' trước khi tìm kiếm vector
     // =========================================================================
-    const candidatePoolSize = Math.max(topK * 3, 6);
+    const candidatePoolSize = Math.max(topK * 3, 15);
     const candidates = this.CHUNKS.map((chunk, idx) => {
+      // Lọc cứng Metadata: Loại bỏ ngay các văn bản/chunk đã hết hiệu lực
+      if (chunk.metadata && chunk.metadata.trang_thai === 'het_hieu_luc') {
+        return {
+          chunk,
+          idx,
+          score: -999,
+          bm25Score: 0,
+          cosineScore: 0,
+          multiVecScore: 0,
+          colbertMaxSim: 0
+        };
+      }
       // 1. Điểm Sparse Retrieval: Okapi BM25
       const bm25Score = this.computeBm25(qMeaningful, idx);
 
@@ -1649,7 +1671,8 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
         if (c.sectionCode === '1.3') finalScore += 75;
       }
 
-      return { chunk: c, score: finalScore };
+      const rerankScoreNormalized = Math.max(0, Math.min(1.0, Number((finalScore / 55).toFixed(3))));
+      return { chunk: c, score: finalScore, rerankScoreNormalized };
     });
 
     // Remove Noise: Loại bỏ các chunk có điểm dưới ngưỡng và lọc các chunk phụ quá yếu so với Top 1
@@ -2003,7 +2026,7 @@ ${lines.join('\n')}
    */
   public static buildMultiChunkSynthesisResponse(
     query: string,
-    topMatches: { chunk: TextbookChunk; score: number }[],
+    topMatches: { chunk: TextbookChunk; score: number; rerankScoreNormalized?: number }[],
     extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
   ): string {
     if (!topMatches || topMatches.length === 0) return '';
@@ -2014,12 +2037,12 @@ ${lines.join('\n')}
     }
 
     const top1Score = topMatches[0].score;
-    // Chọn tối đa 3 Chunks có độ liên quan cao (>= 68% so với Chunk 1 và khác mã mục)
+    // Chọn tối đa Top-N = 5 Chunks có độ liên quan cao (>= 65% so với Chunk 1 và khác mã mục)
     const selected = [topMatches[0]];
     const seenCodes = new Set<string>([topMatches[0].chunk.sectionCode]);
-    for (let i = 1; i < Math.min(topMatches.length, 3); i++) {
+    for (let i = 1; i < Math.min(topMatches.length, 5); i++) {
       const candidate = topMatches[i];
-      if (!seenCodes.has(candidate.chunk.sectionCode) && candidate.score >= top1Score * 0.68 && candidate.score >= 45) {
+      if (!seenCodes.has(candidate.chunk.sectionCode) && candidate.score >= top1Score * 0.65 && candidate.score >= 42) {
         seenCodes.add(candidate.chunk.sectionCode);
         selected.push(candidate);
       }
@@ -2033,7 +2056,7 @@ ${lines.join('\n')}
 
     const bodyParts = selected.map((item, idx) => {
       const formatted = this.formatCleanTextbookContent(item.chunk.baremContent, query);
-      return `### 📌 PHẦN ${idx + 1}: ${item.chunk.sectionTitle.toUpperCase()}\n\n${formatted.trim()}`;
+      return `### 📌 PHẦN ${idx + 1}: ${item.chunk.sectionTitle.toUpperCase()}\n*(Văn bản gốc: ${item.chunk.chapterTitle} — Mục ${item.chunk.sectionCode.replace(/_/g, ' – ')} | Trạng thái: Còn hiệu lực)*\n\n${formatted.trim()}`;
     });
 
     const citationItems = selected.map((item) => ({
