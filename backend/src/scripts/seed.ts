@@ -628,6 +628,69 @@ export async function runSeed(): Promise<void> {
       title: 'Áp dụng hình thức xử lý kỷ luật sa thải',
       contentRaw: 'Hình thức xử lý kỷ luật sa thải được người sử dụng lao động áp dụng trong trường hợp sau đây: 1. Người lao động có hành vi trộm cắp, tham ô, đánh bạc, cố ý gây thương tích, sử dụng ma túy tại nơi làm việc; 2. Người lao động có hành vi tiết lộ bí mật kinh doanh, bí mật công nghệ, xâm phạm quyền sở hữu trí tuệ của người sử dụng lao động, có hành vi gây thiệt hại nghiêm trọng hoặc đe dọa gây thiệt hại đặc biệt nghiêm trọng về tài sản, lợi ích của người sử dụng lao động...',
       keywords: ['sa thải', 'trộm cắp laptop', 'kỷ luật lao động', 'nội quy']
+    },
+    {
+      articleId: 'BLHS2015_D27',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 27,
+      title: 'Thời hiệu truy cứu trách nhiệm hình sự',
+      contentRaw: '1. Thời hiệu truy cứu trách nhiệm hình sự là thời hạn do Bộ luật này quy định mà khi hết thời hạn đó thì người phạm tội không bị truy cứu trách nhiệm hình sự.\n2. Thời hiệu truy cứu trách nhiệm hình sự được quy định như sau: a) 05 năm đối với tội phạm ít nghiêm trọng; b) 10 năm đối với tội phạm nghiêm trọng; c) 20 năm đối với tội phạm rất nghiêm trọng; d) 20 năm đối với tội phạm đặc biệt nghiêm trọng.\n3. Thời hiệu truy cứu trách nhiệm hình sự được tính từ ngày tội phạm được thực hiện. Nếu trong thời hạn quy định tại khoản 2 Điều này, người phạm tội lại thực hiện hành vi phạm tội mới mà Bộ luật này quy định mức cao nhất của khung hình phạt đối với tội đó trên 01 năm tù, thì thời hiệu đối với tội cũ được tính lại kể từ ngày thực hiện hành vi phạm tội mới. Nếu người phạm tội cố tình trốn tránh và đã có quyết định truy nã, thì thời hiệu tính lại kể từ khi người đó ra đầu thú hoặc bị bắt giữ.',
+      keywords: ['thời hiệu truy cứu trách nhiệm hình sự', '5 năm', '10 năm', '20 năm', 'gián đoạn thời hiệu', 'tính lại thời hiệu', 'truy nã', 'tội phạm mới']
+    },
+    {
+      articleId: 'BLHS2015_D28',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 28,
+      title: 'Không áp dụng thời hiệu truy cứu trách nhiệm hình sự',
+      contentRaw: 'Không áp dụng thời hiệu truy cứu trách nhiệm hình sự quy định tại Điều 27 của Bộ luật này đối với các tội phạm sau đây: 1. Các tội xâm phạm an ninh quốc gia quy định tại Chương XIII của Bộ luật này; 2. Các tội phá hoại hòa bình, chống loài người và tội phạm chiến tranh quy định tại Chương XXVI của Bộ luật này; 3. Tội tham ô tài sản thuộc trường hợp quy định tại khoản 3 và khoản 4 Điều 353 của Bộ luật này; tội nhận hối lộ thuộc trường hợp quy định tại khoản 3 và khoản 4 Điều 354 của Bộ luật này.',
+      keywords: ['không áp dụng thời hiệu', 'an ninh quốc gia', 'chống loài người', 'tham ô nhận hối lộ đặc biệt nghiêm trọng']
+    },
+    {
+      articleId: 'BLDS2015_D149',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 149,
+      title: 'Thời hiệu',
+      contentRaw: '1. Thời hiệu là thời hạn do luật quy định mà khi kết thúc thời hạn đó thì phát sinh hậu quả pháp lý đối với chủ thể theo điều kiện do luật quy định. Thời hiệu được áp dụng theo quy định của Bộ luật này, luật khác có liên quan.\n2. Tòa án chỉ áp dụng quy định về thời hiệu theo yêu cầu áp dụng thời hiệu của một bên hoặc các bên với điều kiện yêu cầu này phải được đưa ra trước khi Tòa án cấp sơ thẩm ra bản án, quyết định giải quyết vụ việc.',
+      keywords: ['thời hiệu dân sự', 'yêu cầu áp dụng thời hiệu', 'tòa án chỉ áp dụng khi có yêu cầu']
+    },
+    {
+      articleId: 'BLDS2015_D150',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 150,
+      title: 'Thời hiệu khởi kiện, thời hiệu yêu cầu giải quyết việc dân sự',
+      contentRaw: '1. Thời hiệu khởi kiện là thời hạn mà chủ thể được quyền khởi kiện để yêu cầu Tòa án giải quyết vụ án dân sự bảo vệ quyền và lợi ích hợp pháp bị xâm phạm; nếu thời hạn đó kết thúc thì mất quyền khởi kiện.\n2. Thời hiệu yêu cầu giải quyết việc dân sự là thời hạn mà chủ thể được quyền yêu cầu Tòa án giải quyết việc dân sự để bảo vệ quyền và lợi ích hợp pháp của cá nhân, pháp nhân, lợi ích quốc gia, dân tộc, lợi ích công cộng; nếu thời hạn đó kết thúc thì mất quyền yêu cầu.',
+      keywords: ['thời hiệu khởi kiện', 'thời hiệu yêu cầu', 'mất quyền khởi kiện']
+    },
+    {
+      articleId: 'BLDS2015_D154',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 154,
+      title: 'Bắt đầu lại thời hiệu khởi kiện vụ án dân sự',
+      contentRaw: '1. Thời hiệu khởi kiện vụ án dân sự bắt đầu lại trong trường hợp sau đây: a) Bên có nghĩa vụ đã thừa nhận một phần hoặc toàn bộ nghĩa vụ của mình đối với người khởi kiện; b) Bên có nghĩa vụ thừa nhận hoặc thực hiện xong một phần nghĩa vụ của mình đối với người khởi kiện; c) Các bên đã tự hòa giải với nhau.\n2. Thời hiệu khởi kiện vụ án dân sự bắt đầu lại kể từ ngày tiếp theo sau ngày xảy ra sự kiện quy định tại khoản 1 Điều này.',
+      keywords: ['bắt đầu lại thời hiệu', 'thừa nhận nghĩa vụ', 'tự hòa giải', 'thời hiệu khởi kiện dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D157',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 157,
+      title: 'Gián đoạn thời hiệu khởi kiện vụ án dân sự',
+      contentRaw: '1. Thời hiệu khởi kiện vụ án dân sự bị gián đoạn khi có một trong các căn cứ quy định tại khoản 1 Điều 154 của Bộ luật này.\n2. Khi thời hiệu khởi kiện vụ án dân sự bị gián đoạn thì thời hiệu khởi kiện bắt đầu lại kể từ ngày tiếp theo sau ngày kết thúc hành vi làm gián đoạn.',
+      keywords: ['gián đoạn thời hiệu', 'thời hiệu bị gián đoạn', 'tính lại thời hiệu dân sự']
+    },
+    {
+      articleId: 'XLVPHC2012_D125',
+      lawCode: 'XLVPHC2012',
+      lawName: 'Luật Xử lý vi phạm hành chính năm 2012',
+      articleNumber: 125,
+      title: 'Tạm giữ tang vật, phương tiện, giấy phép, chứng chỉ hành nghề theo thủ tục hành chính',
+      contentRaw: '1. Việc tạm giữ tang vật, phương tiện vi phạm hành chính chỉ được áp dụng trong trường hợp thật cần thiết sau đây: a) Để xác minh tình tiết mà nếu không tạm giữ thì không có căn cứ ra quyết định xử phạt... b) Để ngăn chặn ngay hành vi vi phạm hành chính mà nếu không tạm giữ thì sẽ gây hậu quả nghiêm trọng cho xã hội; c) Để bảo đảm thi hành quyết định xử phạt...\n8. Thời hạn tạm giữ tang vật, phương tiện vi phạm hành chính, giấy phép, chứng chỉ hành nghề là 07 ngày, kể từ ngày tạm giữ. Thời hạn tạm giữ có thể được kéo dài đối với những vụ việc có nhiều tình tiết phức tạp, cần tiến hành xác minh nhưng tối đa không quá 30 ngày...',
+      keywords: ['tạm giữ phương tiện', 'giam xe', 'tạm giữ 7 ngày', 'nồng độ cồn', 'ngăn chặn ngay vi phạm', 'xử lý vi phạm hành chính']
     }
   ];
 

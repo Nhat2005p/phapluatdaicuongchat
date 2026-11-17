@@ -312,8 +312,9 @@ export class RagService {
 
       // 4. Chương 8 & 9: Luật Hành chính & Phòng, chống tham nhũng
       'hành chính', 'quản lý nhà nước', 'xử phạt', 'vi phạm hành chính', 'xử phạt vi phạm hành chính',
-      'biện pháp ngăn chặn', 'tạm giữ', 'khám xét',
-      'vượt đèn', 'vượt đèn đỏ', 'đèn đỏ', 'giao thông', 'xử lý', 'xử lí', 'bị phạt', 'phạt tiền', 'tước bằng', 'tước giấy phép', 'tai nạn', 'va chạm',
+      'biện pháp ngăn chặn', 'tạm giữ', 'khám xét', 'giam xe', 'giữ xe', 'tạm giữ xe', 'công an', 'cảnh sát', 'csgt', 'thổi còi',
+      'nồng độ cồn', 'ngà ngà say', 'say rượu', 'say bia', 'nhậu', 'uống rượu', 'uống bia',
+      'vượt đèn', 'vượt đèn đỏ', 'đèn đỏ', 'chuyển đỏ', 'giao thông', 'xử lý', 'xử lí', 'bị phạt', 'phạt tiền', 'tước bằng', 'tước giấy phép', 'tai nạn', 'va chạm',
       'tham nhũng', 'vụ lợi', 'chức vụ', 'quyền hạn', 'kê khai tài sản', 'hối lộ', 'nhận hối lộ', 'tham ô',
 
       // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
@@ -524,6 +525,10 @@ export class RagService {
       (q.includes('mượn') && (q.includes('hỏng') || q.includes('vỡ') || q.includes('bồi thường') || q.includes('tai nạn'))) ||
       q.includes('vượt đèn đỏ') ||
       q.includes('vượt đèn') ||
+      q.includes('giam xe') ||
+      q.includes('nồng độ cồn') ||
+      q.includes('say rượu') ||
+      q.includes('nhậu') ||
       (q.includes('đuổi theo') && q.includes('đánh')) ||
       q.includes('dùng gậy') ||
       q.includes('dùng ghế') ||
@@ -1053,6 +1058,50 @@ export class RagService {
         break;
       }
 
+      case 'COMPARISON': {
+        const qL = query.toLowerCase();
+        if (qL.includes('thời hiệu') || (qL.includes('khởi kiện') && qL.includes('truy cứu'))) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D149' },
+              { articleId: 'BLDS2015_D150' },
+              { articleId: 'BLDS2015_D157' },
+              { articleId: 'BLHS2015_D27' },
+              { articleId: 'BLHS2015_D28' }
+            ]
+          }).limit(5);
+        } else if (qL.includes('đạo đức') || qL.includes('tập quán')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D5' },
+              { articleId: 'BLDS2015_D1' }
+            ]
+          }).limit(2);
+        } else if (qL.includes('phòng vệ') || qL.includes('cấp thiết')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D22' },
+              { articleId: 'BLHS2015_D23' }
+            ]
+          }).limit(2);
+        } else if (qL.includes('cố ý')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D10' },
+              { articleId: 'BLHS2015_D11' }
+            ]
+          }).limit(2);
+        } else {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D1' },
+              { articleId: 'BLDS2015_D3' }
+            ]
+          }).limit(2);
+        }
+        break;
+      }
+
       case 'DEFINITION':
         matchedArticles = await LawArticle.find({
           $or: [
@@ -1264,6 +1313,10 @@ export class RagService {
           articleOrList.push({ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' });
         } else if (qL.includes('phòng vệ') || qL.includes('cấp thiết') || qL.includes('tự vệ')) {
           articleOrList.push({ articleId: 'BLHS2015_D22' }, { articleId: 'BLHS2015_D23' }, { articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' });
+        } else if (qL.includes('thời hiệu') || (qL.includes('khởi kiện') && qL.includes('truy cứu'))) {
+          articleOrList.push({ articleId: 'BLDS2015_D149' }, { articleId: 'BLDS2015_D150' }, { articleId: 'BLDS2015_D157' }, { articleId: 'BLHS2015_D27' });
+        } else if (qL.includes('giam xe') || qL.includes('tạm giữ') || qL.includes('nồng độ cồn') || qL.includes('say') || qL.includes('nhậu')) {
+          articleOrList.push({ articleId: 'XLVPHC2012_D125' }, { articleId: 'XLVPHC2012_D5' }, { articleId: 'XLVPHC2012_D21' });
         } else if (qL.includes('trộm') || qL.includes('cướp')) {
           articleOrList.push({ articleId: 'BLHS2015_D168' }, { articleId: 'BLHS2015_D173' }, { articleId: 'BLHS2015_D12' });
         } else {

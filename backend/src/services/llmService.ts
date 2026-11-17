@@ -692,7 +692,115 @@ Mặt chủ quan là trạng thái tâm lý nội tâm bên trong của chủ th
 Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thành** nêu trên thì một hành vi thực tế mới bị kết luận là Vi phạm pháp luật và chủ thể mới phải gánh chịu trách nhiệm pháp lý tương ứng trước Nhà nước.`;
   }
 
-  
+  /**
+   * Bộ giải chuyên biệt: So sánh thời hiệu khởi kiện vụ án dân sự và thời hiệu truy cứu TNHS + Các căn cứ gián đoạn
+   */
+  public static solveDynamicStatuteOfLimitationsComparison(query?: string): string {
+    return `### SO SÁNH THỜI HIỆU KHỞI KIỆN VỤ ÁN DÂN SỰ VÀ THỜI HIỆU TRUY CỨU TRÁCH NHIỆM HÌNH SỰ
+*(Căn cứ Bộ luật Dân sự 2015 và Bộ luật Hình sự 2015)*
+
+---
+
+#### I. KHÁI NIỆM & BẢN CHẤT PHÁP LÝ
+
+1. **Thời hiệu khởi kiện vụ án dân sự**:
+   - Theo Điều 149 và Khoản 1 Điều 150 Bộ luật Dân sự 2015: Thời hiệu khởi kiện là thời hạn mà chủ thể được quyền khởi kiện để yêu cầu Tòa án giải quyết vụ án dân sự bảo vệ quyền và lợi ích hợp pháp bị xâm phạm; nếu thời hạn đó kết thúc thì mất quyền khởi kiện.
+   - *Nguyên tắc áp dụng*: Theo Khoản 2 Điều 149 BLDS 2015, Tòa án chỉ áp dụng quy định về thời hiệu theo yêu cầu áp dụng thời hiệu của một bên hoặc các bên với điều kiện yêu cầu này phải được đưa ra trước khi Tòa án cấp sơ thẩm ra bản án, quyết định giải quyết vụ việc.
+
+2. **Thời hiệu truy cứu trách nhiệm hình sự**:
+   - Theo Khoản 1 Điều 27 Bộ luật Hình sự 2015: Thời hiệu truy cứu trách nhiệm hình sự là thời hạn do Bộ luật Hình sự quy định mà khi hết thời hạn đó thì người phạm tội không bị truy cứu trách nhiệm hình sự.
+   - *Nguyên tắc áp dụng*: Mang tính quyền lực công bắt buộc, cơ quan tiến hành tố tụng (Cơ quan điều tra, Viện kiểm sát, Tòa án) phải chủ động áp dụng để đình chỉ điều tra hoặc đình chỉ vụ án mà không phụ thuộc vào yêu cầu của người phạm tội hay người bị hại.
+
+---
+
+#### II. BẢNG SO SÁNH ĐIỂM GIỐNG NHAU VÀ KHÁC NHAU
+
+| Tiêu chí so sánh | Thời hiệu khởi kiện vụ án dân sự | Thời hiệu truy cứu trách nhiệm hình sự |
+| :--- | :--- | :--- |
+| **1. Ngành luật điều chỉnh** | Luật Dân sự (Bộ luật Dân sự 2015 và pháp luật tố tụng dân sự). | Luật Hình sự (Bộ luật Hình sự 2015 và pháp luật tố tụng hình sự). |
+| **2. Bản chất pháp lý** | Điều chỉnh quan hệ tài sản, nhân thân mang tính tư nhân, bình đẳng và tự do định đoạt. | Điều chỉnh quan hệ công quyền giữa Nhà nước và người phạm tội, mang tính cưỡng chế nghiêm khắc. |
+| **3. Cơ chế áp dụng** | Tòa án **chỉ áp dụng khi có yêu cầu** của đương sự trước khi ra bản án, quyết định sơ thẩm (Khoản 2 Điều 149 BLDS 2015). | Cơ quan tiến hành tố tụng **bắt buộc chủ động áp dụng** theo luật định mà không cần đương sự yêu cầu. |
+| **4. Thời hạn cụ thể** | Tùy từng loại quan hệ: 03 năm đối với tranh chấp hợp đồng (Điều 429 BLDS 2015); 03 năm đối với bồi thường thiệt hại ngoài hợp đồng (Điều 588 BLDS 2015); 02 năm đối với yêu cầu tuyên bố GDDS vô hiệu (Điều 132 BLDS 2015). | Phân tầng theo mức độ nghiêm trọng của tội phạm (Khoản 2 Điều 27 BLHS 2015):<br>- **05 năm**: Tội ít nghiêm trọng;<br>- **10 năm**: Tội nghiêm trọng;<br>- **20 năm**: Tội rất nghiêm trọng;<br>- **20 năm**: Tội đặc biệt nghiêm trọng. |
+| **5. Trường hợp loại trừ (Không áp dụng thời hiệu)** | Không áp dụng thời hiệu đối với: Yêu cầu bảo vệ quyền nhân thân không gắn với tài sản; Yêu cầu bảo vệ quyền sở hữu; Tranh chấp quyền sử dụng đất theo Luật Đất đai (Điều 155 BLDS 2015). | Không áp dụng thời hiệu đối với: Các tội xâm phạm an ninh quốc gia; Tội phá hoại hòa bình, chống loài người, tội phạm chiến tranh; Tội tham ô tài sản, nhận hối lộ thuộc khung hình phạt đặc biệt nghiêm trọng (Điều 28 BLHS 2015). |
+| **6. Hậu quả pháp lý khi hết thời hiệu** | Đương sự **mất quyền khởi kiện** yêu cầu Tòa án giải quyết vụ án bảo vệ quyền lợi bị xâm phạm (Tòa án đình chỉ giải quyết yêu cầu khởi kiện nếu có bên yêu cầu áp dụng thời hiệu). | Người phạm tội **không bị truy cứu trách nhiệm hình sự** (Cơ quan có thẩm quyền không khởi tố hoặc đình chỉ vụ án/bị can). |
+
+*Điểm giống nhau cốt lõi*: Cả hai đều là khoảng thời gian do luật định mà khi hết thời hạn đó thì làm chấm dứt quyền năng pháp lý (mất quyền khởi kiện hoặc chấm dứt quyền truy cứu); nhằm ổn định trật tự pháp lý, tránh tình trạng khiếu kiện kéo dài và thúc đẩy việc giải quyết kịp thời khi chứng cứ còn nguyên vẹn.
+
+---
+
+#### III. QUY ĐỊNH VỀ KHI NÀO THỜI HIỆU BỊ GIÁN ĐOẠN VÀ TÍNH LẠI TỪ ĐẦU
+
+#### 1. Trong Tố tụng Dân sự (Căn cứ Điều 157 & Điều 154 Bộ luật Dân sự 2015)
+Thời hiệu khởi kiện vụ án dân sự bị gián đoạn và bắt đầu tính lại từ đầu trong các trường hợp sau:
+1. **Bên có nghĩa vụ đã thừa nhận một phần hoặc toàn bộ nghĩa vụ** của mình đối với người khởi kiện (ví dụ: gửi văn bản xác nhận nợ, xin gia hạn nợ).
+2. **Bên có nghĩa vụ thừa nhận hoặc thực hiện xong một phần nghĩa vụ** của mình đối với người khởi kiện (ví dụ: trả trước một phần tiền nợ gốc hoặc lãi).
+3. **Các bên đã tự hòa giải thành với nhau**.
+
+*Quy tắc tính lại*: Kể từ ngày tiếp theo sau ngày xảy ra sự kiện gián đoạn nêu trên, thời hiệu khởi kiện vụ án dân sự sẽ bắt đầu lại một khoảng thời gian hoàn toàn mới theo quy định tại Khoản 2 Điều 157 BLDS 2015.
+
+#### 2. Trong Pháp luật Hình sự (Căn cứ Khoản 3 Điều 27 Bộ luật Hình sự 2015)
+Thời hiệu truy cứu trách nhiệm hình sự bị gián đoạn và bắt đầu tính lại từ đầu trong 02 trường hợp luật định:
+1. **Thực hiện hành vi phạm tội mới**: Trong thời hạn luật định (5, 10 hoặc 20 năm), người phạm tội lại thực hiện hành vi phạm tội mới mà Bộ luật này quy định mức cao nhất của khung hình phạt đối với tội đó trên 01 năm tù. Khi đó, thời hiệu đối với tội cũ được tính lại kể từ ngày thực hiện hành vi phạm tội mới.
+2. **Cố tình trốn tránh và bị truy nã**: Người phạm tội cố tình trốn tránh và cơ quan điều tra đã ra quyết định truy nã. Khi đó, thời hiệu sẽ được tính lại kể từ khi người đó ra đầu thú hoặc bị cơ quan chức năng bắt giữ.`;
+  }
+
+  /**
+   * Bộ giải chuyên biệt: Tình huống uống rượu say + nghe điện thoại + vượt đèn đỏ bị công an thổi còi -> Có bị giam xe không?
+   */
+  public static solveDynamicDrunkDrivingSeizure(query?: string): string {
+    return `### GIẢI QUYẾT TÌNH HUỐNG GIAO THÔNG: SAY RƯỢU, NGHE ĐIỆN THOẠI, VƯỢT ĐÈN ĐỎ VÀ BIỆN PHÁP TẠM GIỮ XE (GIAM XE)
+*(Căn cứ Luật Xử lý vi phạm hành chính 2012 và Nghị định 100/2019/NĐ-CP được sửa đổi, bổ sung bởi Nghị định 123/2021/NĐ-CP)*
+
+---
+
+#### I. KẾT LUẬN DỨT KHOÁT: CÓ BỊ GIAM XE KHÔNG?
+
+👉 **CÂU TRẢ LỜI LÀ: CÓ! BẠN CHẮC CHẮN SẼ BỊ TẠM GIỮ PHƯƠNG TIỆN (GIAM XE) ĐẾN 07 NGÀY.**
+
+Lý do: Mặc dù bạn cho rằng mình chỉ "ngà ngà say" và "chưa đụng ai", nhưng pháp luật Việt Nam hiện hành quy định mức cấm tuyệt đối nồng độ cồn khi điều khiển phương tiện (nguyên tắc "Đã uống rượu bia - không lái xe"). Hành vi điều khiển phương tiện mà trong máu hoặc hơi thở có nồng độ cồn là **căn cứ bắt buộc để lực lượng Cảnh sát giao thông (CSGT) áp dụng biện pháp ngăn chặn tạm giữ phương tiện ngay lập tức**.
+
+---
+
+#### II. CĂN CỨ ĐIỀU LUẬT THỰC ĐỊNH ÁP DỤNG
+
+1. **Căn cứ tạm giữ phương tiện (Giam xe)**:
+   - **Khoản 1 Điều 82 Nghị định 100/2019/NĐ-CP** (được sửa đổi, bổ sung bởi **Nghị định 123/2021/NĐ-CP**): Để ngăn chặn ngay vi phạm hành chính, người có thẩm quyền xử phạt được phép tạm giữ phương tiện lên đến **07 ngày** trước khi ra quyết định xử phạt đối với các hành vi vi phạm về nồng độ cồn.
+   - **Điều 125 Luật Xử lý vi phạm hành chính 2012**: Quy định về biện pháp ngăn chặn và bảo đảm xử lý vi phạm hành chính "Tạm giữ tang vật, phương tiện vi phạm hành chính", áp dụng trong trường hợp cần ngăn chặn ngay hành vi vi phạm có nguy cơ gây hậu quả nghiêm trọng cho trật tự, an toàn xã hội.
+
+---
+
+#### III. BÓC TÁCH VÀ PHÂN TÍCH 03 HÀNH VI VI PHẠM ĐỘC LẬP
+
+Theo nguyên tắc xử lý vi phạm hành chính tại Điều 5 Luật Xử lý vi phạm hành chính 2012: *"Một người thực hiện nhiều hành vi vi phạm hành chính thì bị xử phạt về từng hành vi vi phạm"*. Trong tình huống này, bạn đã thực hiện cùng lúc 03 hành vi độc lập:
+
+#### 1. Hành vi 1: Điều khiển phương tiện có nồng độ cồn trong máu/hơi thở (Hành vi quyết định việc giam xe)
+- **Biện pháp áp dụng**: Tạm giữ phương tiện đến 07 ngày theo Điều 125 Luật XLVPHC 2012 và Khoản 1 Điều 82 Nghị định 100/2019/NĐ-CP.
+- **Mức phạt tiền và hình phạt bổ sung (tùy nồng độ đo được qua máy thổi)**:
+  + *Đối với xe mô tô, xe gắn máy*:
+    - Mức 1 (chưa vượt quá 0.25 mg/l khí thở): Phạt 2.000.000đ – 3.000.000đ, tước GPLX từ 10 – 12 tháng.
+    - Mức 2 (vượt quá 0.25 mg/l đến 0.4 mg/l khí thở): Phạt 4.000.000đ – 5.000.000đ, tước GPLX từ 16 – 18 tháng.
+    - Mức 3 (vượt quá 0.4 mg/l khí thở): Phạt 6.000.000đ – 8.000.000đ, tước GPLX từ 22 – 24 tháng.
+  + *Đối với xe ô tô*: Phạt tiền từ 6.000.000đ đến 40.000.000đ, tước GPLX từ 10 – 24 tháng.
+
+#### 2. Hành vi 2: Vượt đèn đỏ (Không chấp hành hiệu lệnh của đèn tín hiệu giao thông)
+- *Đối với xe mô tô, xe gắn máy*: Phạt tiền từ **800.000 đồng đến 1.000.000 đồng** (Điểm e Khoản 4 Điều 6 NĐ 100/2019/NĐ-CP được sửa đổi bởi NĐ 123/2021/NĐ-CP), tước quyền sử dụng GPLX từ 01 đến 03 tháng.
+- *Đối với xe ô tô*: Phạt tiền từ **4.000.000 đồng đến 6.000.000 đồng**, tước GPLX từ 01 đến 03 tháng.
+
+#### 3. Hành vi 3: Dùng tay sử dụng điện thoại di động khi đang lái xe
+- *Đối với xe mô tô, xe gắn máy*: Phạt tiền từ **800.000 đồng đến 1.000.000 đồng** (Điểm h Khoản 4 Điều 6 NĐ 100/2019/NĐ-CP), tước GPLX từ 01 đến 03 tháng.
+- *Đối với xe ô tô*: Phạt tiền từ **2.000.000 đồng đến 3.000.000 đồng**, tước GPLX từ 01 đến 03 tháng.
+
+---
+
+#### IV. HƯỚNG DẪN XỬ LÝ VÀ BÀI HỌC THỰC TIỄN
+
+1. **Tại thời điểm bị CSGT dừng xe**:
+   - Nghiêm túc chấp hành hiệu lệnh dừng xe và yêu cầu kiểm tra nồng độ cồn của CSGT. Tuyệt đối không được cự cãi, lăng mạ hay chống đối người thi hành công vụ để tránh bị khởi tố hình sự theo Điều 330 BLHS 2015.
+   - Nhận biên bản vi phạm hành chính và biên bản tạm giữ phương tiện theo đúng thủ tục tại Điều 125 Luật XLVPHC 2012, kiểm tra kỹ niêm phong xe trước khi phương tiện được đưa về bãi tạm giữ.
+2. **Quy trình nhận lại xe**:
+   - Đến đúng ngày hẹn trên biên bản để làm việc với Đội CSGT lập biên bản.
+   - Nộp phạt tại Kho bạc Nhà nước hoặc qua Cổng Dịch vụ công Quốc gia theo quyết định xử phạt vi phạm hành chính và xuất trình biên lai để làm thủ tục nhận lại xe.`;
+  }
 
   /**
    * Đối sánh độ tương đồng từ khóa trên tập SFT Barem chuẩn
@@ -863,6 +971,21 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
+    // 1.5. So sánh thời hiệu khởi kiện dân sự và thời hiệu truy cứu TNHS + căn cứ gián đoạn
+    const isStatuteOfLimitations =
+      (qLower.includes('thời hiệu') || (qLower.includes('khởi kiện') && qLower.includes('truy cứu'))) &&
+      (qLower.includes('dân sự') || qLower.includes('hình sự') || qLower.includes('gián đoạn') || qLower.includes('so sánh'));
+
+    if (isStatuteOfLimitations) {
+      return {
+        sample_id: 'SFT_COMPARE_STATUTE_OF_LIMITATIONS_CIVIL_CRIMINAL',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh thời hiệu khởi kiện vụ án dân sự và thời hiệu truy cứu trách nhiệm hình sự, phân tích các căn cứ gián đoạn theo BLDS 2015 và BLHS 2015.',
+        input: query,
+        output: this.solveDynamicStatuteOfLimitationsComparison(query)
+      };
+    }
+
     // === NHÓM 2: BÀI TẬP TÌNH HUỐNG (CASE ANALYSIS) ===
     // 2.1. Tình huống lái xe đúng luật, cháu bé 8 tuổi chạy vọt ra đường gây thương tích 25%
     const isChildTrafficAccident =
@@ -909,6 +1032,21 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
         instruction: 'Xác định các loại trách nhiệm pháp lý của nhân viên đi làm muộn và trộm cắp tài sản (kỷ luật sa thải, hình sự Điều 173, dân sự bồi thường).',
         input: query,
         output: this.solveDynamicEmployeeTardinessAndTheft(query)
+      };
+    }
+
+    // 2.4. Nhậu say, nghe điện thoại, vượt đèn đỏ -> Có bị giam xe không?
+    const isDrunkDrivingSeizure =
+      (qLower.includes('nhậu') || qLower.includes('say') || qLower.includes('ngà ngà') || qLower.includes('uống rượu') || qLower.includes('nồng độ cồn')) &&
+      (qLower.includes('giam xe') || qLower.includes('tạm giữ') || qLower.includes('giữ xe') || (qLower.includes('đèn đỏ') && qLower.includes('công an')));
+
+    if (isDrunkDrivingSeizure) {
+      return {
+        sample_id: 'SFT_CASE_DRUNK_DRIVING_PHONE_RED_LIGHT_SEIZURE',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Phân tích tình huống vi phạm nồng độ cồn, nghe điện thoại, vượt đèn đỏ và khẳng định việc tạm giữ phương tiện (giam xe 7 ngày) theo Điều 125 Luật XLVPHC 2012 và NĐ 100/2019/NĐ-CP.',
+        input: query,
+        output: this.solveDynamicDrunkDrivingSeizure(query)
       };
     }
 
@@ -2307,29 +2445,28 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       effectiveIntent === 'CIVIL_INHERIT' ||
       effectiveIntent === 'COMPARISON';
     // Điều chỉnh số lượng tokens hợp lý cho CPU (2.2 t/s) để tránh timeout và sinh câu trả lời súc tích
-    const adaptiveMaxTokens = isComplexQuery ? 384 : 256;
-    // Timeout 3 phút (180.000ms): Đủ cho CPU hoàn thành sinh lời giải trong thời hạn an toàn
-    const adaptiveTimeoutMs = 180000;
+    const adaptiveMaxTokens = isComplexQuery ? 220 : 160;
+    // Timeout an toàn 2.5 phút (150.000ms): Đảm bảo CPU hoàn thành trong thời hạn
+    const adaptiveTimeoutMs = 150000;
 
     // Ngữ cảnh tinh gọn kết hợp Căn cứ thực định và Barem giáo trình chuyên sâu (Concise Context):
     let compactLlmContext = '';
     if (retrievedArticles.length > 0) {
-      const topArts = retrievedArticles.slice(0, 3);
+      const topArts = retrievedArticles.slice(0, 2);
       topArts.forEach((art) => {
-        const snippet = art.contentRaw ? art.contentRaw.slice(0, 320).replace(/\s+/g, ' ').trim() : '';
+        const snippet = art.contentRaw ? art.contentRaw.slice(0, 160).replace(/\s+/g, ' ').trim() : '';
         compactLlmContext += `[Điều ${art.articleNumber} ${art.lawName}: ${art.title}]\n${snippet}\n\n`;
       });
     }
     if (topTextbooks.length > 0) {
-      for (const t of topTextbooks.slice(0, 2)) {
-        if (t.chunk && t.chunk.baremContent) {
-          const chunkSnippet = t.chunk.baremContent.slice(0, 600).trim();
-          compactLlmContext += `[Barem Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle}]\n${chunkSnippet}\n\n`;
-        }
+      const t = topTextbooks[0];
+      if (t.chunk && t.chunk.baremContent) {
+        const chunkSnippet = t.chunk.baremContent.slice(0, 250).trim();
+        compactLlmContext += `[Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle}]\n${chunkSnippet}\n\n`;
       }
     }
     if (!compactLlmContext) {
-      compactLlmContext = fullRagContext.slice(0, 1000);
+      compactLlmContext = fullRagContext.slice(0, 400);
     }
 
     try {
@@ -2347,7 +2484,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             {
               role: 'system',
               content:
-                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Nhiệm vụ của bạn là giải đáp chính xác, sâu sắc các tình huống pháp lý và câu hỏi đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNguyên tắc trả lời:\n1. Phân tích trực tiếp đúng trọng tâm vấn đề được hỏi (không lạc đề sang các chế định pháp luật khác).\n2. Nêu rõ Căn cứ pháp lý áp dụng (Điều luật, Tên văn bản luật).\n3. Phân biệt rõ các trường hợp cụ thể trong thực tế để người học nắm trọn vẹn (ví dụ: tài sản riêng do tặng cho riêng vs tài sản chung hoặc trường hợp đã thỏa thuận nhập tài sản riêng vào tài sản chung).\n4. Đưa ra kết luận rõ ràng, dứt khoát cho câu hỏi.\n5. Lưu ý nguyên tắc phân tích tình huống tự ý bán/định đoạt tài sản của người khác:\n- Đây là HÀNH VI TRÁI PHÁP LUẬT (Hành vi bất hợp pháp) với LỖI CỐ Ý TRỰC TIẾP (tuyệt đối không phải hành vi pháp lý hợp pháp, không phải lỗi vô ý).\n- Chủ sở hữu tài sản là người bị hại, KHÔNG PHẢI chịu bất kỳ trách nhiệm dân sự nào đối với người mua; chủ sở hữu có quyền đòi lại tài sản theo Điều 166, Điều 168 BLDS 2015.\n- Người mua tài sản phải trả lại tài sản cho chủ sở hữu theo Điều 168 BLDS 2015 và có quyền yêu cầu người bán hoàn tiền, bồi thường theo Điều 131 BLDS 2015.\n- Người tự ý bán phải chịu trách nhiệm hình sự về Tội lạm dụng tín nhiệm chiếm đoạt tài sản (Điều 175 BLHS 2015) và trách nhiệm dân sự hoàn trả tiền cho người mua, bồi thường cho chủ sở hữu.`
+                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Hãy giải đáp chính xác, đúng trọng tâm đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNêu rõ Căn cứ pháp lý (Điều luật, Tên văn bản luật), phân tích chặt chẽ và đưa ra kết luận dứt khoát.`
             },
             {
               role: 'user',
