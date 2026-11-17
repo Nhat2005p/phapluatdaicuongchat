@@ -1203,7 +1203,14 @@ export class RagService {
         const qL = query.toLowerCase();
         const articleOrList: Array<{ articleId: string }> = [];
 
-        if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông') || qL.includes('thương tích')) {
+        if (qL.includes('tự ý bán') || (qL.includes('bán') && (qL.includes('mượn') || qL.includes('của b') || qL.includes('xe của') || qL.includes('người khác')))) {
+          articleOrList.push(
+            { articleId: 'BLDS2015_D166' },
+            { articleId: 'BLDS2015_D168' },
+            { articleId: 'BLHS2015_D175' },
+            { articleId: 'BLDS2015_D131' }
+          );
+        } else if (qL.includes('ném đá') || qL.includes('cảnh sát') || qL.includes('giao thông') || qL.includes('thương tích')) {
           articleOrList.push({ articleId: 'BLHS2015_D134' }, { articleId: 'BLDS2015_D584' }, { articleId: 'BLHS2015_D12' });
         } else if (qL.includes('xả thải') || qL.includes('nhà máy đường') || qL.includes('môi trường') || qL.includes('ô nhiễm')) {
           articleOrList.push({ articleId: 'BLDS2015_D584' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D74' });
@@ -1253,6 +1260,12 @@ export class RagService {
         }
         if (qLower.includes('thừa kế') || qLower.includes('di sản') || qLower.includes('di chúc')) {
           dynamicConditions.push({ articleId: 'BLDS2015_D612' }, { articleId: 'BLDS2015_D651' }, { articleId: 'BLDS2015_D644' });
+        }
+        if (qLower.includes('tự ý bán') || (qLower.includes('bán') && (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('người khác')))) {
+          dynamicConditions.push({ articleId: 'BLDS2015_D166' });
+          dynamicConditions.push({ articleId: 'BLDS2015_D168' });
+          dynamicConditions.push({ articleId: 'BLHS2015_D175' });
+          dynamicConditions.push({ articleId: 'BLDS2015_D131' });
         }
       }
       // Nhánh tài sản vợ chồng / ly hôn / tặng cho riêng

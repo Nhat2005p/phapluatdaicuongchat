@@ -330,6 +330,51 @@ export async function runSeed(): Promise<void> {
       keywords: ['nghĩa vụ bên mượn', 'bảo quản tài sản', 'làm rơi vỡ', 'bồi thường hư hỏng', 'laptop']
     },
     {
+      articleId: 'BLDS2015_D131',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự 2015',
+      articleNumber: 131,
+      title: 'Hậu quả pháp lý của giao dịch dân sự vô hiệu',
+      contentRaw: '1. Giao dịch dân sự vô hiệu không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự của các bên kể từ thời điểm giao dịch được xác lập.\n2. Khi giao dịch dân sự vô hiệu thì các bên khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận. Trường hợp không thể hoàn trả được bằng hiện vật thì trị giá thành tiền để hoàn trả.\n3. Bên ngay tình trong việc thu hoa lợi, lợi tức không phải hoàn trả lại hoa lợi, lợi tức đó.\n4. Bên có lỗi gây thiệt hại thì phải bồi thường.',
+      keywords: ['hậu quả giao dịch vô hiệu', 'khôi phục lại tình trạng ban đầu', 'hoàn trả những gì đã nhận', 'bồi thường thiệt hại', 'giao dịch vô hiệu']
+    },
+    {
+      articleId: 'BLDS2015_D158',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự 2015',
+      articleNumber: 158,
+      title: 'Quyền sở hữu',
+      contentRaw: 'Quyền sở hữu bao gồm quyền chiếm hữu, quyền sử dụng và quyền định đoạt tài sản của chủ sở hữu theo quy định của luật.',
+      keywords: ['quyền sở hữu', 'quyền chiếm hữu', 'quyền sử dụng', 'quyền định đoạt', 'chủ sở hữu']
+    },
+    {
+      articleId: 'BLDS2015_D166',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự 2015',
+      articleNumber: 166,
+      title: 'Quyền đòi lại tài sản của chủ sở hữu, chủ thể có quyền khác đối với tài sản',
+      contentRaw: '1. Chủ sở hữu, chủ thể có quyền khác đối với tài sản có quyền đòi lại tài sản từ người chiếm hữu, người sử dụng tài sản, người được lợi về tài sản không có căn cứ pháp luật.\n2. Chủ sở hữu không có quyền đòi lại tài sản từ sự chiếm hữu của người chiếm hữu ngay tình, nếu thời hiệu khởi kiện đã hết hoặc thuộc trường hợp quy định tại khoản 2 Điều 168 của Bộ luật này.',
+      keywords: ['quyền đòi lại tài sản', 'chủ sở hữu đòi lại tài sản', 'chiếm hữu không có căn cứ pháp luật', 'đòi lại xe']
+    },
+    {
+      articleId: 'BLDS2015_D168',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự 2015',
+      articleNumber: 168,
+      title: 'Quyền đòi lại động sản phải đăng ký quyền sở hữu hoặc bất động sản từ người chiếm hữu ngay tình',
+      contentRaw: 'Chủ sở hữu được đòi lại động sản phải đăng ký quyền sở hữu hoặc bất động sản từ người chiếm hữu ngay tình, trừ trường hợp người thứ ba ngay tình nhận được tài sản này thông qua bán đấu giá tại tổ chức có thẩm quyền hoặc giao dịch với người mà theo bản án, quyết định của cơ quan nhà nước có thẩm quyền là chủ sở hữu tài sản nhưng sau đó bản án, quyết định bị hủy, sửa.',
+      keywords: ['đòi lại động sản đăng ký quyền sở hữu', 'xe máy phải đăng ký', 'người chiếm hữu ngay tình', 'đòi lại xe máy từ người thứ ba']
+    },
+    {
+      articleId: 'BLHS2015_D175',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 175,
+      title: 'Tội lạm dụng tín nhiệm chiếm đoạt tài sản',
+      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi chiếm đoạt tài sản hoặc đã bị kết án về tội này...:\na) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả;\nb) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng và đã sử dụng tài sản đó vào mục đích bất hợp pháp dẫn đến không có khả năng trả lại tài sản.',
+      keywords: ['lạm dụng tín nhiệm chiếm đoạt tài sản', 'mượn xe đem bán', 'thuê xe đem bán', 'chiếm đoạt tài sản', 'bán xe của người khác']
+    },
+    {
       articleId: 'BLDS2015_D585',
       lawCode: 'BLDS2015',
       lawName: 'Bộ luật Dân sự 2015',

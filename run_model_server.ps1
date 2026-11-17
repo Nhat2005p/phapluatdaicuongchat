@@ -1,4 +1,4 @@
-﻿# VietLawAssist - Local LLM Server (Qwen2.5-3B)
+# VietLawAssist - Local LLM Server (Qwen2.5-3B)
 $Host.UI.RawUI.WindowTitle = "VietLawAssist - Local LLM Server (Qwen2.5-3B)"
 
 $rootDir = $PSScriptRoot

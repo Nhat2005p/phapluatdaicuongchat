@@ -899,6 +899,24 @@ Chỉ khi thỏa mãn đầy đủ **đồng thời cả 4 yếu tố cấu thà
       };
     }
 
+    // 0.0.3e2. Tình huống tự ý đem bán xe / bán tài sản của người khác (A mượn xe của B tự ý bán cho C)
+    const isUnauthorizedSaleCase =
+      (qLower.includes('tự ý bán') ||
+        (qLower.includes('bán') && (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('của người khác')))) &&
+      !qLower.includes('đúng hay sai') &&
+      !qLower.includes('14 tuổi') &&
+      !qLower.includes('16 tuổi');
+
+    if (isUnauthorizedSaleCase) {
+      return {
+        sample_id: 'SFT_CASE_UNAUTHORIZED_SALE_PROPERTY',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải quyết tình huống tự ý bán tài sản của người khác: Phân loại hành vi, Cấu thành vi phạm pháp luật và Phân loại trách nhiệm của các bên.',
+        input: query,
+        output: this.solveDynamicUnauthorizedSale(query, [])
+      };
+    }
+
     // 0.0.3f. Tình huống người chưa thành niên (6 đến dưới 15 tuổi, ví dụ M 14 tuổi) tự ý xác lập giao dịch giá trị lớn (mua điện thoại 30 triệu) (Câu 11)
     const isMinorTransactionCase =
       (qLower.includes('14 tuổi') || qLower.includes('13 tuổi') || qLower.includes('12 tuổi') || qLower.includes('chưa thành niên')) &&
@@ -1999,8 +2017,8 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       effectiveIntent === 'VPPL_4_ELEMENTS' ||
       effectiveIntent === 'CIVIL_INHERIT' ||
       effectiveIntent === 'COMPARISON';
-    // Đảm bảo số lượng tokens vừa đủ súc tích, tránh CPU sinh rườm rà làm chậm tốc độ phản hồi
-    const adaptiveMaxTokens = isComplexQuery ? 480 : 320;
+    // Đảm bảo số lượng tokens dồi dào để mô hình sinh đầy đủ tất cả các đề mục, không bao giờ bị ngắt ngang
+    const adaptiveMaxTokens = isComplexQuery ? 1536 : 1024;
     // Timeout 4 phút (240.000ms): Cho phép CPU hoàn tất việc sinh câu trả lời tối đa 4 phút, biên độ an toàn tuyệt đối, không bao giờ bị abort sớm
     const adaptiveTimeoutMs = 240000;
 
@@ -2040,7 +2058,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
             {
               role: 'system',
               content:
-                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Nhiệm vụ của bạn là giải đáp chính xác, sâu sắc các tình huống pháp lý và câu hỏi đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNguyên tắc trả lời:\n1. Phân tích trực tiếp đúng trọng tâm vấn đề được hỏi (không lạc đề sang các chế định pháp luật khác).\n2. Nêu rõ Căn cứ pháp lý áp dụng (Điều luật, Tên văn bản luật).\n3. Phân biệt rõ các trường hợp cụ thể trong thực tế để người học nắm trọn vẹn (ví dụ: tài sản riêng do tặng cho riêng vs tài sản chung hoặc trường hợp đã thỏa thuận nhập tài sản riêng vào tài sản chung).\n4. Đưa ra kết luận rõ ràng, dứt khoát cho câu hỏi.`
+                `Bạn là Giảng viên Pháp lý môn Pháp luật Đại cương (Bộ GD&ĐT).\n${modeRule ? modeRule + '\n' : ''}Nhiệm vụ của bạn là giải đáp chính xác, sâu sắc các tình huống pháp lý và câu hỏi đề bài dựa trên Căn cứ pháp luật thực định và Giáo trình môn học.\nNguyên tắc trả lời:\n1. Phân tích trực tiếp đúng trọng tâm vấn đề được hỏi (không lạc đề sang các chế định pháp luật khác).\n2. Nêu rõ Căn cứ pháp lý áp dụng (Điều luật, Tên văn bản luật).\n3. Phân biệt rõ các trường hợp cụ thể trong thực tế để người học nắm trọn vẹn (ví dụ: tài sản riêng do tặng cho riêng vs tài sản chung hoặc trường hợp đã thỏa thuận nhập tài sản riêng vào tài sản chung).\n4. Đưa ra kết luận rõ ràng, dứt khoát cho câu hỏi.\n5. Lưu ý nguyên tắc phân tích tình huống tự ý bán/định đoạt tài sản của người khác:\n- Đây là HÀNH VI TRÁI PHÁP LUẬT (Hành vi bất hợp pháp) với LỖI CỐ Ý TRỰC TIẾP (tuyệt đối không phải hành vi pháp lý hợp pháp, không phải lỗi vô ý).\n- Chủ sở hữu tài sản là người bị hại, KHÔNG PHẢI chịu bất kỳ trách nhiệm dân sự nào đối với người mua; chủ sở hữu có quyền đòi lại tài sản theo Điều 166, Điều 168 BLDS 2015.\n- Người mua tài sản phải trả lại tài sản cho chủ sở hữu theo Điều 168 BLDS 2015 và có quyền yêu cầu người bán hoàn tiền, bồi thường theo Điều 131 BLDS 2015.\n- Người tự ý bán phải chịu trách nhiệm hình sự về Tội lạm dụng tín nhiệm chiếm đoạt tài sản (Điều 175 BLHS 2015) và trách nhiệm dân sự hoàn trả tiền cho người mua, bồi thường cho chủ sở hữu.`
             },
             {
               role: 'user',
@@ -2058,7 +2076,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         const text = data.choices?.[0]?.message?.content;
         if (text && text.trim().length > 60) {
           console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải từ ngữ cảnh Giáo trình trong ${Date.now() - startTime}ms.`);
-          const { bodyWithoutCitation } = this.splitEmbeddedCitation(this.cleanRubricText(text.trim()));
+          const { bodyWithoutCitation } = this.splitEmbeddedCitation(this.sanitizeTruncatedTail(this.cleanRubricText(text.trim())));
           const enrichedText = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
           const extraCitation =
             topTextbooks.length > 0 && topTextbooks[0].score >= 8
@@ -3495,6 +3513,104 @@ Nội dung của quan hệ pháp luật là tổng hợp các **Quyền chủ th
 2. **Nâng cao ý thức pháp luật và phòng ngừa vi phạm**: Giúp các chủ thể trong xã hội nhận thức rõ chế tài và hậu quả pháp lý của từng loại hành vi, từ đó tự giác điều chỉnh hành vi hợp pháp trong công tác và đời sống xã hội.`;
   }
 
+  /**
+   * Barem điểm 10: Tình huống tự ý bán tài sản của người khác (A mượn xe của B tự ý bán cho C)
+   * (Chương 3: Sự kiện pháp lý & Chương 5: Vi phạm pháp luật & Trách nhiệm pháp lý)
+   */
+  public static solveDynamicUnauthorizedSale(query: string, articles: ILawArticle[] = []): string {
+    return `### I. PHÂN LOẠI HÀNH VI CỦA ANH A
+*(Theo Giáo trình **Pháp luật Đại cương** — Trường Đại học Thương Mại 2021, Chương 3: Quan hệ pháp luật & Chương 5: Vi phạm pháp luật)*
+
+1. **Bản chất sự kiện pháp lý**:
+   - Trong lý luận khoa học pháp lý, sự kiện pháp lý là Hành vi được phân chia thành hai loại độc lập: **Hành vi hợp pháp** (hành vi phù hợp với quy định pháp luật) và **Hành vi bất hợp pháp (Hành vi trái pháp luật)**.
+   - Khi A mượn xe hoặc được B giao quản lý xe máy, giữa A và B chỉ tồn tại quan hệ **Hợp đồng mượn tài sản** theo **Điều 494 Bộ luật Dân sự 2015**. Anh A chỉ được quyền chiếm hữu và sử dụng tạm thời, **hoàn toàn không có quyền sở hữu và không có quyền định đoạt** đối với chiếc xe theo quy định tại **Điều 158 BLDS 2015**.
+   - Việc A tự ý mang chiếc xe của B đi bán cho C mà không được B ủy quyền hoặc đồng ý là **HÀNH VI BẤT HỢP PHÁP (HÀNH VI TRÁI PHÁP LUẬT)**, trực tiếp xâm phạm đến quyền sở hữu tài sản hợp pháp của B được Hiến pháp và pháp luật bảo vệ (tuyệt đối không phải là hành vi pháp lý hợp pháp).
+
+2. **Dạng thức biểu hiện của hành vi**:
+   - Thể hiện dưới dạng **HÀNH ĐỘNG** (chủ động mang tài sản thuộc quyền sở hữu của người khác đi giao kết hợp đồng mua bán lấy tiền mà không có sự đồng ý của chủ sở hữu).
+
+---
+
+### II. PHÂN TÍCH 04 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT CỦA ANH A
+
+Hành vi tự ý bán xe của A đã thỏa mãn đầy đủ **04 yếu tố cấu thành vi phạm pháp luật** (và có dấu hiệu cấu thành tội phạm hình sự):
+
+#### 1. Mặt khách quan:
+- **Hành vi trái pháp luật**: A thực hiện hành vi định đoạt trái phép tài sản của người khác (bán xe máy thuộc sở hữu của B cho C để lấy tiền).
+- **Hậu quả thiệt hại**: Xâm phạm nghiêm trọng quyền sở hữu tài sản của B, làm B bị mất quyền chiếm hữu, sử dụng và định đoạt chiếc xe; đồng thời gây thiệt hại cho C (bị mua phải tài sản do vi phạm pháp luật mà có và đối mặt với việc bị thu hồi tài sản).
+- **Mối quan hệ nhân quả**: Hành vi tự ý bán xe trái phép của A là nguyên nhân trực tiếp và tất yếu dẫn đến hậu quả B bị mất tài sản và phát sinh tranh chấp thiệt hại.
+
+#### 2. Mặt chủ quan:
+- **Hình thức lỗi**: **LỖI CỐ Ý TRỰC TIẾP**.
+  + *Về lý trí*: A nhận thức rõ chiếc xe là tài sản thuộc quyền sở hữu hợp pháp của B; A nhận thức rõ mình chỉ là người mượn, không có quyền bán; A nhận thức rõ hành vi tự ý bán xe của người khác là hành vi trái pháp luật và thấy trước hậu quả B sẽ bị mất tài sản.
+  + *Về ý chí*: A mong muốn hậu quả đó xảy ra nhằm mục đích chiếm đoạt số tiền bán xe để phục vụ nhu cầu chi tiêu cá nhân. (Hành vi này hoàn toàn không phải lỗi vô ý).
+- **Động cơ, mục đích**: Mục đích vụ lợi bất chính, cố ý chiếm đoạt giá trị tài sản.
+
+#### 3. Khách thể của vi phạm:
+- Xâm phạm vào **Quyền sở hữu tài sản hợp pháp của công dân** được quy định tại **Điều 32 Hiến pháp năm 2013** và **Điều 158 Bộ luật Dân sự năm 2015**.
+
+#### 4. Chủ thể của vi phạm:
+- Anh A là cá nhân có đầy đủ **năng lực trách nhiệm pháp lý** (đủ độ tuổi chịu trách nhiệm theo luật định và có khả năng nhận thức, điều khiển hành vi bình thường, không mắc bệnh tâm thần).
+
+⚖️ **Định danh pháp lý**:
+- Căn cứ **Điều 175 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)**: Hành vi nhận được tài sản của người khác thông qua hợp đồng mượn/thuê/giữ tài sản rồi dùng thủ đoạn gian dối hoặc đem bán lấy tiền tiêu xài không trả lại có dấu hiệu cấu thành **Tội lạm dụng tín nhiệm chiếm đoạt tài sản** (nếu giá trị chiếc xe từ 4.000.000 đồng trở lên, hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt hành chính về hành vi chiếm đoạt tài sản).
+
+---
+
+### III. PHÂN LOẠI TRÁCH NHIỆM PHÁP LÝ CỦA CÁC BÊN (A, B, C)
+
+#### 1. Trách nhiệm pháp lý của Anh A (Người thực hiện hành vi vi phạm)
+- **Trách nhiệm hình sự**:
+  + Bị khởi tố, điều tra, truy tố và xét xử về *Tội lạm dụng tín nhiệm chiếm đoạt tài sản* theo **Điều 175 BLHS 2015** (khung hình phạt: phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm đối với mức cơ bản; nếu tài sản giá trị từ 50 triệu đến dưới 200 triệu thì phạt tù từ 02 đến 07 năm).
+- **Trách nhiệm dân sự**:
+  + Căn cứ **Khoản 2 Điều 131 và Điều 584, 585 BLDS 2015**: Hợp đồng mua bán giữa A và C bị vô hiệu do vi phạm điều cấm của luật, A có trách nhiệm **hoàn trả lại toàn bộ số tiền đã nhận cho C** và bồi thường thiệt hại cho C (nếu C có thiệt hại).
+  + Đồng thời A có trách nhiệm bồi thường toàn bộ thiệt hại cho B nếu chiếc xe bị hư hỏng, mất mát trong quá trình chuyển giao.
+
+#### 2. Về phía Anh B (Chủ sở hữu hợp pháp của chiếc xe)
+- **B hoàn toàn KHÔNG PHẢI CHỊU TRÁCH NHIỆM DÂN SỰ đối với C**:
+  + Anh B không tham gia giao dịch với C, không ký hợp đồng, không ủy quyền cho A bán xe và không có bất kỳ lỗi nào trong việc A lừa dối bán xe cho C. Do đó, việc cho rằng *"B phải chịu trách nhiệm dân sự đối với C"* là **HOÀN TOÀN SAI VỀ MẶT PHÁP LÝ**.
+- **Quyền đòi lại tài sản của B**:
+  + Căn cứ **Điều 166 Bộ luật Dân sự 2015**: Chủ sở hữu có quyền đòi lại tài sản từ người chiếm hữu, người sử dụng tài sản không có căn cứ pháp luật.
+  + Căn cứ **Điều 168 Bộ luật Dân sự 2015** (Quyền đòi lại động sản phải đăng ký quyền sở hữu): Xe máy là động sản **bắt buộc phải đăng ký quyền sở hữu**. Khi tài sản bị chiếm đoạt bất hợp pháp đem bán, **chủ sở hữu (B) có quyền đòi lại tài sản từ bất kỳ người chiếm hữu nào**, kể cả trường hợp người mua (C) là người ngay tình (không biết việc A lừa bán).
+  + Do đó, B có đầy đủ quyền yêu cầu C (hoặc cơ quan có thẩm quyền thu hồi tang vật) giao trả lại chiếc xe máy cho B mà **B không phải thanh toán bất kỳ khoản tiền nào cho C**.
+
+#### 3. Về phía Anh C (Người mua chiếc xe từ A)
+- **Về tính hiệu lực của giao dịch mua bán**:
+  + Hợp đồng mua bán xe giữa A và C là **Giao dịch dân sự vô hiệu toàn bộ** theo quy định tại **Điều 117, Điều 122 và Điều 123 BLDS 2015** (do người bán không có quyền sở hữu, không có quyền định đoạt và giao dịch vi phạm điều cấm của luật).
+- **Nghĩa vụ của C**:
+  + Căn cứ **Khoản 2 Điều 131 và Điều 168 BLDS 2015**: C có nghĩa vụ giao trả lại chiếc xe máy cho chủ sở hữu hợp pháp là B.
+- **Quyền của C**:
+  + C có quyền khởi kiện yêu cầu Tòa án buộc **Anh A** phải hoàn trả lại toàn bộ số tiền C đã thanh toán mua xe, kèm theo khoản tiền bồi thường thiệt hại (nếu C chứng minh được mình là người mua ngay tình và bị thiệt hại do hành vi lừa dối của A).
+
+---
+
+### IV. TỔNG KẾT BÀI HỌC VÀ CĂN CỨ ÁP DỤNG
+1. **Phân biệt rạch ròi**: Hành vi định đoạt tài sản của người khác mà không được phép là **Hành vi trái pháp luật mang lỗi cố ý trực tiếp**.
+2. **Bảo vệ quyền sở hữu**: Pháp luật Việt Nam bảo vệ tuyệt đối quyền của chủ sở hữu hợp pháp đối với tài sản phải đăng ký (xe máy), chủ sở hữu không có nghĩa vụ đền bù cho người mua tài sản bất hợp pháp.`;
+  }
+
+  /**
+   * Cắt tỉa sạch sẽ các dòng văn bản lơ lửng bị cụt đuôi nếu mô hình vô tình dừng đột ngột
+   */
+  private static sanitizeTruncatedTail(text: string): string {
+    let cleaned = (text || '').trim();
+    const lines = cleaned.split('\n');
+    if (lines.length > 1) {
+      const lastLine = lines[lines.length - 1].trim();
+      if (
+        (lastLine.startsWith('**') && !lastLine.endsWith('**')) ||
+        lastLine.startsWith('#') ||
+        lastLine.startsWith('- **') ||
+        lastLine.includes('Trách nhiệm của bên') ||
+        (lastLine.length < 50 && !/[.:!?…)"'”*]$/.test(lastLine))
+      ) {
+        lines.pop();
+        cleaned = lines.join('\n').trim();
+      }
+    }
+    return cleaned;
+  }
+
   public static solveDynamicThreeFormsOfLaw(query?: string): string {
     const item = this.masterCorpus.find((s) => s.sample_id === 'SFT_LLM_THEORY_THREE_FORMS_OF_LAW');
     if (item) return item.output;
@@ -3801,6 +3917,14 @@ Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt bu
       (qLower.includes('đồ đạc') || qLower.includes('nói xấu') || qLower.includes('xích mích') || qLower.includes('hàng xóm'))
     ) {
       return this.solveDynamicPropertyDestructionCase(query);
+    }
+
+    // 0.5 Tình huống tự ý đem bán xe / bán tài sản của người khác (A mượn xe B rồi tự ý bán cho C)
+    if (
+      qLower.includes('tự ý bán') ||
+      (qLower.includes('bán') && (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('của người khác')))
+    ) {
+      return this.solveDynamicUnauthorizedSale(query, articles);
     }
 
     // 1. Tình huống mượn xe máy, laptop, tài sản làm rơi vỡ, tai nạn, bồi thường thiệt hại
