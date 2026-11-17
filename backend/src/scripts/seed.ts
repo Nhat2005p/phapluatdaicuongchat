@@ -484,6 +484,150 @@ export async function runSeed(): Promise<void> {
       title: 'Nguyên tắc tổ chức và hoạt động của Nhà nước',
       contentRaw: '1. Nhà nước được tổ chức và hoạt động theo Hiến pháp và pháp luật, quản lý xã hội bằng Hiến pháp và pháp luật, thực hiện nguyên tắc tập trung dân chủ.\n2. Các cơ quan nhà nước, cán bộ, công chức, viên chức phải tôn trọng Nhân dân, tận tụy phục vụ Nhân dân, liên hệ chặt chẽ với Nhân dân, lắng nghe ý kiến và chịu sự giám sát của Nhân dân; kiên quyết đấu tranh chống tham nhũng, lãng phí và mọi biểu hiện quan liêu, hách dịch, cửa quyền.',
       keywords: ['quản lý xã hội bằng pháp luật', 'hiến pháp và pháp luật', 'đặc trưng nhà nước', 'nguyên tắc tổ chức nhà nước']
+    },
+    {
+      articleId: 'HP2013_D119',
+      lawCode: 'HP2013',
+      lawName: 'Hiến pháp năm 2013',
+      articleNumber: 119,
+      title: 'Hiệu lực tối cao của Hiến pháp',
+      contentRaw: '1. Hiến pháp là luật cơ bản của nước Cộng hòa xã hội chủ nghĩa Việt Nam, có hiệu lực pháp lý cao nhất.\nMọi văn bản quy phạm pháp luật khác phải phù hợp với Hiến pháp.\nMọi hành vi vi phạm Hiến pháp đều bị xử lý.\n2. Quốc hội, các cơ quan của Quốc hội, Chủ tịch nước, Chính phủ, Tòa án nhân dân, Viện kiểm sát nhân dân, các cơ quan khác của Nhà nước và toàn thể Nhân dân có trách nhiệm bảo vệ Hiến pháp.',
+      keywords: ['hiến pháp 2013', 'hiệu lực tối cao', 'văn bản quy phạm pháp luật', 'thứ tự hiệu lực']
+    },
+    {
+      articleId: 'VBQPPL2015_D4',
+      lawCode: 'VBQPPL2015',
+      lawName: 'Luật Ban hành văn bản quy phạm pháp luật năm 2015',
+      articleNumber: 4,
+      title: 'Hệ thống văn bản quy phạm pháp luật',
+      contentRaw: '1. Hiến pháp.\n2. Bộ luật, luật (sau đây gọi chung là luật), nghị quyết của Quốc hội.\n3. Pháp lệnh, nghị quyết của Ủy ban thường vụ Quốc hội...\n4. Lệnh, quyết định của Chủ tịch nước.\n5. Nghị định của Chính phủ...\n6. Quyết định của Thủ tướng Chính phủ.\n7. Nghị quyết của Hội đồng Thẩm phán Tòa án nhân dân tối cao.\n8. Thông tư của Chánh án Tòa án nhân dân tối cao; thông tư của Viện trưởng Viện kiểm sát nhân dân tối cao; thông tư của Bộ trưởng, Thủ trưởng cơ quan ngang bộ...',
+      keywords: ['hệ thống văn bản quy phạm pháp luật', 'thứ tự hiệu lực', 'hiến pháp', 'luật', 'nghị định', 'thông tư']
+    },
+    {
+      articleId: 'VBQPPL2015_D156',
+      lawCode: 'VBQPPL2015',
+      lawName: 'Luật Ban hành văn bản quy phạm pháp luật năm 2015',
+      articleNumber: 156,
+      title: 'Áp dụng văn bản quy phạm pháp luật',
+      contentRaw: '1. Văn bản quy phạm pháp luật được áp dụng từ thời điểm bắt đầu có hiệu lực.\n2. Trong trường hợp các văn bản quy phạm pháp luật có quy định khác nhau về cùng một vấn đề thì áp dụng văn bản có hiệu lực pháp lý cao hơn.\n3. Trong trường hợp các văn bản quy phạm pháp luật do cùng một cơ quan ban hành có quy định khác nhau về cùng một vấn đề thì áp dụng quy định của văn bản quy phạm pháp luật ban hành sau.',
+      keywords: ['áp dụng văn bản', 'hiệu lực pháp lý cao hơn', 'nguyên tắc áp dụng', 'xung đột hiệu lực']
+    },
+    {
+      articleId: 'BLHS2015_D20',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 20,
+      title: 'Sự kiện bất ngờ',
+      contentRaw: 'Người thực hiện hành vi gây hậu quả nguy hại cho xã hội do sự kiện bất ngờ, tức là không thể thấy trước hoặc không buộc phải thấy trước hậu quả của hành vi đó, thì không phải chịu trách nhiệm hình sự.',
+      keywords: ['sự kiện bất ngờ', 'không có lỗi', 'loại trừ trách nhiệm hình sự', 'không vi phạm pháp luật', 'tai nạn giao thông']
+    },
+    {
+      articleId: 'BLHS2015_D155',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 155,
+      title: 'Tội làm nhục người khác',
+      contentRaw: '1. Người nào xúc phạm nghiêm trọng nhân phẩm, danh dự của người khác, thì bị phạt cảnh cáo, phạt tiền từ 10.000.000 đồng đến 30.000.000 đồng hoặc phạt cải tạo không giam giữ đến 03 năm.',
+      keywords: ['xúc phạm danh dự nhân phẩm', 'làm nhục người khác', 'giả định chế tài quy định', 'quy phạm pháp luật']
+    },
+    {
+      articleId: 'BLHS2015_D170',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 170,
+      title: 'Tội cưỡng đoạt tài sản',
+      contentRaw: '1. Người nào đe dọa sẽ dùng vũ lực hoặc có thủ đoạn khác uy hiếp tinh thần người khác nhằm chiếm đoạt tài sản, thì bị phạt tù từ 01 năm đến 05 năm.',
+      keywords: ['cưỡng đoạt tài sản', 'đe dọa', 'đòi nợ thuê', 'uy hiếp tinh thần']
+    },
+    {
+      articleId: 'BLHS2015_D171',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 171,
+      title: 'Tội cướp giật tài sản',
+      contentRaw: '1. Người nào cướp giật tài sản của người khác, thì bị phạt tù từ 01 năm đến 05 năm.\n2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 03 năm đến 10 năm: a) Có tổ chức; b) Có tính chất chuyên nghiệp; c) Chiếm đoạt tài sản trị giá từ 50.000.000 đồng đến dưới 200.000.000 đồng; d) Dùng thủ đoạn nguy hiểm; đ) Hành hung để tẩu thoát; e) Gây thương tích hoặc gây tổn hại cho sức khỏe của người khác mà tỷ lệ tổn thương cơ thể từ 11% đến 30%...',
+      keywords: ['cướp giật tài sản', 'tuổi chịu trách nhiệm hình sự', '15 tuổi', '17 tuổi', 'điều 12']
+    },
+    {
+      articleId: 'BLHS2015_D200',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015',
+      articleNumber: 200,
+      title: 'Tội trốn thuế',
+      contentRaw: '1. Người nào thực hiện một trong các hành vi trốn thuế với số tiền từ 100.000.000 đồng đến dưới 300.000.000 đồng hoặc dưới 100.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi trốn thuế hoặc đã bị kết án về tội này, chưa được xóa án tích mà còn vi phạm, thì bị phạt tiền từ 100.000.000 đồng đến 500.000.000 đồng hoặc phạt tù từ 03 tháng đến 01 năm...',
+      keywords: ['trốn thuế', 'kê khai thuế', 'hợp đồng hai giá', 'điều 200']
+    },
+    {
+      articleId: 'BLDS2015_D124',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 124,
+      title: 'Giao dịch dân sự vô hiệu do giả tạo',
+      contentRaw: '1. Khi các bên xác lập giao dịch dân sự một cách giả tạo nhằm che giấu một giao dịch dân sự khác thì giao dịch dân sự giả tạo vô hiệu, còn giao dịch dân sự bị che giấu vẫn có hiệu lực, trừ trường hợp giao dịch đó cũng vô hiệu theo quy định của Bộ luật này hoặc luật khác có liên quan.\n2. Trường hợp xác lập giao dịch dân sự giả tạo nhằm trốn tránh nghĩa vụ với người thứ ba thì giao dịch dân sự đó vô hiệu.',
+      keywords: ['giao dịch giả tạo', 'vô hiệu do giả tạo', 'hợp đồng hai giá', 'trốn thuế']
+    },
+    {
+      articleId: 'BLDS2015_D591',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 591,
+      title: 'Thiệt hại do tính mạng bị xâm phạm',
+      contentRaw: '1. Thiệt hại do tính mạng bị xâm phạm bao gồm: a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại trước khi chết; b) Chi phí hợp lý cho việc mai táng; c) Tiền cấp dưỡng cho những người mà người bị thiệt hại có nghĩa vụ cấp dưỡng...',
+      keywords: ['tính mạng bị xâm phạm', 'chết do tai nạn', 'bồi thường thiệt hại', 'sự kiện pháp lý']
+    },
+    {
+      articleId: 'BLDS2015_D611',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 611,
+      title: 'Thời điểm, địa điểm mở thừa kế',
+      contentRaw: '1. Thời điểm mở thừa kế là thời điểm người có tài sản chết. Trường hợp Tòa án tuyên bố một người là đã chết thì thời điểm mở thừa kế là ngày được xác định tại khoản 2 Điều 71 của Bộ luật này.\n2. Địa điểm mở thừa kế là nơi cư trú cuối cùng của người để lại di sản; nếu không xác định được nơi cư trú cuối cùng thì địa điểm mở thừa kế là nơi có toàn bộ di sản hoặc nơi có phần lớn di sản.',
+      keywords: ['thời điểm mở thừa kế', 'người chết', 'sự biến pháp lý', 'thừa kế']
+    },
+    {
+      articleId: 'HNGD2014_D8',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình năm 2014',
+      articleNumber: 8,
+      title: 'Điều kiện kết hôn',
+      contentRaw: '1. Nam, nữ kết hôn với nhau phải tuân theo các điều kiện sau đây: a) Nam từ đủ 20 tuổi trở lên, nữ từ đủ 18 tuổi trở lên; b) Việc kết hôn do nam và nữ tự nguyện quyết định; c) Không bị mất năng lực hành vi dân sự; d) Việc kết hôn không thuộc một trong các trường hợp cấm kết hôn theo quy định tại các điểm a, b, c và d khoản 2 Điều 5 của Luật này.',
+      keywords: ['tuổi kết hôn', 'độ tuổi kết hôn', 'nam đủ 20 nữ đủ 18', 'điều kiện kết hôn']
+    },
+    {
+      articleId: 'HNGD2014_D65',
+      lawCode: 'HNGD2014',
+      lawName: 'Luật Hôn nhân và Gia đình năm 2014',
+      articleNumber: 65,
+      title: 'Thời điểm chấm dứt hôn nhân',
+      contentRaw: 'Hôn nhân chấm dứt kể từ thời điểm vợ hoặc chồng chết. Trong trường hợp Tòa án tuyên bố vợ hoặc chồng là đã chết thì thời điểm hôn nhân chấm dứt được xác định theo ngày chết được ghi trong bản án, quyết định của Tòa án.',
+      keywords: ['chấm dứt hôn nhân', 'vợ chồng chết', 'sự biến pháp lý', 'hôn nhân gia đình']
+    },
+    {
+      articleId: 'BLLD2019_D36',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 36,
+      title: 'Quyền đơn phương chấm dứt hợp đồng lao động của người sử dụng lao động',
+      contentRaw: '1. Người sử dụng lao động có quyền đơn phương chấm dứt hợp đồng lao động trong các trường hợp sau đây: a) Người lao động thường xuyên không hoàn thành công việc theo hợp đồng lao động; b) Người lao động bị ốm đau, tai nạn đã điều trị... c) Do thiên tai, hỏa hoạn, dịch bệnh... d) Người lao động không có mặt tại nơi làm việc sau thời hạn tạm hoãn... đ) Đủ tuổi nghỉ hưu... e) Người lao động tự ý bỏ việc mà không có lý do chính đáng từ 05 ngày làm việc liên tục trở lên... 2. Khi đơn phương chấm dứt hợp đồng lao động phải báo trước ít nhất 45 ngày đối với HĐLĐ không xác định thời hạn, ít nhất 30 ngày đối với HĐLĐ xác định thời hạn từ 12 đến 36 tháng, ít nhất 03 ngày làm việc đối với HĐLĐ dưới 12 tháng.',
+      keywords: ['đơn phương chấm dứt hợp đồng', 'bộ luật lao động 2019', 'sa thải', 'báo trước']
+    },
+    {
+      articleId: 'BLLD2019_D41',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 41,
+      title: 'Nghĩa vụ của người sử dụng lao động khi đơn phương chấm dứt hợp đồng lao động trái pháp luật',
+      contentRaw: '1. Phải nhận người lao động trở lại làm việc theo hợp đồng lao động đã giao kết; phải trả tiền lương, đóng bảo hiểm xã hội, bảo hiểm y tế, bảo hiểm thất nghiệp trong những ngày người lao động không được làm việc và phải trả thêm cho người lao động một khoản tiền ít nhất bằng 02 tháng tiền lương theo hợp đồng lao động.\n2. Trường hợp người lao động không muốn tiếp tục làm việc thì ngoài khoản tiền quy định tại khoản 1 Điều này người sử dụng lao động phải trả trợ cấp thôi việc theo quy định tại Điều 46 của Bộ luật này để chấm dứt hợp đồng lao động.',
+      keywords: ['đuổi việc trái luật', 'bồi thường sa thải', 'đuổi việc ngang', '2 tháng tiền lương', 'bảo hiểm']
+    },
+    {
+      articleId: 'BLLD2019_D125',
+      lawCode: 'BLLD2019',
+      lawName: 'Bộ luật Lao động năm 2019',
+      articleNumber: 125,
+      title: 'Áp dụng hình thức xử lý kỷ luật sa thải',
+      contentRaw: 'Hình thức xử lý kỷ luật sa thải được người sử dụng lao động áp dụng trong trường hợp sau đây: 1. Người lao động có hành vi trộm cắp, tham ô, đánh bạc, cố ý gây thương tích, sử dụng ma túy tại nơi làm việc; 2. Người lao động có hành vi tiết lộ bí mật kinh doanh, bí mật công nghệ, xâm phạm quyền sở hữu trí tuệ của người sử dụng lao động, có hành vi gây thiệt hại nghiêm trọng hoặc đe dọa gây thiệt hại đặc biệt nghiêm trọng về tài sản, lợi ích của người sử dụng lao động...',
+      keywords: ['sa thải', 'trộm cắp laptop', 'kỷ luật lao động', 'nội quy']
     }
   ];
 

@@ -998,7 +998,30 @@ export class RagService {
     switch (intentCode) {
       case 'GENERAL_THEORY': {
         const qL = query.toLowerCase();
-        if (
+        if (qL.includes('thứ tự hiệu lực') || qL.includes('hiệu lực pháp lý') || (qL.includes('sắp xếp') && qL.includes('thứ tự')) || (qL.includes('hiến pháp') && qL.includes('nghị định'))) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HP2013_D119' },
+              { articleId: 'VBQPPL2015_D4' },
+              { articleId: 'VBQPPL2015_D156' }
+            ]
+          }).limit(3);
+        } else if (qL.includes('sự kiện pháp lý') || qL.includes('sự biến') || qL.includes('tai nạn giao thông') || qL.includes('qua đời') || qL.includes('chết do')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLDS2015_D611' },
+              { articleId: 'BLDS2015_D591' },
+              { articleId: 'HNGD2014_D65' }
+            ]
+          }).limit(3);
+        } else if (qL.includes('lao động 2012') || qL.includes('blld 2012')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLLD2019_D36' },
+              { articleId: 'VBQPPL2015_D156' }
+            ]
+          }).limit(2);
+        } else if (
           qL.includes('nhà nước') ||
           qL.includes('chủ quyền') ||
           qL.includes('chính thể') ||
@@ -1085,7 +1108,14 @@ export class RagService {
 
       case 'FAMILY_LAW': {
         const qL = query.toLowerCase();
-        if (
+        if (qL.includes('kết hôn') || qL.includes('tuổi kết hôn') || qL.includes('độ tuổi') || qL.includes('điều kiện kết hôn')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HNGD2014_D8' },
+              { articleId: 'BLDS2015_D20' }
+            ]
+          }).limit(2);
+        } else if (
           qL.includes('tài sản') ||
           qL.includes('chia') ||
           qL.includes('ly hôn') ||
@@ -1127,7 +1157,11 @@ export class RagService {
 
       case 'QPPL_STRUCT': {
         const qL = query.toLowerCase();
-        if (qL.includes('hiến pháp') || qL.includes('lực lượng vũ trang')) {
+        if (qL.includes('xúc phạm') || qL.includes('nhân phẩm') || qL.includes('danh dự') || qL.includes('làm nhục')) {
+          matchedArticles = await LawArticle.find({
+            $or: [{ articleId: 'BLHS2015_D155' }, { articleId: 'BLHS2015_D12' }]
+          }).limit(2);
+        } else if (qL.includes('hiến pháp') || qL.includes('lực lượng vũ trang')) {
           matchedArticles = await LawArticle.find({
             $or: [{ articleId: 'BLDS2015_D1' }, { articleId: 'BLDS2015_D74' }]
           }).limit(2);
@@ -1205,7 +1239,19 @@ export class RagService {
         const qL = query.toLowerCase();
         const articleOrList: Array<{ articleId: string }> = [];
 
-        if (qL.includes('tự ý bán') || (qL.includes('bán') && (qL.includes('mượn') || qL.includes('của b') || qL.includes('xe của') || qL.includes('người khác')))) {
+        if (qL.includes('cháu bé') || (qL.includes('8 tuổi') && (qL.includes('ngõ') || qL.includes('phanh') || qL.includes('ô tô') || qL.includes('chạy vọt')))) {
+          articleOrList.push({ articleId: 'BLHS2015_D20' }, { articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D584' });
+        } else if (qL.includes('cướp giật') || (qL.includes('15 tuổi') && qL.includes('17 tuổi'))) {
+          articleOrList.push({ articleId: 'BLHS2015_D12' }, { articleId: 'BLHS2015_D171' }, { articleId: 'BLHS2015_D9' });
+        } else if (qL.includes('laptop') || (qL.includes('đi làm muộn') && qL.includes('trộm'))) {
+          articleOrList.push({ articleId: 'BLLD2019_D125' }, { articleId: 'BLHS2015_D173' }, { articleId: 'BLDS2015_D584' });
+        } else if (qL.includes('đuổi việc') || qL.includes('sa thải') || qL.includes('ngang xương')) {
+          articleOrList.push({ articleId: 'BLLD2019_D36' }, { articleId: 'BLLD2019_D41' });
+        } else if (qL.includes('trốn thuế') || qL.includes('hai giá') || qL.includes('2 giá')) {
+          articleOrList.push({ articleId: 'BLHS2015_D200' }, { articleId: 'BLDS2015_D124' });
+        } else if (qL.includes('đòi nợ') || qL.includes('xã hội đen')) {
+          articleOrList.push({ articleId: 'BLHS2015_D170' }, { articleId: 'BLHS2015_D133' });
+        } else if (qL.includes('tự ý bán') || (qL.includes('bán') && (qL.includes('mượn') || qL.includes('của b') || qL.includes('xe của') || qL.includes('người khác')))) {
           articleOrList.push(
             { articleId: 'BLDS2015_D166' },
             { articleId: 'BLDS2015_D168' },
