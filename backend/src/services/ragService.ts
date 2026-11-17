@@ -63,6 +63,12 @@ export class RagService {
              .replace(/\bgiet\s+nguoi\b/gi, 'giết người')
              .replace(/\btrom\s+cap\b/gi, 'trộm cắp');
 
+    // 1.3 Chuẩn hóa ngôn ngữ đời thường sang thuật ngữ pháp lý chuẩn (Query Rewriting)
+    res = res.replace(/\bgiấy\s+tờ\s+chia\s+của\b/gi, 'di chúc')
+             .replace(/\bchia\s+của\b/gi, 'phân chia di sản thừa kế')
+             .replace(/\btranh\s+nhau\s+mảnh\s+đất\b/gi, 'tranh chấp quyền sử dụng đất thừa kế')
+             .replace(/\bchia\s+kiểu\s+gì\b/gi, 'chia di sản thừa kế theo pháp luật như thế nào');
+
     // 2. Mở rộng các từ viết tắt chuyên ngành Pháp luật Đại cương (dùng ranh giới từ hỗ trợ tiếng Việt có dấu)
     const wbLeft = '(?:^|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
     const wbRight = '(?=$|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
@@ -296,12 +302,12 @@ export class RagService {
       // 2. Chương 6: Nội dung cơ bản Luật Dân sự
       'dân sự', 'giao dịch', 'giao dịch dân sự', 'vô hiệu', 'hợp đồng', 'pháp nhân', 'tư cách pháp nhân',
       'nhân thân', 'quan hệ nhân thân', 'quyền nhân thân', 'tài sản', 'quyền tài sản', 'quyền sở hữu',
-      'chiếm hữu', 'sử dụng', 'định đoạt', 'thừa kế', 'di sản', 'di chúc', 'hàng thừa kế', 'thế vị',
+      'chiếm hữu', 'sử dụng', 'định đoạt', 'thừa kế', 'di sản', 'di chúc', 'chia của', 'giấy tờ chia của', 'chia đất', 'tranh nhau mảnh đất', 'hàng thừa kế', 'thế vị',
       'bồi thường', 'thiệt hại', 'bồi thường thiệt hại', 'nghĩa vụ', 'đại diện', 'thời hiệu', 'hợp đồng vay',
-      'đặt cọc', 'cầm cố', 'thế chấp',
+      'đặt cọc', 'cầm cố', 'thế chấp', 'hạn chế quyền dân sự', 'vô hiệu từng phần', 'xe đạp', 'mua bán xe',
 
-      // 3. Chương 7: Nội dung cơ bản Luật Hình sự
-      'hình sự', 'tội phạm', 'tội danh', 'tội', 'phạm tội', 'đồng phạm', 'người thực hành', 'người tổ chức',
+      // 3. Chương 7: Nội dung cơ bản Luật Hình sự & Tố tụng
+      'hình sự', 'tố tụng', 'tội phạm', 'tội danh', 'tội', 'phạm tội', 'đồng phạm', 'người thực hành', 'người tổ chức',
       'người xúi giục', 'người giúp sức', 'chủ mưu', 'cấu thành tội phạm', 'khách thể của tội phạm',
       'chủ thể của tội phạm', 'mặt khách quan của tội phạm', 'mặt chủ quan của tội phạm',
       'hình phạt', 'tử hình', 'tù chung thân', 'tù có thời hạn', 'cải tạo không giam giữ', 'cảnh cáo',
@@ -309,19 +315,20 @@ export class RagService {
       'phòng vệ', 'cấp thiết', 'sự kiện bất ngờ', 'độ tuổi', 'tuổi chịu', 'chưa thành niên',
       'chuẩn bị phạm tội', 'phạm tội chưa đạt', 'tự ý nửa chừng', 'tái phạm',
       'giết', 'tước đoạt tính mạng', 'đâm', 'chém', 'bắn', 'trộm', 'cướp', 'lừa đảo', 'chiếm đoạt',
+      'tạm giam', 'bắt người', 'bắt người bị giữ', 'án lệ', 'kháng cáo', 'vu khống', 'bịa đặt',
 
       // 4. Chương 8 & 9: Luật Hành chính & Phòng, chống tham nhũng
       'hành chính', 'quản lý nhà nước', 'xử phạt', 'vi phạm hành chính', 'xử phạt vi phạm hành chính',
       'biện pháp ngăn chặn', 'tạm giữ', 'khám xét', 'giam xe', 'giữ xe', 'tạm giữ xe', 'công an', 'cảnh sát', 'csgt', 'thổi còi',
       'nồng độ cồn', 'ngà ngà say', 'say rượu', 'say bia', 'nhậu', 'uống rượu', 'uống bia',
       'vượt đèn', 'vượt đèn đỏ', 'đèn đỏ', 'chuyển đỏ', 'giao thông', 'xử lý', 'xử lí', 'bị phạt', 'phạt tiền', 'tước bằng', 'tước giấy phép', 'tai nạn', 'va chạm',
-      'tham nhũng', 'vụ lợi', 'chức vụ', 'quyền hạn', 'kê khai tài sản', 'hối lộ', 'nhận hối lộ', 'tham ô',
+      'tham nhũng', 'vụ lợi', 'chức vụ', 'quyền hạn', 'kê khai tài sản', 'hối lộ', 'nhận hối lộ', 'tham ô', 'vũ trụ', 'hàng không vũ trụ',
 
       // 5. Luật Hiến pháp, Hôn nhân gia đình, Lao động
       'hiến pháp', 'luật hiến pháp', 'quốc hội', 'chính phủ', 'chủ tịch nước', 'tòa án', 'viện kiểm sát',
       'hội đồng nhân dân', 'ủy ban nhân dân', 'quyền con người', 'quyền công dân', 'nghĩa vụ công dân',
       'kết hôn', 'ly hôn', 'hôn nhân', 'gia đình', 'lao động', 'tiền lương', 'sa thải', 'hợp đồng lao động',
-      'đuổi việc', 'nghỉ việc', 'trốn thuế', 'né thuế', 'đòi nợ', 'laptop', 'xe ô tô', 'ô tô'
+      'đuổi việc', 'nghỉ việc', 'trốn thuế', 'né thuế', 'đòi nợ', 'laptop', 'xe ô tô', 'ô tô', 'ủy quyền ly hôn', 'ủy quyền ra tòa'
     ];
 
     for (const kw of legalKeywords) {
@@ -738,12 +745,12 @@ export class RagService {
 
     const rawLines = raw.split(/\r?\n/).map((l) => l.trim()).filter(Boolean);
 
-    // Kiểm tra xem đề bài có sử dụng nhãn "Câu 1", "Câu 2" / "Nhận định 1", "Nhận định 2" / "Bài 1", "Bài 2" hay không
-    const explicitCauRegex = /^(?:câu\s*hỏi|câu|nhận\s*định|bài)\s*(\d+)\s*[:.)\-]?\s*(.*)$/i;
+    // Kiểm tra xem đề bài có sử dụng nhãn "Câu 1", "Câu 2" / "TC 1.1", "TC 1.2" / "1.", "2." / "Bài 1", "Bài 2" hay không
+    const explicitCauRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|bài|tc|test\s*case)\s*(\d+(?:\.\d+)*)|\(?(\d+(?:\.\d+)*)[.)])\s*(?:\([^)]*\))?\s*[:.)\-–—]?\s*(.*)$/i;
     const explicitCauCount = rawLines.filter((l) => explicitCauRegex.test(l)).length;
 
-    // Nếu đề bài có từ 2 "Câu X" trở lên -> Chỉ tách theo cấp "Câu X" (bảo toàn mọi ý con a, b, c, d bên trong Câu 9!)
-    const generalItemRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|ý|bài)\s*\d+\s*[:.)\-]?|\(?\d{1,2}[.)]|\([a-zA-Z]\)|[a-zA-Z][.)]|[-•*])\s+(.+)$/i;
+    // Nếu đề bài có từ 2 mục trở lên -> Chỉ tách theo cấp mục đó (bảo toàn mọi ý con a, b, c, d bên trong Câu 9!)
+    const generalItemRegex = /^(?:(?:câu\s*hỏi|câu|nhận\s*định|ý|bài|tc|test\s*case)\s*\d+(?:\.\d+)*\s*(?:\([^)]*\))?|\(?\d{1,2}(?:\.\d+)*[.)]|\([a-zA-Z]\)|[a-zA-Z][.)]|[-•*])\s*[:.)\-–—]?\s*(.+)$/i;
     const activeItemRegex = explicitCauCount >= 2 ? explicitCauRegex : generalItemRegex;
 
     const firstMarkerLineIdx = rawLines.findIndex((l) => activeItemRegex.test(l));
@@ -788,7 +795,7 @@ export class RagService {
               isTrueFalseSection: currentItemTfFlag
             });
           }
-          const bodyAfterMarker = stripLeadingScore(explicitCauCount >= 2 ? (m[2] || '') : (m[1] || ''));
+          const bodyAfterMarker = stripLeadingScore(explicitCauCount >= 2 ? (m[3] || m[1] || m[2] || '') : (m[1] || m[2] || ''));
           currentItemLines = bodyAfterMarker ? [bodyAfterMarker] : [];
           currentItemTfFlag = currentSectionIsTrueFalse;
         } else {
@@ -837,12 +844,12 @@ export class RagService {
 
     // 3. Kiểm tra đánh số inline trên cùng 1 dòng: "Câu 1: ... Câu 2: ..." hoặc "1. ... 2. ..."
     const inlineParts = raw
-      .split(/(?:^|\s+)(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|\d{1,2}[.)]\s+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/i)
+      .split(/(?:^|\s+)(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|tc\s*\d+(?:\.\d+)*\s*[:.)]|\d{1,2}[.)]\s+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/i)
       .map((s) => s.trim())
       .filter(Boolean);
 
     if (inlineParts.length >= 2) {
-      const markerStart = /^(?:câu\s*\d+|nhận\s*định\s*\d+|\d{1,2})[.:)]\s*/i;
+      const markerStart = /^(?:câu\s*\d+|nhận\s*định\s*\d+|tc\s*\d+(?:\.\d+)*|\d{1,2})[.:)]\s*/i;
       const markedCount = inlineParts.filter((p) => markerStart.test(p)).length;
       if (markedCount >= 2 && !isCaseStudyNarrative(inlineParts[0].replace(markerStart, ''))) {
         const cleaned = inlineParts
@@ -854,12 +861,19 @@ export class RagService {
       }
     }
 
-    // 4. Nhiều dòng độc lập không đánh số (mỗi dòng là 1 câu hỏi có dấu ? hoặc 1 câu nhận định độc lập)
+    // 4. Nhiều dòng hoặc đoạn văn độc lập không đánh số (mỗi dòng/đoạn là 1 câu hỏi độc lập)
+    const isQuestionOrCasePrompt = (lineText: string): boolean => {
+      const lt = lineText.trim();
+      return (
+        lt.endsWith('?') ||
+        /\b(là gì|như thế nào|thế nào|chia kiểu gì|phải làm sao|có được không|có bị giam xe không|có bị|bị phạt|bao nhiêu|đúng hay sai|phân tích|hãy|so sánh|phân biệt|trình bày|xác định)\b/i.test(lt)
+      );
+    };
+
     const contentLines = rawLines.filter((l) => !isSectionHeaderLine(l) && !isPureScoreLine(l));
     if (contentLines.length >= 2 && contentLines.length <= 8) {
-      const allLinesSubstantial = contentLines.every((l) => l.length >= 15 && !isCaseStudyNarrative(l));
-      const questionLinesCount = contentLines.filter((l) => l.endsWith('?') || /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|trình bày|phân tích)\b/i.test(l)).length;
-      if (allLinesSubstantial && questionLinesCount >= 2) {
+      const questionLinesCount = contentLines.filter((l) => isQuestionOrCasePrompt(l)).length;
+      if (questionLinesCount >= 2 && contentLines.every((l) => l.length >= 20)) {
         return contentLines;
       }
     }

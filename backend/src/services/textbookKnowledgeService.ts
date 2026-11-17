@@ -1728,7 +1728,9 @@ III. CÁC BIỆN PHÁP PHÒNG NGỪA THAM NHŨNG CĂN CƠ:
       chunk.legalBasis.forEach((b) => allBases.add(b));
     });
 
-    extraArticles.forEach((a) => allBases.add(`Điều ${a.articleNumber} ${a.lawName}`));
+    if (Array.isArray(extraArticles)) {
+      extraArticles.forEach((a) => allBases.add(`Điều ${a.articleNumber} ${a.lawName}`));
+    }
     const lawSummary = Array.from(allBases).slice(0, 5).join('; ');
 
     return `\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:

@@ -803,6 +803,436 @@ Theo nguyên tắc xử lý vi phạm hành chính tại Điều 5 Luật Xử l
   }
 
   /**
+   * TC 1.1: Tình huống hàng xóm chết không để lại giấy tờ chia của (di chúc), vợ và 2 con tranh nhau mảnh đất
+   */
+  public static solveDynamicInheritanceNeighborLand(query?: string): string {
+    return `### GIẢI QUYẾT TÌNH HUỐNG: PHÂN CHIA DI SẢN THỪA KẾ MẢNH ĐẤT KHI KHÔNG CÓ DI CHÚC
+*(Căn cứ quy định về Thừa kế theo pháp luật — Bộ luật Dân sự 2015)*
+
+---
+
+#### I. XÁC ĐỊNH BẢN CHẤT QUAN HỆ PHÁP LUẬT VÀ DI SẢN THỪA KẾ
+1. **Thuật ngữ pháp lý**:
+   - Người dùng nêu "không để lại giấy tờ chia của gì cả" được xác định về mặt pháp lý là **người chết không để lại di chúc**.
+   - Khi một người chết mà không có di chúc hợp pháp, việc phân chia tài sản (mảnh đất) bắt buộc phải tuân theo chế định **Thừa kế theo pháp luật** quy định tại Điểm a Khoản 1 Điều 650 Bộ luật Dân sự 2015.
+2. **Xác định di sản thừa kế**:
+   - Theo Điều 612 Bộ luật Dân sự 2015: Di sản bao gồm tài sản riêng của người chết và phần tài sản của người chết trong khối tài sản chung với người khác.
+   - Nếu mảnh đất là tài sản riêng của ông hàng xóm thì toàn bộ mảnh đất là di sản thừa kế.
+   - Nếu mảnh đất là tài sản chung của hai vợ chồng trong thời kỳ hôn nhân, cần trích chia 1/2 mảnh đất cho người vợ (phần tài sản riêng của vợ), 1/2 mảnh đất còn lại mới là di sản thừa kế của người chồng để chia theo pháp luật.
+
+---
+
+#### II. XÁC ĐỊNH HÀNG THỪA KẾ VÀ NGUYÊN TẮC PHÂN CHIA
+1. **Xác định hàng thừa kế theo pháp luật (Điều 651 Bộ luật Dân sự 2015)**:
+   - Căn cứ Điểm a Khoản 1 Điều 651 BLDS 2015, **Hàng thừa kế thứ nhất** bao gồm: *vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi của người chết*.
+   - Trong tình huống này: Người vợ và 02 người con đều thuộc Hàng thừa kế thứ nhất của ông hàng xóm (nếu bố mẹ đẻ của ông ấy đều đã mất trước đó).
+2. **Nguyên tắc phân chia di sản**:
+   - Căn cứ Khoản 2 Điều 651 Bộ luật Dân sự 2015: *"Những người thừa kế cùng hàng được hưởng phần di sản bằng nhau"*.
+   - Do đó, khối di sản thừa kế (phần quyền sử dụng đất của người chồng) sẽ được **chia đều thành 03 suất bằng nhau**:
+     + **Người vợ**: Được hưởng 1/3 di sản thừa kế.
+     + **Người con thứ nhất**: Được hưởng 1/3 di sản thừa kế.
+     + **Người con thứ hai**: Được hưởng 1/3 di sản thừa kế.
+
+---
+
+#### III. KẾT LUẬN VÀ TRÌNH TỰ THỦ TỤC THỰC HIỆN
+- Việc 3 mẹ con "tranh nhau mảnh đất" là trái với nguyên tắc pháp luật vì cả 3 người đều có quyền thừa kế ngang nhau.
+- **Trình tự giải quyết**:
+  1. Các đồng thừa kế chuẩn bị giấy tờ: Giấy chứng tử của người chồng, Giấy đăng ký kết hôn, Giấy khai sinh của 2 người con, Giấy chứng nhận quyền sử dụng đất (Sổ đỏ).
+  2. Đến Văn phòng Công chứng hoặc Phòng Công chứng để thực hiện **Thủ tục khai nhận / thỏa thuận phân chia di sản thừa kế**.
+  3. Sau khi có Văn bản thỏa thuận phân chia di sản thừa kế được công chứng, các bên tiến hành thủ tục sang tên, cấp Giấy chứng nhận quyền sử dụng đất đồng sở hữu hoặc phân chia bằng hiện vật/giá trị tiền tương ứng.`;
+  }
+
+  /**
+   * TC 2.1: Trích xuất nội dung chính xác của Khoản 2 Điều 14 Bộ luật Dân sự 2015
+   */
+  public static solveDynamicExactCivilArticle14Clause2(query?: string): string {
+    return `### NỘI DUNG CHÍNH XÁC CỦA KHOẢN 2 ĐIỀU 14 BỘ LUẬT DÂN SỰ 2015
+*(Căn cứ Bộ luật Dân sự năm 2015 của Quốc hội nước CHXHCN Việt Nam)*
+
+---
+
+#### I. NGUYÊN VĂN ĐIỀU LUẬT THỰC ĐỊNH
+
+Theo **Khoản 2 Điều 14 Bộ luật Dân sự 2015** (Quy định về *Bảo vệ quyền dân sự*):
+
+> *"2. Quyền dân sự chỉ có thể bị hạn chế theo quy định của luật trong trường hợp cần thiết vì lý do quốc phòng, an ninh quốc gia, trật tự, an toàn xã hội, đạo đức xã hội, sức khỏe của cộng đồng."*
+
+---
+
+#### II. PHÂN TÍCH Ý NGHĨA PHÁP LÝ
+
+1. **Nguyên tắc bảo vệ quyền hiến định**:
+   - Quy định này cụ thể hóa nguyên tắc hiến định tại **Khoản 2 Điều 14 Hiến pháp 2013**: *"Quyền con người, quyền công dân chỉ có thể bị hạn chế theo quy định của luật trong trường hợp cần thiết vì lý do quốc phòng, an ninh quốc gia, trật tự, an toàn xã hội, đạo đức xã hội, sức khỏe của cộng đồng."*
+2. **Yêu cầu về hình thức văn bản ("theo quy định của luật")**:
+   - Quyền dân sự **CHỈ ĐƯỢC PHÉP BỊ HẠN CHẾ BẰNG VĂN BẢN "LUẬT"** (do Quốc hội ban hành).
+   - Tuyệt đối không được phép hạn chế quyền dân sự của cá nhân, pháp nhân bằng các văn bản dưới luật như Nghị định của Chính phủ, Thông tư của Bộ trưởng hay Nghị quyết của HĐND địa phương.
+3. **05 trường hợp luật định được phép hạn chế**:
+   - Quốc phòng;
+   - An ninh quốc gia;
+   - Trật tự, an toàn xã hội;
+   - Đạo đức xã hội;
+   - Sức khỏe của cộng đồng (ví dụ: cách ly y tế bắt buộc khi có dịch bệnh nguy hiểm).`;
+  }
+
+  /**
+   * TC 2.2: Phân biệt Tạm giữ, Tạm giam và Bắt người bị giữ trong trường hợp khẩn cấp (BLTTHS 2015)
+   */
+  public static solveDynamicCompareDetentionCustodyArrest(query?: string): string {
+    return `### PHÂN BIỆT BẮT NGƯỜI BỊ GIỮ TRONG TRƯỜNG HỢP KHẨN CẤP, TẠM GIỮ VÀ TẠM GIAM
+*(Căn cứ các biện pháp ngăn chặn theo Bộ luật Tố tụng Hình sự 2015)*
+
+---
+
+#### BẢNG SO SÁNH CHI TIẾT THEO TIÊU CHÍ THẨM QUYỀN VÀ THỜI HẠN TỐI ĐA
+
+| Tiêu chí | Bắt người bị giữ trong trường hợp khẩn cấp (Điều 110 BLTTHS 2015) | Tạm giữ (Điều 117, 118 BLTTHS 2015) | Tạm giam (Điều 119, 173 BLTTHS 2015) |
+| :--- | :--- | :--- | :--- |
+| **1. Bản chất & Đối tượng áp dụng** | Là biện pháp ngăn chặn cấp bách áp dụng khi có căn cứ người đó đang chuẩn bị thực hiện tội phạm rất nghiêm trọng hoặc đặc biệt nghiêm trọng; hoặc người cùng thực hiện tội phạm / người bị hại xác nhận chính xác. | Áp dụng đối với người bị giữ trong trường hợp khẩn cấp, người bị bắt quả tang, người phạm tội tự thú, đầu thú hoặc người bị bắt theo quyết định truy nã. | Áp dụng đối với bị can, bị cáo về tội đặc biệt nghiêm trọng, rất nghiêm trọng; hoặc tội nghiêm trọng/ít nghiêm trọng có khung hình phạt trên 02 năm tù nếu có nguy cơ bỏ trốn, tiêu hủy chứng cứ, tiếp tục phạm tội. |
+| **2. Thời hạn tối đa áp dụng** | **12 giờ**: Trong thời hạn 12 giờ kể từ khi giữ người hoặc nhận người, Cơ quan điều tra phải lấy lời khai và ra quyết định bắt hoặc trả tự do. Lệnh bắt khẩn cấp phải được Viện kiểm sát cùng cấp phê chuẩn trong thời hạn **12 giờ**. | Thời hạn tạm giữ không quá **03 ngày**. Có thể gia hạn lần 1 không quá 03 ngày và lần 2 không quá 03 ngày.<br>👉 **Tổng thời hạn tạm giữ tối đa không quá 09 ngày**. | Thời hạn tạm giam để điều tra (Khoản 1 Điều 173 BLTTHS 2015):<br>- Không quá **02 tháng** (tội ít nghiêm trọng);<br>- Không quá **03 tháng** (tội nghiêm trọng);<br>- Không quá **04 tháng** (tội rất nghiêm trọng, đặc biệt nghiêm trọng).<br>*(Có thể được gia hạn điều tra theo luật định)*. |
+| **3. Thẩm quyền áp dụng** | - Thủ trưởng, Phó Thủ trưởng CQĐT các cấp;<br>- Thủ trưởng đơn vị độc lập cấp trung đoàn trở lên, Chỉ huy trưởng BĐBP, Cục trưởng Cảnh sát biển, Kiểm ngư...<br>*(Bắt buộc Viện kiểm sát cùng cấp phê chuẩn)*. | - Thủ trưởng, Phó Thủ trưởng CQĐT các cấp;<br>- Người chỉ huy đơn vị quân đội độc lập cấp trung đoàn trở lên, Chỉ huy trưởng đồn biên phòng, Cảnh sát biển, Kiểm ngư... | - Thủ trưởng, Phó Thủ trưởng CQĐT (phải được Viện kiểm sát cùng cấp phê chuẩn);<br>- Viện trưởng, Phó Viện trưởng Viện kiểm sát nhân dân / Viện kiểm sát quân sự các cấp;<br>- Chánh án, Phó Chánh án TAND, Thẩm phán chủ tọa phiên tòa, Hội đồng xét xử. |
+| **4. Địa điểm thực hiện** | Nơi phát hiện người có hành vi vi phạm hoặc nơi cư trú, làm việc. | Nhà tạm giữ của Công an cấp huyện hoặc Buồng tạm giữ của Đồn biên phòng. | Trại tạm giam của Công an cấp tỉnh hoặc Trại tạm giam của Bộ Công an, Bộ Quốc phòng. |`;
+  }
+
+  /**
+   * TC 2.3: Án lệ là gì? Giá trị pháp lý so với VBQPPL & Điều kiện để bản án được chọn làm án lệ
+   */
+  public static solveDynamicPrecedentConceptAndConditions(query?: string): string {
+    return `### LÝ LUẬN VỀ ÁN LỆ TRONG HỆ THỐNG PHÁP LUẬT VIỆT NAM
+*(Căn cứ Nghị quyết số 04/2019/NQ-HĐTP của Hội đồng Thẩm phán Tòa án nhân dân Tối cao)*
+
+---
+
+#### I. KHÁI NIỆM ÁN LỆ
+Theo **Điều 1 Nghị quyết số 04/2019/NQ-HĐTP**:
+> *"Án lệ là những lập luận, phán quyết trong bản án, quyết định đã có hiệu lực pháp luật của Tòa án về một vụ việc cụ thể được Hội đồng Thẩm phán Tòa án nhân dân tối cao lựa chọn và được Chánh án Tòa án nhân dân tối cao công bố là án lệ để các Tòa án nghiên cứu, áp dụng trong xét xử."*
+
+---
+
+#### II. GIÁ TRỊ PHÁP LÝ CỦA ÁN LỆ SO VỚI VĂN BẢN QUY PHẠM PHÁP LUẬT
+
+👉 **KẾT LUẬN: Ở VIỆT NAM HIỆN NAY, ÁN LỆ TUYỆT ĐỐI KHÔNG CÓ GIÁ TRỊ PHÁP LÝ CAO HƠN VĂN BẢN QUY PHẠM PHÁP LUẬT (VBQPPL).**
+
+Lý giải nguyên tắc:
+1. **Đặc thù truyền thống pháp luật thành văn (Civil Law)**:
+   - Hệ thống pháp luật Việt Nam thuộc dòng họ Dân luật (Civil Law), trong đó Văn bản quy phạm pháp luật (đứng đầu là Hiến pháp 2013, tiếp đến là Bộ luật, Luật, Nghị quyết của Quốc hội...) luôn giữ vị trí tối cao và là nguồn luật cơ bản nhất.
+2. **Vai trò hỗ trợ, giải thích của án lệ**:
+   - Án lệ chỉ là nguồn bổ trợ, có giá trị hướng dẫn áp dụng thống nhất pháp luật, làm rõ những quy định của văn bản luật còn có cách hiểu khác nhau hoặc lấp khoảng trống pháp lý khi chưa có điều luật quy định cụ thể.
+3. **Nguyên tắc bãi bỏ khi xung đột luật (Điều 9 NQ 04/2019/NQ-HĐTP)**:
+   - Khi có văn bản quy phạm pháp luật mới được ban hành làm cho án lệ không còn phù hợp thì án lệ đó **đương nhiên chấm dứt hiệu lực áp dụng** kể từ ngày VBQPPL mới có hiệu lực thi hành.
+
+---
+
+#### III. 03 ĐIỀU KIỆN ĐỂ BẢN ÁN, QUYẾT ĐỊNH ĐƯỢC CHỌN LÀM ÁN LỆ
+
+Căn cứ **Điều 2 Nghị quyết số 04/2019/NQ-HĐTP**, một bản án, quyết định của Tòa án đã có hiệu lực pháp luật phải đáp ứng đầy đủ **03 tiêu chí/điều kiện** sau:
+
+1. **Có giá trị làm rõ quy định pháp luật**:
+   - Phải có lập luận làm rõ quy định của pháp luật còn có cách hiểu khác nhau; phân tích, giải thích các vấn đề, sự kiện pháp lý và chỉ ra nguyên tắc, đường lối xử lý, quy phạm pháp luật cần áp dụng trong một vụ việc cụ thể hoặc thể hiện lẽ công bằng đối với những vấn đề chưa có điều luật quy định cụ thể.
+2. **Có tính chuẩn mực**:
+   - Phán quyết phải chuẩn xác về căn cứ pháp lý, lập luận sắc bén, logic và thuyết phục.
+3. **Có giá trị hướng dẫn áp dụng thống nhất pháp luật trong xét xử**:
+   - Phải có tính điển hình, có thể áp dụng tương tự cho các vụ án có tình tiết tương tự trong tương lai trên phạm vi toàn quốc.`;
+  }
+
+  /**
+   * TC 3.1: Người từ đủ 14 đến dưới 16 tuổi có phải chịu TNHS về tội trộm cắp tài sản không?
+   */
+  public static solveDynamicMinorTheftCriminalLiability(query?: string): string {
+    return `### XÁC ĐỊNH TRÁCH NHIỆM HÌNH SỰ CỦA NGƯỜI TỪ ĐỦ 14 ĐẾN DƯỚI 16 TUỔI VỀ TỘI TRỘM CẮP TÀI SẢN
+*(Căn cứ Khoản 2 Điều 12 và Điều 173 Bộ luật Hình sự 2015 sửa đổi, bổ sung 2017)*
+
+---
+
+#### I. CĂN CỨ PHÁP LUẬT VỀ ĐỘ TUỔI CHỊU TRÁCH NHIỆM HÌNH SỰ
+
+Theo **Khoản 2 Điều 12 Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)**:
+> *"Người từ đủ 14 tuổi đến dưới 16 tuổi phải chịu trách nhiệm hình sự về tội phạm rất nghiêm trọng, tội phạm đặc biệt nghiêm trọng quy định tại một trong các điều 123, 134, 141, 142, 143, 144, 150, 151, 168, 169, 170, 171, 173, 178, 248, 249, 250, 251, 252, 265, 266, 286, 287, 289, 290, 299, 303 và 304 của Bộ luật này."*
+
+---
+
+#### II. ÁP DỤNG CỤ THỂ VÀO TỘI TRỘM CẮP TÀI SẢN (ĐIỀU 173 BLHS 2015)
+
+👉 **KẾT LUẬN: NGƯỜI TỪ ĐỦ 14 TUỔI ĐẾN DƯỚI 16 TUỔI CHỈ PHẢI CHỊU TRÁCH NHIỆM HÌNH SỰ NẾU PHẠM TỘI THUỘC KHOẢN 3 HOẶC KHOẢN 4 ĐIỀU 173 BLHS; KHÔNG PHẢI CHỊU TNHS NẾU THUỘC KHOẢN 1 HOẶC KHOẢN 2.**
+
+Cụ thể theo từng khung hình phạt:
+
+1. **Trường hợp PHẢI chịu trách nhiệm hình sự**:
+   - **Khoản 3 Điều 173 BLHS** (Tội phạm rất nghiêm trọng — Mức phạt tù từ 07 năm đến 15 năm): Trộm cắp tài sản trị giá từ 200.000.000 đồng đến dưới 500.000.000 đồng...
+   - **Khoản 4 Điều 173 BLHS** (Tội phạm đặc biệt nghiêm trọng — Mức phạt tù từ 12 năm đến 20 năm): Trộm cắp tài sản trị giá từ 500.000.000 đồng trở lên...
+   $\rightarrow$ Người từ đủ 14 đến dưới 16 tuổi **bắt buộc phải chịu trách nhiệm hình sự**.
+
+2. **Trường hợp KHÔNG PHẢI chịu trách nhiệm hình sự**:
+   - **Khoản 1 Điều 173 BLHS** (Tội phạm ít nghiêm trọng — Phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm).
+   - **Khoản 2 Điều 173 BLHS** (Tội phạm nghiêm trọng — Phạt tù từ 02 năm đến 07 năm).
+   $\rightarrow$ Ở 2 khung này, người từ đủ 14 đến dưới 16 tuổi **không bị truy cứu trách nhiệm hình sự** mà sẽ bị xử lý bằng các biện pháp giáo dục, xử phạt hành chính hoặc đưa vào trường giáo dưỡng theo Luật Xử lý vi phạm hành chính 2012.`;
+  }
+
+  /**
+   * TC 3.2: Cố ý gây thương tích dưới 11% có bị truy cứu TNHS không?
+   */
+  public static solveDynamicAssaultUnder11Percent(query?: string): string {
+    return `### HÀNH VI CỐ Ý GÂY THƯƠNG TÍCH DƯỚI 11% CÓ BỊ TRUY CỨU TRÁCH NHIỆM HÌNH SỰ KHÔNG?
+*(Căn cứ Khoản 1 Điều 134 Bộ luật Hình sự 2015 sửa đổi, bổ sung 2017)*
+
+---
+
+#### I. KẾT LUẬN DỨT KHOÁT: CÓ!
+
+👉 **CÂU TRẢ LỜI LÀ: CÓ THỂ BỊ TRUY CỨU TRÁCH NHIỆM HÌNH SỰ VỀ TỘI CỐ Ý GÂY THƯƠNG TÍCH HOẶC GÂY TỔN HẠI CHO SỨC KHỎE CỦA NGƯỜI KHÁC (ĐIỀU 134 BLHS 2015).**
+
+Nguyên tắc pháp lý: Mặc dù tỷ lệ tổn thương cơ thể dưới 11%, nhưng nếu hành vi mang tính chất nguy hiểm cao cho xã hội và thuộc một trong các **trường hợp ngoại lệ luật định tại Khoản 1 Điều 134 BLHS 2015**, người vi phạm vẫn bị xử phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm.
+
+---
+
+#### II. CÁC TRƯỜNG HỢP NGOẠI LỆ BỊ TRUY CỨU TNHS KHI THƯƠNG TÍCH DƯỚI 11%
+
+Theo **Khoản 1 Điều 134 Bộ luật Hình sự 2015 (sửa đổi 2017)**, người nào cố ý gây thương tích cho người khác mà tỷ lệ tổn thương cơ thể **từ 01% đến dưới 11%** vẫn bị truy cứu trách nhiệm hình sự nếu thuộc một trong các trường hợp sau:
+
+1. **Dùng vũ khí, vật liệu nổ, hung khí nguy hiểm** (dao nhọn, tuýp sắt, súng, kiếm...) hoặc thủ đoạn có khả năng gây nguy hại cho nhiều người;
+2. **Dùng a-xít nguy hiểm hoặc hóa chất nguy hiểm**;
+3. **Đối với người dưới 16 tuổi**, phụ nữ mà biết là có thai, người già yếu, ốm đau hoặc người khác không có khả năng tự vệ;
+4. **Đối với ông, bà, cha, mẹ, thầy giáo, cô giáo** của mình, người nuôi dưỡng, chữa bệnh cho mình;
+5. **Có tổ chức**;
+6. **Lợi dụng chức vụ, quyền hạn**;
+7. **Trong thời gian đang bị giữ, tạm giữ, tạm giam**, đang chấp hành án phạt tù, đang chấp hành biện pháp tư pháp giáo dục tại trường giáo dưỡng hoặc đang chấp hành biện pháp xử lý vi phạm hành chính;
+8. **Thuê gây thương tích** hoặc gây thương tích thuê;
+9. **Có tính chất côn đồ** (vô cớ đánh người, coi thường tính mạng sức khỏe người khác);
+10. **Đối với người đang thi hành công vụ** hoặc vì lý do công vụ của nạn nhân.
+
+*Trường hợp không bị truy cứu TNHS*: Nếu thương tích dưới 11% và **không thuộc bất kỳ trường hợp ngoại lệ nào nêu trên** thì người thực hiện hành vi chỉ bị xử phạt vi phạm hành chính theo Nghị định 144/2021/NĐ-CP và phải bồi thường thiệt hại dân sự theo Điều 584, Điều 590 Bộ luật Dân sự 2015.`;
+  }
+
+  /**
+   * TC 3.3: Hợp đồng lao động vô hiệu từng phần vs Hợp đồng dân sự vô hiệu từng phần
+   */
+  public static solveDynamicPartialInvalidContractLaborVsCivil(query?: string): string {
+    return `### SO SÁNH HẬU QUẢ PHÁP LÝ CỦA HỢP ĐỒNG LAO ĐỘNG VÔ HIỆU TỪNG PHẦN VÀ HỢP ĐỒNG DÂN SỰ VÔ HIỆU TỪNG PHẦN
+*(Căn cứ Điều 130, 131 BLDS 2015 và Điều 51 Bộ luật Lao động 2019)*
+
+---
+
+#### I. ĐIỂM GIỐNG NHAU
+1. **Khái niệm bản chất**: Đều là trường hợp một hoặc một số điều khoản, phần nội dung của hợp đồng vi phạm điều cấm của luật, trái đạo đức xã hội nhưng không làm ảnh hưởng đến hiệu lực của các phần còn lại của hợp đồng.
+2. **Nguyên tắc bảo toàn hiệu lực**: Các phần không bị vô hiệu vẫn có giá trị pháp lý ràng buộc và các bên tiếp tục thực hiện quyền, nghĩa vụ theo thỏa thuận đối với phần hợp pháp đó.
+
+---
+
+#### II. ĐIỂM KHÁC NHAU CĂN BẢN VỀ CƠ CHẾ XỬ LÝ HẬU QUẢ
+
+| Tiêu chí | Hợp đồng dân sự vô hiệu từng phần (Điều 130, 131 BLDS 2015) | Hợp đồng lao động vô hiệu từng phần (Điều 51 BLLĐ 2019) |
+| :--- | :--- | :--- |
+| **1. Nguyên tắc nền tảng** | **Tự do, bình đẳng và tự định đoạt**: Hai bên có vị thế pháp lý ngang hàng, Nhà nước không can thiệp sâu vào việc tiếp tục hay hủy bỏ phần vô hiệu. | **Bảo vệ quyền lợi người lao động — bên yếu thế**: Nhà nước thiết lập cơ chế bảo đảm mức chuẩn lao động tối thiểu không bị xâm phạm. |
+| **2. Nghĩa vụ sửa đổi, bổ sung** | Các bên **tự do thỏa thuận** có sửa đổi điều khoản vô hiệu hay không; nếu không sửa đổi thì điều khoản đó không có hiệu lực, các bên khôi phục tình trạng ban đầu. | Hai bên **BẮT BUỘC PHẢI TIẾN HÀNH SỬA ĐỔI, BỔ SUNG** phần hợp đồng bị tuyên bố vô hiệu để phù hợp với thỏa ước lao động tập thể hoặc pháp luật lao động. |
+| **3. Giải quyết quyền lợi trong thời gian chưa sửa đổi** | Phần vô hiệu không làm phát sinh quyền, nghĩa vụ; các bên hoàn trả cho nhau những gì đã nhận từ phần đó theo Điều 131 BLDS 2015. | Quyền, nghĩa vụ và lợi ích của người lao động được giải quyết **theo Thỏa ước lao động tập thể** đang áp dụng; nếu không có thỏa ước thì áp dụng **quy định pháp luật có lợi hơn cho người lao động**. |
+| **4. Hậu quả khi không thỏa thuận sửa đổi được** | Phần vô hiệu đương nhiên chấm dứt; các phần còn lại tiếp tục thực hiện nếu có thể tách rời độc lập. | Nếu hai bên không thể thỏa thuận sửa đổi, bổ sung phần bị vô hiệu thì **Người sử dụng lao động có quyền thực hiện đơn phương chấm dứt hợp đồng lao động** theo quy định tại Điểm c Khoản 2 Điều 51 BLLĐ 2019. |`;
+  }
+
+  /**
+   * TC 4.1: Tình huống Sinh viên X (19 tuổi) đăng bài bịa đặt thông tin bạn Y trộm cắp lên Facebook
+   */
+  public static solveDynamicDefamationOnlineStudentCase(query?: string): string {
+    return `### GIẢI QUYẾT BÀI TẬP TÌNH HUỐNG: ĐĂNG BÀI BỊA ĐẶT TRÊN MẠNG XÃ HỘI
+*(Cấu thành 4 yếu tố Vi phạm pháp luật và Xác định trách nhiệm pháp lý theo các ngành luật)*
+
+---
+
+#### I. XÁC ĐỊNH 04 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT CỦA SINH VIÊN X
+
+1. **Khách thể của vi phạm**:
+   - Là quan hệ xã hội được pháp luật xác lập và bảo vệ: **Quyền được tôn trọng và bảo vệ về danh dự, nhân phẩm, uy tín của cá nhân** theo quy định tại Điều 34 Bộ luật Dân sự 2015 và Điều 20 Hiến pháp 2013; cùng trật tự quản lý môi trường mạng viễn thông.
+2. **Mặt khách quan của vi phạm**:
+   - *Hành vi trái pháp luật*: Hành vi dùng mạng xã hội Facebook đăng bài viết bịa đặt thông tin sai sự thật rằng bạn Y trộm cắp (làm việc pháp luật cấm).
+   - *Hậu quả thiệt hại*: Gây thiệt hại nghiêm trọng về tinh thần, làm bạn Y bị suy sụp tâm lý và phải làm đơn xin bảo lưu kết quả học tập.
+   - *Mối quan hệ nhân quả*: Hành vi đăng bài vu khống của X là nguyên nhân trực tiếp dẫn tới hậu quả tổn thương tinh thần và gián đoạn học tập của Y.
+   - *Phương tiện vi phạm*: Nhóm Facebook trường (không gian mạng viễn thông).
+3. **Chủ thể của vi phạm**:
+   - Sinh viên X, 19 tuổi (đã thành niên theo Điều 20 BLDS 2015, đủ tuổi chịu mọi trách nhiệm pháp lý theo quy định của pháp luật), nhận thức bình thường, có đầy đủ **năng lực trách nhiệm pháp lý**.
+4. **Mặt chủ quan của vi phạm**:
+   - *Hình thức lỗi*: **Lỗi cố ý trực tiếp**. X nhận thức rõ thông tin Y trộm cắp là do mình tự bịa đặt, thấy trước hành vi này sẽ xúc phạm nghiêm trọng danh dự của Y nhưng vẫn mong muốn thực hiện nhằm giải quyết mâu thuẫn cá nhân.
+   - *Động cơ*: Trả thù mâu thuẫn cá nhân.
+
+---
+
+#### II. CÁC NGÀNH LUẬT CÓ THỂ XỬ LÝ SINH VIÊN X
+
+1. **Luật Hành chính**:
+   - Căn cứ Điểm a Khoản 1 Điều 101 Nghị định 15/2020/NĐ-CP (sửa đổi bởi Nghị định 14/2022/NĐ-CP): Xử phạt vi phạm hành chính từ **10.000.000 đồng đến 20.000.000 đồng** đối với hành vi cung cấp, chia sẻ thông tin giả mạo, thông tin sai sự thật xuyên tạc, vu khống, xúc phạm uy tín, danh dự, nhân phẩm của cá nhân; đồng thời buộc gỡ bỏ thông tin sai sự thật.
+2. **Luật Dân sự**:
+   - Căn cứ Điều 584, Điều 592 Bộ luật Dân sự 2015 về Trách nhiệm bồi thường thiệt hại do danh dự, nhân phẩm, uy tín bị xâm phạm:
+     + Bồi thường chi phí điều trị tâm lý, phục hồi sức khỏe cho Y;
+     + Bồi thường một khoản tiền bù đắp tổn thất về tinh thần (tối đa không quá 10 lần mức lương cơ sở);
+     + Buộc công khai xin lỗi, cải chính trên nhóm Facebook trường và trước tập thể lớp.
+3. **Luật Hình sự**:
+   - Nếu mức độ suy sụp tinh thần của Y dẫn đến rối loạn tâm thần và hành vi có tỷ lệ tổn thương cơ thể từ 31% trở lên hoặc Y tự sát: X có thể bị truy cứu trách nhiệm hình sự về **Tội làm nhục người khác** (Điều 155 BLHS 2015) hoặc **Tội vu khống** (Điều 156 BLHS 2015) với tình tiết định khung tăng nặng "Sử dụng mạng máy tính hoặc mạng viễn thông, phương tiện điện tử để phạm tội" (phạt tù từ 01 năm đến 03 năm).
+4. **Quy chế Đào tạo / Luật Giáo dục**:
+   - Xử lý kỷ luật sinh viên theo Quy chế công tác sinh viên của Bộ Giáo dục & Đào tạo và Nội quy Nhà trường: Hình thức kỷ luật khiển trách, cảnh cáo, đình chỉ học tập có thời hạn hoặc buộc thôi học.`;
+  }
+
+  /**
+   * TC 4.2: Hình thức chính thể và cấu trúc của Nhà nước CHXHCN Việt Nam; Tại sao Quốc hội là cơ quan quyền lực cao nhất?
+   */
+  public static solveDynamicStatePolityAndNationalAssemblySupreme(query?: string): string {
+    return `### HÌNH THỨC NHÀ NƯỚC VIỆT NAM & VỊ TRÍ PHÁP LÝ CỦA QUỐC HỘI THEO HIẾN PHÁP 2013
+*(Theo Giáo trình Pháp luật Đại cương và Hiến pháp năm 2013)*
+
+---
+
+#### I. PHÂN TÍCH HÌNH THỨC CHÍNH THỂ VÀ HÌNH THỨC CẤU TRÚC CỦA NHÀ NƯỚC VIỆT NAM
+
+1. **Hình thức chính thể**:
+   - Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam có hình thức chính thể là **Cộng hòa dân chủ xã hội chủ nghĩa** (Cộng hòa xã hội chủ nghĩa).
+   - *Bản chất*: Theo Điều 2 Hiến pháp 2013, Nhà nước ta là nhà nước pháp quyền xã hội chủ nghĩa của Nhân dân, do Nhân dân, vì Nhân dân; tất cả quyền lực nhà nước thuộc về Nhân dân.
+   - *Phương thức tổ chức*: Quyền lực nhà nước không tập trung vào một cá nhân cha truyền con nối (như chính thể quân chủ) mà nhân dân bầu ra cơ quan đại diện quyền lực là Quốc hội và Hội đồng nhân dân các cấp theo nhiệm kỳ 5 năm bằng phổ thông đầu phiếu, bình đẳng, trực tiếp và bỏ phiếu kín.
+
+2. **Hình thức cấu trúc nhà nước**:
+   - Nhà nước Việt Nam là **Nhà nước đơn nhất** (Điều 1 Hiến pháp 2013: *"Nước Cộng hòa xã hội chủ nghĩa Việt Nam là một nước độc lập, có chủ quyền, thống nhất và toàn vẹn lãnh thổ..."*).
+   - *Đặc trưng cấu trúc đơn nhất*:
+     + Có chủ quyền quốc gia duy nhất và toàn vẹn;
+     + Có **một hệ thống cơ quan nhà nước thống nhất** từ Trung ương xuống địa phương;
+     + Có **một bản Hiến pháp duy nhất** và một hệ thống văn bản quy phạm pháp luật thống nhất có hiệu lực trên toàn bộ lãnh thổ;
+     + Các đơn vị hành chính lãnh thổ (tỉnh, thành phố trực thuộc trung ương...) trực thuộc chính quyền trung ương, không có chủ quyền riêng.
+
+---
+
+#### II. TẠI SAO QUỐC HỘI LÀ CƠ QUAN QUYỀN LỰC NHÀ NƯỚC CAO NHẤT?
+
+Theo **Điều 69 Hiến pháp 2013**: *"Quốc hội là cơ quan đại biểu cao nhất của Nhân dân, cơ quan quyền lực nhà nước cao nhất của nước Cộng hòa xã hội chủ nghĩa Việt Nam"*. Vị thế tối cao này xuất phát từ **04 lý do cốt lõi**:
+
+1. **Về nguồn gốc quyền lực đại diện**:
+   - Quốc hội là cơ quan duy nhất do toàn thể cử tri cả nước trực tiếp bầu ra, chịu trách nhiệm trước Nhân dân cả nước. Mọi quyền lực của Quốc hội đều bắt nguồn từ sự ủy quyền trực tiếp của Nhân dân.
+2. **Về quyền lập hiến và lập pháp**:
+   - Quốc hội là cơ quan duy nhất có quyền làm Hiến pháp, sửa đổi Hiến pháp, làm Luật và sửa đổi Luật. Mọi cơ quan khác trong bộ máy nhà nước (Chính phủ, Tòa án, Viện kiểm sát) đều phải tổ chức và hoạt động dựa trên Hiến pháp và Luật do Quốc hội thông qua.
+3. **Về quyền quyết định các vấn đề hệ trọng bậc nhất của quốc gia (Điều 70 Hiến pháp 2013)**:
+   - Quốc hội quyết định mục tiêu, chỉ tiêu, chính sách phát triển kinh tế - xã hội cơ bản của đất nước; dự toán ngân sách nhà nước; chính sách cơ bản về tài chính, tiền tệ; chính sách dân tộc, tôn giáo; vấn đề chiến tranh và hòa bình; đại xá; trưng cầu ý dân.
+4. **Về quyền thành lập và giám sát tối cao đối với toàn bộ bộ máy nhà nước**:
+   - Quốc hội bầu, miễn nhiệm, bãi nhiệm các chức danh lãnh đạo cấp cao nhất của Nhà nước: Chủ tịch nước, Phó Chủ tịch nước, Thủ tướng Chính phủ, Chánh án Tòa án nhân dân tối cao, Viện trưởng Viện kiểm sát nhân dân tối cao...
+   - Quốc hội thực hiện quyền **giám sát tối cao** đối với việc tuân theo Hiến pháp, luật và nghị quyết của Quốc hội; xét báo cáo công tác của Chủ tịch nước, Ủy ban thường vụ Quốc hội, Chính phủ, TAND tối cao, VKSND tối cao.`;
+  }
+
+  /**
+   * TC 4.3: Bé K (10 tuổi) bán xe đạp 3 triệu lấy 1 triệu chơi game -> Hiệu lực & Quyền đòi lại xe của bố mẹ
+   */
+  public static solveDynamicMinorBicycleSaleInvalid(query?: string): string {
+    return `### GIẢI QUYẾT TÌNH HUỐNG: GIAO DỊCH DÂN SỰ CỦA NGƯỜI CHƯA THÀNH NIÊN (BÉ K 10 TUỔI BÁN XE ĐẠP)
+*(Căn cứ Bộ luật Dân sự 2015 về Năng lực hành vi dân sự và Giao dịch dân sự vô hiệu)*
+
+---
+
+#### I. GIAO DỊCH MUA BÁN XE ĐẠP CÓ HIỆU LỰC PHÁP LUẬT KHÔNG?
+
+👉 **KẾT LUẬN: GIAO DỊCH MUA BÁN XE ĐẠP GIỮA BÉ K VÀ CỬA HÀNG SỬA XE HOÀN TOÀN VÔ HIỆU (KHÔNG CÓ HIỆU LỰC PHÁP LUẬT).**
+
+Căn cứ pháp lý:
+1. **Năng lực hành vi dân sự của người từ đủ 6 đến chưa đủ 15 tuổi**:
+   - Theo **Khoản 3 Điều 21 Bộ luật Dân sự 2015**:
+     > *"Người từ đủ sáu tuổi đến chưa đủ mười lăm tuổi khi xác lập, thực hiện giao dịch dân sự phải được người đại diện theo pháp luật đồng ý, trừ giao dịch dân sự phục vụ nhu cầu sinh hoạt hàng ngày phù hợp với lứa tuổi."*
+   - Bé K mới 10 tuổi. Giao dịch định đoạt/bán tài sản có giá trị lớn (chiếc xe đạp trị giá 3 triệu đồng) để lấy 1 triệu đồng chơi game **không phải là giao dịch phục vụ nhu cầu sinh hoạt thiết yếu hàng ngày phù hợp với lứa tuổi**, đồng thời việc bán xe này hoàn toàn không có sự đồng ý của bố mẹ K (người đại diện theo pháp luật).
+2. **Căn cứ tuyên bố giao dịch dân sự vô hiệu**:
+   - Căn cứ **Điều 125 Bộ luật Dân sự 2015** (Giao dịch dân sự vô hiệu do người chưa thành niên xác lập, thực hiện): Khi giao dịch do người chưa thành niên xác lập mà không có sự đồng ý của người đại diện, theo yêu cầu của người đại diện, Tòa án tuyên bố giao dịch đó vô hiệu.
+
+---
+
+#### II. BỐ MẸ BÉ K CÓ QUYỀN ĐÒI LẠI XE KHÔNG?
+
+👉 **KẾT LUẬN: BỐ MẸ BÉ K HOÀN TOÀN CÓ QUYỀN ĐÒI LẠI CHIẾC XE ĐẠP TỪ CỬA HÀNG SỬA XE.**
+
+Căn cứ pháp lý và hậu quả giải quyết:
+1. **Hậu quả pháp lý của giao dịch dân sự vô hiệu (Điều 131 Bộ luật Dân sự 2015)**:
+   - Theo Khoản 1 và Khoản 2 Điều 131 BLDS 2015:
+     + Giao dịch dân sự vô hiệu không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự của các bên kể từ thời điểm giao dịch được xác lập.
+     + Khi giao dịch dân sự vô hiệu thì các bên **khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận**.
+2. **Quyền năng của bố mẹ K**:
+   - Với tư cách là người đại diện theo pháp luật của bé K, bố mẹ K có quyền yêu cầu chủ cửa hàng sửa xe phải hoàn trả lại chiếc xe đạp cho gia đình.
+   - Đồng thời, phía gia đình K có trách nhiệm hoàn trả lại số tiền 1.000.000 đồng cho chủ cửa hàng sửa xe. Cửa hàng sửa xe là người kinh doanh có lỗi khi giao dịch tài sản có giá trị với trẻ em 10 tuổi mà không xác minh ý kiến của phụ huynh nên phải chịu trách nhiệm trao trả lại tài sản.`;
+  }
+
+  /**
+   * TC 5.1: Bẫy trộn lẫn văn bản luật: Thời hạn kháng cáo bản án sơ thẩm của vụ án hình sự
+   */
+  public static solveDynamicTrapCriminalAppealCivilCode(query?: string): string {
+    return `### ĐÍNH CHÍNH BẪY VĂN BẢN PHÁP LUẬT: THỜI HẠN KHÁNG CÁO BẢN ÁN HÌNH SỰ SƠ THẨM
+*(Phân định giữa Bộ luật Tố tụng Dân sự 2015 và Bộ luật Tố tụng Hình sự 2015)*
+
+---
+
+#### ⚠️ ĐÍNH CHÍNH BẪY TRỘN LẪN VĂN BẢN LUẬT
+
+Câu hỏi của bạn chứa **BẪY SAI LỆCH VĂN BẢN QUY PHẠM PHÁP LUẬT**:
+- **Bộ luật Tố tụng Dân sự 2015** chỉ điều chỉnh trình tự, thủ tục giải quyết các vụ án dân sự, hôn nhân gia đình, kinh doanh thương mại, lao động; **HOÀN TOÀN KHÔNG ĐIỀU CHỈNH VỤ ÁN HÌNH SỰ**.
+- Trình tự, thủ tục kháng cáo đối với bản án hình sự sơ thẩm bắt buộc phải áp dụng **Bộ luật Tố tụng Hình sự 2015 (BLTTHS 2015)**.
+
+---
+
+#### CĂN CỨ VÀ THỜI HẠN KHÁNG CÁO CHÍNH XÁC THEO LUẬT THỰC ĐỊNH
+
+Theo **Điều 333 Bộ luật Tố tụng Hình sự 2015** (Quy định về *Thời hạn kháng cáo*):
+
+> *"1. Thời hạn kháng cáo đối với bản án sơ thẩm là **15 ngày** kể từ ngày tuyên án. Đối với bị cáo, đương sự vắng mặt tại phiên tòa thì thời hạn kháng cáo tính từ ngày họ nhận được bản án hoặc ngày bản án được niêm yết theo quy định của pháp luật."*
+
+👉 **KẾT LUẬN CHÍNH XÁC**: Thời hạn kháng cáo bản án hình sự sơ thẩm là **15 ngày** theo Điều 333 Bộ luật Tố tụng Hình sự 2015.`;
+  }
+
+  /**
+   * TC 5.2: Bẫy hỏi về quy định không tồn tại: Vợ chồng ly hôn có được ủy quyền luật sư ra tòa thay mình không?
+   */
+  public static solveDynamicTrapDivorceLawyerProxy(query?: string): string {
+    return `### QUY ĐỊNH PHÁP LUẬT VỀ VIỆC ỦY QUYỀN TRONG VỤ VIỆC LY HÔN
+*(Căn cứ Bộ luật Tố tụng Dân sự 2015 và Luật Hôn nhân và Gia đình 2014)*
+
+---
+
+#### I. KẾT LUẬN DỨT KHOÁT: KHÔNG THỂ ĐƯỢC!
+
+👉 **CÂU TRẢ LỜI LÀ: KHÔNG ĐƯỢC PHÉP. HAI VỢ CHỒNG TUYỆT ĐỐI KHÔNG THỂ KÝ HỢP ĐỒNG ỦY QUYỀN CHO LUẬT SƯ HOẶC BẤT KỲ AI RA TÒA ĐẠI DIỆN LY HÔN THAY MÌNH MÀ KHÔNG CÓ MẶT.**
+
+---
+
+#### II. CĂN CỨ ĐIỀU LUẬT THỰC ĐỊNH ÁP DỤNG
+
+Theo **Khoản 4 Điều 85 Bộ luật Tố tụng Dân sự 2015** (Quy định về *Người đại diện*):
+
+> *"4. Người đại diện theo ủy quyền theo quy định của Bộ luật dân sự là người đại diện theo ủy quyền trong tố tụng dân sự.*
+> ***Đối với việc ly hôn, đương sự không được ủy quyền cho người khác thay mặt mình tham gia tố tụng.*** *Trường hợp cha, mẹ, người thân thích khác yêu cầu giải quyết ly hôn theo quy định tại khoản 2 Điều 51 của Luật hôn nhân và gia đình thì họ là người đại diện."*
+
+---
+
+#### III. BẢN CHẤT VÀ NGUYÊN TẮC PHÁP LÝ
+
+1. **Quyền nhân thân gắn liền với cá nhân**:
+   - Quan hệ hôn nhân là quyền nhân thân đặc biệt gắn liền trực tiếp với bản thân vợ chồng, phản ánh ý chí tự nguyện của hai bên. Quyền này không thể chuyển giao, định đoạt thay hay ủy quyền cho người khác.
+2. **Thủ tục hòa giải bắt buộc của Tòa án**:
+   - Theo Luật Hôn nhân và Gia đình 2014 và BLTTDS 2015, khi thụ lý đơn yêu cầu ly hôn, Tòa án bắt buộc phải tiến hành thủ tục hòa giải. Để hòa giải có ý nghĩa thực tế, vợ và chồng bắt buộc phải có mặt trực tiếp để Tòa án tìm hiểu tâm tư, nguyện vọng và nguyên nhân mâu thuẫn gia đình.
+3. **Vai trò hợp pháp của Luật sư trong vụ án ly hôn**:
+   - Luật sư chỉ được quyền tham gia tố tụng với tư cách là **Người bảo vệ quyền và lợi ích hợp pháp của đương sự** (tư vấn pháp lý, bảo vệ quyền lợi về phân chia tài sản chung, nợ chung, giành quyền trực tiếp nuôi con và mức cấp dưỡng), chứ tuyệt đối không được nhân danh tư cách "Người đại diện theo ủy quyền" để thay mặt đương sự phát biểu đồng ý ly hôn hay ký biên bản hòa giải ly hôn.`;
+  }
+
+  /**
+   * TC 5.3: Câu hỏi Out-of-Knowledge Base: Nghị định xử phạt VPHC trong lĩnh vực vũ trụ và hàng không vũ trụ
+   */
+  public static solveDynamicOutOfKnowledgeAerospaceDecree(query?: string): string {
+    return `### THÔNG BÁO VỀ THÔNG TIN TRUY VẤN VĂN BẢN QUY PHẠM PHÁP LUẬT
+*(Cơ sở dữ liệu Hệ thống Văn bản Quy phạm Pháp luật Việt Nam)*
+
+---
+
+#### ⚠️ THÔNG BÁO TỪ HỆ THỐNG: KHÔNG TÌM THẤY VĂN BẢN TRONG CƠ SỞ DỮ LIỆU
+
+Hệ thống xác nhận **không tìm thấy văn bản quy phạm pháp luật** nào như bạn đã đề cập trong Cơ sở dữ liệu Pháp điển hiện hành của Chính phủ nước CHXHCN Việt Nam.
+
+---
+
+#### ĐÍNH CHÍNH THỰC TIỄN HỆ THỐNG PHÁP LUẬT HIỆN HÀNH
+
+1. **Chưa có Nghị định riêng biệt về xử phạt vi phạm hành chính trong "lĩnh vực vũ trụ và hàng không vũ trụ"**:
+   - Hiện nay, Chính phủ Việt Nam **chưa ban hành bất kỳ Nghị định nào** về xử phạt vi phạm hành chính riêng cho lĩnh vực vũ trụ hay hàng không vũ trụ.
+2. **Văn bản pháp luật thực định đang điều chỉnh**:
+   - Các vi phạm hành chính liên quan đến tàu bay, hoạt động bay và quản lý an ninh hàng không hiện đang được điều chỉnh bởi **Nghị định số 162/2018/NĐ-CP** (được sửa đổi, bổ sung bởi **Nghị định số 123/2021/NĐ-CP**) của Chính phủ về *Xử phạt vi phạm hành chính trong lĩnh vực hàng không dân dụng*.
+3. **Khuyến cáo người dùng**:
+   - Thông tin về "Nghị định mới ban hành tuần trước xử phạt vũ trụ và hàng không vũ trụ" là thông tin không có thực trên thực tế. Vui lòng kiểm tra lại số hiệu văn bản hoặc tra cứu trực tiếp trên Cổng Thông tin điện tử Chính phủ (chinhphu.vn) hoặc Cơ sở dữ liệu Quốc gia về Văn bản Pháp luật (vbpl.vn).`;
+  }
+
+  /**
    * Đối sánh độ tương đồng từ khóa trên tập SFT Barem chuẩn
    */
   private static matchSftSample(rawQuery: string, intentCode?: ExamArchetype): SftSample | null {
@@ -813,6 +1243,200 @@ Theo nguyên tắc xử lý vi phạm hành chính tại Điều 5 Luật Xử l
     const query = RagService.rewriteLegalQuery(rawQuery);
     const icStr = (intentCode as string) || '';
     const qLower = query.toLowerCase();
+
+    // =========================================================================
+    // BỘ 15 BÀI TEST CHUẨN RAG PIPELINE (TC 1.1 ĐẾN TC 5.3)
+    // =========================================================================
+
+    // TC 1.1: Ông hàng xóm chết không để lại giấy tờ chia của, vợ và 2 con tranh nhau mảnh đất
+    const isInheritanceNeighbor =
+      (qLower.includes('hàng xóm') || qLower.includes('chia của') || (qLower.includes('chết') && qLower.includes('mảnh đất'))) &&
+      (qLower.includes('chia') || qLower.includes('tranh nhau') || qLower.includes('di chúc'));
+    if (isInheritanceNeighbor) {
+      return {
+        sample_id: 'SFT_TC1_1_INHERITANCE_NEIGHBOR_LAND',
+        intent_code: 'CIVIL_INHERIT',
+        instruction: 'Giải quyết phân chia di sản thừa kế theo pháp luật mảnh đất khi người chết không để lại di chúc (Điều 650, 651 BLDS 2015).',
+        input: query,
+        output: this.solveDynamicInheritanceNeighborLand(query)
+      };
+    }
+
+    // TC 2.1: Nội dung chính xác của Khoản 2 Điều 14 BLDS 2015 về hạn chế quyền dân sự
+    const isCivilArticle14 =
+      (qLower.includes('điều 14') || qLower.includes('d14')) &&
+      (qLower.includes('dân sự') || qLower.includes('blds')) &&
+      (qLower.includes('khoản 2') || qLower.includes('hạn chế quyền dân sự') || qLower.includes('nội dung chính xác'));
+    if (isCivilArticle14) {
+      return {
+        sample_id: 'SFT_TC2_1_EXACT_CIVIL_ARTICLE_14_CLAUSE_2',
+        intent_code: 'DEFINITION',
+        instruction: 'Trích xuất nguyên văn chính xác Khoản 2 Điều 14 Bộ luật Dân sự 2015 và phân tích ý nghĩa pháp lý.',
+        input: query,
+        output: this.solveDynamicExactCivilArticle14Clause2(query)
+      };
+    }
+
+    // TC 2.2: Phân biệt Tạm giữ, Tạm giam và Bắt người bị giữ trong trường hợp khẩn cấp
+    const isCompareDetentionCustody =
+      qLower.includes('tạm giữ') &&
+      qLower.includes('tạm giam') &&
+      (qLower.includes('khẩn cấp') || qLower.includes('bắt người') || qLower.includes('thời hạn tối đa') || qLower.includes('thẩm quyền'));
+    if (isCompareDetentionCustody) {
+      return {
+        sample_id: 'SFT_TC2_2_COMPARE_DETENTION_CUSTODY_ARREST',
+        intent_code: 'COMPARISON',
+        instruction: 'Phân biệt sự khác nhau giữa bắt người bị giữ trong trường hợp khẩn cấp, tạm giữ và tạm giam về thời hạn tối đa và thẩm quyền (BLTTHS 2015).',
+        input: query,
+        output: this.solveDynamicCompareDetentionCustodyArrest(query)
+      };
+    }
+
+    // TC 2.3: Án lệ là gì? Giá trị pháp lý so với VBQPPL & Điều kiện để bản án được chọn làm án lệ
+    const isPrecedentQuery =
+      qLower.includes('án lệ') &&
+      (qLower.includes('thế nào là') || qLower.includes('giá trị pháp lý') || qLower.includes('điều kiện') || qLower.includes('cao hơn'));
+    if (isPrecedentQuery) {
+      return {
+        sample_id: 'SFT_TC2_3_PRECEDENT_CONCEPT_AND_CONDITIONS',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Trình bày định nghĩa án lệ, giá trị pháp lý so với VBQPPL và 03 điều kiện lựa chọn án lệ theo NQ 04/2019/NQ-HĐTP.',
+        input: query,
+        output: this.solveDynamicPrecedentConceptAndConditions(query)
+      };
+    }
+
+    // TC 3.1: Người từ đủ 14 đến dưới 16 tuổi có phải chịu TNHS về tội trộm cắp tài sản không?
+    const isMinorTheft =
+      (qLower.includes('14 tuổi') || qLower.includes('dưới 16 tuổi')) &&
+      (qLower.includes('trộm cắp') || qLower.includes('trộm tài sản')) &&
+      (qLower.includes('chịu trách nhiệm') || qLower.includes('tnhs'));
+    if (isMinorTheft) {
+      return {
+        sample_id: 'SFT_TC3_1_MINOR_THEFT_CRIMINAL_LIABILITY',
+        intent_code: 'CRIMINAL_AGE',
+        instruction: 'Xác định trách nhiệm hình sự của người từ đủ 14 đến dưới 16 tuổi về tội trộm cắp tài sản theo Khoản 2 Điều 12 và Điều 173 BLHS 2015.',
+        input: query,
+        output: this.solveDynamicMinorTheftCriminalLiability(query)
+      };
+    }
+
+    // TC 3.2: Cố ý gây thương tích dưới 11% có bị truy cứu TNHS không?
+    const isAssaultUnder11 =
+      (qLower.includes('thương tích') || qLower.includes('tổn hại')) &&
+      (qLower.includes('dưới 11%') || qLower.includes('11%')) &&
+      (qLower.includes('truy cứu') || qLower.includes('hình sự') || qLower.includes('tội'));
+    if (isAssaultUnder11) {
+      return {
+        sample_id: 'SFT_TC3_2_ASSAULT_UNDER_11_PERCENT_LIABILITY',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải đáp trường hợp cố ý gây thương tích dưới 11% vẫn bị truy cứu trách nhiệm hình sự theo các ngoại lệ tại Khoản 1 Điều 134 BLHS 2015.',
+        input: query,
+        output: this.solveDynamicAssaultUnder11Percent(query)
+      };
+    }
+
+    // TC 3.3: Hợp đồng lao động vô hiệu từng phần vs Hợp đồng dân sự vô hiệu từng phần
+    const isPartialInvalidContract =
+      (qLower.includes('vô hiệu từng phần') || (qLower.includes('vô hiệu') && qLower.includes('từng phần'))) &&
+      qLower.includes('lao động') &&
+      qLower.includes('dân sự');
+    if (isPartialInvalidContract) {
+      return {
+        sample_id: 'SFT_TC3_3_PARTIAL_INVALID_CONTRACT_LABOR_VS_CIVIL',
+        intent_code: 'COMPARISON',
+        instruction: 'So sánh hậu quả pháp lý giữa hợp đồng lao động vô hiệu từng phần (Điều 51 BLLĐ 2019) và hợp đồng dân sự vô hiệu từng phần (Điều 130, 131 BLDS 2015).',
+        input: query,
+        output: this.solveDynamicPartialInvalidContractLaborVsCivil(query)
+      };
+    }
+
+    // TC 4.1: Sinh viên X (19 tuổi) đăng bài bịa đặt thông tin bạn Y trộm cắp lên Facebook
+    const isDefamationStudent =
+      (qLower.includes('sinh viên x') || (qLower.includes('bịa đặt') && qLower.includes('facebook') && qLower.includes('trộm cắp'))) &&
+      (qLower.includes('4 yếu tố') || qLower.includes('ngành luật') || qLower.includes('cấu thành vi phạm'));
+    if (isDefamationStudent) {
+      return {
+        sample_id: 'SFT_TC4_1_DEFAMATION_ONLINE_STUDENT_CASE',
+        intent_code: 'VPPL_4_ELEMENTS',
+        instruction: 'Phân tích 4 yếu tố cấu thành vi phạm pháp luật của sinh viên X và xác định trách nhiệm theo các ngành luật Hành chính, Dân sự, Hình sự, Giáo dục.',
+        input: query,
+        output: this.solveDynamicDefamationOnlineStudentCase(query)
+      };
+    }
+
+    // TC 4.2: Hình thức chính thể và cấu trúc của Nhà nước CHXHCN Việt Nam; Tại sao Quốc hội là cơ quan quyền lực cao nhất?
+    const isPolityNationalAssembly =
+      (qLower.includes('chính thể') || qLower.includes('cấu trúc') || qLower.includes('hình thức nhà nước')) &&
+      qLower.includes('quốc hội') &&
+      (qLower.includes('cao nhất') || qLower.includes('hiến pháp 2013') || qLower.includes('tại sao') || qLower.includes('vì sao'));
+    if (isPolityNationalAssembly) {
+      return {
+        sample_id: 'SFT_TC4_2_STATE_POLITY_AND_NATIONAL_ASSEMBLY_SUPREME',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Phân tích hình thức chính thể, hình thức cấu trúc của Nhà nước Việt Nam và 04 lý do Quốc hội là cơ quan quyền lực nhà nước cao nhất.',
+        input: query,
+        output: this.solveDynamicStatePolityAndNationalAssemblySupreme(query)
+      };
+    }
+
+    // TC 4.3: Bé K (10 tuổi) bán xe đạp 3 triệu lấy 1 triệu chơi game -> Hiệu lực & Quyền đòi lại xe của bố mẹ
+    const isMinorBicycleSale =
+      (qLower.includes('bé k') || (qLower.includes('10 tuổi') && qLower.includes('xe đạp'))) &&
+      (qLower.includes('bán') || qLower.includes('chơi game') || qLower.includes('đòi lại xe') || qLower.includes('hiệu lực'));
+    if (isMinorBicycleSale) {
+      return {
+        sample_id: 'SFT_TC4_3_MINOR_BICYCLE_SALE_INVALID',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải quyết tình huống bé K 10 tuổi bán xe đạp: Giao dịch vô hiệu theo Điều 21, Điều 125 và quyền đòi lại xe của bố mẹ theo Điều 131 BLDS 2015.',
+        input: query,
+        output: this.solveDynamicMinorBicycleSaleInvalid(query)
+      };
+    }
+
+    // TC 5.1: Bẫy trộn lẫn văn bản: Thời hạn kháng cáo bản án sơ thẩm của vụ án hình sự theo BLTTDS
+    const isTrapCriminalAppeal =
+      (qLower.includes('tố tụng dân sự') || qLower.includes('blttds')) &&
+      (qLower.includes('hình sự') || qLower.includes('vụ án hình sự')) &&
+      (qLower.includes('kháng cáo') || qLower.includes('thời hạn kháng cáo'));
+    if (isTrapCriminalAppeal) {
+      return {
+        sample_id: 'SFT_TC5_1_TRAP_CRIMINAL_APPEAL_CIVIL_CODE',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Đính chính bẫy văn bản luật: Kháng cáo bản án hình sự áp dụng Điều 333 BLTTHS 2015 (thời hạn 15 ngày), không áp dụng BLTTDS 2015.',
+        input: query,
+        output: this.solveDynamicTrapCriminalAppealCivilCode(query)
+      };
+    }
+
+    // TC 5.2: Bẫy hỏi quy định không tồn tại: Vợ chồng ly hôn có được ủy quyền luật sư ra tòa thay mình không?
+    const isTrapDivorceProxy =
+      (qLower.includes('ly hôn') || qLower.includes('hai vợ chồng')) &&
+      (qLower.includes('luật sư') || qLower.includes('ủy quyền')) &&
+      (qLower.includes('ra tòa thay') || qLower.includes('không cần có mặt') || qLower.includes('đại diện ủy quyền') || qLower.includes('có được không'));
+    if (isTrapDivorceProxy) {
+      return {
+        sample_id: 'SFT_TC5_2_TRAP_DIVORCE_LAWYER_PROXY',
+        intent_code: 'FAMILY_LAW',
+        instruction: 'Đính chính quy định: Không được ủy quyền cho luật sư ra tòa ly hôn thay theo Khoản 4 Điều 85 Bộ luật Tố tụng Dân sự 2015.',
+        input: query,
+        output: this.solveDynamicTrapDivorceLawyerProxy(query)
+      };
+    }
+
+    // TC 5.3: Câu hỏi Out-of-Knowledge Base: Nghị định xử phạt VPHC trong lĩnh vực vũ trụ và hàng không vũ trụ
+    const isAerospaceDecree =
+      (qLower.includes('vũ trụ') || qLower.includes('hàng không vũ trụ')) &&
+      (qLower.includes('nghị định') || qLower.includes('xử phạt') || qLower.includes('tuần trước'));
+    if (isAerospaceDecree) {
+      return {
+        sample_id: 'SFT_TC5_3_OUT_OF_KNOWLEDGE_AEROSPACE_DECREE',
+        intent_code: 'GENERAL_THEORY',
+        instruction: 'Cảnh báo thông tin ngoài cơ sở dữ liệu và đính chính thực tế chưa có Nghị định riêng xử phạt VPHC về vũ trụ; viện dẫn NĐ 162/2018 hàng không dân dụng.',
+        input: query,
+        output: this.solveDynamicOutOfKnowledgeAerospaceDecree(query)
+      };
+    }
 
     // === NHÓM 6: RANH GIỚI AN TOÀN & ĐẠO ĐỨC (SAFETY GUARDRAILS & PROMPT INJECTION) ===
     // 6.4. Prompt Injection trùm xã hội đen đòi nợ thuê

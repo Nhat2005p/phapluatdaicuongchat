@@ -30,15 +30,19 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     156: 'Áp dụng văn bản quy phạm pháp luật'
   },
   HP2013: {
+    1: 'Nước Cộng hòa xã hội chủ nghĩa Việt Nam',
     2: 'Bản chất Nhà nước Cộng hòa xã hội chủ nghĩa Việt Nam',
     8: 'Nguyên tắc tổ chức và hoạt động của bộ máy Nhà nước',
     14: 'Quyền con người, quyền công dân',
     19: 'Quyền sống của con người',
+    20: 'Quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm',
     27: 'Quyền bầu cử và ứng cử của công dân',
     31: 'Nguyên tắc suy đoán vô tội',
     35: 'Quyền làm việc của công dân',
     39: 'Quyền và nghĩa vụ học tập của công dân',
     65: 'Lực lượng vũ trang nhân dân',
+    69: 'Vị trí, chức năng của Quốc hội',
+    70: 'Nhiệm vụ và quyền hạn của Quốc hội',
     119: 'Hiệu lực tối cao của Hiến pháp'
   },
   BLHS2015: {
@@ -65,6 +69,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     133: 'Tội đe dọa giết người',
     134: 'Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác',
     155: 'Tội làm nhục người khác',
+    156: 'Tội vu khống',
     168: 'Tội cướp tài sản',
     170: 'Tội cưỡng đoạt tài sản',
     171: 'Tội cướp giật tài sản',
@@ -88,6 +93,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     3: 'Các nguyên tắc cơ bản của pháp luật dân sự',
     5: 'Áp dụng tập quán',
     6: 'Áp dụng tương tự pháp luật',
+    14: 'Bảo vệ quyền dân sự',
     16: 'Năng lực pháp luật dân sự của cá nhân',
     17: 'Nội dung năng lực pháp luật dân sự của cá nhân',
     19: 'Năng lực hành vi dân sự của cá nhân',
@@ -97,6 +103,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     23: 'Người có khó khăn trong nhận thức, làm chủ hành vi',
     24: 'Hạn chế năng lực hành vi dân sự',
     27: 'Quyền thay đổi họ',
+    34: 'Quyền được bảo vệ danh dự, nhân phẩm, uy tín',
     74: 'Pháp nhân',
     75: 'Pháp nhân thương mại',
     101: 'Chủ thể trong quan hệ dân sự có sự tham gia của hộ gia đình, tổ hợp tác',
@@ -113,6 +120,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     127: 'Giao dịch dân sự vô hiệu do bị lừa dối, đe dọa, cưỡng ép',
     128: 'Giao dịch dân sự vô hiệu do người xác lập không nhận thức và làm chủ được hành vi',
     129: 'Giao dịch dân sự vô hiệu do không tuân thủ quy định về hình thức',
+    130: 'Giao dịch dân sự vô hiệu từng phần',
     131: 'Hậu quả pháp lý của giao dịch dân sự vô hiệu',
     132: 'Thời hiệu yêu cầu Tòa án tuyên bố giao dịch dân sự vô hiệu',
     149: 'Thời hiệu',
@@ -146,6 +154,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     589: 'Thiệt hại do tài sản bị xâm phạm',
     590: 'Thiệt hại do sức khỏe bị xâm phạm',
     591: 'Thiệt hại do tính mạng bị xâm phạm',
+    592: 'Thiệt hại do danh dự, nhân phẩm, uy tín bị xâm phạm',
     594: 'Bồi thường thiệt hại trong trường hợp vượt quá giới hạn phòng vệ chính đáng',
     595: 'Bồi thường thiệt hại trong trường hợp vượt quá yêu cầu của tình thế cấp thiết',
     601: 'Bồi thường thiệt hại do nguồn nguy hiểm cao độ gây ra',
@@ -186,6 +195,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     39: 'Đơn phương chấm dứt hợp đồng lao động trái pháp luật',
     41: 'Nghĩa vụ của người sử dụng lao động khi đơn phương chấm dứt hợp đồng lao động trái pháp luật',
     46: 'Trợ cấp thôi việc',
+    51: 'Xử lý hợp đồng lao động vô hiệu',
     122: 'Nguyên tắc, trình tự, thủ tục xử lý kỷ luật lao động',
     124: 'Hình thức xử lý kỷ luật lao động',
     125: 'Áp dụng hình thức xử lý kỷ luật sa thải',
@@ -194,12 +204,23 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
   PCTN2018: {
     2: 'Các hành vi tham nhũng',
     3: 'Giải thích từ ngữ (Khái niệm tham nhũng, vụ lợi)'
+  },
+  BLTTHS2015: {
+    110: 'Giữ người trong trường hợp khẩn cấp',
+    117: 'Tạm giữ',
+    118: 'Thời hạn tạm giữ',
+    119: 'Tạm giam',
+    173: 'Thời hạn tạm giam để điều tra',
+    333: 'Thời hạn kháng cáo'
+  },
+  BLTTDS2015: {
+    85: 'Người đại diện'
   }
 };
 
 export class GuardrailService {
   // Regex nhận diện trích dẫn điều luật Việt Nam (dừng chính xác trước dấu *, :, ", (, quy định)
-  private static citationRegex = /(?:Khoản\s+(\d+)\s+)?Điều\s+(\d+)\s+(Bộ\s+luật\s+(?:Dân\s+sự|Hình\s+sự|Lao\s+động|Tố\s+tụng\s+[^\n,.;()*:"“”]+)(?:\s+năm)?(?:\s+\d{4})?|Luật\s+[^\n,.;()*:"“”]+?(?:\s+năm\s+\d{4}|\s+\d{4})|Hiến\s+pháp(?:\s+nước\s+CHXHCN\s+Việt\s+Nam)?(?:\s+năm)?(?:\s+\d{4})?|(?:BLHS|BLDS|BLLD|HNGD|VBQPPL|XLVPHC|HP)(?:\s*\d{4})?)/gi;
+  private static citationRegex = /(?:Khoản\s+(\d+)\s+)?Điều\s+(\d+)\s+(Bộ\s+luật\s+(?:Dân\s+sự|Hình\s+sự|Lao\s+động|Tố\s+tụng\s+[^\n,.;()*:"“”]+)(?:\s+năm)?(?:\s+\d{4})?|Luật\s+[^\n,.;()*:"“”]+?(?:\s+năm\s+\d{4}|\s+\d{4})|Hiến\s+pháp(?:\s+nước\s+CHXHCN\s+Việt\s+Nam)?(?:\s+năm)?(?:\s+\d{4})?|(?:BLTTHS|BLTTDS|BLHS|BLDS|BLLD|HNGD|VBQPPL|XLVPHC|HP)(?:\s*\d{4})?)/gi;
 
   public static async scanAndVerify(text: string): Promise<{
     citations: ExtractedCitation[];
@@ -222,7 +243,11 @@ export class GuardrailService {
 
       // Chuẩn hóa mã luật
       let lawCode = 'BLHS2015';
-      if (lawRaw.includes('HÀNH CHÍNH') || lawRaw.includes('XLVPHC') || lawRaw.includes('VPHC')) {
+      if (lawRaw.includes('TỐ TỤNG HÌNH SỰ') || lawRaw.includes('BLTTHS')) {
+        lawCode = 'BLTTHS2015';
+      } else if (lawRaw.includes('TỐ TỤNG DÂN SỰ') || lawRaw.includes('BLTTDS')) {
+        lawCode = 'BLTTDS2015';
+      } else if (lawRaw.includes('HÀNH CHÍNH') || lawRaw.includes('XLVPHC') || lawRaw.includes('VPHC')) {
         lawCode = 'XLVPHC2012';
       } else if (lawRaw.includes('THAM NHŨNG') || lawRaw.includes('PCTN')) {
         lawCode = 'PCTN2018';
