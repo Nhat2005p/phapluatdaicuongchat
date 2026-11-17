@@ -56,6 +56,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     70: 'Nhiệm vụ và quyền hạn của Quốc hội',
     71: 'Nhiệm kỳ của mỗi khóa Quốc hội',
     73: 'Ủy ban thường vụ Quốc hội',
+    74: 'Nhiệm vụ và quyền hạn của Ủy ban thường vụ Quốc hội',
     86: 'Chủ tịch nước',
     87: 'Bầu Chủ tịch nước và trách nhiệm trước Quốc hội',
     88: 'Nhiệm vụ và quyền hạn của Chủ tịch nước',

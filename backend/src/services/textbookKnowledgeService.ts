@@ -1630,9 +1630,14 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
       if (
         rawQueryText.includes('bồi thường thiệt hại ngoài hợp đồng') ||
         rawQueryText.includes('nguồn nguy hiểm cao độ') ||
-        rawQueryText.includes('năng lực chịu trách nhiệm bồi thường')
+        rawQueryText.includes('năng lực chịu trách nhiệm bồi thường') ||
+        rawQueryText.includes('ai phải bồi thường') ||
+        rawQueryText.includes('chịu trách nhiệm bồi thường') ||
+        rawQueryText.includes('điều 584') ||
+        rawQueryText.includes('điều 596') ||
+        rawQueryText.includes('điều 597')
       ) {
-        if (c.sectionCode === '6.9') finalScore += 80;
+        if (c.sectionCode === '6.9') finalScore += 95;
       }
 
       // P. Nếu hỏi về ngành luật hiến pháp, quyền con người, quyền và nghĩa vụ cơ bản của công dân -> Ưu tiên Mục 1.3
@@ -1990,5 +1995,53 @@ ${lines.join('\n')}
     const answerBody = this.formatCleanTextbookContent(c.baremContent, query);
     const citation = this.buildDetailedCitation(c, [], query);
     return `${answerBody.trim()}${citation}`;
+  }
+
+  /**
+   * Tổng hợp Đa Ngữ cảnh RAG (Multi-Chunk Context Fusion: Chunk 1 + Chunk 2 + Chunk 3)
+   * Phục vụ các câu hỏi phức hợp hỏi nhiều chế định hoặc kéo dài qua nhiều mục của Giáo trình.
+   */
+  public static buildMultiChunkSynthesisResponse(
+    query: string,
+    topMatches: { chunk: TextbookChunk; score: number }[],
+    extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
+  ): string {
+    if (!topMatches || topMatches.length === 0) return '';
+    if (topMatches.length === 1) {
+      const c = topMatches[0].chunk;
+      const body = this.formatCleanTextbookContent(c.baremContent, query);
+      return `${body.trim()}${this.buildDetailedCitation(c, extraArticles, query)}`;
+    }
+
+    const top1Score = topMatches[0].score;
+    // Chọn tối đa 3 Chunks có độ liên quan cao (>= 68% so với Chunk 1 và khác mã mục)
+    const selected = [topMatches[0]];
+    const seenCodes = new Set<string>([topMatches[0].chunk.sectionCode]);
+    for (let i = 1; i < Math.min(topMatches.length, 3); i++) {
+      const candidate = topMatches[i];
+      if (!seenCodes.has(candidate.chunk.sectionCode) && candidate.score >= top1Score * 0.68 && candidate.score >= 45) {
+        seenCodes.add(candidate.chunk.sectionCode);
+        selected.push(candidate);
+      }
+    }
+
+    if (selected.length === 1) {
+      const c = selected[0].chunk;
+      const body = this.formatCleanTextbookContent(c.baremContent, query);
+      return `${body.trim()}${this.buildDetailedCitation(c, extraArticles, query)}`;
+    }
+
+    const bodyParts = selected.map((item, idx) => {
+      const formatted = this.formatCleanTextbookContent(item.chunk.baremContent, query);
+      return `### 📌 PHẦN ${idx + 1}: ${item.chunk.sectionTitle.toUpperCase()}\n\n${formatted.trim()}`;
+    });
+
+    const citationItems = selected.map((item) => ({
+      subQuestion: query,
+      chunk: item.chunk
+    }));
+    const multiCitation = this.buildMultiChunkCitation(citationItems, extraArticles);
+
+    return `${bodyParts.join('\n\n---\n\n')}${multiCitation}`;
   }
 }

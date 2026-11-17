@@ -535,10 +535,16 @@ export class RagService {
       q.includes('giam xe') ||
       q.includes('nồng độ cồn') ||
       q.includes('say rượu') ||
+      q.includes('uống rượu') ||
       q.includes('nhậu') ||
+      q.includes('ai phải bồi thường') ||
+      q.includes('chịu trách nhiệm bồi thường') ||
+      q.includes('làm đổ') ||
+      q.includes('bị bỏng') ||
       (q.includes('đuổi theo') && q.includes('đánh')) ||
       q.includes('dùng gậy') ||
       q.includes('dùng ghế') ||
+      q.includes('dùng dùi cui') ||
       q.includes('đập phá') ||
       q.includes('giết') ||
       q.includes('tước đoạt tính mạng') ||
@@ -842,9 +848,13 @@ export class RagService {
       }
     }
 
-    // 3. Kiểm tra đánh số inline trên cùng 1 dòng: "Câu 1: ... Câu 2: ..." hoặc "1. ... 2. ..."
-    const inlineParts = raw
-      .split(/(?:^|\s+)(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|tc\s*\d+(?:\.\d+)*\s*[:.)]|\d{1,2}[.)]\s+[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/i)
+    // 3. Kiểm tra đánh số inline trên cùng 1 dòng (bao gồm cả trường hợp dính dấu chấm ".7.", ".8."): "Câu 1: ... Câu 2: ..." hoặc "1. ... 2. ..."
+    const normalizedInline = raw.replace(
+      /([.;?!])\s*(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|tc\s*\d+(?:\.\d+)*\s*[:.)]|\d{1,2}[.)]\s*[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/gi,
+      '$1 '
+    );
+    const inlineParts = normalizedInline
+      .split(/(?:^|\s+)(?=(?:câu\s*\d+\s*[:.)]|nhận\s*định\s*\d+\s*[:.)]|tc\s*\d+(?:\.\d+)*\s*[:.)]|\d{1,2}[.)]\s*[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ"“]))/i)
       .map((s) => s.trim())
       .filter(Boolean);
 
@@ -909,6 +919,36 @@ export class RagService {
 
         if (independentQuestions.length >= 2) {
           return independentQuestions.slice(0, 8);
+        }
+      }
+    }
+
+    // 6. Nhiều câu nhận định Đúng/Sai không đánh số được dán liền nhau (ngăn cách bởi dấu chấm ".")
+    const flatText = raw.replace(/\s*\n+\s*/g, ' ').trim();
+    const hasExplicitActorsOrMoney =
+      /\b(ông|bà|anh|chị|cháu|công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹa-zà-ỹ]/i.test(flatText) ||
+      /\b\d+\s*(triệu|tỷ|nghìn)\s*đồng\b/i.test(flatText) ||
+      /\b(hôm qua|vừa qua|trên đường|tại ngã tư|đang đi)\b/i.test(flatText);
+
+    if (!flatText.includes('?') && !hasExplicitActorsOrMoney) {
+      const sentenceParts = flatText
+        .split(/\.\s*(?=[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ])/g)
+        .map((s) => s.replace(/\.+$/, '').trim())
+        .filter((s) => s.length >= 30);
+
+      if (sentenceParts.length >= 2 && sentenceParts.length <= 5) {
+        const connectorStart = /^(?:ví\s*dụ|chẳng\s*hạn|do\s*đó|vì\s*vậy|tuy\s*nhiên|mặt\s*khác|ngoài\s*ra|theo\s*đó|trường\s*hợp|trong\s*đó|cụ\s*thể|giải\s*thích|nhận\s*định|đúng\s*hay\s*sai|tại\s*sao|vì\s*sao|hãy\s*|phân\s*tích|trình\s*bày|so\s*sánh|phân\s*biệt)/i;
+        const hasNoConnector = sentenceParts.every((s, idx) => idx === 0 || !connectorStart.test(s));
+        const isSelfEssay = sentenceParts.some((s) => /^(?:phân\s*tích|trình\s*bày|so\s*sánh|phân\s*biệt|nêu\s+|hãy\s+)/i.test(s));
+        const tfStatementCue = /\b(bắt buộc|chỉ có|đều là|đều phải|đều được|mọi\s+|tất cả\s+|luôn\s+|không thể|không bao giờ|có quyền|không phải|là một loại|chế độ hai cấp|chỉ thuộc về)\b/i;
+        const tfCount = sentenceParts.filter((s) => tfStatementCue.test(s)).length;
+
+        if (hasNoConnector && !isSelfEssay && tfCount >= 1) {
+          const topic0 = RagService.extractCoreTopicKeyword(sentenceParts[0]);
+          const topic1 = RagService.extractCoreTopicKeyword(sentenceParts[1]);
+          if (!topic0 || !topic1 || topic0 !== topic1) {
+            return sentenceParts.map((s) => `${s}.`);
+          }
         }
       }
     }
@@ -1169,8 +1209,8 @@ export class RagService {
         } else if (qL.includes('thực hiện pháp luật') || qL.includes('tuân thủ') || qL.includes('thi hành')) {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'BLDS2015_D1' },
-              { articleId: 'BLHS2015_D8' }
+              { articleId: 'HP2013_D8' },
+              { articleId: 'BLDS2015_D1' }
             ]
           }).limit(2);
         } else if (qL.includes('năng lực hành vi') || qL.includes('18 tuổi') || qL.includes('dân sự')) {
@@ -1181,22 +1221,50 @@ export class RagService {
               { articleId: 'BLDS2015_D20' }
             ]
           }).limit(3);
-        } else if (qL.includes('hình sự') || qL.includes('tội phạm') || qL.includes('vppl')) {
+        } else if (qL.includes('thừa kế') || qL.includes('di chúc') || qL.includes('di sản')) {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'BLHS2015_D8' },
+              { articleId: 'BLDS2015_D651' },
+              { articleId: 'BLDS2015_D644' }
+            ]
+          }).limit(2);
+        } else if (qL.includes('kết hôn') || qL.includes('ly hôn') || qL.includes('vợ chồng') || qL.includes('hôn nhân')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'HNGD2014_D8' },
+              { articleId: 'HNGD2014_D33' },
+              { articleId: 'HNGD2014_D59' }
+            ]
+          }).limit(3);
+        } else if (qL.includes('lao động') || qL.includes('thử việc') || qL.includes('sa thải')) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLLD2019_D36' },
+              { articleId: 'BLLD2019_D125' }
+            ]
+          }).limit(2);
+        } else if (
+          qL.includes('hình sự') ||
+          qL.includes('tội phạm') ||
+          qL.includes('hình phạt') ||
+          qL.includes('án treo') ||
+          qL.includes('lỗi cố ý') ||
+          qL.includes('phòng vệ')
+        ) {
+          matchedArticles = await LawArticle.find({
+            $or: [
+              { articleId: 'BLHS2015_D9' },
               { articleId: 'BLHS2015_D12' },
-              { articleId: 'BLHS2015_D21' }
+              { articleId: 'BLHS2015_D22' }
             ]
           }).limit(3);
         } else {
           matchedArticles = await LawArticle.find({
             $or: [
-              { articleId: 'BLHS2015_D21' },
-              { articleId: 'BLHS2015_D22' },
-              { articleId: 'BLHS2015_D12' }
+              { articleId: 'HP2013_D2' },
+              { articleId: 'HP2013_D8' }
             ]
-          }).limit(3);
+          }).limit(2);
         }
         break;
       }
