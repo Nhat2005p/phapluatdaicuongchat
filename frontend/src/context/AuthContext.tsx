@@ -29,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     const stored = localStorage.getItem('vietlaw_remaining_quota');
     return stored ? parseInt(stored, 10) : 30;
   });
-  const totalQuestions = 30;
+  const totalQuestions = user?.questionsQuota ?? 30;
 
   const refreshUser = async () => {
     if (!token) {

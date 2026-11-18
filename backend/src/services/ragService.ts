@@ -97,16 +97,16 @@ export class RagService {
     // 1. Sửa các lỗi OCR dính chữ 'đ' phổ biến trong đề thi (ví dụ: "quânđ ội" -> "quân đội", "quanđ ến" -> "quan đến", "quyếtđ ịnh" -> "quyết định")
     const vnLower = 'a-zàáảãạăằắẳẵặâầấẩẫậèéẻẽẹêềếểễệìíỉĩịòóỏõọôồốổỗộơờớởỡợùúủũụưừứửữựỳýỷỹỵđ';
     const vnUpper = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
-    const shiftedDRe = new RegExp(`([${vnLower}${vnUpper}])([đĐ])\\s+(ội|ến|ịnh|ồng|ầu|ược|ây|ó|iều|úng|ối|ơn|ộ|ộc|ạo|ất|ảm|áng)\\b`, 'gi');
+    const shiftedDRe = new RegExp(`([${vnLower}${vnUpper}])([đĐ])\\s+(ội|ến|ịnh|ồng|ầu|ược|ây|ó|iều|úng|ối|ơn|ộ|ộc|ạo|ất|ảm|áng)(?=$|[\\s.,;:?!"'“”()\\[\\]\\-–—_/\\\\])`, 'gi');
     res = res.replace(shiftedDRe, '$1 $2$3');
 
     // 1.1 Khử dấu gạch chéo ngược trailing do gõ nhầm (ví dụ: "không\", "gì\\")
     res = res.replace(/\\+$/g, '').trim();
 
     // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu / gõ nhầm phổ biến
-    res = res.replace(/(?:^|\s)hân\s+biệt\b/gi, ' Phân biệt')
-      .replace(/(?:^|\s)iải\s+thích\b/gi, ' Giải thích')
-      .replace(/(?:^|\s)ỏ\s+qua\b/gi, ' Bỏ qua')
+    res = res.replace(/(?:^|\s)hân\s+biệt(?=$|[\s.,;:?!])/gi, ' Phân biệt')
+      .replace(/(?:^|\s)iải\s+thích(?=$|[\s.,;:?!])/gi, ' Giải thích')
+      .replace(/(?:^|\s)ỏ\s+qua(?=$|[\s.,;:?!])/gi, ' Bỏ qua')
       .replace(/\bkhonog\b/gi, 'không')
       .replace(/\bkhong\b/gi, 'không')
       .replace(/\bphap\s+luat\b/gi, 'pháp luật')
@@ -116,11 +116,11 @@ export class RagService {
       .replace(/\bgiet\s+nguoi\b/gi, 'giết người')
       .replace(/\btrom\s+cap\b/gi, 'trộm cắp');
 
-    // 1.3 Chuẩn hóa ngôn ngữ đời thường sang thuật ngữ pháp lý chuẩn (Query Rewriting)
-    res = res.replace(/\bgiấy\s+tờ\s+chia\s+của\b/gi, 'di chúc')
-      .replace(/\bchia\s+của\b/gi, 'phân chia di sản thừa kế')
-      .replace(/\btranh\s+nhau\s+mảnh\s+đất\b/gi, 'tranh chấp quyền sử dụng đất thừa kế')
-      .replace(/\bchia\s+kiểu\s+gì\b/gi, 'chia di sản thừa kế theo pháp luật như thế nào');
+    // 1.3 Chuẩn hóa ngôn ngữ đời thường sang thuật ngữ pháp lý chuẩn (Query Rewriting - dùng ranh giới tương thích tiếng Việt có dấu)
+    res = res.replace(/(?:^|[\s.,;:?!"'“”()])giấy\s+tờ\s+chia\s+của(?=$|[\s.,;:?!"'“”()])/gi, (m) => `${/^\s/.test(m) ? ' ' : ''}di chúc`)
+      .replace(/(?:^|[\s.,;:?!"'“”()])chia\s+của(?=$|[\s.,;:?!"'“”()])/gi, (m) => `${/^\s/.test(m) ? ' ' : ''}phân chia di sản thừa kế`)
+      .replace(/(?:^|[\s.,;:?!"'“”()])tranh\s+nhau\s+mảnh\s+đất(?=$|[\s.,;:?!"'“”()])/gi, (m) => `${/^\s/.test(m) ? ' ' : ''}tranh chấp quyền sử dụng đất thừa kế`)
+      .replace(/(?:^|[\s.,;:?!"'“”()])chia\s+kiểu\s+gì(?=$|[\s.,;:?!"'“”()])/gi, (m) => `${/^\s/.test(m) ? ' ' : ''}chia di sản thừa kế theo pháp luật như thế nào`);
 
     // 2. Mở rộng các từ viết tắt chuyên ngành Pháp luật Đại cương (dùng ranh giới từ hỗ trợ tiếng Việt có dấu)
     const wbLeft = '(?:^|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
@@ -383,11 +383,11 @@ export class RagService {
     if (!q || q.length < 2) return false;
 
     // Check article patterns: e.g. "điều 12", "khoản 1", "blhs", "blds"
-    if (/\b(?:điều|khoản|điểm)\s+\d+/i.test(query)) return true;
-    if (/\b(?:blhs|blds|blld|hngd|vbqppl|luật|nghị định|thông tư|hiến pháp|pháp lệnh|nghị quyết|án lệ)\b/i.test(query)) return true;
+    if (/(?:^|[\s.,;:?!"'“”()])(?:điều|khoản|điểm)\s+\d+/i.test(query)) return true;
+    if (/(?:^|[\s.,;:?!"'“”()])(?:blhs|blds|blld|hngd|vbqppl|luật|nghị định|thông tư|hiến pháp|pháp lệnh|nghị quyết|án lệ)(?=$|[\s.,;:?!"'“”()\d])/i.test(query)) return true;
 
     // Check chapter patterns: "chương 1", "chương 2", "chương 7", "chương vii", etc.
-    if (/\bchương\s+(?:\d+|i{1,3}|iv|v|vi|vii|viii|ix|x)\b/i.test(query)) return true;
+    if (/(?:^|[\s.,;:?!"'“”()])chương\s+(?:\d+|i{1,3}|iv|v|vi|vii|viii|ix|x)(?=$|[\s.,;:?!"'“”()])/i.test(query)) return true;
 
     // Check legal vocabulary of General Law (Pháp luật Đại cương - Đầy đủ 9 Chương)
     const legalKeywords = [
@@ -737,7 +737,7 @@ export class RagService {
     const qLower = query.toLowerCase();
 
     const isOutOfDatabaseDomain =
-      /\b(mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000|hàng không vũ trụ)\b/i.test(
+      /(?:mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000|hàng không vũ trụ)/i.test(
         qLower
       );
 
@@ -778,7 +778,7 @@ export class RagService {
     }
 
     // 5. Nhận diện câu hỏi tư vấn thực tế ngắn bị mơ hồ / thiếu dữ kiện định lượng (KHÔNG dùng \b của ASCII cho tiếng Việt có dấu như đ, ă, ơ, ư)
-    const hasQuantitativeFacts = /\d+\s*(?:%|triệu|tỷ|nghìn|tuổi|mg|lít|cm)\b/i.test(query);
+    const hasQuantitativeFacts = /\d+\s*(?:%|triệu|tỷ|nghìn|tuổi|mg|lít|cm)(?=$|[\s.,;:?!"'“”()/])/i.test(query);
     const isAmbiguousMissingFacts =
       !hasQuantitativeFacts &&
       query.length < 160 &&
@@ -813,7 +813,7 @@ export class RagService {
       questionForm = 'TRUE_FALSE';
     } else if (mentionedArticles.length > 0 && (qLower.includes('nội dung') || qLower.includes('quy định gì') || qLower.includes('giải thích điều'))) {
       questionForm = 'STATUTE_LOOKUP';
-    } else if (/\b(ông|bà|anh|chị|sinh viên|công ty|doanh nghiệp)\b/i.test(qLower)) {
+    } else if (/(?:^|[\s.,;:?!"'“”()])(ông|bà|anh|chị|sinh viên|công ty|doanh nghiệp)(?=$|[\s.,;:?!"'“”()])/i.test(qLower)) {
       questionForm = 'CASE_STUDY';
     }
 
@@ -954,16 +954,16 @@ export class RagService {
       if (t.length >= 95) {
         if (
           (tl.includes('nhận định sau') || tl.includes('câu hỏi sau') || tl.includes('mệnh đề sau') || tl.includes('phần i')) &&
-          !/\b(ông|bà|anh|chị|cháu|công ty|doanh nghiệp)\s+[a-zA-ZÀ-ỹ]/i.test(t)
+          !/(?:^|[\s.,;:?!"'“”()])(ông|bà|anh|chị|cháu|công ty|doanh nghiệp)\s+[a-zA-ZÀ-ỹ]/i.test(t)
         ) {
           return false;
         }
         return true;
       }
       const narrativeIndicators = [
-        /\b(ông|bà|anh|chị|cháu)\s+[A-ZÀ-Ỹ]/,
-        /\b(công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹ]/i,
-        /\b(kết hôn|chung sống|di sản|thừa kế|di chúc|vay|mượn|trộm|cướp|đâm|chém|đánh|vượt đèn đỏ|tai nạn|xích mích|thương tích|tình huống)\b/i,
+        /(?:^|[\s.,;:?!"'“”()])(ông|bà|anh|chị|cháu)\s+[A-ZÀ-Ỹ]/,
+        /(?:^|[\s.,;:?!"'“”()])(công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹ]/i,
+        /(?:kết hôn|chung sống|di sản|thừa kế|di chúc|vay tiền|cho vay|mượn xe|mượn tài sản|trộm cắp|cướp tài sản|đâm|chém|vượt đèn đỏ|tai nạn|xích mích|thương tích|tình huống)/i,
         /\b\d+\s*(triệu|tỷ|nghìn)\s*đồng\b/i
       ];
       return narrativeIndicators.some((rx) => rx.test(t));
@@ -1067,14 +1067,14 @@ export class RagService {
         const firstHasActor = isCaseStudyNarrative(validItems[0].text);
         const secondRefersBack =
           validItems.length >= 2 &&
-          /\b(trên|đó|này|anh\s+[a-z]|ông\s+[a-z]|bà\s+[a-z]|chị\s+[a-z]|tình huống)/i.test(validItems[1].text) &&
-          !/\b(là gì|đúng hay sai|nhận định)\b/i.test(validItems[1].text);
+          /(?:^|[\s.,;:?!"'“”()])(trên|đó|này|anh\s+[a-z]|ông\s+[a-z]|bà\s+[a-z]|chị\s+[a-z]|tình huống)/i.test(validItems[1].text) &&
+          !/(?:là gì|đúng hay sai|nhận định)/i.test(validItems[1].text);
 
         if (!(firstHasActor && secondRefersBack)) {
           return validItems.slice(0, 15).map((it) => {
             const txt = it.text;
             const isSelfEssayOrCase =
-              /\b(hãy\s+phân\s+biệt|phân\s+biệt|so\s+sánh|hãy\s+xác\s+định|xác\s+định\s*:|phân\s+tích\s*:|trình\s+bày|là\s+gì)\b/i.test(txt) ||
+              /(?:hãy\s+phân\s+biệt|phân\s+biệt|so\s+sánh|hãy\s+xác\s+định|xác\s+định\s*:|phân\s+tích\s*:|trình\s+bày|là\s+gì)/i.test(txt) ||
               (/\ba[.)]\s+/i.test(txt) && /\bb[.)]\s+/i.test(txt));
 
             if (
@@ -1119,7 +1119,7 @@ export class RagService {
       const lt = lineText.trim();
       return (
         lt.endsWith('?') ||
-        /\b(là gì|như thế nào|thế nào|chia kiểu gì|phải làm sao|có được không|có bị giam xe không|có bị|bị phạt|bao nhiêu|đúng hay sai|phân tích|hãy|so sánh|phân biệt|trình bày|xác định)\b/i.test(lt)
+        /(?:là gì|như thế nào|thế nào|chia kiểu gì|phải làm sao|có được không|có bị giam xe không|có bị|bị phạt|bao nhiêu|đúng hay sai|phân tích|hãy|so sánh|phân biệt|trình bày|xác định)/i.test(lt)
       );
     };
 
@@ -1152,7 +1152,7 @@ export class RagService {
           if (compoundFollowUpStarter.test(seg) || sharesSameConcept) {
             independentQuestions[independentQuestions.length - 1] += ` ${seg}?`;
           } else if (
-            /\b(là gì|như thế nào|đúng hay sai|phân biệt|so sánh|bao nhiêu tuổi|gồm những gì|cơ quan nào|ngành luật nào)\b/i.test(seg)
+            /(?:là gì|như thế nào|đúng hay sai|phân biệt|so sánh|bao nhiêu tuổi|gồm những gì|cơ quan nào|ngành luật nào)/i.test(seg)
           ) {
             independentQuestions.push(`${seg}?`);
           } else {
@@ -1169,9 +1169,9 @@ export class RagService {
     // 6. Nhiều câu nhận định Đúng/Sai không đánh số được dán liền nhau (ngăn cách bởi dấu chấm ".")
     const flatText = raw.replace(/\s*\n+\s*/g, ' ').trim();
     const hasExplicitActorsOrMoney =
-      /\b(ông|bà|anh|chị|cháu|công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹa-zà-ỹ]/i.test(flatText) ||
+      /(?:^|[\s.,;:?!"'“”()])(ông|bà|anh|chị|cháu|công ty|doanh nghiệp|nhà máy|cửa hàng)\s+[A-ZÀ-Ỹa-zà-ỹ]/i.test(flatText) ||
       /\b\d+\s*(triệu|tỷ|nghìn)\s*đồng\b/i.test(flatText) ||
-      /\b(hôm qua|vừa qua|trên đường|tại ngã tư|đang đi)\b/i.test(flatText);
+      /(?:hôm qua|vừa qua|trên đường|tại ngã tư|đang đi)/i.test(flatText);
 
     if (!flatText.includes('?') && !hasExplicitActorsOrMoney) {
       const sentenceParts = flatText
@@ -1183,7 +1183,7 @@ export class RagService {
         const connectorStart = /^(?:ví\s*dụ|chẳng\s*hạn|do\s*đó|vì\s*vậy|tuy\s*nhiên|mặt\s*khác|ngoài\s*ra|theo\s*đó|trường\s*hợp|trong\s*đó|cụ\s*thể|giải\s*thích|nhận\s*định|đúng\s*hay\s*sai|tại\s*sao|vì\s*sao|hãy\s*|phân\s*tích|trình\s*bày|so\s*sánh|phân\s*biệt)/i;
         const hasNoConnector = sentenceParts.every((s, idx) => idx === 0 || !connectorStart.test(s));
         const isSelfEssay = sentenceParts.some((s) => /^(?:phân\s*tích|trình\s*bày|so\s*sánh|phân\s*biệt|nêu\s+|hãy\s+)/i.test(s));
-        const tfStatementCue = /\b(bắt buộc|chỉ có|đều là|đều phải|đều được|mọi\s+|tất cả\s+|luôn\s+|không thể|không bao giờ|có quyền|không phải|là một loại|chế độ hai cấp|chỉ thuộc về)\b/i;
+        const tfStatementCue = /(?:bắt buộc|chỉ có|đều là|đều phải|đều được|mọi\s+|tất cả\s+|luôn\s+|không thể|không bao giờ|có quyền|không phải|là một loại|chế độ hai cấp|chỉ thuộc về)/i;
         const tfCount = sentenceParts.filter((s) => tfStatementCue.test(s)).length;
 
         if (hasNoConnector && !isSelfEssay && tfCount >= 1) {

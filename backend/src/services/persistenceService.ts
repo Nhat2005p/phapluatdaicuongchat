@@ -46,10 +46,11 @@ export interface IPersistedHistory {
 
 export class PersistenceService {
   private static getUserFilePath(): string {
+    const baseDir = typeof __dirname !== 'undefined' ? __dirname : process.cwd();
     const candidates = [
       path.resolve(process.cwd(), '../data/persisted_users.json'),
       path.resolve(process.cwd(), 'data/persisted_users.json'),
-      path.resolve(__dirname, '../../../data/persisted_users.json')
+      path.resolve(baseDir, '../../../data/persisted_users.json')
     ];
     for (const p of candidates) {
       if (fs.existsSync(p)) return p;
@@ -63,10 +64,11 @@ export class PersistenceService {
   }
 
   private static getHistoryFilePath(): string {
+    const baseDir = typeof __dirname !== 'undefined' ? __dirname : process.cwd();
     const candidates = [
       path.resolve(process.cwd(), '../data/persisted_history.json'),
       path.resolve(process.cwd(), 'data/persisted_history.json'),
-      path.resolve(__dirname, '../../../data/persisted_history.json')
+      path.resolve(baseDir, '../../../data/persisted_history.json')
     ];
     for (const p of candidates) {
       if (fs.existsSync(p)) return p;

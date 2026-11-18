@@ -44,6 +44,7 @@ export class QueryController {
         }
         user.questionsUsed = (user.questionsUsed ?? 0) + 1;
         await user.save();
+        PersistenceService.saveUser(user);
       }
 
       const sanitizedQuery = RagService.sanitizeSecurityPayload(query);
@@ -282,6 +283,22 @@ export class QueryController {
         });
       }
 
+      // 3b. Kiểm tra rủi ro về Tiền lương thử việc thấp hơn 85%
+      if (
+        lower.includes('lương thử việc') &&
+        (lower.includes('70%') || lower.includes('75%') || lower.includes('80%') || lower.includes('50%') || lower.includes('60%'))
+      ) {
+        deducedScore -= 18;
+        issues.push({
+          category: 'Tiền Lương Thử việc Thấp hơn Mức Tối thiểu Luật định',
+          severity: 'warning',
+          clauseText: 'Thỏa thuận tiền lương trong thời gian thử việc thấp hơn 85% mức lương của công việc đó.',
+          description: 'Tiền lương của người lao động trong thời gian thử việc do hai bên thỏa thuận nhưng ít nhất phải bằng 85% mức lương chính thức của công việc đó.',
+          legalBasis: 'Điều 26 Bộ luật Lao động 2019',
+          recommendation: 'Điều chỉnh mức lương thử việc tối thiểu từ 85% mức lương chính thức trở lên.'
+        });
+      }
+
       // 4. Kiểm tra rủi ro về Phạt vi phạm hợp đồng quá mức trần
       if (
         (lower.includes('phạt vi phạm') || lower.includes('phạt hợp đồng')) &&
@@ -328,8 +345,8 @@ export class QueryController {
       }
 
       // 7. Kiểm tra lỗi môn Pháp luật đại cương (Bài làm tự luận của sinh viên)
-      if (lower.includes('chia thừa kế') || lower.includes('thừa kế theo pháp luật') || lower.includes('hàng thừa kế')) {
-        if (!lower.includes('điều 651') && !lower.includes('hàng thừa kế thứ nhất') && !lower.includes('bộ luật dân sự')) {
+      if (lower.includes('chia thừa kế') || lower.includes('thừa kế theo pháp luật') || lower.includes('hàng thừa kế') || lower.includes('không để lại di chúc')) {
+        if (!lower.includes('điều 651') && !lower.includes('hàng thừa kế thứ nhất')) {
           deducedScore -= 15;
           issues.push({
             category: 'Thiếu Căn cứ Barem Môn học',
@@ -338,6 +355,20 @@ export class QueryController {
             description: 'Để đạt điểm tối đa trong bài tập môn Pháp luật đại cương, cần trích dẫn rõ Điều 651 BLDS 2015 (vợ, chồng, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi, con đẻ, con nuôi) và nguyên tắc chia đều cho những người cùng hàng thừa kế.',
             legalBasis: 'Điều 651 Bộ luật Dân sự 2015',
             recommendation: 'Bổ sung căn cứ Điều 651 BLDS 2015 và giải thích rõ ai thuộc hàng thừa kế thứ nhất trước khi tính toán số tiền.'
+          });
+        }
+        if (
+          (lower.includes('bố đẻ') || lower.includes('cha đẻ') || lower.includes('mẹ đẻ')) &&
+          lower.includes('không được hưởng')
+        ) {
+          deducedScore -= 25;
+          issues.push({
+            category: 'Xác định Sai Hàng Thừa kế Thứ nhất',
+            severity: 'critical',
+            clauseText: 'Loại bỏ cha đẻ / mẹ đẻ khỏi diện hưởng thừa kế theo pháp luật.',
+            description: 'Theo Điểm a Khoản 1 Điều 651 BLDS 2015, cha đẻ, mẹ đẻ thuộc Hàng thừa kế thứ nhất cùng với vợ/chồng và các con của người chết, được hưởng phần di sản ngang bằng nhau không phân biệt tuổi tác.',
+            legalBasis: 'Điểm a Khoản 1 và Khoản 2 Điều 651 Bộ luật Dân sự 2015',
+            recommendation: 'Tính lại tổng số suất ở hàng thừa kế thứ nhất (bao gồm cả bố đẻ/mẹ đẻ còn sống) và chia đều khối di sản.'
           });
         }
       }

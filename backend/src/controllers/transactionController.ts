@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import { Transaction } from '../models/Transaction.js';
 import { User } from '../models/User.js';
+import { PersistenceService } from '../services/persistenceService.js';
 
 export class TransactionController {
   /**
@@ -89,6 +90,7 @@ export class TransactionController {
       if (user) {
         user.questionsQuota = (user.questionsQuota ?? 30) + questionsToAdd;
         await user.save();
+        PersistenceService.saveUser(user);
       }
 
       res.json({

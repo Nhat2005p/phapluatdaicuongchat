@@ -298,8 +298,8 @@ export async function runSeed(): Promise<void> {
       lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
       articleNumber: 175,
       title: 'Tội lạm dụng tín nhiệm chiếm đoạt tài sản',
-      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt VPHC hoặc kết án...: a) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả.\n2. Phạm tội chiếm đoạt tài sản trị giá từ 50.000.000 đồng đến dưới 200.000.000 đồng thì bị phạt tù từ 02 năm đến 07 năm.',
-      keywords: ['lạm dụng tín nhiệm', 'vay mượn', 'bỏ trốn', 'cố tình không trả', '100 triệu']
+      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi chiếm đoạt tài sản hoặc đã bị kết án về tội này...:\na) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả;\nb) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng và đã sử dụng tài sản đó vào mục đích bất hợp pháp dẫn đến không có khả năng trả lại tài sản.\n2. Phạm tội chiếm đoạt tài sản trị giá từ 50.000.000 đồng đến dưới 200.000.000 đồng thì bị phạt tù từ 02 năm đến 07 năm.',
+      keywords: ['lạm dụng tín nhiệm', 'lạm dụng tín nhiệm chiếm đoạt tài sản', 'vay mượn', 'bỏ trốn', 'cố tình không trả', '100 triệu', 'mượn xe đem bán', 'thuê xe đem bán', 'chiếm đoạt tài sản', 'bán xe của người khác']
     },
     // Mượn tài sản & Sự kiện bất khả kháng (BLDS 2015)
     {
@@ -366,13 +366,13 @@ export async function runSeed(): Promise<void> {
       keywords: ['đòi lại động sản đăng ký quyền sở hữu', 'xe máy phải đăng ký', 'người chiếm hữu ngay tình', 'đòi lại xe máy từ người thứ ba']
     },
     {
-      articleId: 'BLHS2015_D175',
-      lawCode: 'BLHS2015',
-      lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
-      articleNumber: 175,
-      title: 'Tội lạm dụng tín nhiệm chiếm đoạt tài sản',
-      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi chiếm đoạt tài sản hoặc đã bị kết án về tội này...:\na) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả;\nb) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng và đã sử dụng tài sản đó vào mục đích bất hợp pháp dẫn đến không có khả năng trả lại tài sản.',
-      keywords: ['lạm dụng tín nhiệm chiếm đoạt tài sản', 'mượn xe đem bán', 'thuê xe đem bán', 'chiếm đoạt tài sản', 'bán xe của người khác']
+      articleId: 'ND144_D7',
+      lawCode: 'ND144',
+      lawName: 'Nghị định 144/2021/NĐ-CP về xử phạt vi phạm hành chính trong lĩnh vực an ninh, trật tự, an toàn xã hội',
+      articleNumber: 7,
+      title: 'Vi phạm quy định về trật tự công cộng',
+      contentRaw: '1. Phạt cảnh cáo hoặc phạt tiền từ 300.000 đồng đến 500.000 đồng đối với một trong những hành vi sau đây: a) Gây mất trật tự công cộng ở nơi biểu diễn nghệ thuật, nơi tổ chức các hoạt động văn hóa, thể dục thể thao, thương mại, trụ sở cơ quan, khu dân cư...; b) Thả rông động vật nuôi trong đô thị hoặc nơi công cộng.\n5. Phạt tiền từ 5.000.000 đồng đến 8.000.000 đồng đối với hành vi cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác nhưng không bị truy cứu trách nhiệm hình sự; sàm sỡ, quấy rối tình dục; khiêu dâm, kích dục ở nơi công cộng.',
+      keywords: ['nghị định 144', 'trật tự công cộng', 'gây rối trật tự công cộng', 'cố ý gây thương tích chưa đến mức hình sự', 'an ninh trật tự']
     },
     {
       articleId: 'BLDS2015_D585',

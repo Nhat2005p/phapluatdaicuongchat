@@ -18,10 +18,12 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     10: 'Tình tiết tăng nặng trong xử lý vi phạm hành chính',
     11: 'Những trường hợp không xử phạt vi phạm hành chính',
     21: 'Các hình thức xử phạt vi phạm hành chính',
+    22: 'Hình thức xử phạt cảnh cáo',
     62: 'Chuyển hồ sơ vụ vi phạm có dấu hiệu tội phạm để truy cứu trách nhiệm hình sự',
     63: 'Chuyển hồ sơ vụ vi phạm để xử phạt vi phạm hành chính',
     119: 'Các biện pháp ngăn chặn và bảo đảm xử lý vi phạm hành chính',
-    125: 'Tạm giữ tang vật, phương tiện, giấy phép, chứng chỉ hành nghề theo thủ tục hành chính'
+    125: 'Tạm giữ tang vật, phương tiện, giấy phép, chứng chỉ hành nghề theo thủ tục hành chính',
+    134: 'Nguyên tắc xử lý người chưa thành niên vi phạm hành chính'
   },
   VBQPPL2015: {
     1: 'Phạm vi điều chỉnh của Luật Ban hành văn bản quy phạm pháp luật',
@@ -44,14 +46,21 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     7: 'Nguyên tắc bầu cử đại biểu Quốc hội và đại biểu Hội đồng nhân dân',
     8: 'Nguyên tắc tổ chức và hoạt động của bộ máy Nhà nước',
     14: 'Quyền con người, quyền công dân',
+    15: 'Quyền con người, quyền công dân không tách rời nghĩa vụ đối với Nhà nước và xã hội',
+    16: 'Mọi người đều bình đẳng trước pháp luật',
+    17: 'Công dân nước CHXHCN Việt Nam không thể bị trục xuất, giao nộp cho nhà nước khác',
     19: 'Quyền sống của con người',
     20: 'Quyền bất khả xâm phạm về thân thể, được pháp luật bảo hộ về sức khỏe, danh dự và nhân phẩm',
+    23: 'Quyền tự do đi lại và cư trú của công dân',
+    25: 'Quyền tự do ngôn luận, tự do báo chí, tiếp cận thông tin, hội họp, lập hội, biểu tình',
     27: 'Quyền bầu cử và ứng cử của công dân',
+    28: 'Quyền tham gia quản lý nhà nước và xã hội',
     31: 'Nguyên tắc suy đoán vô tội',
     32: 'Quyền sở hữu tư nhân và quyền thừa kế',
     33: 'Quyền tự do kinh doanh trong những ngành nghề mà pháp luật không cấm',
     35: 'Quyền làm việc của công dân',
     39: 'Quyền và nghĩa vụ học tập của công dân',
+    47: 'Nghĩa vụ nộp thuế theo luật định',
     65: 'Lực lượng vũ trang nhân dân',
     69: 'Vị trí, chức năng của Quốc hội',
     70: 'Nhiệm vụ và quyền hạn của Quốc hội',
@@ -115,17 +124,28 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     109: 'Tội hoạt động nhằm lật đổ chính quyền nhân dân',
     123: 'Tội giết người',
     126: 'Tội giết người do vượt quá giới hạn phòng vệ chính đáng',
+    128: 'Tội vô ý làm chết người',
     129: 'Tội vô ý làm chết người do vi phạm quy tắc nghề nghiệp hoặc quy tắc hành chính',
     132: 'Tội không cứu giúp người đang ở trong tình trạng nguy hiểm đến tính mạng',
     133: 'Tội đe dọa giết người',
     134: 'Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác',
+    136: 'Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác do vượt quá giới hạn phòng vệ chính đáng',
+    141: 'Tội hiếp dâm',
+    142: 'Tội hiếp dâm người dưới 16 tuổi',
+    143: 'Tội cưỡng dâm',
+    144: 'Tội cưỡng dâm người từ đủ 13 tuổi đến dưới 16 tuổi',
     145: 'Tội giao cấu hoặc thực hiện hành vi quan hệ tình dục khác với người từ đủ 13 tuổi đến dưới 16 tuổi',
+    150: 'Tội mua bán người',
+    151: 'Tội mua bán người dưới 16 tuổi',
     155: 'Tội làm nhục người khác',
     156: 'Tội vu khống',
     168: 'Tội cướp tài sản',
+    169: 'Tội bắt cóc nhằm chiếm đoạt tài sản',
     170: 'Tội cưỡng đoạt tài sản',
     171: 'Tội cướp giật tài sản',
+    172: 'Tội công nhiên chiếm đoạt tài sản',
     173: 'Tội trộm cắp tài sản',
+    174: 'Tội lừa đảo chiếm đoạt tài sản',
     175: 'Tội lạm dụng tín nhiệm chiếm đoạt tài sản',
     178: 'Tội hủy hoại hoặc cố ý làm hư hỏng tài sản',
     185: 'Tội ngược đãi hoặc hành hạ ông bà, cha mẹ, vợ chồng, con, cháu',
@@ -168,6 +188,8 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     24: 'Hạn chế năng lực hành vi dân sự',
     27: 'Quyền thay đổi họ',
     34: 'Quyền được bảo vệ danh dự, nhân phẩm, uy tín',
+    68: 'Tuyên bố mất tích',
+    71: 'Tuyên bố một người là đã chết',
     74: 'Pháp nhân',
     75: 'Pháp nhân thương mại',
     86: 'Năng lực pháp luật dân sự của pháp nhân',
@@ -190,6 +212,11 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     130: 'Giao dịch dân sự vô hiệu từng phần',
     131: 'Hậu quả pháp lý của giao dịch dân sự vô hiệu',
     132: 'Thời hiệu yêu cầu Tòa án tuyên bố giao dịch dân sự vô hiệu',
+    134: 'Đại diện',
+    136: 'Đại diện theo pháp luật của cá nhân',
+    138: 'Đại diện theo ủy quyền',
+    141: 'Phạm vi đại diện',
+    143: 'Hậu quả của giao dịch dân sự do người đại diện xác lập, thực hiện vượt quá phạm vi đại diện',
     149: 'Thời hiệu',
     150: 'Thời hiệu khởi kiện, thời hiệu yêu cầu giải quyết việc dân sự',
     154: 'Bắt đầu lại thời hiệu khởi kiện vụ án dân sự',
@@ -277,13 +304,16 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     669: 'Người thừa kế không phụ thuộc vào nội dung của di chúc (Tham chiếu)'
   },
   HNGD2014: {
+    3: 'Giải thích từ ngữ',
     5: 'Bảo vệ chế độ hôn nhân và gia đình',
     8: 'Điều kiện kết hôn',
     9: 'Đăng ký kết hôn',
     10: 'Người có quyền yêu cầu hủy việc kết hôn trái pháp luật',
     11: 'Xử lý việc kết hôn trái pháp luật',
+    12: 'Hậu quả pháp lý của việc hủy kết hôn trái pháp luật',
     14: 'Giải quyết hậu quả việc nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn',
     15: 'Quyền, nghĩa vụ của cha mẹ và con trong trường hợp nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn',
+    16: 'Giải quyết quan hệ tài sản, nghĩa vụ và hợp đồng của nam, nữ chung sống với nhau như vợ chồng mà không đăng ký kết hôn',
     33: 'Tài sản chung của vợ chồng',
     43: 'Tài sản riêng của vợ, chồng',
     46: 'Nhập tài sản riêng của vợ, chồng vào tài sản chung',
@@ -307,21 +337,60 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     13: 'Hợp đồng lao động',
     17: 'Hành vi người sử dụng lao động không được làm khi giao kết, thực hiện hợp đồng lao động',
     25: 'Thời gian thử việc',
+    26: 'Tiền lương thử việc',
     35: 'Quyền đơn phương chấm dứt hợp đồng lao động của người lao động',
     36: 'Quyền đơn phương chấm dứt hợp đồng lao động của người sử dụng lao động',
     39: 'Đơn phương chấm dứt hợp đồng lao động trái pháp luật',
+    40: 'Nghĩa vụ của người lao động khi đơn phương chấm dứt hợp đồng lao động trái pháp luật',
     41: 'Nghĩa vụ của người sử dụng lao động khi đơn phương chấm dứt hợp đồng lao động trái pháp luật',
     46: 'Trợ cấp thôi việc',
     51: 'Xử lý hợp đồng lao động vô hiệu',
+    62: 'Hợp đồng đào tạo nghề và chi phí đào tạo',
+    105: 'Thời giờ làm việc bình thường',
     122: 'Nguyên tắc, trình tự, thủ tục xử lý kỷ luật lao động',
     124: 'Hình thức xử lý kỷ luật lao động',
     125: 'Áp dụng hình thức xử lý kỷ luật sa thải',
-    129: 'Bồi thường thiệt hại'
+    129: 'Bồi thường thiệt hại',
+    188: 'Trình tự, thủ tục hòa giải tranh chấp lao động cá nhân',
+    190: 'Thời hiệu yêu cầu giải quyết tranh chấp lao động cá nhân'
   },
   PCTN2018: {
     2: 'Các hành vi tham nhũng',
     3: 'Giải thích từ ngữ (Khái niệm tham nhũng, vụ lợi)',
-    20: 'Quy tắc ứng xử của người có chức vụ, quyền hạn'
+    20: 'Quy tắc ứng xử của người có chức vụ, quyền hạn',
+    22: 'Việc tặng quà và nhận quà tặng'
+  },
+  LDD2024: {
+    27: 'Quyền chuyển đổi, chuyển nhượng, cho thuê, cho thuê lại, thừa kế, tặng cho quyền sử dụng đất',
+    113: 'Khung giá đất (Luật Đất đai 2013 - đối chiếu lịch sử lập pháp)',
+    114: 'Bảng giá đất và giá đất cụ thể (Luật Đất đai 2013 - đối chiếu lịch sử lập pháp)',
+    158: 'Nguyên tắc, căn cứ, phương pháp định giá đất',
+    159: 'Bảng giá đất hằng năm',
+    257: 'Giải quyết về tài chính đất đai, giá đất khi Luật có hiệu lực thi hành'
+  },
+  TTATGT2024: {
+    57: 'Giấy phép lái xe (Phân hạng A1, A từ 01/01/2025)',
+    58: 'Điểm của giấy phép lái xe',
+    89: 'Hiệu lực thi hành Luật Trật tự, an toàn giao thông đường bộ 2024'
+  },
+  TTHC2015: {
+    3: 'Giải thích từ ngữ trong Luật Tố tụng hành chính',
+    30: 'Những khiếu kiện thuộc thẩm quyền giải quyết của Tòa án',
+    115: 'Quyền khởi kiện vụ án hành chính',
+    116: 'Thời hiệu khởi kiện vụ án hành chính'
+  },
+  ND168_2024: {
+    6: 'Xử phạt người điều khiển xe ô tô vi phạm quy tắc giao thông đường bộ',
+    7: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
+    48: 'Tạm giữ phương tiện, giấy tờ có liên quan đến người điều khiển và phương tiện vi phạm'
+  },
+  ND144: {
+    7: 'Vi phạm quy định về trật tự công cộng'
+  },
+  ND100_2019: {
+    5: 'Xử phạt người điều khiển xe ô tô và các loại xe tương tự xe ô tô vi phạm quy tắc giao thông đường bộ',
+    6: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
+    82: 'Tạm giữ phương tiện, giấy tờ có liên quan đến người điều khiển và phương tiện vi phạm'
   },
   BLTTHS2015: {
     27: 'Chế độ xét xử sơ thẩm, phúc thẩm được bảo đảm',
@@ -349,6 +418,9 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     25: 'Thủ tục đăng ký nhận cha, mẹ, con (Luật Hộ tịch 2014)',
     26: 'Phạm vi thay đổi hộ tịch (Luật Hộ tịch 2014)',
     32: 'Thẩm quyền chấp thuận chủ trương đầu tư của Ủy ban nhân dân cấp tỉnh (Luật Đầu tư)',
+    49: 'Điều kiện hưởng trợ cấp thất nghiệp (Luật Việc làm 2013)',
+    78: 'Các hình thức kỷ luật đối với công chức (Luật Cán bộ, công chức)',
+    79: 'Các hình thức kỷ luật đối với công chức (Luật Cán bộ, công chức)',
     86: 'Bảo vệ môi trường trong hoạt động sản xuất, kinh doanh (Luật Bảo vệ môi trường 2020)',
     132: 'Đơn phương chấm dứt thực hiện hợp đồng thuê nhà ở (Luật Nhà ở 2014)',
     301: 'Mức phạt đối với vi phạm nghĩa vụ hợp đồng (Luật Thương mại 2005)'
@@ -356,8 +428,8 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
 };
 
 export class GuardrailService {
-  // Regex nhận diện trích dẫn điều luật Việt Nam (dừng chính xác trước dấu *, :, ", (, quy định)
-  private static citationRegex = /(?:Khoản\s+(\d+)\s+)?Điều\s+(\d+)\s+(Bộ\s+luật\s+(?:Dân\s+sự|Hình\s+sự|Lao\s+động|Tố\s+tụng\s+[^\n,.;()*:"“”]+)(?:\s+năm)?(?:\s+\d{4})?|Luật\s+[^\n,.;()*:"“”]+?(?:\s+năm\s+\d{4}|\s+\d{4})|Hiến\s+pháp(?:\s+nước\s+CHXHCN\s+Việt\s+Nam)?(?:\s+năm)?(?:\s+\d{4})?|(?:BLTTHS|BLTTDS|BLHS|BLDS|BLLD|HNGD|VBQPPL|XLVPHC|HP)(?:\s*\d{4})?)/gi;
+  // Regex nhận diện trích dẫn điều luật Việt Nam (bao gồm Bộ luật, Luật, Hiến pháp, Nghị định)
+  private static citationRegex = /(?:Khoản\s+(\d+)\s+)?Điều\s+(\d+)\s+(Bộ\s+luật\s+(?:Dân\s+sự|Hình\s+sự|Lao\s+động|Tố\s+tụng\s+[^\n,.;()*:"“”]+)(?:\s+năm)?(?:\s+\d{4})?|Luật\s+[^\n,.;()*:"“”]+?(?:\s+năm\s+\d{4}|\s+\d{4})|Hiến\s+pháp(?:\s+nước\s+CHXHCN\s+Việt\s+Nam)?(?:\s+năm)?(?:\s+\d{4})?|Nghị\s+định\s+\d+\/\d{4}\/NĐ-CP|(?:BLTTHS|BLTTDS|BLHS|BLDS|BLLD|HNGD|VBQPPL|XLVPHC|TTATGT|HP)(?:\s*\d{4})?)/gi;
 
   public static async scanAndVerify(text: string): Promise<{
     citations: ExtractedCitation[];
@@ -378,16 +450,28 @@ export class GuardrailService {
         .trim()
         .toUpperCase();
 
-      // Chuẩn hóa mã luật
-      let lawCode = 'BLHS2015';
+      // Chuẩn hóa mã luật (kiểm tra các mã chuyên biệt trước, tránh fallback sai sang BLHS2015)
+      let lawCode = 'OTHER_LAW';
       if (lawRaw.includes('TỐ TỤNG HÌNH SỰ') || lawRaw.includes('BLTTHS')) {
         lawCode = 'BLTTHS2015';
       } else if (lawRaw.includes('TỐ TỤNG DÂN SỰ') || lawRaw.includes('BLTTDS')) {
         lawCode = 'BLTTDS2015';
-      } else if (lawRaw.includes('HÀNH CHÍNH') || lawRaw.includes('XLVPHC') || lawRaw.includes('VPHC')) {
+      } else if (lawRaw.includes('TỐ TỤNG HÀNH CHÍNH') || lawRaw.includes('LTTHC')) {
+        lawCode = 'TTHC2015';
+      } else if (lawRaw.includes('XỬ LÝ VI PHẠM HÀNH CHÍNH') || lawRaw.includes('HÀNH CHÍNH') || lawRaw.includes('XLVPHC') || lawRaw.includes('VPHC')) {
         lawCode = 'XLVPHC2012';
       } else if (lawRaw.includes('THAM NHŨNG') || lawRaw.includes('PCTN')) {
         lawCode = 'PCTN2018';
+      } else if (lawRaw.includes('ĐẤT ĐAI')) {
+        lawCode = 'LDD2024';
+      } else if (lawRaw.includes('TRẬT TỰ, AN TOÀN GIAO THÔNG') || lawRaw.includes('GIAO THÔNG ĐƯỜNG BỘ') || lawRaw.includes('TTATGT')) {
+        lawCode = 'TTATGT2024';
+      } else if (lawRaw.includes('168/2024')) {
+        lawCode = 'ND168_2024';
+      } else if (lawRaw.includes('144/2021')) {
+        lawCode = 'ND144';
+      } else if (lawRaw.includes('100/2019')) {
+        lawCode = 'ND100_2019';
       } else if (lawRaw.includes('HÌNH SỰ') || lawRaw.includes('BLHS')) {
         lawCode = 'BLHS2015';
       } else if (lawRaw.includes('DÂN SỰ') || lawRaw.includes('BLDS')) {
@@ -405,7 +489,9 @@ export class GuardrailService {
         lawRaw.includes('HỘ TỊCH') ||
         lawRaw.includes('MÔI TRƯỜNG') ||
         lawRaw.includes('NHÀ Ở') ||
-        lawRaw.includes('THƯƠNG MẠI')
+        lawRaw.includes('THƯƠNG MẠI') ||
+        lawRaw.includes('VIỆC LÀM') ||
+        lawRaw.includes('CÁN BỘ, CÔNG CHỨC')
       ) {
         lawCode = 'LUAT_CHUYEN_NGANH';
       }

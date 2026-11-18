@@ -25,6 +25,20 @@ function getAuthHeaders(): HeadersInit {
   };
 }
 
+async function parseJsonSafe<T = any>(res: Response): Promise<T> {
+  const text = await res.text();
+  try {
+    return JSON.parse(text) as T;
+  } catch {
+    return {
+      success: false,
+      message: res.ok
+        ? 'Phản hồi từ máy chủ không đúng định dạng JSON.'
+        : `Máy chủ đang khởi động lại hoặc bận (HTTP ${res.status}). Vui lòng thử lại sau giây lát.`
+    } as unknown as T;
+  }
+}
+
 export const api = {
   // --- Auth ---
   async login(emailOrUsername: string, password: string) {
@@ -33,7 +47,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ emailOrUsername, password })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async googleLogin(data: { email: string; fullName?: string; googleId?: string; avatarUrl?: string }) {
@@ -42,7 +56,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async register(data: { username: string; email: string; password: string; fullName: string; studentId?: string; role?: string }) {
@@ -51,14 +65,14 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getMe() {
     const res = await fetch(`${API_BASE}/auth/me`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async sendForgotOtp(email: string) {
@@ -67,7 +81,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async verifyOtpAndReset(email: string, otp: string, newPassword: string) {
@@ -76,7 +90,7 @@ export const api = {
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, otp, newPassword })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateProfile(data: { fullName?: string; email?: string; avatarUrl?: string }) {
@@ -85,7 +99,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async changePassword(currentPassword: string, newPassword: string) {
@@ -94,7 +108,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ currentPassword, newPassword })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Student Query & History ---
@@ -114,7 +128,7 @@ export const api = {
       }),
       signal
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async reviewDocument(content: string, documentType?: string): Promise<{
@@ -139,14 +153,14 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ content, documentType })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getHistory(): Promise<{ success: boolean; history: QueryHistoryItem[] }> {
     const res = await fetch(`${API_BASE}/query/history`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async clearHistory(): Promise<{ success: boolean; message: string }> {
@@ -154,14 +168,14 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getBookmarks(): Promise<{ success: boolean; bookmarks: QueryHistoryItem[] }> {
     const res = await fetch(`${API_BASE}/query/bookmarks`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async toggleBookmark(id: string, note?: string): Promise<{ success: boolean; message: string; item: QueryHistoryItem }> {
@@ -170,7 +184,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ note })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Transactions & Billing ---
@@ -178,7 +192,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/transactions`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async upgradePlan(planType: string, paymentMethod?: string): Promise<{
@@ -192,7 +206,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ planType, paymentMethod })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Council / Evaluator Benchmark ---
@@ -202,7 +216,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ query })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Admin ---
@@ -210,7 +224,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/users`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateUserRole(userId: string, role: UserRole): Promise<{ success: boolean; message: string }> {
@@ -219,7 +233,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ role })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateUserStatus(userId: string, status: 'active' | 'locked', lockReason?: string): Promise<{ success: boolean; message: string; user?: any }> {
@@ -228,7 +242,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify({ status, lockReason })
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateUserQuota(
@@ -240,7 +254,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(payload)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getUserHistory(userId: string): Promise<{
@@ -251,14 +265,14 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/users/${userId}/history`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getQuotaConfig(): Promise<{ success: boolean; config: SystemQuotaConfig }> {
     const res = await fetch(`${API_BASE}/admin/quota/config`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateQuotaConfig(data: Partial<SystemQuotaConfig>): Promise<{ success: boolean; message: string; config: SystemQuotaConfig }> {
@@ -267,21 +281,21 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getPipelineStatus(): Promise<{ success: boolean; pipeline: any }> {
     const res = await fetch(`${API_BASE}/admin/pipeline`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getDashboardAnalytics(): Promise<{ success: boolean; data: any }> {
     const res = await fetch(`${API_BASE}/admin/analytics`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Law Corpus ---
@@ -290,7 +304,7 @@ export const api = {
     if (search) params.append('search', search);
     if (lawCode) params.append('lawCode', lawCode);
     const res = await fetch(`${API_BASE}/laws/articles?${params.toString()}`);
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async createLawArticle(data: Partial<LawArticle>): Promise<{ success: boolean; message: string; article: LawArticle }> {
@@ -299,12 +313,12 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getPrinciples(): Promise<{ success: boolean; principles: TextbookPrinciple[] }> {
     const res = await fetch(`${API_BASE}/laws/principles`);
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- Knowledge Base & Crawl Management ---
@@ -312,7 +326,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/crawl/sources`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async createCrawlSource(data: Partial<CrawlSourceItem>): Promise<{ success: boolean; message: string; source: CrawlSourceItem }> {
@@ -321,7 +335,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateCrawlSource(id: string, data: Partial<CrawlSourceItem>): Promise<{ success: boolean; message: string; source: CrawlSourceItem }> {
@@ -330,7 +344,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async deleteCrawlSource(id: string): Promise<{ success: boolean; message: string }> {
@@ -338,7 +352,7 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async triggerCrawlSource(id: string): Promise<{ success: boolean; message: string; job: CrawlJobItem }> {
@@ -346,14 +360,14 @@ export const api = {
       method: 'POST',
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getCrawlJobs(): Promise<{ success: boolean; jobs: CrawlJobItem[] }> {
     const res = await fetch(`${API_BASE}/admin/crawl/jobs`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getKnowledgeChunks(params?: { search?: string; lawCode?: string; status?: string }): Promise<{
@@ -369,7 +383,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/knowledge/chunks?${q.toString()}`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async uploadNewLawDocument(data: {
@@ -384,7 +398,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateKnowledgeChunk(
@@ -396,7 +410,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async deleteKnowledgeChunk(id: string): Promise<{ success: boolean; message: string }> {
@@ -404,7 +418,7 @@ export const api = {
       method: 'DELETE',
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   // --- System Settings & Services ---
@@ -412,7 +426,7 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/settings`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async updateSystemSettings(data: Partial<SystemSettingsData>): Promise<{
@@ -425,7 +439,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getAllTransactions(): Promise<{
@@ -441,14 +455,14 @@ export const api = {
     const res = await fetch(`${API_BASE}/admin/transactions/all`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async getPartnerApiKeys(): Promise<{ success: boolean; count: number; apiKeys: PartnerApiKeyItem[] }> {
     const res = await fetch(`${API_BASE}/admin/apikeys`, {
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async createPartnerApiKey(data: {
@@ -463,7 +477,7 @@ export const api = {
       headers: getAuthHeaders(),
       body: JSON.stringify(data)
     });
-    return res.json();
+    return parseJsonSafe(res);
   },
 
   async togglePartnerApiKey(id: string): Promise<{ success: boolean; message: string; apiKey: PartnerApiKeyItem }> {
@@ -471,6 +485,6 @@ export const api = {
       method: 'PATCH',
       headers: getAuthHeaders()
     });
-    return res.json();
+    return parseJsonSafe(res);
   }
 };

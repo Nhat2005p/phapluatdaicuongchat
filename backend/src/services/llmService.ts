@@ -289,7 +289,7 @@ export class LlmService {
       qLower.includes('anh ') ||
       qLower.includes('chị ') ||
       qLower.includes('công ty ') ||
-      /\b(giết chết|đâm chết|chém chết|bắn chết)\b/i.test(qLower);
+      /(?:giết chết|đâm chết|chém chết|bắn chết)/i.test(qLower);
 
     const sLower = sText.toLowerCase();
     const isScenarioSample =

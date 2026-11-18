@@ -42,6 +42,12 @@ export const AiReviewMode: React.FC<AiReviewModeProps> = ({
   const [reviewResult, setReviewResult] = useState<any | null>(null);
   const [copied, setCopied] = useState(false);
 
+  React.useEffect(() => {
+    if (initialContent) {
+      setContent(initialContent);
+    }
+  }, [initialContent]);
+
   const sampleTemplates = [
     {
       name: 'HĐ Mua bán (Chủ thể 16 tuổi)',

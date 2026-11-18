@@ -357,7 +357,8 @@ export class KnowledgeCrawlController {
         query.status = status;
       }
       if (search) {
-        const searchRegex = new RegExp(search as string, 'i');
+        const escapedSearch = String(search).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const searchRegex = new RegExp(escapedSearch, 'i');
         query.$or = [{ title: searchRegex }, { content: searchRegex }, { chunkId: searchRegex }];
       }
 

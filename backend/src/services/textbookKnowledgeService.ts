@@ -1673,7 +1673,7 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
 
       // Q. Chốt chặn Cross-Encoder cho lĩnh vực viễn tưởng / ngoài phạm vi cơ sở dữ liệu (Mặt Trăng, Sao Hỏa, Vũ trụ, Ngoài hành tinh...)
       if (
-        /\b(mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000)\b/i.test(rawQueryText)
+        /(?:mặt trăng|sao hỏa|ngoài hành tinh|thiên hà|xuyên không|ma thuật|phép thuật|năm 3000)/i.test(rawQueryText)
       ) {
         finalScore = 0;
       }
@@ -2049,7 +2049,7 @@ ${lines.join('\n')}
       qLower.includes('đồng thời') ||
       qLower.includes('kết hợp') ||
       qLower.includes('ngoài ra') ||
-      /\b(và|cùng với)\b.*\b(trình bày|phân tích|nêu|giải thích|so sánh)\b/i.test(qLower);
+      /(?:^|\s)(?:và|cùng với)(?:\s|$).*(?:trình bày|phân tích|nêu|giải thích|so sánh)/i.test(qLower);
 
     // Chỉ ghép nối đa Chunk trên giao diện hiển thị khi câu hỏi thực sự hỏi gộp nhiều chuyên đề khác nhau
     const selected = [topMatches[0]];

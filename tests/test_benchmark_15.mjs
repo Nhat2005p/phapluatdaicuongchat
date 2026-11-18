@@ -2,8 +2,6 @@ import { RagService } from '../backend/dist/services/ragService.js';
 import { GuardrailService } from '../backend/dist/services/guardrailService.js';
 import { LlmService } from '../backend/dist/services/llmService.js';
 
-const guard = new GuardrailService();
-
 const testCases = [
   { id: 'TC 1.1', text: 'Ông hàng xóm nhà tôi chết không để lại giấy tờ chia của gì cả, giờ vợ ông ấy với 2 đứa con tranh nhau mảnh đất thì chia kiểu gì?' },
   { id: 'TC 1.2', text: 'Hôm qua tôi đi nhậu về hơi ngà ngà say, lúc đi qua ngã tư do mải nghe điện thoại nên tôi không để ý đèn chuyển đỏ và phóng qua luôn, may chưa đụng ai nhưng bị công an thổi còi. Cho hỏi lỗi này của tôi có bị giam xe không?' },
@@ -33,6 +31,6 @@ for (const tc of testCases) {
   if (isOk) passed++;
   
   const guardRes = await GuardrailService.scanAndVerify(sft?.output || '');
-  console.log(`[${tc.id}] Legal: ${isLegal} | Intent: ${intent} | Matcher: ${hasSft ? 'OK' : 'FAIL'} | Verified Citations: ${guardRes.verifiedCount}/${guardRes.citations.length} | Precision: ${(guardRes.precisionRate * 100).toFixed(0)}%`);
+  console.log(`[${tc.id}] Legal: ${isLegal} | Intent: ${intent} | Matcher: ${hasSft ? 'OK' : 'FAIL'} | Verified Citations: ${guardRes.verifiedCount}/${guardRes.citations.length} | Precision: ${guardRes.precisionRate}%`);
 }
 console.log(`Passed: ${passed}/${testCases.length}`);
