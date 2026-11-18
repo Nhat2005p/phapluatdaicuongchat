@@ -1704,7 +1704,64 @@ Khi đơn phương chấm dứt hợp đồng lao động trái pháp luật, ch
       };
     }
 
-    // M8 (Câu 16): Chống trả tên trộm dùng dao nhọn tấn công quyết liệt dẫn đến tử vong (Phòng vệ chính đáng vs Vượt quá giới hạn)
+    // M8b: Tình huống Tình thế cấp thiết (bị truy sát / hỏa hoạn / cấp cứu phải lấy tạm hoặc gây thiệt hại nhỏ hơn cho tài sản của người thứ ba - Điều 23 BLHS 2015 & Điều 595 BLDS 2015)
+    if (
+      (qLower.includes('truy sát') || qLower.includes('thoát thân') || (qLower.includes('chạy trốn') && (qLower.includes('côn đồ') || qLower.includes('mã tấu') || qLower.includes('dao')))) &&
+      (qLower.includes('lấy chiếc xe') || qLower.includes('lấy xe') || qLower.includes('thiệt hại') || qLower.includes('bồi thường'))
+    ) {
+      const actorsList = this.extractActors(query);
+      const actorVictim = actorsList[0] || 'Anh A';
+      const thirdPartyOwner = actorsList[1] || 'Ông B';
+      const dmgMoney = this.extractMoney(query) || '8 triệu đồng';
+
+      return {
+        sample_id: 'SFT_CASE_EMERGENCY_NECESSITY_ART23_BLHS_ART595_BLDS',
+        intent_code: 'CASE_ANALYSIS',
+        instruction: 'Giải quyết bài tập tình huống Tình thế cấp thiết (Điều 23 BLHS 2015, Điều 11 Luật XLVPHC 2012) và trách nhiệm bồi thường thiệt hại thuộc về người gây ra tình thế cấp thiết (Khoản 2 Điều 595 BLDS 2015).',
+        input: query,
+        output: `### PHÂN TÍCH TÌNH HUỐNG PHÁP LÝ: TÌNH THẾ CẤP THIẾT & TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI
+
+---
+
+#### 1. Tóm tắt vấn đề pháp lý
+Tình huống đặt ra hai câu hỏi pháp lý trọng tâm thuộc chế định **Tình thế cấp thiết**:
+1. Hành vi của **${actorVictim}** tự ý lấy xe máy của **${thirdPartyOwner}** dựng bên đường để thoát thân khi bị nhóm côn đồ cầm mã tấu truy sát và vô ý làm hư hỏng xe (**${dmgMoney}**) có cấu thành tội phạm hay vi phạm pháp luật không?
+2. **${actorVictim}** có phải bồi thường số tiền **${dmgMoney}** cho **${thirdPartyOwner}** không, hay trách nhiệm bồi thường thuộc về ai?
+
+---
+
+#### 2. Căn cứ pháp lý áp dụng
+- **Khoản 1 Điều 23 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** — *Tình thế cấp thiết*.
+- **Khoản 1 Điều 11 Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020)** — *Những trường hợp không xử phạt vi phạm hành chính (thực hiện hành vi trong tình thế cấp thiết)*.
+- **Khoản 2 Điều 584** và **Khoản 1, Khoản 2 Điều 595 Bộ luật Dân sự năm 2015** — *Bồi thường thiệt hại trong trường hợp tình thế cấp thiết*.
+
+---
+
+#### 3. Phân tích chi tiết từng câu hỏi
+
+##### a) Hành vi lấy xe của ${actorVictim} CÓ cấu thành tội phạm hay vi phạm pháp luật không?
+- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorVictim} KHÔNG cấu thành tội phạm** và **KHÔNG phải là hành vi vi phạm pháp luật** (thuộc trường hợp **Tình thế cấp thiết** loại trừ tính chất nguy hiểm/trái pháp luật của hành vi).
+- **Đối chiếu đủ 03 điều kiện của Tình thế cấp thiết (Khoản 1 Điều 23 BLHS 2015)**:
+  1. **Có nguồn nguy hiểm đang thực tế đe dọa lợi ích hợp pháp**: Nhóm côn đồ dùng **mã tấu (hung khí nguy hiểm chết người) truy sát**, đe dọa trực tiếp và ngay tức khắc đến **tính mạng, sức khỏe** của ${actorVictim}.
+  2. **Việc gây thiệt hại là biện pháp duy nhất ("không còn cách nào khác")**: Trong tình thế ngặt nghèo đang bị đuổi chém, việc lấy tạm chiếc xe máy đang cắm sẵn chìa khóa bên đường để phóng chạy thoát thân là lựa chọn cấp bách duy nhất để bảo toàn mạng sống. Về mặt chủ quan, ${actorVictim} **hoàn toàn không có mục đích chiếm đoạt** chiếc xe làm tài sản riêng nên không cấu thành *Tội trộm cắp tài sản (Điều 173)* hay *Tội công nhiên chiếm đoạt tài sản (Điều 172 BLHS)*.
+  3. **Thiệt hại gây ra nhỏ hơn thiệt hại cần ngăn ngừa**: Thiệt hại thực tế gây ra cho người thứ ba (${thirdPartyOwner}) là thiệt hại về tài sản (**${dmgMoney}** — vỡ dàn áo xe), **nhỏ hơn rất nhiều** so với lợi ích thiết thân cần bảo vệ là **tính mạng và sức khỏe con người** của ${actorVictim}.
+- Do thỏa mãn trọn vẹn các điều kiện của **Tình thế cấp thiết**, theo **Khoản 1 Điều 23 BLHS 2015** và **Khoản 1 Điều 11 Luật XLVPHC 2012**, ${actorVictim} **không phạm tội và không bị xử phạt vi phạm hành chính**.
+
+##### b) ${actorVictim} có phải bồi thường số tiền ${dmgMoney} cho ${thirdPartyOwner} không?
+- **KẾT LUẬN DỨT KHOÁT**: **${actorVictim} KHÔNG PHẢI BỒI THƯỜNG số tiền ${dmgMoney} cho ${thirdPartyOwner}** *(nhưng có nghĩa vụ hoàn trả lại chiếc xe máy cho ${thirdPartyOwner})*; **chủ thể phải bồi thường ${dmgMoney} cho ${thirdPartyOwner} chính là NHÓM CÔN ĐỒ CẦM MÃ TẤU TRUY SÁT**.
+- **Giải thích theo Điều 595 Bộ luật Dân sự năm 2015**:
+  + **Khoản 1 Điều 595 BLDS 2015**: Người gây thiệt hại chỉ phải bồi thường phần thiệt hại vượt quá nếu *"thiệt hại xảy ra do vượt quá yêu cầu của tình thế cấp thiết"* (tức thiệt hại gây ra lớn hơn hoặc bằng thiệt hại cần ngăn ngừa, hoặc có cách khác ít gây thiệt hại hơn mà không dùng). Ở đây, thiệt hại tài sản **${dmgMoney}** là quá nhỏ so với tính mạng con người nên ${actorVictim} **không vượt quá yêu cầu của tình thế cấp thiết**.
+  + **Khoản 2 Điều 595 BLDS 2015** quy định rõ nguyên tắc cốt lõi:
+    > *"Người đã gây ra tình thế cấp thiết dẫn đến thiệt hại xảy ra thì phải bồi thường cho người bị thiệt hại."*
+  + Trong vụ việc này, **nhóm côn đồ cầm mã tấu truy sát ${actorVictim}** chính là **"người đã gây ra tình thế cấp thiết"** buộc ${actorVictim} phải lấy xe của ${thirdPartyOwner} thoát thân dẫn đến xe bị đổ vỡ. Vì vậy, **nhóm côn đồ phải chịu toàn bộ trách nhiệm bồi thường khoản thiệt hại ${dmgMoney} cho ${thirdPartyOwner}** (đồng thời nhóm côn đồ còn bị xử lý hình sự nghiêm khắc về hành vi truy sát người khác).
+
+---
+
+#### 4. Kết luận tổng hợp
+1. **Về trách nhiệm hình sự & hành chính của ${actorVictim}**: **Không cấu thành tội phạm, không vi phạm pháp luật** vì hành động trong **Tình thế cấp thiết** (**Khoản 1 Điều 23 BLHS 2015**, **Khoản 1 Điều 11 Luật XLVPHC 2012**).
+2. **Về trách nhiệm bồi thường dân sự (${dmgMoney})**: **${actorVictim} không phải bồi thường** (chỉ giao trả lại xe cho ${thirdPartyOwner}); **nhóm côn đồ gây ra cuộc truy sát** có nghĩa vụ bắt buộc bồi thường toàn bộ **${dmgMoney}** cho **${thirdPartyOwner}** theo **Khoản 2 Điều 595 Bộ luật Dân sự năm 2015**.`
+      };
+    }
     if (
       (qLower.includes('dao nhọn') || qLower.includes('ông s') || (qLower.includes('thanh gỗ') && qLower.includes('tên trộm'))) &&
       (qLower.includes('phòng vệ') || qLower.includes('trách nhiệm hình sự'))

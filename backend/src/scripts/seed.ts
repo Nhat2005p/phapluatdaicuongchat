@@ -576,6 +576,15 @@ export async function runSeed(): Promise<void> {
       keywords: ['tính mạng bị xâm phạm', 'chết do tai nạn', 'bồi thường thiệt hại', 'sự kiện pháp lý']
     },
     {
+      articleId: 'BLDS2015_D595',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 595,
+      title: 'Bồi thường thiệt hại trong trường hợp vượt quá yêu cầu của tình thế cấp thiết',
+      contentRaw: '1. Trường hợp thiệt hại xảy ra do vượt quá yêu cầu của tình thế cấp thiết thì người gây thiệt hại phải bồi thường phần thiệt hại do vượt quá yêu cầu của tình thế cấp thiết cho người bị thiệt hại.\n2. Người đã gây ra tình thế cấp thiết dẫn đến thiệt hại xảy ra thì phải bồi thường cho người bị thiệt hại.',
+      keywords: ['tình thế cấp thiết', 'người gây ra tình thế cấp thiết phải bồi thường', 'điều 595 bộ luật dân sự', 'chạy trốn truy sát lấy xe']
+    },
+    {
       articleId: 'BLDS2015_D611',
       lawCode: 'BLDS2015',
       lawName: 'Bộ luật Dân sự năm 2015',

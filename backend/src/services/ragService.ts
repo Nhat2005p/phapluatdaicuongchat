@@ -1666,7 +1666,9 @@ export class RagService {
           dynamicConditions.push({ articleId: 'BLHS2015_D156' }, { articleId: 'BLDS2015_D584' });
         }
         if (qLower.includes('phòng vệ') || qLower.includes('chống trả')) dynamicConditions.push({ articleId: 'BLHS2015_D22' });
-        if (qLower.includes('cấp thiết')) dynamicConditions.push({ articleId: 'BLHS2015_D23' });
+        if (qLower.includes('cấp thiết') || qLower.includes('truy sát') || qLower.includes('thoát thân') || (qLower.includes('chạy trốn') && qLower.includes('côn đồ'))) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D23' }, { articleId: 'BLDS2015_D595' }, { articleId: 'BLDS2015_D584' });
+        }
         if (qLower.includes('nguồn nguy hiểm') || (qLower.includes('tai nạn') && (qLower.includes('xe máy') || qLower.includes('ô tô')))) {
           dynamicConditions.push({ articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D584' });
         }
