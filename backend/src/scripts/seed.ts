@@ -572,8 +572,26 @@ export async function runSeed(): Promise<void> {
       lawName: 'Bộ luật Dân sự năm 2015',
       articleNumber: 591,
       title: 'Thiệt hại do tính mạng bị xâm phạm',
-      contentRaw: '1. Thiệt hại do tính mạng bị xâm phạm bao gồm: a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại trước khi chết; b) Chi phí hợp lý cho việc mai táng; c) Tiền cấp dưỡng cho những người mà người bị thiệt hại có nghĩa vụ cấp dưỡng...',
-      keywords: ['tính mạng bị xâm phạm', 'chết do tai nạn', 'bồi thường thiệt hại', 'sự kiện pháp lý']
+      contentRaw: '1. Thiệt hại do tính mạng bị xâm phạm bao gồm: a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại trước khi chết; b) Chi phí hợp lý cho việc mai táng; c) Tiền cấp dưỡng cho những người mà người bị thiệt hại có nghĩa vụ cấp dưỡng...\n2. Người chịu trách nhiệm bồi thường trong trường hợp tính mạng của người khác bị xâm phạm phải bồi thường thiệt hại theo quy định tại khoản 1 Điều này và một khoản tiền khác để bù đắp tổn thất về tinh thần cho những người thân thích thuộc hàng thừa kế thứ nhất của người bị thiệt hại... Mức bồi thường bù đắp tổn thất về tinh thần do các bên thỏa thuận; nếu không thỏa thuận được thì mức tối đa cho một người có tính mạng bị xâm phạm không quá một trăm lần mức lương cơ sở do Nhà nước quy định.',
+      keywords: ['tính mạng bị xâm phạm', 'chết do tai nạn', 'bồi thường thiệt hại tính mạng', '100 lần mức lương cơ sở']
+    },
+    {
+      articleId: 'BLDS2015_D589',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 589,
+      title: 'Thiệt hại do tài sản bị xâm phạm',
+      contentRaw: 'Thiệt hại do tài sản bị xâm phạm bao gồm: 1. Tài sản bị mất, bị hủy hoại hoặc bị hư hỏng; 2. Lợi ích gắn liền với việc sử dụng, khai thác tài sản bị mất, bị giảm sút; 3. Chi phí hợp lý để ngăn chặn, hạn chế và khắc phục thiệt hại; 4. Thiệt hại khác do luật quy định.',
+      keywords: ['thiệt hại do tài sản bị xâm phạm', 'tài sản bị hư hỏng', 'điều 589 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D590',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 590,
+      title: 'Thiệt hại do sức khỏe bị xâm phạm',
+      contentRaw: '1. Thiệt hại do sức khỏe bị xâm phạm bao gồm: a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe; b) Thu nhập thực tế bị mất hoặc bị giảm sút; c) Chi phí hợp lý và phần thu nhập thực tế bị mất của người chăm sóc.\n2. Người chịu trách nhiệm bồi thường còn phải trả một khoản tiền bù đắp tổn thất về tinh thần tối đa không quá năm mươi lần mức lương cơ sở do Nhà nước quy định.',
+      keywords: ['thiệt hại do sức khỏe bị xâm phạm', 'bù đắp tổn thất tinh thần 50 lần lương cơ sở', 'điều 590 bộ luật dân sự']
     },
     {
       articleId: 'BLDS2015_D595',
@@ -583,6 +601,33 @@ export async function runSeed(): Promise<void> {
       title: 'Bồi thường thiệt hại trong trường hợp vượt quá yêu cầu của tình thế cấp thiết',
       contentRaw: '1. Trường hợp thiệt hại xảy ra do vượt quá yêu cầu của tình thế cấp thiết thì người gây thiệt hại phải bồi thường phần thiệt hại do vượt quá yêu cầu của tình thế cấp thiết cho người bị thiệt hại.\n2. Người đã gây ra tình thế cấp thiết dẫn đến thiệt hại xảy ra thì phải bồi thường cho người bị thiệt hại.',
       keywords: ['tình thế cấp thiết', 'người gây ra tình thế cấp thiết phải bồi thường', 'điều 595 bộ luật dân sự', 'chạy trốn truy sát lấy xe']
+    },
+    {
+      articleId: 'BLHS2015_D174',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 174,
+      title: 'Tội lừa đảo chiếm đoạt tài sản',
+      contentRaw: '1. Người nào bằng thủ đoạn gian dối chiếm đoạt tài sản của người khác trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 2.000.000 đồng nhưng thuộc trường hợp luật định, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm.\n2. Chiếm đoạt tài sản từ 50.000.000 đồng đến dưới 200.000.000 đồng: phạt tù từ 02 năm đến 07 năm.',
+      keywords: ['tội lừa đảo chiếm đoạt tài sản', 'thủ đoạn gian dối', 'điều 174 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D178',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 178,
+      title: 'Tội hủy hoại hoặc cố ý làm hư hỏng tài sản',
+      contentRaw: '1. Người nào hủy hoại hoặc cố ý làm hư hỏng tài sản của người khác trị giá từ 2.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 2.000.000 đồng nhưng thuộc trường hợp luật định, thì bị phạt tiền từ 10.000.000 đồng đến 50.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm.',
+      keywords: ['hủy hoại tài sản', 'cố ý làm hư hỏng tài sản', 'đập phá tài sản', 'điều 178 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D260',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 260,
+      title: 'Tội vi phạm quy định về tham gia giao thông đường bộ',
+      contentRaw: '1. Người nào tham gia giao thông đường bộ mà vi phạm quy định về an toàn giao thông đường bộ gây thiệt hại cho người khác thuộc một trong các trường hợp sau đây, thì bị phạt tiền từ 30.000.000 đồng đến 100.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 01 năm đến 05 năm: a) Làm chết người; b) Gây thương tích hoặc gây tổn hại cho sức khỏe của 01 người mà tỷ lệ tổn thương cơ thể 61% trở lên; ... d) Gây thiệt hại về tài sản từ 100.000.000 đồng đến dưới 500.000.000 đồng.\n2. Phạm tội thuộc một trong các trường hợp sau đây, thì bị phạt tù từ 03 năm đến 10 năm: a) Không có giấy phép lái xe theo quy định; b) Trong tình trạng có sử dụng rượu, bia mà trong máu hoặc hơi thở có nồng độ cồn vượt quá mức quy định, có sử dụng chất ma túy; c) Bỏ chạy để trốn tránh trách nhiệm hoặc cố ý không cứu giúp người bị nạn.',
+      keywords: ['gây tai nạn làm chết người', 'tai nạn chết người bỏ trốn', 'bỏ chạy để trốn tránh trách nhiệm', 'điều 260 bộ luật hình sự', 'vi phạm quy định về tham gia giao thông đường bộ']
     },
     {
       articleId: 'BLDS2015_D611',

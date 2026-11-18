@@ -31,15 +31,15 @@ export interface MultipleChoiceOption {
 
 export interface StructuredQueryContext {
   questionForm:
-    | 'MULTIPLE_CHOICE'
-    | 'SUMMARIZATION'
-    | 'QPPL_DISSECTION'
-    | 'STATUTE_LOOKUP'
-    | 'COMPARISON'
-    | 'TRUE_FALSE'
-    | 'AMBIGUOUS_CONSULT'
-    | 'CASE_STUDY'
-    | 'CONCEPT_EXPLANATION';
+  | 'MULTIPLE_CHOICE'
+  | 'SUMMARIZATION'
+  | 'QPPL_DISSECTION'
+  | 'STATUTE_LOOKUP'
+  | 'COMPARISON'
+  | 'TRUE_FALSE'
+  | 'AMBIGUOUS_CONSULT'
+  | 'CASE_STUDY'
+  | 'CONCEPT_EXPLANATION';
   multipleChoiceOptions: MultipleChoiceOption[];
   quotedClause: string | null;
   comparisonPair: [string, string] | null;
@@ -105,22 +105,22 @@ export class RagService {
 
     // 1.2 Chuẩn hóa một số cụm từ không dấu / gõ thiếu dấu / gõ nhầm phổ biến
     res = res.replace(/(?:^|\s)hân\s+biệt\b/gi, ' Phân biệt')
-             .replace(/(?:^|\s)iải\s+thích\b/gi, ' Giải thích')
-             .replace(/(?:^|\s)ỏ\s+qua\b/gi, ' Bỏ qua')
-             .replace(/\bkhonog\b/gi, 'không')
-             .replace(/\bkhong\b/gi, 'không')
-             .replace(/\bphap\s+luat\b/gi, 'pháp luật')
-             .replace(/\bphap\s+ly\b/gi, 'pháp lý')
-             .replace(/\bvi\s+pham\b/gi, 'vi phạm')
-             .replace(/\bnghi\s+dinh\b/gi, 'nghị định')
-             .replace(/\bgiet\s+nguoi\b/gi, 'giết người')
-             .replace(/\btrom\s+cap\b/gi, 'trộm cắp');
+      .replace(/(?:^|\s)iải\s+thích\b/gi, ' Giải thích')
+      .replace(/(?:^|\s)ỏ\s+qua\b/gi, ' Bỏ qua')
+      .replace(/\bkhonog\b/gi, 'không')
+      .replace(/\bkhong\b/gi, 'không')
+      .replace(/\bphap\s+luat\b/gi, 'pháp luật')
+      .replace(/\bphap\s+ly\b/gi, 'pháp lý')
+      .replace(/\bvi\s+pham\b/gi, 'vi phạm')
+      .replace(/\bnghi\s+dinh\b/gi, 'nghị định')
+      .replace(/\bgiet\s+nguoi\b/gi, 'giết người')
+      .replace(/\btrom\s+cap\b/gi, 'trộm cắp');
 
     // 1.3 Chuẩn hóa ngôn ngữ đời thường sang thuật ngữ pháp lý chuẩn (Query Rewriting)
     res = res.replace(/\bgiấy\s+tờ\s+chia\s+của\b/gi, 'di chúc')
-             .replace(/\bchia\s+của\b/gi, 'phân chia di sản thừa kế')
-             .replace(/\btranh\s+nhau\s+mảnh\s+đất\b/gi, 'tranh chấp quyền sử dụng đất thừa kế')
-             .replace(/\bchia\s+kiểu\s+gì\b/gi, 'chia di sản thừa kế theo pháp luật như thế nào');
+      .replace(/\bchia\s+của\b/gi, 'phân chia di sản thừa kế')
+      .replace(/\btranh\s+nhau\s+mảnh\s+đất\b/gi, 'tranh chấp quyền sử dụng đất thừa kế')
+      .replace(/\bchia\s+kiểu\s+gì\b/gi, 'chia di sản thừa kế theo pháp luật như thế nào');
 
     // 2. Mở rộng các từ viết tắt chuyên ngành Pháp luật Đại cương (dùng ranh giới từ hỗ trợ tiếng Việt có dấu)
     const wbLeft = '(?:^|[\\s.,;:?!"\'“”()\\[\\]\\-–—_/\\\\])';
@@ -633,6 +633,10 @@ export class RagService {
     if (
       q.includes('phòng vệ chính đáng') ||
       q.includes('tình thế cấp thiết') ||
+      q.includes('truy sát') ||
+      q.includes('thoát thân') ||
+      q.includes('gây tai nạn') ||
+      (q.includes('tai nạn') && (q.includes('chết') || q.includes('bỏ trốn') || q.includes('thương tích'))) ||
       q.includes('làm rơi') ||
       q.includes('rơi vỡ') ||
       (q.includes('laptop') && (q.includes('rơi') || q.includes('vỡ') || q.includes('hỏng') || q.includes('mượn'))) ||
@@ -1318,12 +1322,18 @@ export class RagService {
           }
         }
 
-        // 2. Khớp từ khóa chuyên ngành của điều luật (keywords)
+        // 2. Khớp từ khóa chuyên ngành của điều luật (keywords) — Loại trừ các từ khóa đơn quá chung chung ('luật', 'hiến pháp', 'xe máy', 'tuổi') để không kéo nhầm Điều 4 Luật Ban hành VBQPPL!
+        const genericSingleKeywords = new Set([
+          'luật', 'hiến pháp', 'nghị định', 'thông tư', 'nhà nước', 'tuổi', 'xe máy', 'ô tô', 'giao thông', 'tài sản', 'bồi thường', 'vi phạm'
+        ]);
         if (Array.isArray(art.keywords)) {
           for (const kw of art.keywords) {
             const kwLower = kw.toLowerCase().trim();
-            if (kwLower.length >= 4 && qNorm.includes(kwLower)) {
-              score += kwLower.includes(' ') ? 26 : 12;
+            if (genericSingleKeywords.has(kwLower)) continue;
+            if (kwLower.includes(' ') && kwLower.length >= 7 && qNorm.includes(kwLower)) {
+              score += 28;
+            } else if (!kwLower.includes(' ') && kwLower.length >= 6 && qTokens.includes(kwLower)) {
+              score += 14;
             }
           }
         }
@@ -1360,7 +1370,7 @@ export class RagService {
       });
 
       return scored
-        .filter((s) => s.score >= 18)
+        .filter((s) => s.score >= 24)
         .sort((a, b) => b.score - a.score)
         .slice(0, topN)
         .map((s) => s.art);
@@ -1669,8 +1679,12 @@ export class RagService {
         if (qLower.includes('cấp thiết') || qLower.includes('truy sát') || qLower.includes('thoát thân') || (qLower.includes('chạy trốn') && qLower.includes('côn đồ'))) {
           dynamicConditions.push({ articleId: 'BLHS2015_D23' }, { articleId: 'BLDS2015_D595' }, { articleId: 'BLDS2015_D584' });
         }
-        if (qLower.includes('nguồn nguy hiểm') || (qLower.includes('tai nạn') && (qLower.includes('xe máy') || qLower.includes('ô tô')))) {
-          dynamicConditions.push({ articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D584' });
+        if (qLower.includes('nguồn nguy hiểm') || qLower.includes('tai nạn')) {
+          if (qLower.includes('chết') || qLower.includes('thiệt mạng') || qLower.includes('tử vong') || qLower.includes('bỏ trốn') || qLower.includes('bỏ chạy')) {
+            dynamicConditions.push({ articleId: 'BLHS2015_D260' }, { articleId: 'BLDS2015_D591' }, { articleId: 'BLDS2015_D601' });
+          } else if (qLower.includes('xe máy') || qLower.includes('ô tô')) {
+            dynamicConditions.push({ articleId: 'BLDS2015_D601' }, { articleId: 'BLDS2015_D584' });
+          }
         }
         if (qLower.includes('hạng a1') || qLower.includes('bằng lái a1') || qLower.includes('125 cm3') || qLower.includes('phân khối')) {
           dynamicConditions.push({ articleId: 'TTATGT2024_D57' });
@@ -1681,8 +1695,13 @@ export class RagService {
         if (qLower.includes('vượt đèn đỏ') || qLower.includes('đèn đỏ')) {
           dynamicConditions.push({ articleId: 'ND168_2024_D7' }, { articleId: 'GT2019_ND100' });
         }
-        if (qLower.includes('giết') || qLower.includes('đâm chết') || qLower.includes('chém chết') || qLower.includes('tước đoạt mạng sống')) {
-          dynamicConditions.push({ articleId: 'BLHS2015_D123' }, { articleId: 'BLHS2015_D12' });
+        if (
+          qLower.includes('giết') ||
+          qLower.includes('tước đoạt mạng sống') ||
+          ((qLower.includes('đâm') || qLower.includes('chém') || qLower.includes('bắn')) &&
+            (qLower.includes('chết') || qLower.includes('thiệt mạng') || qLower.includes('tử vong')))
+        ) {
+          dynamicConditions.push({ articleId: 'BLHS2015_D123' }, { articleId: 'BLDS2015_D591' });
         }
         if (qLower.includes('thừa kế') || qLower.includes('di sản') || qLower.includes('di chúc')) {
           dynamicConditions.push({ articleId: 'BLDS2015_D612' }, { articleId: 'BLDS2015_D651' }, { articleId: 'BLDS2015_D644' });

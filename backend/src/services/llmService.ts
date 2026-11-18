@@ -1447,8 +1447,8 @@ Pháp luật tất yếu vừa mang tính giai cấp, vừa mang tính xã hội
 - **Ông K (em ruột)**: Nhận **466,67 triệu đồng** theo di chúc hợp pháp của ông M.
 - **B và cháu D**: **0 đồng** (vì ông M đã lập di chúc hợp pháp định đoạt toàn bộ di sản cho K và B, D không thuộc đối tượng bảo vệ tại Điều 644 BLDS 2015).`
       };
-    // IV. KẾT LUẬN PHÂN CHIA DI SẢN CỦA ÔNG M
-    // (Cleaned LaTeX for universal chat rendering)
+      // IV. KẾT LUẬN PHÂN CHIA DI SẢN CỦA ÔNG M
+      // (Cleaned LaTeX for universal chat rendering)
     }
 
     // Câu 12: Luật Trật tự, an toàn giao thông đường bộ 2024 - Hạng A1 (đến 125 cm3)
@@ -1704,64 +1704,7 @@ Khi đơn phương chấm dứt hợp đồng lao động trái pháp luật, ch
       };
     }
 
-    // M8b: Tình huống Tình thế cấp thiết (bị truy sát / hỏa hoạn / cấp cứu phải lấy tạm hoặc gây thiệt hại nhỏ hơn cho tài sản của người thứ ba - Điều 23 BLHS 2015 & Điều 595 BLDS 2015)
-    if (
-      (qLower.includes('truy sát') || qLower.includes('thoát thân') || (qLower.includes('chạy trốn') && (qLower.includes('côn đồ') || qLower.includes('mã tấu') || qLower.includes('dao')))) &&
-      (qLower.includes('lấy chiếc xe') || qLower.includes('lấy xe') || qLower.includes('thiệt hại') || qLower.includes('bồi thường'))
-    ) {
-      const actorsList = this.extractActors(query);
-      const actorVictim = actorsList[0] || 'Anh A';
-      const thirdPartyOwner = actorsList[1] || 'Ông B';
-      const dmgMoney = this.extractMoney(query) || '8 triệu đồng';
-
-      return {
-        sample_id: 'SFT_CASE_EMERGENCY_NECESSITY_ART23_BLHS_ART595_BLDS',
-        intent_code: 'CASE_ANALYSIS',
-        instruction: 'Giải quyết bài tập tình huống Tình thế cấp thiết (Điều 23 BLHS 2015, Điều 11 Luật XLVPHC 2012) và trách nhiệm bồi thường thiệt hại thuộc về người gây ra tình thế cấp thiết (Khoản 2 Điều 595 BLDS 2015).',
-        input: query,
-        output: `### PHÂN TÍCH TÌNH HUỐNG PHÁP LÝ: TÌNH THẾ CẤP THIẾT & TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI
-
----
-
-#### 1. Tóm tắt vấn đề pháp lý
-Tình huống đặt ra hai câu hỏi pháp lý trọng tâm thuộc chế định **Tình thế cấp thiết**:
-1. Hành vi của **${actorVictim}** tự ý lấy xe máy của **${thirdPartyOwner}** dựng bên đường để thoát thân khi bị nhóm côn đồ cầm mã tấu truy sát và vô ý làm hư hỏng xe (**${dmgMoney}**) có cấu thành tội phạm hay vi phạm pháp luật không?
-2. **${actorVictim}** có phải bồi thường số tiền **${dmgMoney}** cho **${thirdPartyOwner}** không, hay trách nhiệm bồi thường thuộc về ai?
-
----
-
-#### 2. Căn cứ pháp lý áp dụng
-- **Khoản 1 Điều 23 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** — *Tình thế cấp thiết*.
-- **Khoản 1 Điều 11 Luật Xử lý vi phạm hành chính năm 2012 (sửa đổi, bổ sung năm 2020)** — *Những trường hợp không xử phạt vi phạm hành chính (thực hiện hành vi trong tình thế cấp thiết)*.
-- **Khoản 2 Điều 584** và **Khoản 1, Khoản 2 Điều 595 Bộ luật Dân sự năm 2015** — *Bồi thường thiệt hại trong trường hợp tình thế cấp thiết*.
-
----
-
-#### 3. Phân tích chi tiết từng câu hỏi
-
-##### a) Hành vi lấy xe của ${actorVictim} CÓ cấu thành tội phạm hay vi phạm pháp luật không?
-- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorVictim} KHÔNG cấu thành tội phạm** và **KHÔNG phải là hành vi vi phạm pháp luật** (thuộc trường hợp **Tình thế cấp thiết** loại trừ tính chất nguy hiểm/trái pháp luật của hành vi).
-- **Đối chiếu đủ 03 điều kiện của Tình thế cấp thiết (Khoản 1 Điều 23 BLHS 2015)**:
-  1. **Có nguồn nguy hiểm đang thực tế đe dọa lợi ích hợp pháp**: Nhóm côn đồ dùng **mã tấu (hung khí nguy hiểm chết người) truy sát**, đe dọa trực tiếp và ngay tức khắc đến **tính mạng, sức khỏe** của ${actorVictim}.
-  2. **Việc gây thiệt hại là biện pháp duy nhất ("không còn cách nào khác")**: Trong tình thế ngặt nghèo đang bị đuổi chém, việc lấy tạm chiếc xe máy đang cắm sẵn chìa khóa bên đường để phóng chạy thoát thân là lựa chọn cấp bách duy nhất để bảo toàn mạng sống. Về mặt chủ quan, ${actorVictim} **hoàn toàn không có mục đích chiếm đoạt** chiếc xe làm tài sản riêng nên không cấu thành *Tội trộm cắp tài sản (Điều 173)* hay *Tội công nhiên chiếm đoạt tài sản (Điều 172 BLHS)*.
-  3. **Thiệt hại gây ra nhỏ hơn thiệt hại cần ngăn ngừa**: Thiệt hại thực tế gây ra cho người thứ ba (${thirdPartyOwner}) là thiệt hại về tài sản (**${dmgMoney}** — vỡ dàn áo xe), **nhỏ hơn rất nhiều** so với lợi ích thiết thân cần bảo vệ là **tính mạng và sức khỏe con người** của ${actorVictim}.
-- Do thỏa mãn trọn vẹn các điều kiện của **Tình thế cấp thiết**, theo **Khoản 1 Điều 23 BLHS 2015** và **Khoản 1 Điều 11 Luật XLVPHC 2012**, ${actorVictim} **không phạm tội và không bị xử phạt vi phạm hành chính**.
-
-##### b) ${actorVictim} có phải bồi thường số tiền ${dmgMoney} cho ${thirdPartyOwner} không?
-- **KẾT LUẬN DỨT KHOÁT**: **${actorVictim} KHÔNG PHẢI BỒI THƯỜNG số tiền ${dmgMoney} cho ${thirdPartyOwner}** *(nhưng có nghĩa vụ hoàn trả lại chiếc xe máy cho ${thirdPartyOwner})*; **chủ thể phải bồi thường ${dmgMoney} cho ${thirdPartyOwner} chính là NHÓM CÔN ĐỒ CẦM MÃ TẤU TRUY SÁT**.
-- **Giải thích theo Điều 595 Bộ luật Dân sự năm 2015**:
-  + **Khoản 1 Điều 595 BLDS 2015**: Người gây thiệt hại chỉ phải bồi thường phần thiệt hại vượt quá nếu *"thiệt hại xảy ra do vượt quá yêu cầu của tình thế cấp thiết"* (tức thiệt hại gây ra lớn hơn hoặc bằng thiệt hại cần ngăn ngừa, hoặc có cách khác ít gây thiệt hại hơn mà không dùng). Ở đây, thiệt hại tài sản **${dmgMoney}** là quá nhỏ so với tính mạng con người nên ${actorVictim} **không vượt quá yêu cầu của tình thế cấp thiết**.
-  + **Khoản 2 Điều 595 BLDS 2015** quy định rõ nguyên tắc cốt lõi:
-    > *"Người đã gây ra tình thế cấp thiết dẫn đến thiệt hại xảy ra thì phải bồi thường cho người bị thiệt hại."*
-  + Trong vụ việc này, **nhóm côn đồ cầm mã tấu truy sát ${actorVictim}** chính là **"người đã gây ra tình thế cấp thiết"** buộc ${actorVictim} phải lấy xe của ${thirdPartyOwner} thoát thân dẫn đến xe bị đổ vỡ. Vì vậy, **nhóm côn đồ phải chịu toàn bộ trách nhiệm bồi thường khoản thiệt hại ${dmgMoney} cho ${thirdPartyOwner}** (đồng thời nhóm côn đồ còn bị xử lý hình sự nghiêm khắc về hành vi truy sát người khác).
-
----
-
-#### 4. Kết luận tổng hợp
-1. **Về trách nhiệm hình sự & hành chính của ${actorVictim}**: **Không cấu thành tội phạm, không vi phạm pháp luật** vì hành động trong **Tình thế cấp thiết** (**Khoản 1 Điều 23 BLHS 2015**, **Khoản 1 Điều 11 Luật XLVPHC 2012**).
-2. **Về trách nhiệm bồi thường dân sự (${dmgMoney})**: **${actorVictim} không phải bồi thường** (chỉ giao trả lại xe cho ${thirdPartyOwner}); **nhóm côn đồ gây ra cuộc truy sát** có nghĩa vụ bắt buộc bồi thường toàn bộ **${dmgMoney}** cho **${thirdPartyOwner}** theo **Khoản 2 Điều 595 Bộ luật Dân sự năm 2015**.`
-      };
-    }
+    // M8 (Câu 16): Chống trả tên trộm dùng dao nhọn tấn công quyết liệt dẫn đến tử vong (Phòng vệ chính đáng vs Vượt quá giới hạn)
     if (
       (qLower.includes('dao nhọn') || qLower.includes('ông s') || (qLower.includes('thanh gỗ') && qLower.includes('tên trộm'))) &&
       (qLower.includes('phòng vệ') || qLower.includes('trách nhiệm hình sự'))
@@ -4624,7 +4567,7 @@ ${query}
     }
   }
 
-  // --- DẠNG 1: VPPL 4 YẾU TỐ ĐỘNG ---
+  // --- DẠNG 1: BỘ PHÂN TÍCH TÌNH HUỐNG VI PHẠM PHÁP LUẬT CHUYÊN SÂU THEO DỮ KIỆN CỤ THỂ (ANTI-BOILERPLATE ENGINE) ---
   private static solveDynamicVppl(
     query: string,
     actors: string[],
@@ -4635,7 +4578,67 @@ ${query}
   ): string {
     const qLower = query.toLowerCase();
 
-    // Tình huống điển hình: Đập phá đồ đạc do xích mích hàng xóm / nói xấu (Bà A, bà B, anh C)
+    // 0. KIỂM TRA CÁC TRƯỜNG HỢP LOẠI TRỪ VI PHẠM PHÁP LUẬT TRƯỚC TIÊN (Tuyệt đối không kết luận vơ đũa "có vi phạm pháp luật"!)
+    // 0a. Tình thế cấp thiết (bị truy sát / hỏa hoạn / thiên tai / cấp cứu phải lấy tạm hoặc làm hư hỏng tài sản nhỏ hơn của người thứ ba)
+    if (
+      qLower.includes('tình thế cấp thiết') ||
+      qLower.includes('truy sát') ||
+      qLower.includes('thoát thân') ||
+      (qLower.includes('chạy trốn') && (qLower.includes('côn đồ') || qLower.includes('mã tấu') || qLower.includes('hung khí') || qLower.includes('dao'))) ||
+      ((qLower.includes('cứu người') || qLower.includes('chữa cháy') || qLower.includes('cấp cứu')) && (qLower.includes('phá cửa') || qLower.includes('lấy xe')))
+    ) {
+      const actorVictim = actors[0] || 'Anh A';
+      const thirdPartyOwner = actors[1] || 'Ông B (chủ sở hữu tài sản)';
+      const dmgMoney = money || 'giá trị tài sản bị hư hỏng';
+      const dangerSource = qLower.includes('côn đồ')
+        ? 'nhóm côn đồ cầm mã tấu truy sát'
+        : qLower.includes('chữa cháy')
+          ? 'đám cháy đang đe dọa tính mạng, tài sản lớn'
+          : 'nguồn nguy hiểm đang trực tiếp đe dọa tính mạng, sức khỏe';
+
+      return `### PHÂN TÍCH TÌNH HUỐNG CỤ THỂ: HÀNH ĐỘNG TRONG TÌNH THẾ CẤP THIẾT
+
+---
+
+#### 1. Kết luận trực tiếp đối với hành vi của ${actorVictim}
+- **Hành vi lấy xe / gây thiệt hại của ${actorVictim} KHÔNG cấu thành tội phạm và KHÔNG phải là hành vi vi phạm pháp luật.**
+- **Căn cứ pháp lý loại trừ trách nhiệm**: **Khoản 1 Điều 23 Bộ luật Hình sự năm 2015** (*Tình thế cấp thiết*) và **Khoản 1 Điều 11 Luật Xử lý vi phạm hành chính năm 2012**.
+
+---
+
+#### 2. Phân tích 03 điều kiện của Tình thế cấp thiết gắn với dữ kiện đề bài
+1. **Nguồn nguy hiểm đang hiện hữu thực tế**: ${actorVictim} đang bị **${dangerSource}**, đe dọa trực tiếp và tức khắc đến **tính mạng, sức khỏe**.
+2. **Biện pháp duy nhất ("không còn cách nào khác")**: Trong lúc nguy cấp để bảo toàn mạng sống, việc tự ý lấy tạm chiếc xe máy đang cắm sẵn chìa khóa của ${thirdPartyOwner} dựng bên đường để phóng chạy thoát thân là lựa chọn duy nhất. Về mặt chủ quan, ${actorVictim} **không có mục đích chiếm đoạt tài sản** làm của riêng nên không cấu thành *Tội trộm cắp tài sản* hay *Tội công nhiên chiếm đoạt tài sản*.
+3. **Thiệt hại gây ra nhỏ hơn thiệt hại cần ngăn ngừa**: Thiệt hại vật chất làm đổ vỡ dàn áo xe của ${thirdPartyOwner} (**${dmgMoney}**) **nhỏ hơn rất nhiều** so với giá trị tối cao cần bảo vệ là **tính mạng con người** của ${actorVictim}.
+
+---
+
+#### 3. Giải quyết trách nhiệm bồi thường số tiền ${dmgMoney} cho ${thirdPartyOwner} (Điều 595 BLDS 2015)
+- **${actorVictim} KHÔNG PHẢI BỒI THƯỜNG số tiền ${dmgMoney}** cho ${thirdPartyOwner} (vì thiệt hại ${dmgMoney} hoàn toàn nằm trong giới hạn cần thiết của tình thế cấp thiết, không vượt quá yêu cầu theo Khoản 1 Điều 595 BLDS 2015; ${actorVictim} chỉ có nghĩa vụ hoàn trả lại chiếc xe cho ${thirdPartyOwner}).
+- **Chủ thể bắt buộc phải bồi thường ${dmgMoney} cho ${thirdPartyOwner}**: Căn cứ **Khoản 2 Điều 595 Bộ luật Dân sự năm 2015**:
+  > *"Người đã gây ra tình thế cấp thiết dẫn đến thiệt hại xảy ra thì phải bồi thường cho người bị thiệt hại."*
+  Do đó, chính **${dangerSource}** là bên đã gây ra tình thế cấp thiết buộc ${actorVictim} phải lấy xe thoát thân, nên phải chịu trách nhiệm bồi thường toàn bộ **${dmgMoney}** cho **${thirdPartyOwner}** (đồng thời chịu trách nhiệm hình sự về hành vi truy sát người khác).`;
+    }
+
+    // 0b. Chủ thể mắc bệnh tâm thần / mất khả năng nhận thức hoặc trẻ em dưới tuổi chịu trách nhiệm
+    if (
+      qLower.includes('tâm thần') ||
+      qLower.includes('mất khả năng nhận thức') ||
+      (ageInfo.age !== undefined && ageInfo.age < 14 && !qLower.includes('đủ 14'))
+    ) {
+      const subName = actors[0] || 'Chủ thể thực hiện hành vi';
+      const reason =
+        ageInfo.age !== undefined && ageInfo.age < 14
+          ? `mới **${ageInfo.age} tuổi** (chưa đủ độ tuổi tối thiểu chịu TNHS từ đủ 14 tuổi theo **Điều 12 BLHS 2015** và chưa đủ tuổi bị xử phạt VPHC theo **Điều 5 Luật XLVPHC 2012**)`
+          : `đang mắc **bệnh tâm thần / mất khả năng nhận thức và điều khiển hành vi** (**Điều 21 BLHS 2015**, **Khoản 1 Điều 11 Luật XLVPHC 2012**)`;
+      return `### PHÂN TÍCH CỤ THỂ: HÀNH VI TRÁI PHÁP LUẬT NHƯNG KHÔNG CẤU THÀNH VI PHẠM PHÁP LUẬT
+
+- **Kết luận trực tiếp**: Hành vi của **${subName}** tuy gây thiệt hại thực tế nhưng **KHÔNG cấu thành tội phạm / vi phạm pháp luật hành chính** vì thiếu yếu tố **Năng lực trách nhiệm pháp lý của Chủ thể**.
+- **Giải thích theo dữ kiện đề bài**: ${subName} ${reason}. Một hiện tượng chỉ là vi phạm pháp luật khi hội tụ đủ cả 04 dấu hiệu (hành vi xác định, trái pháp luật, có lỗi, và do chủ thể có năng lực trách nhiệm pháp lý thực hiện).
+- **Trách nhiệm bồi thường dân sự (Điều 586 Bộ luật Dân sự 2015)**: Cha, mẹ hoặc người giám hộ hợp pháp của ${subName} có trách nhiệm dùng tài sản để **bồi thường thiệt hại thực tế** cho người bị hại theo quy định tại **Điều 586 BLDS 2015**.`;
+    }
+
+    // 0c. Tình huống đập phá đồ đạc do xích mích hàng xóm / nói xấu
     if (
       (qLower.includes('đập phá') || qLower.includes('hủy hoại')) &&
       (qLower.includes('đồ đạc') || qLower.includes('nói xấu') || qLower.includes('xích mích') || qLower.includes('hàng xóm'))
@@ -4643,8 +4646,8 @@ ${query}
       return this.solveDynamicPropertyDestructionCase(query);
     }
 
-    // Tự động phát hiện chủ thể thực hiện hành vi vi phạm dựa trên vị trí gần từ khóa hành vi
-    const actionVerbs = ['đập phá', 'hủy hoại', 'trộm', 'cướp', 'chiếm đoạt', 'đánh', 'gây thương tích', 'chém', 'giết', 'vượt đèn', 'gây tai nạn', 'lừa đảo'];
+    // 1. TRÍCH XUẤT CHI TIẾT DỮ KIỆN ĐỀ BÀI (CHỦ THỂ, NẠN NHÂN, CÔNG CỤ, HẬU QUẢ, TÌNH TIẾT TĂNG NẶNG)
+    const actionVerbs = ['đâm', 'chém', 'bắn', 'giết', 'gây tai nạn', 'tông', 'đập phá', 'hủy hoại', 'trộm', 'cướp', 'chiếm đoạt', 'đánh', 'gây thương tích', 'vượt đèn', 'lừa đảo'];
     let bestActor = '';
     let minDistance = 9999;
     for (const verb of actionVerbs) {
@@ -4661,84 +4664,197 @@ ${query}
       }
     }
 
-    const actorA = bestActor || actors[0] || 'Chủ thể thực hiện hành vi';
-    const otherActors = actors.filter((a) => a !== actorA);
-    const actorB = otherActors[0] || 'Bên bị thiệt hại';
+    const actorA = bestActor || actors[0] || 'Anh A';
+    const otherActors = actors.filter((a) => a.toLowerCase() !== actorA.toLowerCase());
+    const actorB = otherActors[0] || 'người bị hại';
 
-    let actionDesc = 'Hành vi vi phạm pháp luật được nêu trong tình huống';
-    let objectDesc = 'Trật tự an toàn xã hội và các quan hệ xã hội được pháp luật bảo vệ';
-    let lawClause = 'Quy định pháp luật hiện hành';
-    let faultType = 'Lỗi cố ý trực tiếp';
+    // Bóc tách công cụ / phương tiện cụ thể ngay từ câu hỏi
+    let concreteTool = '';
+    if (qLower.includes('dao')) concreteTool = 'con dao (hung khí nguy hiểm)';
+    else if (qLower.includes('mã tấu') || qLower.includes('kiếm')) concreteTool = 'mã tấu / kiếm (hung khí nguy hiểm)';
+    else if (qLower.includes('súng')) concreteTool = 'súng (vũ khí quân dụng / hung khí đặc biệt nguy hiểm)';
+    else if (qLower.includes('gậy')) concreteTool = 'gậy (hung khí nguy hiểm)';
+    else if (qLower.includes('gạch') || qLower.includes('đá')) concreteTool = 'gạch, đá (hung khí nguy hiểm)';
+    else if (qLower.includes('ô tô') || qLower.includes('xe tải') || qLower.includes('xe khách')) concreteTool = 'xe ô tô (nguồn nguy hiểm cao độ)';
+    else if (qLower.includes('xe máy') || qLower.includes('mô tô')) concreteTool = 'xe mô tô / xe máy (nguồn nguy hiểm cao độ)';
+    else if (qLower.includes('tai nạn') || qLower.includes('giao thông')) concreteTool = 'phương tiện giao thông đường bộ (nguồn nguy hiểm cao độ)';
 
-    if (qLower.includes('giết') || qLower.includes('tước đoạt tính mạng') || qLower.includes('chém') || qLower.includes('đâm') || qLower.includes('bắn')) {
-      actionDesc = `Hành vi dùng hung khí/vũ lực tước đoạt tính mạng của ${actorB}`;
-      objectDesc = 'Quyền được sống, quyền bất khả xâm phạm về tính mạng của con người (được Hiến pháp 2013 và Bộ luật Hình sự bảo vệ ở mức độ tối cao)';
-      lawClause = 'Điều 123 Bộ luật Hình sự 2015 về Tội giết người và Điều 8 BLHS 2015';
-      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ tính chất đặc biệt nguy hiểm cho xã hội của hành vi tước đoạt tính mạng và mong muốn hậu quả chết người xảy ra) hoặc Lỗi cố ý gián tiếp';
-    } else if (qLower.includes('trộm cắp') || qLower.includes('trộm')) {
-      actionDesc = `Hành vi lén lút, bí mật chiếm đoạt tài sản của ${actorB}${money ? ` có giá trị ${money}` : ''}`;
-      objectDesc = 'Quyền sở hữu tài sản hợp pháp của công dân (được Hiến pháp 2013 và Bộ luật Hình sự bảo vệ)';
-      lawClause = 'Điều 173 Bộ luật Hình sự 2015 (sửa đổi 2017) về Tội trộm cắp tài sản';
-      faultType = 'Lỗi cố ý trực tiếp (mong muốn chiếm đoạt tài sản làm của riêng)';
-    } else if (qLower.includes('cướp')) {
-      actionDesc = `Hành vi dùng vũ lực hoặc đe dọa dùng vũ lực ngay tức khắc nhằm chiếm đoạt tài sản của ${actorB}`;
-      objectDesc = 'Quyền sở hữu tài sản và quyền bất khả xâm phạm về sức khỏe, tính mạng của con người';
-      lawClause = 'Điều 168 Bộ luật Hình sự 2015 về Tội cướp tài sản';
-      faultType = 'Lỗi cố ý trực tiếp';
-    } else if (qLower.includes('lừa đảo') || qLower.includes('lừa tiền') || qLower.includes('lừa chiếm đoạt')) {
-      actionDesc = `Hành vi dùng thủ đoạn gian dối làm cho ${actorB} tin tưởng giao tài sản rồi chiếm đoạt${money ? ` giá trị ${money}` : ''}`;
-      objectDesc = 'Quyền sở hữu tài sản hợp pháp của cá nhân, tổ chức được pháp luật hình sự bảo vệ';
-      lawClause = 'Điều 174 Bộ luật Hình sự 2015 về Tội lừa đảo chiếm đoạt tài sản';
-      faultType = 'Lỗi cố ý trực tiếp (mục đích chiếm đoạt xuất hiện trước khi thực hiện hành vi gian dối)';
-    } else if (qLower.includes('vượt đèn đỏ') || qLower.includes('vượt đèn')) {
-      actionDesc = `Hành vi điều khiển phương tiện không chấp hành hiệu lệnh của đèn tín hiệu giao thông (vượt đèn đỏ)`;
-      objectDesc = 'Trật tự, an toàn giao thông đường bộ và trật tự quản lý công cộng của Nhà nước';
-      lawClause = 'Điểm a Khoản 5 Điều 5 hoặc Điểm e Khoản 4 Điều 6 Nghị định 100/2019/NĐ-CP (sửa đổi bởi Nghị định 123/2021/NĐ-CP) và Luật Giao thông đường bộ 2008';
-      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ đèn tín hiệu đỏ nhưng vẫn cố tình không dừng lại)';
-    } else if (qLower.includes('tai nạn') || qLower.includes('va chạm') || qLower.includes('xe máy') || qLower.includes('ô tô')) {
-      actionDesc = `Hành vi điều khiển phương tiện tham gia giao thông không chấp hành tín hiệu/quy tắc an toàn, gây va chạm làm hư hỏng tài sản${money ? ` (thiệt hại ${money})` : ''}`;
-      objectDesc = 'Trật tự an toàn giao thông đường bộ và quyền sở hữu tài sản hợp pháp của người tham gia giao thông';
-      lawClause = 'Nghị định 100/2019/NĐ-CP (sửa đổi bởi Nghị định 123/2021/NĐ-CP) và Điều 584, Điều 601 Bộ luật Dân sự 2015';
-      faultType = 'Lỗi cố ý đối với hành vi vi phạm quy tắc giao thông, lỗi vô ý đối với hậu quả thiệt hại tài sản';
-    } else if (qLower.includes('thương tích') || qLower.includes('đánh') || qLower.includes('gậy') || qLower.includes('hung khí')) {
-      actionDesc = `Hành vi dùng vũ lực/hung khí tấn công gây tổn thương cơ thể cho ${actorB}${injury ? ` với tỷ lệ thương tích ${injury}` : ''}`;
-      objectDesc = 'Quyền bất khả xâm phạm về tính mạng, sức khỏe của con người (được Hiến pháp và pháp luật hình sự bảo vệ tuyệt đối)';
-      lawClause = 'Điều 134 Bộ luật Hình sự 2015 về Tội cố ý gây thương tích hoặc gây tổn hại cho sức khỏe của người khác';
-      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ hành vi nguy hiểm và mong muốn hậu quả thương tích xảy ra)';
-    } else if (qLower.includes('đập phá') || qLower.includes('hủy hoại')) {
-      actionDesc = `Hành vi dùng sức mạnh cơ học hoặc công cụ đập phá, làm hư hỏng đồ đạc, tài sản của ${actorB}${money ? ` có giá trị ${money}` : ''}`;
-      objectDesc = 'Quyền sở hữu tài sản hợp pháp của công dân (được Điều 178 BLHS 2015 và Điều 584, Điều 589 BLDS 2015 bảo vệ)';
-      lawClause = 'Điều 178 Bộ luật Hình sự 2015 hoặc Điểm a Khoản 2 Điều 15 Nghị định 144/2021/NĐ-CP và Điều 584, Điều 589 BLDS 2015';
-      faultType = 'Lỗi cố ý trực tiếp (nhận thức rõ hành vi đập phá là trái pháp luật và mong muốn làm hư hại tài sản)';
+    const hasDeath = /(?:thiệt mạng|chết người|làm chết|đâm chết|chém chết|tông chết|tử vong|tước đoạt tính mạng|mất mạng)/i.test(qLower);
+    const isTrafficAccident = /(?:gây tai nạn|tai nạn giao thông|va chạm giao thông|vượt đèn đỏ gây tai nạn|tông trúng|đâm xe)/i.test(qLower);
+    const hasHitAndRun = /(?:bỏ trốn|bỏ chạy|trốn khỏi hiện trường|không cứu giúp)/i.test(qLower);
+    const hasAlcohol = /(?:rượu|bia|nồng độ cồn|say xỉn)/i.test(qLower);
+    const explicitlyAsks4Elements = /(?:4 yếu tố|bốn yếu tố|cấu thành vi phạm|mặt khách quan)/i.test(qLower);
+
+    // =========================================================================
+    // KỊCH BẢN A: GÂY TAI NẠN GIAO THÔNG LÀM CHẾT NGƯỜI (KÈM TÌNH TIẾT BỎ TRỐN / NỒNG ĐỘ CỒN) — ĐIỀU 260 BLHS 2015
+    // =========================================================================
+    if (isTrafficAccident && (hasDeath || hasHitAndRun || (injury && parseInt(injury, 10) >= 61))) {
+      const frameClause = hasHitAndRun
+        ? '**Điểm c Khoản 2 Điều 260 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** (*"Bỏ chạy để trốn tránh trách nhiệm hoặc cố ý không cứu giúp người bị nạn"*)'
+        : hasAlcohol
+          ? '**Điểm b Khoản 2 Điều 260 Bộ luật Hình sự năm 2015** (*trong máu hoặc hơi thở có nồng độ cồn vượt mức quy định*)'
+          : '**Điểm a Khoản 1 Điều 260 Bộ luật Hình sự năm 2015** (*Làm chết người*)';
+      const penaltyRange = hasHitAndRun || hasAlcohol
+        ? '**phạt tù từ 03 năm đến 10 năm** (thuộc loại *Tội phạm rất nghiêm trọng* theo Khoản 3 Điều 9 BLHS 2015)'
+        : 'phạt tiền từ 30.000.000 đồng đến 100.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 01 năm đến 05 năm**';
+
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI GÂY TAI NẠN LÀM CHẾT NGƯỜI${hasHitAndRun ? ' RỒI BỎ TRỐN' : ''}
+
+---
+
+#### 1. Kết luận trực tiếp: ${actorA} CÓ vi phạm pháp luật không?
+- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorA} CÓ VI PHẠM PHÁP LUẬT ĐẶC BIỆT NGHIÊM TRỌNG**, cụ thể là **Vi phạm pháp luật Hình sự (Tội phạm)** và phát sinh **Trách nhiệm bồi thường thiệt hại Dân sự** *(tuyệt đối không chỉ dừng ở mức xử phạt hành chính giao thông thông thường)*.
+- **Định danh tội phạm**: Cấu thành **Tội vi phạm quy định về tham gia giao thông đường bộ** theo ${frameClause}.
+
+---
+
+#### 2. Phân tích cụ thể cấu thành hành vi và yếu tố lỗi của ${actorA}
+1. **Về Mặt khách quan (Hành vi kép & Hậu quả thực tế)**:
+   - *Hành vi thứ nhất*: ${actorA} điều khiển ${concreteTool || 'phương tiện giao thông'} vi phạm quy tắc an toàn giao thông đường bộ, trực tiếp gây tai nạn dẫn đến hậu quả đặc biệt nghiêm trọng là **làm chết người**.
+   ${hasHitAndRun ? `- *Hành vi thứ hai (Tình tiết định khung tăng nặng)*: Sau khi gây tai nạn chết người, thay vì dừng xe giữ nguyên hiện trường và đưa nạn nhân đi cấp cứu theo nghĩa vụ bắt buộc của Luật Trật tự, an toàn giao thông đường bộ 2024, ${actorA} đã **bỏ trốn khỏi hiện trường nhằm trốn tránh trách nhiệm**.` : ''}
+2. **Về Mặt chủ quan (Phân hóa rõ trạng thái lỗi)**:
+   - *Đối với vụ tai nạn làm chết người*: Là **lỗi vô ý** (vô ý vì quá tự tin hoặc vô ý do cẩu thả — ${actorA} không mong muốn làm chết người nhưng đã vi phạm quy tắc an toàn khi điều khiển phương tiện).
+   ${hasHitAndRun ? `- *Đối với hành vi bỏ trốn sau tai nạn*: Mang **ý thức cố ý trốn tránh trách nhiệm / bỏ mặc tính mạng người bị nạn**, thể hiện thái độ coi thường pháp luật và đạo đức xã hội nghiêm trọng.` : ''}
+3. **Về Khách thể bị xâm phạm**: Xâm phạm đồng thời **trật tự an toàn giao thông đường bộ** và **quyền sống, tính mạng của người tham gia giao thông**.
+4. **Về Chủ thể**: ${actorA}${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''} có năng lực trách nhiệm hình sự và đạt độ tuổi chịu TNHS theo **Điều 12 BLHS 2015** (từ đủ 16 tuổi trở lên chịu TNHS về Điều 260).
+
+---
+
+#### 3. Chế tài Hình sự & Nghĩa vụ bồi thường Dân sự cụ thể đối với ${actorA}
+1. **Trách nhiệm Hình sự (${frameClause})**:
+   - Do có hậu quả **làm chết người**${hasHitAndRun ? ' kết hợp tình tiết tăng nặng định khung **"bỏ chạy để trốn tránh trách nhiệm hoặc cố ý không cứu giúp người bị nạn"** tại **Điểm c Khoản 2 Điều 260 BLHS 2015**' : ''}, khung hình phạt áp dụng đối với ${actorA} là ${penaltyRange}.
+   - Ngoài ra, người phạm tội còn có thể bị cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc liên quan đến điều khiển phương tiện giao thông từ **01 năm đến 05 năm** (**Khoản 5 Điều 260 BLHS 2015**).
+2. **Trách nhiệm Dân sự bắt buộc (Điều 584, Điều 591 và Điều 601 Bộ luật Dân sự năm 2015)**:
+   - ${actorA} phải bồi thường toàn bộ thiệt hại do tính mạng bị xâm phạm cho gia đình nạn nhân, bao gồm:
+     + Chi phí hợp lý cho việc cứu chữa trước khi chết (nếu có) và **chi phí hợp lý cho việc mai táng**;
+     + **Tiền cấp dưỡng** cho những người mà nạn nhân có nghĩa vụ cấp dưỡng (con chưa thành niên, cha mẹ già mất khả năng lao động...);
+     + **Khoản tiền bù đắp tổn thất về tinh thần** cho những người thân thích thuộc hàng thừa kế thứ nhất của nạn nhân (do các bên thỏa thuận; nếu không thỏa thuận được thì tối đa không quá **100 lần mức lương cơ sở** theo Khoản 2 Điều 591 BLDS 2015).`;
     }
 
-    const citedLaw =
-      lawClause !== 'Quy định pháp luật hiện hành'
-        ? lawClause
-        : articles.length > 0
-          ? `Điều ${articles[0].articleNumber} ${articles[0].lawName}`
-          : 'Quy định pháp luật hiện hành';
+    // =========================================================================
+    // KỊCH BẢN B: CỐ Ý DÙNG HUNG KHÍ (DAO / MÃ TẤU / SÚNG...) ĐÂM, CHÉM LÀM CHẾT NGƯỜI — TỘI GIẾT NGƯỜI (ĐIỀU 123 BLHS 2015)
+    // =========================================================================
+    if (
+      !isTrafficAccident &&
+      (qLower.includes('giết') ||
+        qLower.includes('tước đoạt tính mạng') ||
+        ((qLower.includes('đâm') || qLower.includes('chém') || qLower.includes('bắn') || qLower.includes('đánh')) && hasDeath))
+    ) {
+      const weaponText = concreteTool || 'hung khí nguy hiểm / vũ lực mạnh';
+      if (explicitlyAsks4Elements) {
+        return `### PHÂN TÍCH 04 YẾU TỐ CẤU THÀNH TỘI GIẾT NGƯỜI TRONG TÌNH HUỐNG CỦA ${actorA.toUpperCase()}
+*(Căn cứ **Điều 8, Điều 10, Điều 12 và Điều 123 Bộ luật Hình sự năm 2015** & **Điều 591 Bộ luật Dân sự năm 2015**)*
 
-    return `### I. KẾT LUẬN SƠ BỘ VỀ HÀNH VI
-Hành vi của **${actorA}** trong tình huống có đầy đủ các dấu hiệu cấu thành **Vi phạm pháp luật** theo quy định của pháp luật Việt Nam.
+- **Kết luận**: Hành vi của **${actorA}** dùng **${weaponText}** cố ý đâm làm **${actorB} thiệt mạng** là **Vi phạm pháp luật Hình sự đặc biệt nghiêm trọng**, cấu thành **Tội giết người (Điều 123 BLHS 2015)**.
 
----
-
-### II. BẢNG PHÂN TÍCH 4 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT
-*(Theo đúng khung Barem chuẩn môn Pháp luật Đại cương - Bộ GD&ĐT)*
-
-| Yếu tố cấu thành | Nội dung phân tích cụ thể trong tình huống | Ý nghĩa & Căn cứ pháp lý |
+| Yếu tố cấu thành | Phân tích gắn chặt dữ kiện vụ án (${actorA} – ${actorB}) | Căn cứ & Hệ quả pháp lý |
 | :--- | :--- | :--- |
-| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: ${actionDesc}.<br>• **Hậu quả thiệt hại**: ${money ? `Gây thiệt hại về tài sản trị giá ${money}` : injury ? `Gây thương tổn sức khỏe với tỷ lệ ${injury}` : 'Xâm phạm trực tiếp đến quyền và lợi ích hợp pháp của người bị hại'}.<br>• **Mối quan hệ nhân quả**: Hành vi trái pháp luật của ${actorA} là nguyên nhân trực tiếp, tất yếu dẫn đến hậu quả thiệt hại xảy ra.<br>• **Công cụ, phương tiện**: Thể hiện cụ thể trong diễn biến tình huống. | Biểu hiện ra thế giới khách quan, xác định mức độ nguy hiểm cho xã hội của hành vi. |
-| **2. Mặt chủ quan** | • **Hình thức lỗi**: **${faultType}**.<br>- *Về lý trí*: Chủ thể nhận thức được tính chất nguy hiểm cho xã hội của hành vi.<br>- *Về ý chí*: Chủ thể mong muốn hoặc để mặc cho hậu quả xảy ra.<br>• **Động cơ, mục đích**: Thể hiện thái độ tâm lý chủ quan khi thực hiện hành vi vi phạm. | Phản ánh trạng thái tâm lý bên trong của người vi phạm đối với hành vi và hậu quả do mình gây ra. |
-| **3. Khách thể** | Xâm phạm trực tiếp đến: **${objectDesc}**. | Xác định loại quan hệ xã hội được pháp luật bảo vệ bị xâm hại. |
-| **4. Chủ thể** | **${actorA}**${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''}: Có đầy đủ năng lực trách nhiệm pháp lý, đạt độ tuổi luật định, không thuộc trường hợp mất khả năng nhận thức hoặc điều khiển hành vi. | Đạt độ tuổi và có năng lực trách nhiệm pháp lý theo luật định. |
+| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: ${actorA} sử dụng **${weaponText}** trực tiếp đâm/tấn công tước đoạt trái phép tính mạng của **${actorB}**.<br>• **Công cụ phạm tội**: **${weaponText}** (có khả năng sát thương gây tử vong cao).<br>• **Hậu quả thực tế**: **${actorB} thiệt mạng (tử vong)**.<br>• **Quan hệ nhân quả**: Nhát đâm bằng ${weaponText} của ${actorA} là nguyên nhân trực tiếp gây ra cái chết của ${actorB}. | Thỏa mãn mặt khách quan của **Tội giết người (Điều 123 BLHS 2015)**. |
+| **2. Mặt chủ quan** | • **Lỗi cố ý trực tiếp (Khoản 1 Điều 10 BLHS 2015)** *(hoặc cố ý gián tiếp nếu đâm vào vùng trọng yếu và để mặc hậu quả)*: ${actorA} nhận thức rõ ${weaponText} là hung khí nguy hiểm có thể tước đoạt mạng sống của ${actorB} nhưng vẫn cố ý thực hiện hành vi đâm. | Lỗi cố ý đối với hậu quả chết người — dấu hiệu phân biệt với tội vô ý làm chết người (Điều 128). |
+| **3. Khách thể** | Xâm phạm trực tiếp **Quyền sống, quyền bất khả xâm phạm về tính mạng con người** của ${actorB}. | Được bảo vệ tối cao tại **Điều 19 Hiến pháp 2013** và Chương XIV BLHS 2015. |
+| **4. Chủ thể** | **${actorA}**${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''}: Cá nhân có năng lực TNHS bình thường và đạt độ tuổi chịu TNHS (từ **đủ 14 tuổi trở lên** đã phải chịu TNHS về Tội giết người theo **Khoản 2 Điều 12 BLHS 2015**). | Đủ tư cách chủ thể của tội phạm đặc biệt nghiêm trọng. |
+
+- **Khung hình phạt & Bồi thường**: Phạt tù từ **12 – 20 năm, tù chung thân hoặc tử hình** (**Khoản 1 Điều 123** nếu có tính chất côn đồ/đê hèn...) hoặc **07 – 15 năm tù** (**Khoản 2 Điều 123**); đồng thời bồi thường toàn bộ chi phí cứu chữa, mai táng, cấp dưỡng và tổn thất tinh thần tối đa **100 lần mức lương cơ sở** cho gia đình ${actorB} (**Điều 591 BLDS 2015**).`;
+      }
+
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI DÙNG ${weaponText.toUpperCase()} ĐÂM LÀM ${actorB.toUpperCase()} THIỆT MẠNG
 
 ---
 
-### III. KẾT LUẬN & TRÁCH NHIỆM PHÁP LÝ ÁP DỤNG
-- **Căn cứ pháp lý xác định**: **${citedLaw}**.
-- **Chế tài áp dụng**: Chủ thể phải chịu trách nhiệm pháp lý tương ứng và có trách nhiệm **bồi thường toàn bộ thiệt hại thực tế phát sinh** theo quy định của **Bộ luật Dân sự 2015**.`;
+#### 1. Kết luận trực tiếp: ${actorA} CÓ vi phạm pháp luật không?
+- **KẾT LUẬN DỨT KHOÁT**: **CÓ.** Hành vi của **${actorA}** dùng **${weaponText}** cố ý đâm làm **${actorB} thiệt mạng** là **Vi phạm pháp luật Hình sự đặc biệt nghiêm trọng**, cấu thành **Tội giết người** theo quy định tại **Điều 123 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)**.
+
+---
+
+#### 2. Phân tích cụ thể các dấu hiệu pháp lý từ dữ kiện đề bài
+1. **Hành vi, công cụ và hậu quả (Mặt khách quan)**:
+   - ${actorA} đã thực hiện hành vi tước đoạt tính mạng người khác trái pháp luật bằng công cụ sát thương trực tiếp là **${weaponText}**.
+   - Hậu quả đặc biệt nghiêm trọng đã xảy ra trên thực tế: **${actorB} bị thiệt mạng (tử vong)**, có mối quan hệ nhân quả trực tiếp với hành vi đâm của ${actorA}.
+2. **Trạng thái tâm lý và lỗi (Mặt chủ quan — Điều 10 BLHS 2015)**:
+   - Đề bài nêu rõ ${actorA} **"cố ý đâm"** bằng **${weaponText}**: ${actorA} nhận thức rõ việc dùng dao đâm vào cơ thể ${actorB} là cực kỳ nguy hiểm đến tính mạng, thấy trước hậu quả ${actorB} có thể tử vong và **mong muốn (lỗi cố ý trực tiếp)** hoặc **chấp nhận để mặc hậu quả chết người xảy ra (lỗi cố ý gián tiếp)**.
+3. **Khách thể bị xâm phạm**: Xâm phạm trực tiếp **Quyền sống** của ${actorB} được hiến định tại **Điều 19 Hiến pháp năm 2013**.
+4. **Năng lực chủ thể (Điều 12 BLHS 2015)**: Đối với *Tội giết người (Điều 123)*, pháp luật quy định rất nghiêm khắc: người chỉ cần **từ đủ 14 tuổi trở lên** và có khả năng nhận thức, điều khiển hành vi đã phải chịu trách nhiệm hình sự (**Khoản 2 Điều 12 BLHS 2015**).
+
+---
+
+#### 3. Trách nhiệm Hình sự & Bồi thường Dân sự cụ thể mà ${actorA} phải chịu
+1. **Trách nhiệm Hình sự (Điều 123 Bộ luật Hình sự 2015)**:
+   - **Khoản 1 Điều 123**: Nếu thuộc một trong các tình tiết định khung tăng nặng (như *có tính chất côn đồ, vì động cơ đê hèn, giết người dưới 16 tuổi, giết phụ nữ có thai...*), ${actorA} bị phạt tù từ **12 năm đến 20 năm, tù chung thân hoặc tử hình**.
+   - **Khoản 2 Điều 123**: Nếu không thuộc các tình tiết tại Khoản 1, ${actorA} bị phạt tù từ **07 năm đến 15 năm**.
+2. **Trách nhiệm Dân sự bắt buộc (Điều 584 và Điều 591 Bộ luật Dân sự năm 2015)**:
+   - ${actorA} phải bồi thường cho gia đình ${actorB}: (i) Chi phí hợp lý cho việc cứu chữa trước khi mất; (ii) **Chi phí mai táng** hợp lý; (iii) **Tiền cấp dưỡng** cho người mà ${actorB} có nghĩa vụ cấp dưỡng; và (iv) **Khoản tiền bù đắp tổn thất về tinh thần** cho thân nhân hàng thừa kế thứ nhất của ${actorB} (tối đa không quá **100 lần mức lương cơ sở** theo Khoản 2 Điều 591 BLDS 2015 nếu các bên không tự thỏa thuận được).`;
+    }
+
+    // =========================================================================
+    // KỊCH BẢN C: CỐ Ý GÂY THƯƠNG TÍCH (CHƯA CHẾT NGƯỜI) — ĐIỀU 134 BLHS 2015 & ĐIỀU 590 BLDS 2015
+    // =========================================================================
+    if ((qLower.includes('thương tích') || qLower.includes('đánh') || qLower.includes('đâm') || qLower.includes('chém')) && !hasDeath) {
+      const hasWeapon = Boolean(concreteTool);
+      const pctNum = injury ? parseInt(injury, 10) : null;
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI TẤN CÔNG XÂM PHẠM SỨC KHỎE NGƯỜI KHÁC
+
+- **Kết luận trực tiếp**: Hành vi của **${actorA}** ${concreteTool ? `sử dụng **${concreteTool}** ` : ''}tấn công **${actorB}**${injury ? ` gây tỷ lệ tổn thương cơ thể **${injury}**` : ''} là **hành vi vi phạm pháp luật** xâm phạm trực tiếp đến sức khỏe con người.
+- **Định danh trách nhiệm pháp lý cụ thể theo dữ kiện**:
+  1. **Về Trách nhiệm Hình sự / Hành chính**:
+     ${pctNum !== null && pctNum >= 11
+       ? `- Do tỷ lệ tổn thương cơ thể là **${injury} (từ 11% trở lên)**, hành vi của ${actorA} đã cấu thành **Tội cố ý gây thương tích** theo **Điều 134 Bộ luật Hình sự 2015** (${pctNum >= 31 || hasWeapon ? 'phạt tù từ **02 năm đến 06 năm** tại **Khoản 2 Điều 134** do tỷ lệ thương tật cao hoặc dùng hung khí nguy hiểm' : 'phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** tại **Khoản 1 Điều 134**'}).`
+       : hasWeapon
+         ? `- Do ${actorA} sử dụng **${concreteTool}** (thuộc tình tiết *dùng hung khí nguy hiểm* tại **Điểm a Khoản 1 Điều 134 BLHS 2015**), nên **ngay cả khi tỷ lệ thương tích của ${actorB} dưới 11%**, ${actorA} vẫn có thể bị truy cứu trách nhiệm hình sự về **Tội cố ý gây thương tích** (phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** theo Khoản 1; nếu thương tích từ 11% đến 30% kèm hung khí nguy hiểm thì phạt tù từ **02 năm đến 06 năm** theo Khoản 2 Điều 134).`
+         : `- Nếu giám định tỷ lệ tổn thương cơ thể của ${actorB} **từ 11% trở lên** (hoặc dưới 11% nhưng có tính chất côn đồ, dùng hung khí nguy hiểm...): Truy cứu TNHS về **Tội cố ý gây thương tích (Điều 134 BLHS 2015)**.\n     - Nếu tỷ lệ tổn thương cơ thể **dưới 11%** và không có tình tiết định khung tại Khoản 1 Điều 134: Bị xử phạt **Vi phạm hành chính** từ **5.000.000 đồng đến 8.000.000 đồng** theo **Điểm a Khoản 5 Điều 7 Nghị định 144/2021/NĐ-CP**.`}
+  2. **Về Trách nhiệm Dân sự (Điều 584 & Điều 590 Bộ luật Dân sự 2015)**:
+     - ${actorA} bắt buộc phải bồi thường cho ${actorB} toàn bộ chi phí khám chữa bệnh, phục hồi chức năng, thu nhập thực tế bị mất, chi phí người chăm sóc và tiền bù đắp tổn thất tinh thần (**tối đa không quá 50 lần mức lương cơ sở**).`;
+    }
+
+    // =========================================================================
+    // KỊCH BẢN D: CÁC TỘI XÂM PHẠM SỞ HỮU (TRỘM CẮP / CƯỚP / LỪA ĐẢO / HỦY HOẠI TÀI SẢN) & VƯỢT ĐÈN ĐỎ HÀNH CHÍNH
+    // =========================================================================
+    if (qLower.includes('cướp')) {
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI DÙNG VŨ LỰC / ĐE DỌA VŨ LỰC NGAY TỨC KHẮC CHIẾM ĐOẠT TÀI SẢN
+
+- **Kết luận trực tiếp**: Hành vi của **${actorA}** là **Vi phạm pháp luật Hình sự đặc biệt nghiêm trọng**, cấu thành **Tội cướp tài sản** theo **Điều 168 Bộ luật Hình sự năm 2015** *(hoặc **Tội cướp giật tài sản — Điều 171 BLHS 2015** nếu giật nhanh tài sản rồi tẩu thoát mà không dùng vũ lực đè bẹp sự kháng cự)*.
+- **Điểm đặc thù pháp lý của vụ việc**:
+  1. *Cấu thành hình thức*: Tội cướp tài sản (Điều 168) cấu thành ngay từ thời điểm ${actorA} dùng vũ lực hoặc đe dọa dùng vũ lực ngay tức khắc làm ${actorB} lâm vào tình trạng không thể chống cự được nhằm chiếm đoạt tài sản (**không phụ thuộc giá trị tài sản lớn hay nhỏ**, dù dưới 2 triệu đồng vẫn phạm tội hình sự!).
+  2. *Độ tuổi chịu TNHS*: Người **từ đủ 14 tuổi trở lên** đã phải chịu TNHS về tội này (**Khoản 2 Điều 12 BLHS 2015**).
+  3. *Khung hình phạt & Dân sự*: Khung cơ bản tại **Khoản 1 Điều 168** là **phạt tù từ 03 năm đến 10 năm** (nếu dùng vũ khí, phương tiện nguy hiểm hoặc chiếm đoạt từ 50 triệu đến dưới 200 triệu đồng tại Khoản 2 thì phạt tù từ **07 năm đến 15 năm**); buộc hoàn trả tài sản${money ? ` (${money})` : ''} và bồi thường thiệt hại theo **Điều 584, 589, 590 BLDS 2015**.`;
+    }
+
+    if (qLower.includes('trộm') || qLower.includes('lừa đảo') || qLower.includes('đập phá') || qLower.includes('hủy hoại')) {
+      const isFraud = qLower.includes('lừa đảo');
+      const isDestroy = qLower.includes('đập phá') || qLower.includes('hủy hoại');
+      const crimeTitle = isFraud
+        ? 'Tội lừa đảo chiếm đoạt tài sản (Điều 174 BLHS 2015)'
+        : isDestroy
+          ? 'Tội hủy hoại hoặc cố ý làm hư hỏng tài sản (Điều 178 BLHS 2015)'
+          : 'Tội trộm cắp tài sản (Điều 173 BLHS 2015)';
+      const methodDesc = isFraud
+        ? 'dùng **thủ đoạn gian dối** làm cho chủ tài sản tin tưởng tự nguyện giao tài sản rồi chiếm đoạt'
+        : isDestroy
+          ? 'cố ý tác động vật lý làm mất hoặc giảm giá trị sử dụng tài sản của người khác'
+          : '**lén lút, bí mật** chiếm đoạt tài sản đang trong sự quản lý của người khác';
+
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI XÂM PHẠM QUYỀN SỞ HỮU TÀI SẢN CỦA ${actorA.toUpperCase()}
+
+- **Kết luận trực tiếp**: Hành vi của **${actorA}** (${methodDesc}${money ? `, giá trị tài sản **${money}**` : ''}) là **hành vi vi phạm pháp luật** xâm phạm quyền sở hữu hợp pháp của **${actorB}** với **lỗi cố ý trực tiếp**.
+- **Ranh giới xử lý Hình sự vs. Hành chính theo định lượng tài sản**:
+  1. **Truy cứu trách nhiệm Hình sự về ${crimeTitle}**: Khi giá trị tài sản bị xâm phạm **từ 2.000.000 đồng trở lên** (hoặc dưới 2 triệu đồng nhưng đã từng bị xử phạt VPHC / chưa được xóa án tích về hành vi này):
+     - Từ 2 triệu đến dưới 50 triệu đồng (**Khoản 1**): Phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** *(riêng Điều 178 có thêm mức phạt tiền 10 – 50 triệu đồng)*.
+     - Từ 50 triệu đến dưới 200 triệu đồng (**Khoản 2**): **Phạt tù từ 02 năm đến 07 năm**.
+  2. **Xử phạt Vi phạm hành chính (Nghị định 144/2021/NĐ-CP — Điều 15)**: Nếu giá trị tài sản **dưới 2.000.000 đồng** và vi phạm lần đầu $\\rightarrow$ Phạt tiền từ **2.000.000 – 5.000.000 đồng** (không phạt tù).
+  3. **Trách nhiệm Dân sự (Điều 584, Điều 589 BLDS 2015)**: Buộc hoàn trả nguyên vẹn tài sản hoặc bồi thường toàn bộ giá trị tài sản bị mất/hư hỏng${money ? ` (**${money}**)` : ''} cho ${actorB}.`;
+    }
+
+    if (qLower.includes('vượt đèn đỏ') || qLower.includes('vượt đèn')) {
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI ĐIỀU KHIỂN PHƯƠNG TIỆN VƯỢT ĐÈN ĐỎ
+
+- **Kết luận trực tiếp**: Hành vi của **${actorA}** điều khiển ${concreteTool || 'phương tiện giao thông'} không chấp hành hiệu lệnh của đèn tín hiệu giao thông (**vượt đèn đỏ**) với **lỗi cố ý trực tiếp** là **Vi phạm pháp luật Hành chính** về trật tự, an toàn giao thông đường bộ (nếu chưa gây hậu quả chết người / thương tích từ 61% / thiệt hại tài sản từ 100 triệu đồng trở lên theo Điều 260 BLHS).
+- **Chế tài xử phạt cụ thể theo Nghị định 168/2024/NĐ-CP (hiệu lực từ 01/01/2025)**:
+  + *Đối với xe mô tô, xe gắn máy (Điểm c Khoản 7 Điều 7)*: Phạt tiền từ **4.000.000 đồng đến 6.000.000 đồng** và **trừ 04 điểm giấy phép lái xe** *(nếu gây tai nạn giao thông thì phạt 10 – 14 triệu đồng và trừ 10 điểm GPLX)*.
+  + *Đối với xe ô tô (Điểm b Khoản 9 Điều 6)*: Phạt tiền từ **18.000.000 đồng đến 20.000.000 đồng** và **trừ 04 điểm giấy phép lái xe** *(nếu gây tai nạn thì phạt 20 – 22 triệu đồng và trừ 10 điểm GPLX)*.
+- **Trách nhiệm dân sự**: Nếu việc vượt đèn đỏ gây va chạm làm hư hỏng tài sản${money ? ` (${money})` : ''} của người khác thì ${actorA} phải bồi thường toàn bộ thiệt hại thực tế theo **Điều 584 và Điều 601 Bộ luật Dân sự 2015**.`;
+    }
+
+    // Với mọi tình huống lạ / chưa có trong kịch bản chuyên sâu: TUYỆT ĐỐI KHÔNG in bảng chung chung, mà chuyển thẳng xuống BƯỚC 4 (Fine-tuned Qwen2.5-3B LLM) phân tích sát từng chữ!
+    return `### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG`;
   }
 
   // --- DẠNG 2: NHẬN ĐỊNH ĐÚNG / SAI ĐỘNG (HỖ TRỢ ĐƠN Ý VÀ ĐA Ý) ---
@@ -6956,8 +7072,13 @@ Quy phạm pháp luật (QPPL) là quy tắc xử sự chung mang tính bắt bu
       return this.solveDynamicDefamationOnlineStudentCase(query);
     }
 
-    // 2.5 Tình huống tội phạm hình sự hoặc xem xét cấu thành vi phạm pháp luật
+    // 2.5 Tình huống tội phạm hình sự, tai nạn giao thông nghiêm trọng, tình thế cấp thiết hoặc xem xét cấu thành vi phạm pháp luật
     if (
+      qLower.includes('truy sát') ||
+      qLower.includes('thoát thân') ||
+      qLower.includes('tình thế cấp thiết') ||
+      qLower.includes('gây tai nạn') ||
+      (qLower.includes('tai nạn') && (qLower.includes('chết') || qLower.includes('thiệt mạng') || qLower.includes('bỏ trốn'))) ||
       qLower.includes('giết') ||
       qLower.includes('tước đoạt tính mạng') ||
       qLower.includes('chém') ||
