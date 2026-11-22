@@ -98,6 +98,8 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     15: 'Phạm tội chưa đạt',
     16: 'Tự ý nửa chừng chấm dứt việc phạm tội',
     17: 'Đồng phạm',
+    18: 'Che giấu tội phạm',
+    19: 'Không tố giác tội phạm',
     20: 'Sự kiện bất ngờ',
     21: 'Tình trạng không có năng lực trách nhiệm hình sự',
     22: 'Phòng vệ chính đáng',
@@ -113,6 +115,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     45: 'Cơ sở quyết định hình phạt',
     51: 'Các tình tiết giảm nhẹ trách nhiệm hình sự',
     52: 'Các tình tiết tăng nặng trách nhiệm hình sự',
+    54: 'Quyết định hình phạt dưới mức thấp nhất của khung hình phạt được áp dụng',
     65: 'Án treo',
     69: 'Xóa án tích',
     70: 'Đương nhiên được xóa án tích',
@@ -170,7 +173,9 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     353: 'Tội tham ô tài sản',
     354: 'Tội nhận hối lộ',
     355: 'Tội lạm dụng chức vụ, quyền hạn chiếm đoạt tài sản',
-    364: 'Tội đưa hối lộ'
+    364: 'Tội đưa hối lộ',
+    389: 'Tội che giấu tội phạm',
+    390: 'Tội không tố giác tội phạm'
   },
   BLDS2015: {
     1: 'Phạm vi điều chỉnh của Bộ luật Dân sự',
@@ -232,6 +237,7 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     192: 'Quyền định đoạt',
     256: 'Quyền đòi lại tài sản',
     288: 'Thực hiện nghĩa vụ liên đới',
+    328: 'Đặt cọc',
     357: 'Trách nhiệm do chậm thực hiện nghĩa vụ trả tiền',
     360: 'Trách nhiệm bồi thường thiệt hại do vi phạm nghĩa vụ',
     385: 'Khái niệm hợp đồng',
@@ -392,6 +398,10 @@ const STATUTORY_KNOWLEDGE: Record<string, Record<number, string>> = {
     6: 'Xử phạt người điều khiển xe mô tô, xe gắn máy vi phạm quy tắc giao thông đường bộ',
     82: 'Tạm giữ phương tiện, giấy tờ có liên quan đến người điều khiển và phương tiện vi phạm'
   },
+  ND21_2021: {
+    29: 'Phân biệt tiền đặt cọc và tiền trả trước trong thực hiện hợp đồng',
+    38: 'Thực hiện hợp đồng có đặt cọc'
+  },
   BLTTHS2015: {
     27: 'Chế độ xét xử sơ thẩm, phúc thẩm được bảo đảm',
     76: 'Xác định tư cách tham gia tố tụng',
@@ -472,6 +482,8 @@ export class GuardrailService {
         lawCode = 'ND144';
       } else if (lawRaw.includes('100/2019')) {
         lawCode = 'ND100_2019';
+      } else if (lawRaw.includes('21/2021')) {
+        lawCode = 'ND21_2021';
       } else if (lawRaw.includes('HÌNH SỰ') || lawRaw.includes('BLHS')) {
         lawCode = 'BLHS2015';
       } else if (lawRaw.includes('DÂN SỰ') || lawRaw.includes('BLDS')) {

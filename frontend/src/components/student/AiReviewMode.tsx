@@ -105,6 +105,10 @@ Kết luận: Vợ và các con mỗi người nhận 400 triệu đồng.`
     reader.onload = (event) => {
       const text = event.target?.result as string;
       if (text) {
+        if (text.startsWith('PK\x03\x04')) {
+          setContent('⚠️ File .docx dạng nén nhị phân cần được sao chép (Copy & Paste) nội dung văn bản trực tiếp vào ô này hoặc lưu dưới dạng .txt / .md để hệ thống phân tích chính xác từng điều khoản.');
+          return;
+        }
         setContent(text);
       }
     };

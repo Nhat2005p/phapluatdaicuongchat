@@ -34,11 +34,14 @@ models/
 *.pt
 *.pth
 
-# Large Dataset files (> 100MB)
+# Large Dataset files (> 100MB / Heavy data files)
 data/new/
 *.parquet
+data/processed/*.jsonl
+data/processed/*.csv
 
-# Temporary scratch test files
+# Temporary scratch scripts & logs
+scratch/
 backend/test_*.cjs
 *.log
 npm-debug.log*
@@ -56,3 +59,5 @@ Thumbs.db
 tools/llama/
 tools/llama-src/
 .cache/
+
+

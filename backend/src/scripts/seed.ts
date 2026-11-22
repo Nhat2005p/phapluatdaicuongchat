@@ -65,8 +65,8 @@ export async function runSeed(): Promise<void> {
       lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
       articleNumber: 9,
       title: 'Phân loại tội phạm',
-      contentRaw: '1. Tội phạm ít nghiêm trọng: mức cao nhất của khung hình phạt là phạt tiền, phạt cải tạo không giam giữ hoặc phạt tù đến 03 năm;\n2. Tội phạm nghiêm trọng: mức cao nhất của khung hình phạt từ trên 03 năm tù đến 07 năm tù;\n3. Tội phạm rất nghiêm trọng: mức cao nhất của khung hình phạt từ trên 07 năm tù đến 15 năm tù;\n4. Tội phạm đặc biệt nghiêm trọng: mức cao nhất của khung hình phạt từ trên 15 năm tù đến 20 năm tù, tù chung thân hoặc tử hình.',
-      keywords: ['phân loại tội phạm', 'ít nghiêm trọng', 'nghiêm trọng', 'rất nghiêm trọng', 'đặc biệt nghiêm trọng', 'khung hình phạt']
+      contentRaw: '1. Căn cứ vào tính chất và mức độ nguy hiểm cho xã hội của hành vi phạm tội được quy định trong Bộ luật này, tội phạm được phân thành 04 loại:\na) Tội phạm ít nghiêm trọng là tội phạm có tính chất và mức độ nguy hiểm cho xã hội không lớn mà mức cao nhất của khung hình phạt do Bộ luật này quy định đối với tội ấy là phạt tiền, phạt cải tạo không giam giữ hoặc phạt tù đến 03 năm;\nb) Tội phạm nghiêm trọng là tội phạm có tính chất và mức độ nguy hiểm cho xã hội lớn mà mức cao nhất của khung hình phạt do Bộ luật này quy định đối với tội ấy là từ trên 03 năm tù đến 07 năm tù;\nc) Tội phạm rất nghiêm trọng là tội phạm có tính chất và mức độ nguy hiểm cho xã hội rất lớn mà mức cao nhất của khung hình phạt do Bộ luật này quy định đối với tội ấy là từ trên 07 năm tù đến 15 năm tù;\nd) Tội phạm đặc biệt nghiêm trọng là tội phạm có tính chất và mức độ nguy hiểm cho xã hội đặc biệt lớn mà mức cao nhất của khung hình phạt do Bộ luật này quy định đối với tội ấy là từ trên 15 năm tù đến 20 năm tù, tù chung thân hoặc tử hình.\n(Nguyên tắc bắt buộc: Việc phân loại tội phạm căn cứ hoàn toàn vào MỨC CAO NHẤT CỦA KHUNG HÌNH PHẠT do Bộ luật Hình sự quy định tại điều, khoản mà bị cáo bị truy tố, xét xử; TUYỆT ĐỐI KHÔNG căn cứ vào mức án cụ thể mà Tòa án tuyên phạt trên thực tế khi áp dụng tình tiết giảm nhẹ hoặc Điều 54 BLHS).',
+      keywords: ['phân loại tội phạm', 'loại tội phạm nào', 'ít nghiêm trọng', 'nghiêm trọng', 'rất nghiêm trọng', 'đặc biệt nghiêm trọng', 'mức cao nhất của khung hình phạt', 'tuyên phạt thấp hơn khung', 'điều 9 bộ luật hình sự']
     },
     {
       articleId: 'BLHS2015_D12',
@@ -298,8 +298,8 @@ export async function runSeed(): Promise<void> {
       lawName: 'Bộ luật Hình sự 2015 (sửa đổi, bổ sung 2017)',
       articleNumber: 175,
       title: 'Tội lạm dụng tín nhiệm chiếm đoạt tài sản',
-      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi chiếm đoạt tài sản hoặc đã bị kết án về tội này...:\na) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả;\nb) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng và đã sử dụng tài sản đó vào mục đích bất hợp pháp dẫn đến không có khả năng trả lại tài sản.\n2. Phạm tội chiếm đoạt tài sản trị giá từ 50.000.000 đồng đến dưới 200.000.000 đồng thì bị phạt tù từ 02 năm đến 07 năm.',
-      keywords: ['lạm dụng tín nhiệm', 'lạm dụng tín nhiệm chiếm đoạt tài sản', 'vay mượn', 'bỏ trốn', 'cố tình không trả', '100 triệu', 'mượn xe đem bán', 'thuê xe đem bán', 'chiếm đoạt tài sản', 'bán xe của người khác']
+      contentRaw: '1. Người nào thực hiện một trong các hành vi sau đây chiếm đoạt tài sản của người khác trị giá từ 4.000.000 đồng đến dưới 50.000.000 đồng hoặc dưới 4.000.000 đồng nhưng đã bị xử phạt vi phạm hành chính về hành vi chiếm đoạt tài sản hoặc đã bị kết án về tội này, thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm:\na) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng rồi dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt tài sản đó hoặc đến thời hạn trả lại tài sản mặc dù có điều kiện, khả năng nhưng cố tình không trả;\nb) Vay, mượn, thuê tài sản của người khác hoặc nhận được tài sản của người khác bằng hình thức hợp đồng và đã sử dụng tài sản đó vào mục đích bất hợp pháp dẫn đến không có khả năng trả lại tài sản.\n2. Phạm tội chiếm đoạt tài sản trị giá từ 50.000.000 đồng đến dưới 200.000.000 đồng: phạt tù từ 02 năm đến 07 năm.\n3. Phạm tội chiếm đoạt tài sản trị giá từ 200.000.000 đồng đến dưới 500.000.000 đồng: phạt tù từ 05 năm đến 12 năm.\n4. Phạm tội chiếm đoạt tài sản trị giá 500.000.000 đồng trở lên: phạt tù từ 12 năm đến 20 năm.',
+      keywords: ['lạm dụng tín nhiệm', 'lạm dụng tín nhiệm chiếm đoạt tài sản', 'vay mượn bỏ trốn', 'cố tình không trả nợ', 'mượn xe đem bán', 'thuê xe đem bán', 'bán xe của người khác']
     },
     // Mượn tài sản & Sự kiện bất khả kháng (BLDS 2015)
     {
@@ -1015,6 +1015,133 @@ export async function runSeed(): Promise<void> {
       title: 'Bảng giá đất hằng năm (Bỏ khung giá đất 05 năm/lần)',
       contentRaw: 'Luật Đất đai năm 2024 đã bãi bỏ hoàn toàn quy định về Khung giá đất của Chính phủ ban hành định kỳ 05 năm một lần. Theo Khoản 3 Điều 159 Luật Đất đai 2024, Ủy ban nhân dân cấp tỉnh xây dựng, trình Hội đồng nhân dân cùng cấp quyết định Bảng giá đất lần đầu để công bố và áp dụng từ ngày 01/01/2026; hằng năm, Ủy ban nhân dân cấp tỉnh có trách nhiệm trình Hội đồng nhân dân cấp tỉnh quyết định điều chỉnh, sửa đổi, bổ sung Bảng giá đất để công bố và áp dụng từ ngày 01 tháng 01 của năm tiếp theo.',
       keywords: ['luật đất đai 2024', 'khung giá đất', 'bảng giá đất hằng năm', 'điều 159 luật đất đai']
+    },
+    // --- BỔ SUNG CÁC ĐIỀU LUẬT TRỌNG TÂM CÒN KHUYẾT TRONG VECTOR DB ---
+    {
+      articleId: 'VBQPPL2015_D4',
+      lawCode: 'VBQPPL2015',
+      lawName: 'Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)',
+      articleNumber: 4,
+      title: 'Hệ thống văn bản quy phạm pháp luật',
+      contentRaw: '1. Hiến pháp. 2. Bộ luật, luật, nghị quyết của Quốc hội. 3. Pháp lệnh, nghị quyết của Ủy ban thường vụ Quốc hội... 4. Lệnh, quyết định của Chủ tịch nước. 5. Nghị định của Chính phủ... 6. Quyết định của Thủ tướng Chính phủ. 7. Nghị quyết của Hội đồng Thẩm phán TANDTC. 8. Thông tư của Chánh án TANDTC, Viện trưởng VKSNDTC, Bộ trưởng, Thủ trưởng cơ quan ngang bộ... 9. Quyết định của Tổng Kiểm toán nhà nước. 10-15. Nghị quyết của HĐND và Quyết định của UBND cấp tỉnh, cấp huyện, cấp xã.',
+      keywords: ['hệ thống văn bản quy phạm pháp luật', 'thứ bậc hiệu lực pháp lý', 'điều 4 luật ban hành văn bản']
+    },
+    {
+      articleId: 'VBQPPL2015_D152',
+      lawCode: 'VBQPPL2015',
+      lawName: 'Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)',
+      articleNumber: 152,
+      title: 'Hiệu lực trở về trước của văn bản quy phạm pháp luật (Hiệu lực hồi tố)',
+      contentRaw: '1. Chỉ trong trường hợp thật cần thiết để bảo đảm lợi ích chung của xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân được quy định trong luật, nghị quyết của Quốc hội, văn bản quy phạm pháp luật của cơ quan trung ương mới được quy định hiệu lực trở về trước.\n2. Không được quy định hiệu lực trở về trước đối với các trường hợp sau đây:\na) Quy định trách nhiệm pháp lý mới đối với hành vi mà vào thời điểm thực hiện hành vi đó pháp luật không quy định trách nhiệm pháp lý;\nb) Quy định trách nhiệm pháp lý nặng hơn.\n3. Văn bản quy phạm pháp luật của Hội đồng nhân dân, Ủy ban nhân dân các cấp, chính quyền địa phương ở đơn vị hành chính - kinh tế đặc biệt không được quy định hiệu lực trở về trước.',
+      keywords: ['hiệu lực trở về trước', 'hiệu lực hồi tố', 'trách nhiệm pháp lý nặng hơn', 'nâng mức phạt', 'điều 152 luật ban hành văn bản', 'khi nào được áp dụng hiệu lực trở về trước']
+    },
+    {
+      articleId: 'VBQPPL2015_D156',
+      lawCode: 'VBQPPL2015',
+      lawName: 'Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)',
+      articleNumber: 156,
+      title: 'Áp dụng văn bản quy phạm pháp luật',
+      contentRaw: '1. Văn bản quy phạm pháp luật được áp dụng đối với hành vi xảy ra tại thời điểm mà văn bản đó đang có hiệu lực. Trong trường hợp văn bản quy phạm pháp luật có quy định hiệu lực trở về trước thì áp dụng theo quy định đó.\n2. Trong trường hợp các văn bản quy phạm pháp luật có quy định khác nhau về cùng một vấn đề thì áp dụng văn bản có hiệu lực pháp lý cao hơn.\n3. Trong trường hợp các văn bản quy phạm pháp luật do cùng một cơ quan ban hành có quy định khác nhau về cùng một vấn đề thì áp dụng quy định của văn bản quy phạm pháp luật ban hành sau.\n4. Trong trường hợp văn bản quy phạm pháp luật mới không quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý nhẹ hơn đối với hành vi xảy ra, trước ngày văn bản có hiệu lực thì áp dụng văn bản mới.\n5. Việc áp dụng văn bản quy phạm pháp luật trong nước không được cản trở việc thực hiện điều ước quốc tế mà Cộng hòa xã hội chủ nghĩa Việt Nam là thành viên; trường hợp văn bản trong nước và điều ước quốc tế có quy định khác nhau về cùng một vấn đề thì áp dụng quy định của điều ước quốc tế đó, trừ Hiến pháp.',
+      keywords: ['áp dụng văn bản quy phạm pháp luật', 'hành vi xảy ra tại thời điểm văn bản đang có hiệu lực', 'trách nhiệm pháp lý nhẹ hơn', 'khoản 1 điều 156', 'khoản 4 điều 156', 'hồi tố có lợi']
+    },
+    {
+      articleId: 'BLHS2015_D7',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 7,
+      title: 'Hiệu lực của Bộ luật Hình sự về thời gian',
+      contentRaw: '1. Điều luật được áp dụng đối với một hành vi phạm tội là điều luật đang có hiệu lực thi hành tại thời điểm mà hành vi phạm tội đó được thực hiện.\n2. Điều luật quy định một tội phạm mới, một hình phạt nặng hơn, một tình tiết tăng nặng mới hoặc hạn chế phạm vi áp dụng án treo, miễn trách nhiệm hình sự, loại trừ trách nhiệm hình sự, miễn hình phạt, giảm hình phạt, xóa án tích và quy định khác không có lợi cho người phạm tội, thì không được áp dụng đối với hành vi phạm tội đã thực hiện trước khi điều luật đó có hiệu lực thi hành.\n3. Điều luật xóa bỏ một tội phạm, một hình phạt, một tình tiết tăng nặng, quy định một hình phạt nhẹ hơn, một tình tiết giảm nhẹ mới hoặc mở rộng phạm vi áp dụng án treo, miễn trách nhiệm hình sự, loại trừ trách nhiệm hình sự, miễn hình phạt, giảm hình phạt, tha tù trước thời hạn có điều kiện, xóa án tích và quy định khác có lợi cho người phạm tội, thì được áp dụng đối với hành vi phạm tội đã thực hiện trước khi điều luật đó có hiệu lực thi hành.',
+      keywords: ['hiệu lực của bộ luật hình sự về thời gian', 'hồi tố hình sự', 'có lợi cho người phạm tội', 'điều 7 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D18',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 18,
+      title: 'Che giấu tội phạm',
+      contentRaw: '1. Người nào không hứa hẹn trước, nhưng sau khi biết tội phạm được thực hiện đã che giấu người phạm tội, dấu vết, tang vật của tội phạm hoặc có hành vi khác cản trở việc phát hiện, điều tra, xử lý người phạm tội, thì phải chịu trách nhiệm hình sự về tội che giấu tội phạm trong những trường hợp mà Bộ luật này quy định.\n2. Người che giấu tội phạm là ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng của người phạm tội không phải chịu trách nhiệm hình sự theo quy định tại khoản 1 Điều này, trừ trường hợp che giấu các tội xâm phạm an ninh quốc gia hoặc tội đặc biệt nghiêm trọng khác quy định tại Điều 389 của Bộ luật này.',
+      keywords: ['che giấu tội phạm', 'không hứa hẹn trước', 'ông bà cha mẹ anh chị em ruột che giấu', 'miễn trách nhiệm hình sự người thân che giấu', 'điều 18 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D19',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 19,
+      title: 'Không tố giác tội phạm',
+      contentRaw: '1. Người nào biết rõ tội phạm đang được chuẩn bị, đang được thực hiện hoặc đã được thực hiện mà không tố giác, thì phải chịu trách nhiệm hình sự về tội không tố giác tội phạm theo quy định tại Điều 390 của Bộ luật này.\n2. Người không tố giác là ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng của người phạm tội không phải chịu trách nhiệm hình sự theo quy định tại khoản 1 Điều này, trừ trường hợp không tố giác các tội quy định tại Chương XIII của Bộ luật này (các tội xâm phạm an ninh quốc gia) hoặc tội khác là tội phạm đặc biệt nghiêm trọng.\n3. Người không tố giác nếu đã có hành động can ngăn người phạm tội hoặc hạn chế tác hại của tội phạm, thì có thể được miễn trách nhiệm hình sự hoặc miễn hình phạt.',
+      keywords: ['không tố giác tội phạm', 'im lặng không báo công an', 'người thân không tố giác tội phạm', 'anh chị em ruột không tố giác', 'điều 19 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D54',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 54,
+      title: 'Quyết định hình phạt dưới mức thấp nhất của khung hình phạt được áp dụng',
+      contentRaw: '1. Tòa án có thể quyết định một hình phạt dưới mức thấp nhất của khung hình phạt được áp dụng nhưng phải trong khung hình phạt liền kề nhẹ hơn của điều luật khi người phạm tội có ít nhất hai tình tiết giảm nhẹ quy định tại khoản 1 Điều 51 của Bộ luật này.\n(Lưu ý pháp lý: Việc Tòa án áp dụng Điều 51, Điều 54 BLHS để tuyên mức án thực tế nhẹ hơn hoặc dưới mức thấp nhất của khung hình phạt hoàn toàn KHÔNG làm thay đổi loại tội phạm đã được xác định theo mức cao nhất của khung hình phạt luật định tại Điều 9 BLHS).',
+      keywords: ['dưới mức thấp nhất của khung hình phạt', 'nhiều tình tiết giảm nhẹ', 'tuyên phạt dưới khung', 'điều 54 bộ luật hình sự']
+    },
+    {
+      articleId: 'BLHS2015_D389',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 389,
+      title: 'Tội che giấu tội phạm',
+      contentRaw: '1. Người nào không hứa hẹn trước mà che giấu một trong các tội phạm sau đây, nếu không thuộc trường hợp quy định tại khoản 2 Điều 18 của Bộ luật này (người thân thích gồm ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ, chồng được miễn trừ nếu tội được che giấu KHÔNG phải tội xâm phạm an ninh quốc gia hoặc tội đặc biệt nghiêm trọng), thì bị phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 05 năm:\na) Các tội xâm phạm an ninh quốc gia;\nb) Giết người (Điều 123)... Cướp tài sản (Điều 168 các khoản 2, 3 và 4 — lưu ý: Khoản 1 Điều 168 KHÔNG nằm trong danh mục Điều 389 và chỉ là tội phạm rất nghiêm trọng chứ không phải tội đặc biệt nghiêm trọng)...\n2. Phạm tội trong trường hợp lợi dụng chức vụ, quyền hạn cản trở việc phát hiện tội phạm hoặc có hành vi khác bao che người phạm tội, thì bị phạt tù từ 02 năm đến 07 năm.',
+      keywords: ['tội che giấu tội phạm', 'điều 389 bộ luật hình sự', 'đưa tiền cho con bỏ trốn', 'che giấu cướp tài sản khoản 1 điều 168']
+    },
+    {
+      articleId: 'BLHS2015_D390',
+      lawCode: 'BLHS2015',
+      lawName: 'Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung 2017)',
+      articleNumber: 390,
+      title: 'Tội không tố giác tội phạm',
+      contentRaw: '1. Người nào biết rõ một trong các tội phạm quy định tại khoản 2 hoặc khoản 3 Điều 14 của Bộ luật này đang được chuẩn bị hoặc một trong các tội phạm quy định tại Điều 389 của Bộ luật này đang được thực hiện hoặc đã được thực hiện mà không tố giác, nếu không thuộc trường hợp quy định tại khoản 2 và khoản 3 Điều 19 của Bộ luật này (ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng không phải chịu TNHS trừ tội xâm phạm an ninh quốc gia hoặc tội đặc biệt nghiêm trọng), thì bị phạt cảnh cáo, phạt cải tạo không giam giữ đến 03 năm hoặc phạt tù từ 06 tháng đến 03 năm.',
+      keywords: ['tội không tố giác tội phạm', 'điều 390 bộ luật hình sự', 'biết rõ tội phạm mà không tố giác', 'em ruột không tố giác']
+    },
+    {
+      articleId: 'BLDS2015_D328',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015 (kèm Nghị định 21/2021/NĐ-CP)',
+      articleNumber: 328,
+      title: 'Đặt cọc (và Phân biệt với Tiền trả trước)',
+      contentRaw: '1. Đặt cọc là việc một bên (bên đặt cọc) giao cho bên kia (bên nhận đặt cọc) một khoản tiền hoặc kim khí quý, đá quý hoặc vật có giá trị khác (tài sản đặt cọc) trong một thời hạn để bảo đảm giao kết hoặc thực hiện hợp đồng.\n2. Trường hợp hợp đồng được giao kết, thực hiện thì tài sản đặt cọc được trả lại cho bên đặt cọc hoặc được trừ để thực hiện nghĩa vụ trả tiền; nếu bên đặt cọc từ chối việc giao kết, thực hiện hợp đồng thì tài sản đặt cọc thuộc về bên nhận đặt cọc; nếu bên nhận đặt cọc từ chối việc giao kết, thực hiện hợp đồng thì phải trả cho bên đặt cọc tài sản đặt cọc và một khoản tiền tương đương giá trị tài sản đặt cọc (phạt cọc), trừ trường hợp có thỏa thuận khác.\n(Hướng dẫn bắt buộc tại Khoản 2 Điều 29 Nghị định 21/2021/NĐ-CP: Trường hợp một bên trong hợp đồng giao cho bên kia một khoản tiền mà các bên KHÔNG xác định rõ là tiền đặt cọc hoặc tiền trả trước — ví dụ chỉ ghi nội dung chuyển khoản là "chuyển trước tiền mua xe/mua hàng" và không lập thỏa thuận đặt cọc — thì số tiền này ĐƯỢC COI LÀ TIỀN TRẢ TRƯỚC, do đó KHÔNG phát sinh chế tài phạt cọc gấp đôi theo Khoản 2 Điều 328 BLDS 2015; khi hủy bỏ/không thực hiện mua bán thì bên nhận tiền chỉ phải hoàn trả lại khoản tiền trả trước đã nhận và bồi thường thiệt hại thực tế nếu có).',
+      keywords: ['đặt cọc', 'phạt cọc', 'tiền trả trước', 'chuyển trước tiền mua xe', 'không lập văn bản đặt cọc', 'điều 328 bộ luật dân sự', 'nghị định 21/2021']
+    },
+    {
+      articleId: 'BLDS2015_D430',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 430,
+      title: 'Hợp đồng mua bán tài sản',
+      contentRaw: 'Hợp đồng mua bán tài sản là sự thỏa thuận giữa các bên, theo đó bên bán chuyển quyền sở hữu tài sản cho bên mua và bên mua trả tiền cho bên bán.',
+      keywords: ['hợp đồng mua bán tài sản', 'mua chiếc ô tô', 'mua bán xe ô tô', 'điều 430 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D589',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 589,
+      title: 'Thiệt hại do tài sản bị xâm phạm',
+      contentRaw: 'Thiệt hại do tài sản bị xâm phạm bao gồm: 1. Tài sản bị mất, bị hủy hoại hoặc bị hư hỏng; 2. Lợi ích gắn liền với việc sử dụng, khai thác tài sản bị mất, bị giảm sút; 3. Chi phí hợp lý để ngăn chặn, hạn chế và khắc phục thiệt hại; 4. Thiệt hại khác do luật quy định.',
+      keywords: ['thiệt hại do tài sản bị xâm phạm', 'tài sản bị hư hỏng', 'điều 589 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D590',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 590,
+      title: 'Thiệt hại do sức khỏe bị xâm phạm',
+      contentRaw: '1. Thiệt hại do sức khỏe bị xâm phạm bao gồm: a) Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe và chức năng bị mất, bị giảm sút của người bị thiệt hại (viện phí, thuốc men...); b) Thu nhập thực tế bị mất hoặc bị giảm sút của người bị thiệt hại; c) Chi phí hợp lý và phần thu nhập thực tế bị mất của người chăm sóc người bị thiệt hại trong thời gian điều trị.\n2. Người chịu trách nhiệm bồi thường trong trường hợp sức khỏe của người khác bị xâm phạm phải bồi thường thiệt hại theo quy định tại khoản 1 Điều này và một khoản tiền khác để bù đắp tổn thất về tinh thần mà người đó gánh chịu (nếu không thỏa thuận được thì mức tối đa cho một người có sức khỏe bị xâm phạm không quá 50 lần mức lương cơ sở do Nhà nước quy định).',
+      keywords: ['thiệt hại do sức khỏe bị xâm phạm', 'viện phí', 'cắn bị thương', 'chi phí cứu chữa', '50 lần mức lương cơ sở', 'điều 590 bộ luật dân sự']
+    },
+    {
+      articleId: 'BLDS2015_D603',
+      lawCode: 'BLDS2015',
+      lawName: 'Bộ luật Dân sự năm 2015',
+      articleNumber: 603,
+      title: 'Bồi thường thiệt hại do súc vật gây ra',
+      contentRaw: '1. Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra cho người khác. Người chiếm hữu, sử dụng súc vật phải bồi thường thiệt hại trong thời gian chiếm hữu, sử dụng súc vật, trừ trường hợp có thỏa thuận khác.\n2. Trường hợp người thứ ba hoàn toàn có lỗi làm cho súc vật gây thiệt hại cho người khác thì người thứ ba phải bồi thường thiệt hại; nếu người thứ ba và chủ sở hữu cùng có lỗi thì phải liên đới bồi thường thiệt hại.\n3. Trường hợp súc vật bị chiếm hữu, sử dụng trái pháp luật thì người chiếm hữu, sử dụng trái pháp luật phải bồi thường; khi chủ sở hữu, người chiếm hữu, sử dụng súc vật có lỗi trong việc để súc vật bị chiếm hữu, sử dụng trái pháp luật thì phải liên đới bồi thường thiệt hại.\n4. Trường hợp súc vật thả rông theo tập quán mà gây thiệt hại thì chủ sở hữu súc vật đó phải bồi thường theo tập quán nhưng không được trái pháp luật, đạo đức xã hội.',
+      keywords: ['bồi thường thiệt hại do súc vật gây ra', 'con chó cắn người', 'chó dữ xổng chuồng', 'người thứ ba hoàn toàn có lỗi làm cho súc vật gây thiệt hại', 'cạy khóa chuồng chó', 'điều 603 bộ luật dân sự']
     }
   ];
 

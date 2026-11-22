@@ -1,0 +1,21 @@
+{
+  "timestamp": "2026-11-21T02:24:36.142Z",
+  "dataset_name": "sft_vietlaw_master",
+  "version": "v2_clean_grounded",
+  "total_samples": 21349,
+  "splits": {
+    "train": 17080,
+    "validation": 2135,
+    "test": 2134
+  },
+  "taxonomy_groups_count": 17,
+  "intents_count": 21,
+  "qa_checks": {
+    "standardized_4_section_headers": true,
+    "zero_boilerplate_conclusions": true,
+    "zero_duplicate_ketluan_line": true,
+    "zero_bogus_phap_luat_hien_hanh": true,
+    "clean_oos_refusals": true,
+    "grounded_rag_and_negative_rejection_added": 57
+  }
+}

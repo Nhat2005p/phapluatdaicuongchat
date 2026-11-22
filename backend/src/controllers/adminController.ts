@@ -254,7 +254,7 @@ export class AdminController {
             datasetSamples: 500,
             baseModel: 'Qwen2.5-3B-Instruct',
             fineTunedCheckpoint: 'vietlaw_lora_adapter (LoRA r=16, alpha=16)',
-            quantization: '4-bit GGUF (Q4_K_M)',
+            quantization: '5-bit GGUF (Q5_K_M)',
             targetHardware: 'Local CPU (AVX2) / GPU CUDA'
           },
           systemStats: {

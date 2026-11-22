@@ -9,7 +9,7 @@ const PROJECT_ROOT = fs.existsSync(path.join(process.cwd(), 'tools'))
   : path.resolve(process.cwd(), '..');
 
 const LLAMA_EXE = path.join(PROJECT_ROOT, 'tools', 'llama', 'llama-server.exe');
-const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-3b-legal-vn-Q4_K_M.gguf');
+const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-3b-legal-vn-Q5_K_M.gguf');
 const LORA_GGUF = path.join(PROJECT_ROOT, 'models', 'vietlaw_lora_adapter.gguf');
 
 let llamaProcess: ChildProcess | null = null;
@@ -51,7 +51,7 @@ export class LlamaManager {
       '-m', MODEL_GGUF,
       '--host', '127.0.0.1',
       '--port', '8088',
-      '-c', '4096',
+      '-c', '2048',
       '-np', '1',
       '-t', String(genThreads),
       '-tb', String(logicalThreads),
@@ -61,10 +61,6 @@ export class LlamaManager {
       '--cache-reuse', '64',
       '--log-disable'
     ];
-
-    if (fs.existsSync(LORA_GGUF)) {
-      llamaArgs.push('--lora', LORA_GGUF);
-    }
 
     console.log(
       `🚀 [Llama-Server] Đang khởi động ${path.basename(MODEL_GGUF)} (t=${genThreads}, tb=${logicalThreads}, FlashAttention=ON)...`
@@ -95,54 +91,10 @@ export class LlamaManager {
   }
 
   /**
-   * Kích hoạt lượt suy luận thực tế trên cổng 8088 (llama-server) cho mỗi câu hỏi
-   * để đồng bộ hóa trạng thái hoạt động của Local LLM mà không làm nghẽn cổ chai thời gian phản hồi.
+   * Kiểm tra sẵn sàng nhẹ trên cổng 8088 (TUYỆT ĐỐI KHÔNG gửi dummy /chat/completions gây nghẽn slot suy luận chính của BƯỚC 4).
    */
-  public static async triggerLiveModelPass(query: string, intentCode: string = 'GENERAL_THEORY'): Promise<void> {
-    try {
-      if (this.isFullGenerating) return;
-      const healthy = await this.isHealthy();
-      if (!healthy || this.isFullGenerating) return;
-
-      console.log(`🤖 [Llama-Server 8088] Đang kích hoạt Qwen2.5-3B-Legal-VN suy luận (Intent=${intentCode})...`);
-      const controller = new AbortController();
-      const timer = setTimeout(() => controller.abort(), 3500);
-
-      fetch('http://127.0.0.1:8088/v1/chat/completions', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          model: 'qwen2.5-3b-legal-vn',
-          cache_prompt: true,
-          messages: [
-            {
-              role: 'system',
-              content: '<system_instruction>Bạn là trợ lý Pháp luật đại cương (VietLawAssist).</system_instruction>'
-            },
-            {
-              role: 'user',
-              content: `<user_query>[${intentCode}] ${query.slice(0, 160)}</user_query>`
-            }
-          ],
-          temperature: 0.0,
-          top_p: 0.9,
-          repeat_penalty: 1.12,
-          frequency_penalty: 0.3,
-          max_tokens: 8
-        }),
-        signal: controller.signal
-      })
-        .then((res) => {
-          clearTimeout(timer);
-          if (res.ok) {
-            console.log(`✅ [Llama-Server 8088] Qwen2.5-3B-Legal-VN đã hoàn tất suy luận cho Intent=${intentCode}.`);
-          }
-        })
-        .catch(() => {
-          clearTimeout(timer);
-        });
-    } catch {
-      // Ignore background pass errors
-    }
+  public static async triggerLiveModelPass(_query: string, _intentCode: string = 'GENERAL_THEORY'): Promise<void> {
+    if (this.isFullGenerating) return;
+    void this.isHealthy();
   }
 }

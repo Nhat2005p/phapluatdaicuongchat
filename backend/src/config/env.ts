@@ -18,6 +18,9 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'vietlaw_secret_key_pbl6_2026_dut',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   llamaServerUrl: process.env.LLAMA_SERVER_URL || 'http://127.0.0.1:8088/v1',
+  // LLM_FIRST=1: ưu tiên gọi Fine-tuned LLM (khi llama-server sẵn sàng) thay vì để Bộ giải Động rule-based trả lời sớm
+  llmFirst: process.env.LLM_FIRST === '1',
+  llmTimeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '90000', 10),
   nodeEnv: process.env.NODE_ENV || 'development',
   get smtp() {
     return {

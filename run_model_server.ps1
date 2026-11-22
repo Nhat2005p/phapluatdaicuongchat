@@ -1,4 +1,4 @@
-﻿# VietLawAssist - Local LLM Server (Qwen2.5-3B)
+# VietLawAssist - Local LLM Server (Qwen2.5-3B)
 $Host.UI.RawUI.WindowTitle = "VietLawAssist - Local LLM Server (Qwen2.5-3B)"
 
 $rootDir = $PSScriptRoot
@@ -6,11 +6,11 @@ Set-Location $rootDir
 
 Write-Host "===================================================================" -ForegroundColor Cyan
 Write-Host "VietLawAssist: Khởi động Local LLM Inference Engine" -ForegroundColor Cyan
-Write-Host "Model: models\qwen2.5-3b-legal-vn-Q4_K_M.gguf" -ForegroundColor Yellow
+Write-Host "Model: models\qwen2.5-3b-legal-vn-Q5_K_M.gguf" -ForegroundColor Yellow
 Write-Host "Server: http://127.0.0.1:8088/v1" -ForegroundColor Green
 Write-Host "===================================================================" -ForegroundColor Cyan
 
-$modelPath = Join-Path $rootDir "models\qwen2.5-3b-legal-vn-Q4_K_M.gguf"
+$modelPath = Join-Path $rootDir "models\qwen2.5-3b-legal-vn-Q5_K_M.gguf"
 $llamaExe = Join-Path $rootDir "tools\llama\llama-server.exe"
 $loraPath = Join-Path $rootDir "models\vietlaw_lora_adapter.gguf"
 

@@ -102,8 +102,16 @@ export class QueryController {
         return;
       }
 
-      // BƯỚC 05: EVALUATION & CITATION GUARDRAIL (Đo lường chất lượng & Kiểm định điều luật)
+      // BƯỚC 05: EVALUATION & CITATION GUARDRAIL (Đồng bộ 100% giữa Thân bài giải, Thanh đối soát trên đầu và Tham khảo cuối bài)
       const guardrailResult = await GuardrailService.scanAndVerify(llmResult.text);
+      const verifiedCodes = new Set(guardrailResult.citations.filter((c) => c.verified).map((c) => `${c.lawCode}_${c.articleNumber}`));
+      const syncedRetrievedArticles =
+        verifiedCodes.size > 0
+          ? [
+              ...ragContext.articles.filter((a) => verifiedCodes.has(`${a.lawCode}_${a.articleNumber}`)),
+              ...ragContext.articles.filter((a) => !verifiedCodes.has(`${a.lawCode}_${a.articleNumber}`))
+            ].slice(0, 5)
+          : ragContext.articles;
 
       const totalLatency = Date.now() - startTime;
 
@@ -143,7 +151,7 @@ export class QueryController {
           targetSources: routingPlan.targetSources,
           quantifierFlags: routingPlan.quantifierFlags
         },
-        retrievedArticles: ragContext.articles.map((a) => ({
+        retrievedArticles: syncedRetrievedArticles.map((a) => ({
           articleId: a.articleId,
           lawCode: a.lawCode,
           articleNumber: a.articleNumber,

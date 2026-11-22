@@ -243,20 +243,23 @@ II. HỆ THỐNG VĂN BẢN QUY PHẠM PHÁP LUẬT Ở VIỆT NAM (ĐIỀU 4 LU
       chapterNumber: 2,
       chapterTitle: 'Chương 2: Một số vấn đề lý luận cơ bản về pháp luật',
       sectionCode: '2.3.4_2.3.5',
-      sectionTitle: 'Hiệu lực của VBQPPL và Nguyên tắc Áp dụng Văn bản',
+      sectionTitle: 'Hiệu lực của VBQPPL, Hiệu lực hồi tố (Điều 152) và Nguyên tắc Áp dụng Văn bản (Điều 156)',
       pageRange: 'tr. 52 - 57',
-      keywords: ['hiệu lực văn bản', 'hiệu lực thời gian', 'hiệu lực hồi tố', 'nguyên tắc áp dụng văn bản', 'điều ước quốc tế'],
-      summary: 'Hiệu lực về thời gian, không gian, đối tượng, hiệu lực trở về trước (hồi tố) và các nguyên tắc xử lý xung đột văn bản.',
-      legalBasis: ['Luật Ban hành VBQPPL 2015 (Điều 79, 154, 156)', 'Bộ luật Hình sự 2015 (Khoản 3 Điều 7)'],
-      baremContent: `I. HIỆU LỰC CỦA VĂN BẢN QUY PHẠM PHÁP LUẬT:
-1. Hiệu lực về thời gian: Bắt đầu phát sinh và chấm dứt hiệu lực (văn bản trung ương có hiệu lực không sớm hơn 45 ngày; cấp tỉnh 10 ngày; cấp huyện/xã 07 ngày).
-2. Hiệu lực hồi tố (trở về trước): Về nguyên tắc không áp dụng hồi tố. Chỉ áp dụng trong trường hợp nhân đạo có lợi cho đối tượng chịu tác động (Khoản 3 Điều 7 BLHS 2015: điều luật xóa bỏ tội phạm, giảm nhẹ hình phạt mới được áp dụng hồi tố). Tuyệt đối không hồi tố quy định trách nhiệm pháp lý mới hoặc nặng hơn.
-3. Hiệu lực về không gian và đối tượng: Toàn quốc hoặc địa phương; áp dụng đối với mọi cơ quan, tổ chức, công dân và người nước ngoài tại Việt Nam.
+      keywords: ['hiệu lực văn bản', 'hiệu lực thời gian', 'hiệu lực hồi tố', 'hiệu lực trở về trước', 'điều 152', 'điều 156', 'trách nhiệm pháp lý nhẹ hơn', 'nâng mức phạt', 'giảm mức phạt', 'nguyên tắc áp dụng văn bản', 'điều ước quốc tế'],
+      summary: 'Hiệu lực về thời gian, không gian, đối tượng; điều kiện và điều cấm áp dụng hiệu lực trở về trước (Điều 152 Luật Ban hành VBQPPL 2015); đầy đủ 5 nguyên tắc áp dụng văn bản tại Điều 156 (Khoản 1 thời điểm xảy ra hành vi, Khoản 4 hồi tố có lợi).',
+      legalBasis: ['Luật Ban hành VBQPPL 2015 (Điều 79, 152, 154, 156)', 'Bộ luật Hình sự 2015 (Điều 7)'],
+      baremContent: `I. HIỆU LỰC HỒI TỐ / HIỆU LỰC TRỞ VỀ TRƯỚC CỦA VĂN BẢN QPPL (ĐIỀU 152 LUẬT BAN HÀNH VBQPPL 2015):
+1. Điều kiện cho phép quy định hiệu lực trở về trước (Khoản 1 Điều 152): Chỉ trong trường hợp thật cần thiết để bảo đảm lợi ích chung của xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân được quy định trong luật, nghị quyết của Quốc hội, thì văn bản quy phạm pháp luật của cơ quan trung ương mới được quy định hiệu lực trở về trước (văn bản của HĐND, UBND các cấp KHÔNG được quy định hiệu lực trở về trước).
+2. Các trường hợp NGHIÊM CẤM quy định hiệu lực trở về trước (Khoản 2 Điều 152):
+   - a) Quy định trách nhiệm pháp lý mới đối với hành vi mà vào thời điểm thực hiện hành vi đó pháp luật không quy định trách nhiệm pháp lý;
+   - b) Quy định trách nhiệm pháp lý NẶNG HƠN (ví dụ nâng mức phạt tiền, tăng khung hình phạt tù). Do đó, nếu văn bản mới nâng mức phạt nặng hơn so với văn bản tại thời điểm xảy ra vi phạm thì TUYỆT ĐỐI KHÔNG ĐƯỢC áp dụng hồi tố để xử phạt nặng hơn!
 
-II. NGUYÊN TẮC ÁP DỤNG VĂN BẢN QUY PHẠM PHÁP LUẬT (ĐIỀU 156 LUẬT 2015):
-1. Áp dụng văn bản có hiệu lực pháp lý cao hơn nếu có quy định khác nhau về cùng một vấn đề.
-2. Áp dụng văn bản ban hành sau nếu các văn bản do cùng một cơ quan ban hành có quy định khác nhau.
-3. Ưu tiên áp dụng Điều ước quốc tế mà Việt Nam là thành viên (trừ Hiến pháp).`
+II. NĂM NGUYÊN TẮC ÁP DỤNG VĂN BẢN QUY PHẠM PHÁP LUẬT (ĐIỀU 156 LUẬT BAN HÀNH VBQPPL 2015):
+1. Nguyên tắc áp dụng theo thời điểm xảy ra hành vi (Khoản 1 Điều 156): Văn bản quy phạm pháp luật được áp dụng đối với hành vi xảy ra tại thời điểm mà văn bản đó đang có hiệu lực. Trong trường hợp văn bản có quy định hiệu lực trở về trước (hợp pháp theo Điều 152) thì áp dụng theo quy định đó.
+2. Xung đột thứ bậc hiệu lực (Khoản 2 Điều 156): Các văn bản có quy định khác nhau về cùng một vấn đề thì áp dụng văn bản có hiệu lực pháp lý cao hơn.
+3. Xung đột thời gian cùng cơ quan (Khoản 3 Điều 156): Các văn bản do cùng một cơ quan ban hành có quy định khác nhau về cùng một vấn đề thì áp dụng quy định của văn bản ban hành sau.
+4. Ngoại lệ hồi tố nhân đạo có lợi (Khoản 4 Điều 156 & Khoản 3 Điều 7 BLHS 2015): Trong trường hợp văn bản quy phạm pháp luật mới KHÔNG quy định trách nhiệm pháp lý hoặc quy định trách nhiệm pháp lý NHẸ HƠN đối với hành vi xảy ra trước ngày văn bản có hiệu lực thì ÁP DỤNG VĂN BẢN MỚI (có lợi cho người vi phạm). Ngược lại, nếu văn bản mới quy định nặng hơn thì bắt buộc áp dụng văn bản cũ có hiệu lực tại thời điểm thực hiện hành vi (Khoản 1 Điều 156).
+5. Ưu tiên Điều ước quốc tế (Khoản 5 Điều 156): Việc áp dụng VBQPPL không được cản trở điều ước quốc tế mà Việt Nam là thành viên; nếu khác nhau thì áp dụng điều ước quốc tế, trừ Hiến pháp.`
     },
 
     // =========================================================================
@@ -333,21 +336,22 @@ II. CƠ CẤU 3 YẾU TỐ CỦA QUAN HỆ PHÁP LUẬT:
       sectionCode: '4.3',
       sectionTitle: 'Sự kiện pháp lý (Khái niệm, Sự biến pháp lý và Hành vi pháp lý)',
       pageRange: 'tr. 100 - 103',
-      keywords: ['sự kiện pháp lý', 'sự biến pháp lý', 'hành vi pháp lý', 'hợp pháp', 'bất hợp pháp', 'sự kiện đơn giản', 'sự kiện phức tạp'],
-      summary: 'Khái niệm sự kiện pháp lý; phân loại theo ý chí (sự biến pháp lý, hành vi pháp lý) và theo số lượng điều kiện.',
-      legalBasis: ['Bộ luật Dân sự 2015 (Điều 116, 611)'],
+      keywords: ['sự kiện pháp lý', 'sự biến pháp lý', 'sự biến tuyệt đối', 'sự biến tương đối', 'hành vi pháp lý', 'hợp pháp', 'bất hợp pháp', 'sự kiện đơn giản', 'sự kiện phức tạp', 'đốt rẫy', 'gió đổi hướng'],
+      summary: 'Khái niệm sự kiện pháp lý; phân loại theo ý chí (sự biến tuyệt đối vs sự biến tương đối, hành vi pháp lý) và theo số lượng điều kiện.',
+      legalBasis: ['Bộ luật Dân sự 2015 (Điều 116, 156, 611)', 'Luật Kinh doanh bảo hiểm'],
       baremContent: `I. KHÁI NIỆM SỰ KIỆN PHÁP LÝ:
 Sự kiện pháp lý là những sự kiện thực tế xảy ra trong đời sống mà sự xuất hiện hay mất đi của chúng được pháp luật gắn liền với việc làm phát sinh, thay đổi hoặc chấm dứt quan hệ pháp luật.
 
 II. PHÂN LOẠI SỰ KIỆN PHÁP LÝ:
 1. Căn cứ vào tiêu chuẩn ý chí:
-   - Sự biến pháp lý: Hiện tượng tự nhiên hoặc xã hội xảy ra không phụ thuộc vào ý chí con người nhưng được pháp luật dự liệu gắn với hậu quả pháp lý (Ví dụ: Người chết làm phát sinh thừa kế; thiên tai lũ lụt là sự kiện bất khả kháng miễn trách nhiệm).
-   - Hành vi pháp lý: Sự kiện xảy ra theo ý chí của con người (hành động hoặc không hành động). Gồm:
-     + Hành vi hợp pháp: Ký hợp đồng, nộp thuế, đăng ký kết hôn.
-     + Hành vi không hợp pháp: Trộm cắp, gây thương tích, vi phạm hợp đồng.
+   a) Sự biến pháp lý (gồm Sự biến tuyệt đối và Sự biến tương đối):
+      - Sự biến pháp lý tuyệt đối: Hiện tượng hoàn toàn do tự nhiên gây ra, cả sự phát sinh lẫn diễn biến đều không phụ thuộc chút nào vào ý chí con người (Ví dụ: động đất, sóng thần, bão lũ tự nhiên, sét đánh cháy rừng).
+      - Sự biến pháp lý tương đối: Sự kiện khởi phát ban đầu có sự tác động từ hành vi của con người, nhưng quá trình diễn biến và hậu quả tiếp theo xảy ra khách quan, vượt ra ngoài ý chí và tầm kiểm soát của chủ thể (Ví dụ: một người đốt rẫy làm nương nhưng do gió đổi hướng đột ngột làm lửa lan sang cháy nhà người khác làm phát sinh quan hệ bảo hiểm cháy nổ; hoặc cái chết do tai nạn làm mở thừa kế).
+   b) Hành vi pháp lý: Sự kiện xảy ra trực tiếp theo ý chí của con người (hành động hoặc không hành động). Gồm:
+      + Hành vi hợp pháp: Ký hợp đồng, nộp thuế, đăng ký kết hôn.
+      + Hành vi bất hợp pháp: Trộm cắp, gây thương tích, vi phạm hợp đồng.
 2. Căn cứ vào số lượng điều kiện:
-   - Sự kiện pháp lý đơn giản: Chỉ một sự kiện thực tế là đủ (Ví dụ: Cá nhân chết chấm dứt hôn nhân).
-   - Sự kiện pháp lý phức tạp: Cần tập hợp nhiều sự kiện liên tiếp (Ví dụ: Để chia thừa kế cần có sự kiện chết + có tài sản + có người thừa kế còn sống).`
+   - Sự kiện pháp lý đơn giản và Sự kiện pháp lý phức tạp.`
     },
 
     // =========================================================================
@@ -458,11 +462,11 @@ II. LUẬN CỨ GIẢI THÍCH LÝ LUẬN VÀ THỰC TIỄN:
       chapterNumber: 6,
       chapterTitle: 'Chương 6: Một số nội dung cơ bản của Luật Dân sự',
       sectionCode: '6.2_6.3',
-      sectionTitle: 'Giao dịch dân sự, Điều kiện có hiệu lực và Hợp đồng dân sự vô hiệu',
+      sectionTitle: 'Giao dịch dân sự, Biện pháp bảo đảm (Đặt cọc Điều 328) và Hợp đồng dân sự',
       pageRange: 'tr. 145 - 158',
-      keywords: ['giao dịch dân sự', 'hợp đồng dân sự', 'điều kiện có hiệu lực', 'giao dịch vô hiệu', 'hợp đồng vô hiệu', 'điều 117 blds', 'điều 122 blds', 'lừa dối đe dọa', 'hình thức giao dịch', 'hậu quả vô hiệu'],
-      summary: 'Quy định về khái niệm giao dịch dân sự, 4 điều kiện có hiệu lực theo Điều 117 BLDS 2015 và các trường hợp giao dịch dân sự vô hiệu cùng hậu quả pháp lý.',
-      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 116, Điều 117, Điều 122 - 133, Điều 385, Điều 407, Điều 408)'],
+      keywords: ['giao dịch dân sự', 'hợp đồng dân sự', 'điều kiện có hiệu lực', 'giao dịch vô hiệu', 'hợp đồng vô hiệu', 'điều 117 blds', 'điều 122 blds', 'lừa dối đe dọa', 'hình thức giao dịch', 'hậu quả vô hiệu', 'đặt cọc', 'phạt cọc', 'tiền trả trước', 'điều 328', 'điều 430', 'hợp đồng mua bán'],
+      summary: 'Quy định về giao dịch dân sự, 4 điều kiện có hiệu lực (Điều 117), biện pháp Đặt cọc vs Tiền trả trước (Điều 328 BLDS 2015 & Điều 29 Nghị định 21/2021/NĐ-CP), Hợp đồng mua bán tài sản (Điều 430) và hậu quả giao dịch vô hiệu.',
+      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 116, 117, 122 - 133, 328, 385, 430)', 'Nghị định 21/2021/NĐ-CP (Khoản 2 Điều 29)'],
       baremContent: `I. KHÁI NIỆM VÀ ĐIỀU KIỆN CÓ HIỆU LỰC CỦA GIAO DỊCH DÂN SỰ (ĐIỀU 116, 117 BLDS 2015):
 1. Khái niệm: Giao dịch dân sự là hợp đồng hoặc hành vi pháp lý đơn phương làm phát sinh, thay đổi hoặc chấm dứt quyền, nghĩa vụ dân sự.
 2. Bốn điều kiện có hiệu lực (Điều 117 BLDS 2015):
@@ -471,20 +475,13 @@ II. LUẬN CỨ GIẢI THÍCH LÝ LUẬN VÀ THỰC TIỄN:
 - Mục đích và nội dung của giao dịch dân sự không vi phạm điều cấm của luật, không trái đạo đức xã hội.
 - Hình thức của giao dịch dân sự là điều kiện có hiệu lực trong trường hợp luật có quy định (bằng văn bản, công chứng, chứng thực, đăng ký).
 
-II. CÁC TRƯỜNG HỢP GIAO DỊCH DÂN SỰ VÔ HIỆU (ĐIỀU 122 - 129 BLDS 2015):
-1. Vô hiệu do vi phạm điều cấm của luật, trái đạo đức xã hội (Điều 123).
-2. Vô hiệu do giả tạo (Điều 124): Xác lập giao dịch nhằm che giấu một giao dịch khác hoặc trốn tránh nghĩa vụ.
-3. Vô hiệu do người chưa thành niên, người mất NLHVDS, người có khó khăn trong nhận thức xác lập (Điều 125).
-4. Vô hiệu do nhầm lẫn (Điều 126).
-5. Vô hiệu do bị lừa dối, đe dọa, cưỡng ép (Điều 127).
-6. Vô hiệu do người xác lập không nhận thức và làm chủ được hành vi của mình (Điều 128).
-7. Vô hiệu do không tuân thủ quy định về hình thức (Điều 129).
+II. BIỆN PHÁP BẢO ĐẢM ĐẶT CỌC (ĐIỀU 328 BLDS 2015) VÀ PHÂN BIỆT VỚI TIỀN TRẢ TRƯỚC:
+1. Đặt cọc (Khoản 1, 2 Điều 328 BLDS 2015): Một bên giao cho bên kia khoản tiền/vật có giá trị trong một thời hạn để bảo đảm giao kết hoặc thực hiện hợp đồng. Nếu bên đặt cọc từ chối giao kết/thực hiện thì mất cọc; nếu bên nhận đặt cọc từ chối giao kết/thực hiện thì phải trả lại tài sản đặt cọc và một khoản tiền tương đương giá trị tài sản đặt cọc (phạt cọc), trừ thỏa thuận khác.
+2. Ranh giới với Tiền trả trước (Khoản 2 Điều 29 Nghị định 21/2021/NĐ-CP): Nếu một bên giao tiền cho bên kia (ví dụ trong hợp đồng mua bán tài sản theo Điều 430 BLDS 2015) mà các bên KHÔNG xác định rõ là tiền đặt cọc hay tiền trả trước (không lập văn bản đặt cọc riêng, nội dung chuyển khoản chỉ ghi "chuyển trước tiền mua...") thì khoản tiền đó ĐƯỢC COI LÀ TIỀN TRẢ TRƯỚC, KHÔNG áp dụng chế tài phạt cọc theo Điều 328 BLDS 2015 (bên vi phạm chỉ hoàn trả tiền đã nhận và bồi thường thiệt hại thực tế nếu chứng minh được).
 
-III. HẬU QUẢ PHÁP LÝ CỦA GIAO DỊCH DÂN SỰ VÔ HIỆU (ĐIỀU 131 BLDS 2015):
-- Không làm phát sinh, thay đổi, chấm dứt quyền, nghĩa vụ dân sự của các bên từ thời điểm giao dịch được xác lập.
-- Các bên khôi phục lại tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận; nếu không hoàn trả được bằng hiện vật thì trị giá thành tiền để hoàn trả.
-- Bên ngay tình trong việc thu hoa lợi, lợi tức không phải hoàn trả hoa lợi, lợi tức đó.
-- Bên có lỗi gây thiệt hại thì phải bồi thường.`
+III. CÁC TRƯỜNG HỢP GIAO DỊCH DÂN SỰ VÔ HIỆU VÀ HẬU QUẢ PHÁP LÝ (ĐIỀU 122 - 131 BLDS 2015):
+- Vô hiệu do vi phạm điều cấm/trái đạo đức (Điều 123), giả tạo (Điều 124), người chưa thành niên/mất NLHVDS (Điều 125), nhầm lẫn (Điều 126), lừa dối/đe dọa/cưỡng ép (Điều 127), không nhận thức (Điều 128), vi phạm hình thức (Điều 129).
+- Hậu quả (Điều 131): Không làm phát sinh quyền, nghĩa vụ từ thời điểm xác lập; các bên khôi phục tình trạng ban đầu, hoàn trả cho nhau những gì đã nhận; bên có lỗi gây thiệt hại phải bồi thường.`
     },
 {
       chapterNumber: 6,
@@ -642,27 +639,25 @@ II. BỐN YẾU TỐ CẤU THÀNH TỘI PHẠM:
       chapterNumber: 7,
       chapterTitle: 'Chương 7: Một số nội dung cơ bản của Luật Hình sự',
       sectionCode: '7.2_7.3',
-      sectionTitle: 'Tội phạm, Đồng phạm, Phòng vệ chính đáng, Tình thế cấp thiết và Hệ thống hình phạt',
+      sectionTitle: 'Phân loại tội phạm (Điều 9, 54), Đồng phạm, Che giấu / Không tố giác tội phạm (Điều 18, 19, 389, 390) và Hệ thống hình phạt',
       pageRange: 'tr. 160 - 180',
-      keywords: ['tội phạm điều 8', 'phân loại tội phạm điều 9', 'đồng phạm điều 17', 'phòng vệ chính đáng điều 22', 'tình thế cấp thiết điều 23', 'hệ thống hình phạt điều 32', 'tử hình điều 40'],
-      summary: 'Khái niệm tội phạm, 4 phân loại, đồng phạm (4 loại người), so sánh phòng vệ chính đáng vs tình thế cấp thiết, hệ thống 7 hình phạt chính & 7 hình phạt bổ sung.',
-      legalBasis: ['Bộ luật Hình sự năm 2015 (sửa đổi 2017) Điều 8, 9, 12, 17, 22, 23, 30, 32, 40'],
-      baremContent: `I. TỘI PHẠM VÀ ĐỒNG PHẠM (BLHS 2015):
-- Tội phạm (Điều 8): Hành vi nguy hiểm cao độ cho xã hội, trái pháp luật hình sự, có lỗi và phải chịu trách nhiệm hình sự. Phân thành 4 loại (Điều 9): Ít nghiêm trọng (đến 3 năm tù), Nghiêm trọng (3-7 năm), Rất nghiêm trọng (7-15 năm), Đặc biệt nghiêm trọng (15-20 năm, tù chung thân, tử hình).
-- Đồng phạm (Điều 17): Hai người trở lên cùng cố ý thực hiện tội phạm. Gồm 4 vai trò: Người thực hành (trực tiếp), Người tổ chức (chủ mưu, cầm đầu), Người xúi giục (kích động), Người giúp sức (tạo điều kiện vật chất/tinh thần).
+      keywords: ['tội phạm điều 8', 'phân loại tội phạm điều 9', 'loại tội phạm nào', 'ít nghiêm trọng hay nghiêm trọng', 'điều 54 blhs', 'đồng phạm điều 17', 'che giấu tội phạm', 'không tố giác tội phạm', 'điều 18 blhs', 'điều 19 blhs', 'điều 389', 'điều 390', 'phòng vệ chính đáng điều 22', 'tình thế cấp thiết điều 23', 'hệ thống hình phạt điều 32', 'tử hình điều 40'],
+      summary: 'Nguyên tắc phân loại 4 loại tội phạm căn cứ mức cao nhất của khung hình phạt (Điều 9, Điều 54 BLHS), đồng phạm, miễn TNHS cho người thân thích khi che giấu / không tố giác tội phạm (Điều 18, 19, 389, 390), phòng vệ chính đáng, tình thế cấp thiết và hệ thống hình phạt.',
+      legalBasis: ['Bộ luật Hình sự năm 2015 (sửa đổi 2017) Điều 8, 9, 12, 17, 18, 19, 22, 23, 30, 32, 40, 54, 389, 390'],
+      baremContent: `I. NGUYÊN TẮC PHÂN LOẠI TỘI PHẠM (ĐIỀU 9 & ĐIỀU 54 BLHS 2015) VÀ ĐỒNG PHẠM:
+1. Bốn loại tội phạm theo Điều 9 BLHS 2015: Ít nghiêm trọng (mức cao nhất của khung hình phạt tù đến 03 năm), Nghiêm trọng (trên 03 năm đến 07 năm tù), Rất nghiêm trọng (trên 07 năm đến 15 năm tù), Đặc biệt nghiêm trọng (trên 15 năm đến 20 năm tù, tù chung thân hoặc tử hình).
+   - Nguyên tắc cốt lõi: Loại tội phạm được xác định hoàn toàn dựa vào MỨC CAO NHẤT CỦA KHUNG HÌNH PHẠT do Bộ luật Hình sự quy định tại điều, khoản mà bị cáo bị truy tố, xét xử; TUYỆT ĐỐI KHÔNG căn cứ vào mức án cụ thể mà Tòa án tuyên trên thực tế (kể cả khi Tòa án áp dụng tình tiết giảm nhẹ hoặc Điều 54 xử dưới mức thấp nhất của khung hình phạt).
+2. Đồng phạm (Điều 17): Hai người trở lên cùng cố ý thực hiện một tội phạm (Người thực hành, Người tổ chức, Người xúi giục, Người giúp sức).
+3. Che giấu tội phạm (Điều 18, Điều 389) & Không tố giác tội phạm (Điều 19, Điều 390):
+   - Khác với đồng phạm, hành vi che giấu / không tố giác phát sinh khi KHÔNG có sự hứa hẹn trước.
+   - Chính sách miễn trách nhiệm hình sự đối với người thân thích (Khoản 2 Điều 18 & Khoản 2 Điều 19 BLHS 2015): Ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng của người phạm tội KHÔNG PHẢI CHỊU TRÁCH NHIỆM HÌNH SỰ về tội che giấu tội phạm hoặc tội không tố giác tội phạm, TRỪ TRƯỜNG HỢP che giấu / không tố giác các tội xâm phạm an ninh quốc gia (Chương XIII) hoặc tội phạm ĐẶC BIỆT NGHIÊM TRỌNG (tức nếu người thân chỉ phạm tội ít nghiêm trọng, nghiêm trọng hoặc rất nghiêm trọng như Khoản 1 Điều 168 BLHS khung 3-10 năm tù thì cha mẹ, anh chị em ruột được miễn hoàn toàn TNHS!).
 
 II. PHÂN BIỆT PHÒNG VỆ CHÍNH ĐÁNG VÀ TÌNH THẾ CẤP THIẾT:
-1. Phòng vệ chính đáng (Điều 22):
-   - Nguồn gốc nguy hiểm: Do hành vi tấn công trái pháp luật của con người.
-   - Đối tượng tác động: Gây thiệt hại cho chính kẻ đang tấn công.
-   - Yêu cầu thiệt hại: Chống trả một cách cần thiết (thiệt hại gây ra có thể lớn hơn hoặc bằng thiệt hại bị đe dọa). Không phải bồi thường dân sự.
-2. Tình thế cấp thiết (Điều 23):
-   - Nguồn gốc nguy hiểm: Do thiên tai, súc vật, sự cố máy móc hoặc con người gây ra.
-   - Đối tượng tác động: Gây thiệt hại cho quyền, lợi ích hợp pháp của người thứ ba vô tội.
-   - Yêu cầu thiệt hại: Thiệt hại gây ra bắt buộc phải NHỎ HƠN thiệt hại cần ngăn ngừa. Phải bồi thường thiệt hại dân sự theo Điều 595 BLDS 2015.
+1. Phòng vệ chính đáng (Điều 22): Chống trả cần thiết người đang có hành vi tấn công trái pháp luật. Không phải bồi thường dân sự.
+2. Tình thế cấp thiết (Điều 23): Gây thiệt hại nhỏ hơn thiệt hại cần ngăn ngừa cho người thứ ba. Người gây ra tình thế cấp thiết phải bồi thường (Điều 595 BLDS 2015).
 
 III. HỆ THỐNG HÌNH PHẠT ĐỐI VỚI CÁ NHÂN (ĐIỀU 32 BLHS 2015):
-- 7 Hình phạt chính: Cảnh cáo, Phạt tiền, Cải tạo không giam giữ, Trục xuất, Tù có thời hạn, Tù chung thân, Tử hình (Điều 40: không áp dụng tử hình đối với người dưới 18 tuổi, phụ nữ có thai/nuôi con nhỏ dưới 36 tháng, người đủ 75 tuổi trở lên).
+- 7 Hình phạt chính: Cảnh cáo, Phạt tiền, Cải tạo không giam giữ, Trục xuất, Tù có thời hạn, Tù chung thân, Tử hình (Điều 40).
 - 7 Hình phạt bổ sung: Cấm đảm nhiệm chức vụ, Cấm cư trú, Quản chế, Tước quyền công dân, Tịch thu tài sản, Phạt tiền, Trục xuất.`
     },
 
@@ -886,26 +881,37 @@ II. ĐƠN PHƯƠNG CHẤM DỨT HỢP ĐỒNG LAO ĐỘNG VÀ KỶ LUẬT LAO Đ
         'căn cứ phát sinh trách nhiệm bồi thường',
         'năng lực chịu trách nhiệm bồi thường',
         'nguồn nguy hiểm cao độ',
+        'bồi thường thiệt hại do súc vật gây ra',
+        'con chó',
+        'chó dữ',
+        'chó cắn',
+        'súc vật',
+        'người thứ ba làm chó xổng chuồng',
+        'viện phí',
         'điều 584',
         'điều 585',
         'điều 586',
-        'điều 601'
+        'điều 590',
+        'điều 601',
+        'điều 603'
       ],
-      summary: 'Căn cứ phát sinh trách nhiệm bồi thường thiệt hại ngoài hợp đồng (Điều 584), nguyên tắc bồi thường (Điều 585), năng lực chịu trách nhiệm theo độ tuổi (Điều 586) và nguồn nguy hiểm cao độ (Điều 601 BLDS 2015).',
-      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 584, Điều 585, Điều 586, Điều 589, Điều 590, Điều 591, Điều 592, Điều 601)'],
-      baremContent: `I. CĂN CỨ PHÁT SINH VÀ NGUYÊN TẮC BỒI THƯỜNG THIỆT HẠI NGOÀI HỢP ĐỒNG (ĐIỀU 584, 585 BLDS 2015):
+      summary: 'Căn cứ phát sinh trách nhiệm bồi thường thiệt hại ngoài hợp đồng (Điều 584), nguyên tắc bồi thường (Điều 585), thiệt hại do sức khỏe bị xâm phạm (Điều 590), nguồn nguy hiểm cao độ (Điều 601) và súc vật gây thiệt hại khi người thứ ba có lỗi (Điều 603 BLDS 2015).',
+      legalBasis: ['Bộ luật Dân sự năm 2015 (Điều 584, Điều 585, Điều 586, Điều 590, Điều 591, Điều 601, Điều 603)'],
+      baremContent: `I. CĂN CỨ PHÁT SINH VÀ NGUYÊN TẮC BỒI THƯỜNG THIỆT HẠI NGOÀI HỢP ĐỒNG (ĐIỀU 584, 585, 590 BLDS 2015):
 1. Căn cứ phát sinh (Điều 584 BLDS 2015): Người nào có hành vi xâm phạm tính mạng, sức khỏe, danh dự, nhân phẩm, uy tín, tài sản, quyền, lợi ích hợp pháp khác của người khác mà gây thiệt hại thì phải bồi thường.
    - Các trường hợp được miễn trách nhiệm bồi thường (Khoản 2 Điều 584): Thiệt hại phát sinh là do sự kiện bất khả kháng hoặc hoàn toàn do lỗi của bên bị thiệt hại (trừ trường hợp có thỏa thuận khác hoặc luật có quy định khác).
-2. Nguyên tắc bồi thường (Điều 585 BLDS 2015): Thiệt hại thực tế phải được bồi thường toàn bộ và kịp thời; người chịu trách nhiệm bồi thường có thể được giảm mức bồi thường nếu không có lỗi hoặc có lỗi vô ý và thiệt hại quá lớn so với khả năng kinh tế của mình.
+2. Thiệt hại do sức khỏe bị xâm phạm (Điều 590 BLDS 2015): Gồm chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe (viện phí, thuốc men); thu nhập thực tế bị mất/giảm sút; chi phí người chăm sóc và khoản tiền bù đắp tổn thất về tinh thần (tối đa không quá 50 lần mức lương cơ sở).
 
 II. NĂNG LỰC CHỊU TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI CỦA CÁ NHÂN (ĐIỀU 586 BLDS 2015):
 1. Người từ đủ 18 tuổi trở lên gây thiệt hại thì phải tự mình bồi thường.
-2. Người chưa đủ 15 tuổi gây thiệt hại mà còn cha, mẹ thì cha, mẹ phải bồi thường toàn bộ thiệt hại; nếu tài sản của cha, mẹ không đủ để bồi thường mà con chưa thành niên gây thiệt hại có tài sản riêng thì lấy tài sản đó để bồi thường phần còn thiếu.
-3. Người từ đủ 15 tuổi đến chưa đủ 18 tuổi gây thiệt hại thì phải bồi thường bằng tài sản của mình; nếu không đủ tài sản để bồi thường thì cha, mẹ phải bồi thường phần còn thiếu bằng tài sản của mình.
+2. Người chưa đủ 15 tuổi gây thiệt hại mà còn cha, mẹ thì cha, mẹ phải bồi thường toàn bộ thiệt hại.
+3. Người từ đủ 15 tuổi đến chưa đủ 18 tuổi gây thiệt hại thì phải bồi thường bằng tài sản của mình; nếu không đủ thì cha, mẹ bồi thường phần còn thiếu.
 
-III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐIỀU 601 BLDS 2015):
-- Nguồn nguy hiểm cao độ gồm phương tiện giao thông vận tải cơ giới (ô tô, xe máy...), hệ thống tải điện, nhà máy công nghiệp đang hoạt động, vũ khí, chất nổ, chất cháy, chất độc, thú dữ...
-- Chủ sở hữu, người chiếm hữu, sử dụng nguồn nguy hiểm cao độ phải bồi thường thiệt hại cả khi KHÔNG CÓ LỖI, trừ 02 trường hợp: (a) Thiệt hại xảy ra hoàn toàn do lỗi cố ý của người bị thiệt hại; (b) Thiệt hại xảy ra trong trường hợp bất khả kháng hoặc tình thế cấp thiết.`
+III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601) VÀ DO SÚC VẬT GÂY RA (ĐIỀU 603 BLDS 2015):
+1. Nguồn nguy hiểm cao độ (Điều 601 BLDS 2015): Chủ sở hữu, người chiếm hữu, sử dụng nguồn nguy hiểm cao độ (ô tô, xe máy, hệ thống tải điện, thú dữ...) phải bồi thường thiệt hại cả khi KHÔNG CÓ LỖI, trừ trường hợp hoàn toàn do lỗi cố ý của người bị thiệt hại hoặc bất khả kháng/tình thế cấp thiết.
+2. Bồi thường thiệt hại do súc vật gây ra (Điều 603 BLDS 2015):
+   - Khoản 1: Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra cho người khác.
+   - Khoản 2 (Lỗi của người thứ ba): Trường hợp NGƯỜI THỨ BA HOÀN TOÀN CÓ LỖI làm cho súc vật gây thiệt hại cho người khác (ví dụ chủ nhà đã nhốt chó cẩn thận trong chuồng có khóa nhưng kẻ trộm cạy khóa chuồng làm chó xổng ra cắn người đi đường) thì NGƯỜI THỨ BA PHẢI BỒI THƯỜNG TOÀN BỘ THIỆT HẠI (chủ sở hữu không có lỗi nên không phải bồi thường); nếu người thứ ba và chủ sở hữu cùng có lỗi thì phải liên đới bồi thường.`
     }
   ];
 
@@ -1648,18 +1654,72 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
         if (c.sectionCode === '6.8') finalScore += 80;
       }
 
-      // O. Nếu hỏi về bồi thường thiệt hại ngoài hợp đồng, nguồn nguy hiểm cao độ -> Ưu tiên Mục 6.9
+      // O. Nếu hỏi về bồi thường thiệt hại ngoài hợp đồng, nguồn nguy hiểm cao độ, súc vật / chó cắn -> Ưu tiên Mục 6.9
       if (
         rawQueryText.includes('bồi thường thiệt hại ngoài hợp đồng') ||
         rawQueryText.includes('nguồn nguy hiểm cao độ') ||
         rawQueryText.includes('năng lực chịu trách nhiệm bồi thường') ||
         rawQueryText.includes('ai phải bồi thường') ||
+        rawQueryText.includes('phải bồi thường') ||
         rawQueryText.includes('chịu trách nhiệm bồi thường') ||
+        rawQueryText.includes('con chó') ||
+        rawQueryText.includes('chó săn') ||
+        rawQueryText.includes('chó dữ') ||
+        rawQueryText.includes('súc vật') ||
         rawQueryText.includes('điều 584') ||
+        rawQueryText.includes('điều 590') ||
         rawQueryText.includes('điều 596') ||
-        rawQueryText.includes('điều 597')
+        rawQueryText.includes('điều 597') ||
+        rawQueryText.includes('điều 603')
       ) {
-        if (c.sectionCode === '6.9') finalScore += 95;
+        if (c.sectionCode === '6.9') finalScore += 110;
+      }
+
+      // O2. Khử nhiễu cứng cho Mục 6.6 & 6.7 (Hôn nhân & Gia đình): Nếu câu hỏi KHÔNG hề nhắc tới vợ chồng / kết hôn / ly hôn / hôn nhân / cấp dưỡng thì phạt nặng Mục 6.6 & 6.7 để không bao giờ trích dẫn nhầm Luật HNGĐ cho bài Đặt cọc / Mua bán xe!
+      const hasMarriageFamilyContext =
+        /(?:vợ|chồng|kết hôn|ly hôn|ly dị|hôn nhân|tảo hôn|cấp dưỡng|con chung|ngoài giá thú|nhà chồng|nhà vợ)/i.test(rawQueryText);
+      if (!hasMarriageFamilyContext && (c.sectionCode === '6.6' || c.sectionCode === '6.7')) {
+        finalScore -= 95;
+      }
+
+      // O3. Ưu tiên chính xác cho Đặt cọc / Tiền trả trước / Hợp đồng mua bán (Mục 6.2_6.3), Sự biến tuyệt đối/tương đối (Mục 4.3), Hiệu lực hồi tố (Mục 2.3.4_2.3.5), Phân loại tội phạm & Che giấu / Không tố giác (Mục 7.2_7.3)
+      if (
+        rawQueryText.includes('đặt cọc') ||
+        rawQueryText.includes('phạt cọc') ||
+        rawQueryText.includes('tiền trả trước') ||
+        rawQueryText.includes('chuyển trước tiền mua') ||
+        rawQueryText.includes('điều 328') ||
+        rawQueryText.includes('điều 430')
+      ) {
+        if (c.sectionCode === '6.2_6.3') finalScore += 110;
+      }
+      if (
+        rawQueryText.includes('sự biến tuyệt đối') ||
+        rawQueryText.includes('sự biến tương đối') ||
+        (rawQueryText.includes('sự biến pháp lý') && rawQueryText.includes('phân biệt'))
+      ) {
+        if (c.sectionCode === '4.3') finalScore += 120;
+        if (c.sectionCode === '4.1_4.2') finalScore -= 40;
+      }
+      if (
+        rawQueryText.includes('hiệu lực hồi tố') ||
+        rawQueryText.includes('hiệu lực trở về trước') ||
+        rawQueryText.includes('điều 152') ||
+        (rawQueryText.includes('văn bản') && (rawQueryText.includes('nâng mức phạt') || rawQueryText.includes('nhẹ hơn')))
+      ) {
+        if (c.sectionCode === '2.3.4_2.3.5') finalScore += 115;
+      }
+      if (
+        rawQueryText.includes('che giấu tội phạm') ||
+        rawQueryText.includes('không tố giác') ||
+        rawQueryText.includes('thuộc loại tội phạm') ||
+        (rawQueryText.includes('ít nghiêm trọng') && rawQueryText.includes('nghiêm trọng')) ||
+        rawQueryText.includes('điều 18') ||
+        rawQueryText.includes('điều 19') ||
+        rawQueryText.includes('điều 389') ||
+        rawQueryText.includes('điều 390')
+      ) {
+        if (c.sectionCode === '7.2_7.3') finalScore += 115;
       }
 
       // P. Nếu hỏi về ngành luật hiến pháp, quyền con người, quyền và nghĩa vụ cơ bản của công dân -> Ưu tiên Mục 1.3
@@ -1952,11 +2012,14 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ GÂY RA (ĐI
     const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
     const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
     const safeArticles = Array.isArray(extraArticles) ? extraArticles : [];
+    // Ưu tiên đồng bộ 100% với các điều luật thực tế được truy xuất / viện dẫn trong bài giải, tránh ghép lệch điều luật ngoài phạm vi câu hỏi
+    const directArticleLabels = safeArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`);
     const allLaws = Array.from(
-      new Set([
-        ...(chunk.legalBasis || []),
-        ...safeArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`)
-      ])
+      new Set(
+        directArticleLabels.length > 0
+          ? [...directArticleLabels, ...(chunk.legalBasis || []).slice(0, 1)]
+          : [...(chunk.legalBasis || [])]
+      )
     ).filter(Boolean);
 
     const lawSummary =
