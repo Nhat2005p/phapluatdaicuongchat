@@ -1187,10 +1187,20 @@ Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật D�
       qLower.includes('trong cùng một điều luật');
 
     const qCtxEarly = RagService.analyzeQueryContext(query);
+    const hasSpecificClauseDissection =
+      qCtxEarly.quotedClause !== null ||
+      qLower.includes('tự do kinh doanh') ||
+      qLower.includes('điều 33 hiến pháp');
+
     const isQpplQuery =
       !isTrueFalseCue &&
+      !hasSpecificClauseDissection &&
       (
         qCtxEarly.questionForm === 'QPPL_DISSECTION' ||
+        qLower.includes('cấu trúc của quy phạm pháp luật') ||
+        qLower.includes('cơ cấu của quy phạm pháp luật') ||
+        qLower.includes('khái niệm quy phạm pháp luật') ||
+        (qLower.includes('quy phạm pháp luật') && (qLower.includes('giả định') || qLower.includes('quy định') || qLower.includes('chế tài'))) ||
         qLower.includes('cách thể hiện của từng quy phạm') ||
         qLower.includes('cách thể hiện của quy phạm') ||
         (qLower.includes('giả định') && qLower.includes('chế tài') && (qLower.includes('điều 39') || qLower.includes('điều 207') || qLower.includes('nhận xét')))
@@ -1313,7 +1323,19 @@ Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật D�
       return this.buildStaticSftMatch('SFT_CASE_MINOR_14YO_TRANSACTION_VALIDITY', 'CIVIL_CONTRACT', query);
     }
 
-    // 0.0.3c. Bài tập xác định Chủ thể, Nội dung, Khách thể, Sự kiện pháp lý của Quan hệ pháp luật cụ thể (Câu 9)
+    // 0.0.3c. Lý thuyết Quan hệ pháp luật & Ba yếu tố cấu thành (Chủ thể, Nội dung, Khách thể)
+    const isQhplTheory =
+      (qLower.includes('quan hệ pháp luật') || qLower.includes('qhpl')) &&
+      (qLower.includes('khái niệm') || qLower.includes('cơ cấu') || qLower.includes('ba yếu tố') || qLower.includes('3 yếu tố') || qLower.includes('yếu tố cấu thành') || qLower.includes('cấu thành quan hệ')) &&
+      !qLower.includes('công ty x') &&
+      !qLower.includes('anh a ký hợp đồng với') &&
+      !qLower.includes('sự kiện pháp lý');
+
+    if (isQhplTheory) {
+      return this.buildStaticSftMatch('SFT_LLM_CIVIL_RELATION_3_ELEMENTS', 'QPPL_STRUCT', query);
+    }
+
+    // 0.0.3d. Bài tập xác định Chủ thể, Nội dung, Khách thể, Sự kiện pháp lý của Quan hệ pháp luật cụ thể (Câu 9)
     const isLegalRelationCase =
       !isMinorTransactionCase &&
       !qLower.includes('điều kiện có hiệu lực') &&
@@ -2707,7 +2729,7 @@ ${query}
     existingCitation: string;
   } {
     const raw = (text || '').trim();
-    const citationIdx = raw.search(/(?:\n\s*---\s*\n\s*)?(?:###\s*)?📚\s*\*{0,2}\s*CĂN CỨ(?:\s+THAM KHẢO)?\s+GIÁO TRÌNH/i);
+    const citationIdx = raw.search(/(?:\n\s*---\s*\n\s*)?(?:###\s*)?📚\s*\*?\*?\s*(?:CĂN CỨ|NGUỒN)(?:\s+THAM KHẢO)?[:\s]/i);
     if (citationIdx !== -1) {
       return {
         bodyWithoutCitation: raw.slice(0, citationIdx).trim(),
@@ -2784,8 +2806,7 @@ ${query}
       const hasDetailedQppl =
         ansLower.includes('giả định') &&
         ansLower.includes('quy định') &&
-        ansLower.includes('chế tài') &&
-        result.length >= 520;
+        ansLower.includes('chế tài');
 
       if (!hasDetailedQppl) {
         result += `\n\n---\n\n### 🔍 PHÂN TÍCH CHUYÊN SÂU CẤU TRÚC 3 BỘ PHẬN CỦA QUY PHẠM PHÁP LUẬT:
@@ -2829,7 +2850,12 @@ ${query}
 
     // 3. Nếu câu hỏi có yêu cầu "lấy ví dụ minh họa" mà nội dung trả lời chưa có mục Ví dụ cụ thể
     const isComparisonQuery = query.toLowerCase().includes('phân biệt') || query.toLowerCase().includes('so sánh');
-    if (reqs.needsExample && !ansLower.includes('ví dụ') && !isComparisonQuery) {
+    const alreadyHasExample =
+      ansLower.includes('ví dụ') ||
+      ansLower.includes('minh họa') ||
+      ansLower.includes('điều 33 hiến pháp') ||
+      ansLower.includes('vượt đèn đỏ');
+    if (reqs.needsExample && !alreadyHasExample && !isComparisonQuery) {
       const qLower = query.toLowerCase();
       let exampleBlock = '';
 

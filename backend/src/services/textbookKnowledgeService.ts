@@ -2009,28 +2009,8 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
     extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = [],
     query?: string
   ): string {
-    const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
     const cleanSectionCode = chunk.sectionCode.replace(/_/g, ' – ');
-    const safeArticles = Array.isArray(extraArticles) ? extraArticles : [];
-    // Ưu tiên đồng bộ 100% với các điều luật thực tế được truy xuất / viện dẫn trong bài giải, tránh ghép lệch điều luật ngoài phạm vi câu hỏi
-    const directArticleLabels = safeArticles.map((a) => `Điều ${a.articleNumber} ${a.lawName}`);
-    const allLaws = Array.from(
-      new Set(
-        directArticleLabels.length > 0
-          ? [...directArticleLabels, ...(chunk.legalBasis || []).slice(0, 1)]
-          : [...(chunk.legalBasis || [])]
-      )
-    ).filter(Boolean);
-
-    const lawSummary =
-      allLaws.length > 0
-        ? allLaws.slice(0, 4).join('; ')
-        : 'Bộ luật Dân sự 2015, Bộ luật Hình sự 2015';
-
-    return `\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:
-- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-- **Chương & Mục**: **${chunk.chapterTitle}** — **Mục ${cleanSectionCode}: ${chunk.sectionTitle}** (Trang ${pages}).
-- **Căn cứ pháp lý cốt lõi**: ${lawSummary}.`;
+    return `\n\n---\n📚 *Căn cứ tham khảo: Giáo trình Pháp luật đại cương (Bộ GD&ĐT) — ${chunk.chapterTitle} (Mục ${cleanSectionCode}: ${chunk.sectionTitle}).*`;
   }
 
   /**
@@ -2041,42 +2021,7 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
     extraArticles: { lawName: string; articleNumber: number | string; title: string; contentRaw?: string }[] = []
   ): string {
     if (!items || items.length === 0) return '';
-    if (items.length === 1) {
-      return this.buildDetailedCitation(items[0].chunk, extraArticles, items[0].subQuestion);
-    }
-
-    const groupedMap = new Map<string, { chunk: TextbookChunk; indices: number[] }>();
-    items.forEach((it, idx) => {
-      const code = it.chunk.sectionCode;
-      if (!groupedMap.has(code)) {
-        groupedMap.set(code, { chunk: it.chunk, indices: [idx + 1] });
-      } else {
-        groupedMap.get(code)!.indices.push(idx + 1);
-      }
-    });
-
-    const lines: string[] = [];
-    const allBases = new Set<string>();
-
-    groupedMap.forEach(({ chunk, indices }) => {
-      const pages = chunk.pageRange.replace(/^tr\.\s*/i, '');
-      const cleanCode = chunk.sectionCode.replace(/_/g, ' – ');
-      const qLabels = indices.map((n) => `Câu ${n}`).join(', ');
-      lines.push(
-        `- **Đối chiếu ${qLabels}**: **${chunk.chapterTitle}** — Mục ${cleanCode}: ${chunk.sectionTitle} (Trang ${pages})`
-      );
-      chunk.legalBasis.forEach((b) => allBases.add(b));
-    });
-
-    if (Array.isArray(extraArticles)) {
-      extraArticles.forEach((a) => allBases.add(`Điều ${a.articleNumber} ${a.lawName}`));
-    }
-    const lawSummary = Array.from(allBases).slice(0, 5).join('; ');
-
-    return `\n\n---\n\n📚 **CĂN CỨ THAM KHẢO GIÁO TRÌNH & PHÁP LUẬT THỰC ĐỊNH**:
-- **Giáo trình**: Giáo trình Pháp luật đại cương — Trường Đại học Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ).
-${lines.join('\n')}
-- **Căn cứ pháp lý cốt lõi**: ${lawSummary || 'Bộ luật Dân sự 2015, Bộ luật Hình sự 2015'}.`;
+    return `\n\n---\n📚 *Căn cứ tham khảo: Giáo trình Pháp luật đại cương (Bộ GD&ĐT) & Văn bản QPPL thực định.*`;
   }
 
   /**
