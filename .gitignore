@@ -27,7 +27,7 @@ __pycache__/
 *.so
 
 # Large Model weights (> 100MB không thể push lên GitHub)
-models/
+/models/
 *.gguf
 *.bin
 *.safetensors
