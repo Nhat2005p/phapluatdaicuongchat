@@ -5,8 +5,8 @@ from dotenv import load_dotenv
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 load_dotenv(PROJECT_ROOT / ".env")
 
-MODEL_ID = os.getenv("MODEL_ID", "bqbbao6/Qwen2.5-3B-legal-vn")
-MODEL_DIR = PROJECT_ROOT / os.getenv("MODEL_DIR", "models/qwen2.5-3b-legal-vn")
+MODEL_ID = os.getenv("MODEL_ID", "qwen2.5-7b-legal-vn")
+MODEL_DIR = PROJECT_ROOT / os.getenv("MODEL_DIR", "models/qwen2.5-7b-legal-vn-Q4_K_M.gguf")
 
 MAX_NEW_TOKENS = int(os.getenv("MAX_NEW_TOKENS", "2048"))
 TEMPERATURE = float(os.getenv("TEMPERATURE", "0.2"))

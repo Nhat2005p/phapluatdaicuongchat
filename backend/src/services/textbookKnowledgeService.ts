@@ -77,11 +77,11 @@ II. NĂM ĐẶC ĐIỂM CƠ BẢN PHÂN BIỆT NHÀ NƯỚC VỚI CÁC TỔ CH�
     {
       chapterNumber: 1,
       chapterTitle: 'Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam',
-      sectionCode: '1.1.4_1.1.5_1.1.6',
-      sectionTitle: 'Hình thức Nhà nước, Chức năng Nhà nước và Các kiểu Nhà nước',
+      sectionCode: '1.1.4_1.1.6',
+      sectionTitle: 'Hình thức Nhà nước và Các kiểu Nhà nước trong lịch sử',
       pageRange: 'tr. 14 - 21',
-      keywords: ['hình thức nhà nước', 'hình thức chính thể', 'quân chủ', 'cộng hòa', 'cấu trúc nhà nước', 'đơn nhất', 'liên bang', 'chế độ chính trị', 'chức năng nhà nước', 'các kiểu nhà nước'],
-      summary: 'Cấu tạo 3 yếu tố hình thức nhà nước (chính thể, cấu trúc, chế độ chính trị), chức năng đối nội/đối ngoại, 4 kiểu nhà nước lịch sử.',
+      keywords: ['hình thức nhà nước', 'hình thức chính thể', 'quân chủ', 'cộng hòa', 'cấu trúc nhà nước', 'đơn nhất', 'liên bang', 'chế độ chính trị', 'các kiểu nhà nước'],
+      summary: 'Cấu tạo 3 yếu tố hình thức nhà nước (chính thể, cấu trúc, chế độ chính trị) và 4 kiểu nhà nước trong lịch sử.',
       legalBasis: ['Hiến pháp 2013 (Điều 1, Điều 2)', 'Giáo trình Pháp luật đại cương (ĐH Thương mại 2021)'],
       baremContent: `I. HÌNH THỨC NHÀ NƯỚC (GỒM 3 YẾU TỐ CẤU THÀNH):
 1. Hình thức chính thể: Cách thức tổ chức và trình tự thành lập cơ quan quyền lực nhà nước tối cao:
@@ -92,12 +92,62 @@ II. NĂM ĐẶC ĐIỂM CƠ BẢN PHÂN BIỆT NHÀ NƯỚC VỚI CÁC TỔ CH�
    - Nhà nước liên bang: Gồm hai hay nhiều nhà nước thành viên hợp lại, có hệ thống cơ quan chung và từng bang có hệ thống riêng (Mỹ, Đức, Nga).
 3. Chế độ chính trị: Tổng thể phương pháp thực hiện quyền lực nhà nước (Phương pháp dân chủ và Phương pháp phản dân chủ/độc tài).
 
-II. CHỨC NĂNG NHÀ NƯỚC:
-- Chức năng đối nội: Quản lý kinh tế, bảo đảm trật tự an toàn xã hội, y tế, giáo dục, bảo vệ môi trường.
-- Chức năng đối ngoại: Phòng thủ đất nước, mở rộng quan hệ hữu nghị và hội nhập quốc tế.
-
-III. BỐN KIỂU NHÀ NƯỚC TRONG LỊCH SỬ:
+II. BỐN KIỂU NHÀ NƯỚC TRONG LỊCH SỬ:
 Kiểu nhà nước chủ nô -> Kiểu nhà nước phong kiến -> Kiểu nhà nước tư sản -> Kiểu nhà nước xã hội chủ nghĩa.`
+    },
+    {
+      chapterNumber: 1,
+      chapterTitle: 'Chương 1: Một số vấn đề lý luận cơ bản về nhà nước - Nhà nước CHXHCN Việt Nam',
+      sectionCode: '1.1.5',
+      sectionTitle: 'Các Chức năng cơ bản của Nhà nước và Ví dụ minh họa (Đối nội & Đối ngoại)',
+      pageRange: 'tr. 18 - 20',
+      keywords: [
+        'chức năng nhà nước',
+        'chức năng của nhà nước',
+        'chức năng cơ bản của nhà nước',
+        'các chức năng cơ bản của nhà nước',
+        'chức năng đối nội',
+        'chức năng đối ngoại',
+        'ví dụ chức năng nhà nước',
+        'ví dụ chức năng đối nội',
+        'ví dụ chức năng đối ngoại'
+      ],
+      summary: 'Khái niệm chức năng của Nhà nước, phân tích chức năng đối nội và đối ngoại kèm ví dụ thực tiễn, mối quan hệ biện chứng.',
+      legalBasis: ['Hiến pháp năm 2013 (Điều 1, 2, 11, 12, 65)', 'Giáo trình Pháp luật đại cương (Bộ GD&ĐT / ĐH Thương mại 2021, tr. 18-20)'],
+      baremContent: `I. KHÁI NIỆM VÀ PHÂN LOẠI CHỨC NĂNG CỦA NHÀ NƯỚC:
+- **Khái niệm**: Chức năng của Nhà nước là những phương diện, mặt hoạt động cơ bản mang tính định hướng của Nhà nước nhằm thực hiện các nhiệm vụ đặt ra trước Nhà nước trong từng giai đoạn phát triển lịch sử.
+- **Căn cứ phân loại**: Căn cứ vào phạm vi hoạt động chủ yếu, chức năng của Nhà nước được chia thành hai nhóm cơ bản: **Chức năng đối nội** và **Chức năng đối ngoại**.
+
+---
+
+II. NỘI DUNG VÀ VÍ DỤ MINH HỌA CÁC CHỨC NĂNG CƠ BẢN CỦA NHÀ NƯỚC:
+1. **Chức năng đối nội** (Hoạt động nội bộ trong phạm vi lãnh thổ quốc gia):
+   - *Bản chất*: Là những mặt hoạt động chủ yếu của Nhà nước trong nội bộ đất nước nhằm thiết lập, củng cố và bảo vệ trật tự kinh tế, chính trị, xã hội, văn hóa, giáo dục và bảo vệ quyền, lợi ích hợp pháp của công dân.
+   - *Các lĩnh vực trọng tâm*:
+     + Quản lý kinh tế và điều tiết vĩ mô (thu thuế, kiểm soát lạm phát, đầu tư hạ tầng quốc gia).
+     + Giữ vững an ninh chính trị, trật tự an toàn xã hội, phòng chống tội phạm và vi phạm pháp luật.
+     + Phát triển văn hóa, giáo dục, y tế, bảo vệ môi trường và bảo đảm an sinh xã hội.
+   - *Ví dụ minh họa thực tiễn*:
+     + *Ví dụ 1 (Kinh tế & Hạ tầng)*: Nhà nước ban hành Luật Đầu tư, Luật Thuế; đầu tư ngân sách xây dựng tuyến đường bộ cao tốc Bắc - Nam và sân bay quốc tế Long Thành để thúc đẩy giao thương.
+     + *Ví dụ 2 (An ninh trật tự)*: Lực lượng Công an nhân dân mở các đợt cao điểm tuần tra kiểm soát giao thông, trấn áp tội phạm ma túy và lừa đảo công nghệ cao nhằm bảo vệ cuộc sống bình yên của nhân dân.
+     + *Ví dụ 3 (An sinh & Y tế)*: Nhà nước thực hiện chính sách bảo hiểm y tế toàn dân, miễn giảm học phí cho học sinh vùng khó khăn và chi trả trợ cấp cho người có công với cách mạng.
+
+2. **Chức năng đối ngoại** (Hoạt động trong quan hệ quốc tế):
+   - *Bản chất*: Là những mặt hoạt động của Nhà nước trong mối quan hệ với các quốc gia, vùng lãnh thổ và các tổ chức quốc tế nhằm bảo vệ chủ quyền, an ninh quốc gia và nâng cao vị thế của đất nước trên trường quốc tế.
+   - *Các lĩnh vực trọng tâm*:
+     + Phòng thủ đất nước, bảo vệ vững chắc độc lập, chủ quyền, thống nhất và toàn vẹn lãnh thổ.
+     + Thiết lập, củng cố và phát triển quan hệ ngoại giao, hợp tác hữu nghị, kinh tế, thương mại song phương và đa phương.
+     + Tích cực tham gia giải quyết các vấn đề chung toàn cầu (biến đổi khí hậu, an ninh năng lượng, gìn giữ hòa bình).
+   - *Ví dụ minh họa thực tiễn*:
+     + *Ví dụ 1 (Bảo vệ chủ quyền)*: Quân đội nhân dân Việt Nam ngày đêm tuần tra bảo vệ vững chắc vùng trời, vùng biển, biên giới đất liền và các hải đảo (Trường Sa, Hoàng Sa).
+     + *Ví dụ 2 (Hợp tác quốc tế)*: Việt Nam ký kết và thực thi các Hiệp định thương mại tự do thế hệ mới như EVFTA, CPTPP; là thành viên tích cực của ASEAN, Liên Hợp Quốc và cử lực lượng tham gia Phái bộ Gìn giữ hòa bình LHQ tại Nam Sudan.
+
+---
+
+III. MỐI QUAN HỆ BIỆN CHỨNG GIỮA CHỨC NĂNG ĐỐI NỘI VÀ ĐỐI NGOẠI:
+- Chức năng đối nội và chức năng đối ngoại có mối liên hệ mật thiết, tác động qua lại lẫn nhau:
+  + **Chức năng đối nội giữ vai trò chủ đạo, quyết định chức năng đối ngoại**: Một đất nước có nội trị ổn định, kinh tế vững mạnh, xã hội đoàn kết thì mới tạo tiền đề và sức mạnh thực lực để triển khai hoạt động đối ngoại hiệu quả.
+  + **Chức năng đối ngoại phục vụ và hỗ trợ đắc lực cho chức năng đối nội**: Mở rộng đối ngoại giúp thu hút vốn đầu tư nước ngoài (FDI), tiếp thu khoa học công nghệ, mở rộng thị trường xuất khẩu, qua đó thúc đẩy kinh tế trong nước phát triển và củng cố vững chắc an ninh quốc gia.`
     },
     {
       chapterNumber: 1,
@@ -397,8 +447,6 @@ III. BỐN LOẠI VI PHẠM PHÁP LUẬT VÀ TRÁCH NHIỆM PHÁP LÝ TƯƠNG �
         'lỗi cố ý gián tiếp',
         'cố ý trực tiếp',
         'cố ý gián tiếp',
-        'ví dụ minh hoạ',
-        'ví dụ minh họa',
         'mặt chủ quan',
         'vô ý do quá tự tin',
         'vô ý do cẩu thả'
@@ -1324,6 +1372,21 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
       );
     }
 
+    // 10b. Nhóm chức năng, hình thức, bộ máy Nhà nước (Chương 1)
+    if (
+      qLower.includes('nhà nước') &&
+      (qLower.includes('chức năng') ||
+        qLower.includes('hình thức') ||
+        qLower.includes('chính thể') ||
+        qLower.includes('cấu trúc') ||
+        qLower.includes('bộ máy') ||
+        qLower.includes('kiểu nhà nước'))
+    ) {
+      additions.push(
+        'chức năng nhà nước chức năng đối nội quản lý kinh tế trật tự an toàn xã hội an sinh giáo dục chức năng đối ngoại phòng thủ bảo vệ chủ quyền biên giới hội nhập quốc tế ví dụ chức năng nhà nước hình thức chính thể quân chủ cộng hòa cấu trúc đơn nhất liên bang'
+      );
+    }
+
     // 11. Nhóm Quan hệ pháp luật & Sự kiện pháp lý (Chương 4)
     if (
       qLower.includes('quan hệ pháp luật') ||
@@ -1547,6 +1610,30 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
         c.chapterNumber === 1
       ) {
         finalScore -= 40;
+      }
+
+      // E2. Ưu tiên tuyệt đối Chương 1 khi hỏi về Chức năng Nhà nước / Hình thức Nhà nước / Bộ máy Nhà nước
+      if (
+        rawQueryText.includes('nhà nước') &&
+        (rawQueryText.includes('chức năng') ||
+          rawQueryText.includes('hình thức nhà nước') ||
+          rawQueryText.includes('chính thể') ||
+          rawQueryText.includes('cấu trúc') ||
+          rawQueryText.includes('bộ máy'))
+      ) {
+        if (rawQueryText.includes('chức năng') && c.sectionCode === '1.1.5') finalScore += 95;
+        else if (c.chapterNumber === 1) finalScore += 60;
+
+        // Phạt nặng các chunk về Lỗi, Vi phạm pháp luật, Tội phạm khi câu hỏi chỉ hỏi về Nhà nước thuần túy
+        if (
+          (c.chapterNumber === 5 || c.chapterNumber === 7) &&
+          !rawQueryText.includes('vi phạm') &&
+          !rawQueryText.includes('tội') &&
+          !rawQueryText.includes('lỗi') &&
+          !rawQueryText.includes('hình sự')
+        ) {
+          finalScore -= 85;
+        }
       }
 
       // F. Nếu hỏi về "hình thức pháp luật", "đặc điểm pháp luật", "bản chất pháp luật", "tính giai cấp / tính xã hội của pháp luật", "nguồn gốc pháp luật" -> Ưu tiên Chương 2, PHẠT NẶNG Chương 1 (Nhà nước)
@@ -1944,13 +2031,8 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
         }
       });
 
-      // Nếu mục khớp nhất nằm ở phía sau (mục II, III...) và có điểm vượt trội so với mục I, đưa mục trọng tâm lên đầu
-      if (bestSectionIdx > 0 && maxScore >= 4 && maxScore >= sections[0].score + 3) {
-        const focusedSec = sections[bestSectionIdx];
-        const otherSecs = sections.filter((_, idx) => idx !== bestSectionIdx);
-        sections.splice(0, sections.length, focusedSec, ...otherSecs);
-        bestSectionIdx = 0;
-      }
+      // Luôn giữ nguyên thứ tự cấu trúc logic tự nhiên I -> II -> III theo barem chuẩn Giáo trình
+      // (Không đảo mục trọng tâm lên đầu để tránh làm xáo trộn số thứ tự La Mã)
     }
 
     const formatLine = (line: string): string => {

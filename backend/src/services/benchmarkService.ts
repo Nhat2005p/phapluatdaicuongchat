@@ -76,7 +76,7 @@ export class BenchmarkService {
       {
         tierNumber: 1,
         tierName: 'Tier 1 - Zero-shot',
-        technology: 'Qwen2.5-3B Base (Nguyên bản, không ngữ cảnh RAG)',
+        technology: 'Qwen2.5-7B Base (Nguyên bản, không ngữ cảnh RAG)',
         response: tier1Response,
         latencyMs: 320,
         baremAdherenceScore: 35,
@@ -88,7 +88,7 @@ export class BenchmarkService {
       {
         tierNumber: 2,
         tierName: 'Tier 2 - Few-shot In-Context',
-        technology: 'Qwen2.5-3B Base + 2 Ví dụ mẫu In-Context',
+        technology: 'Qwen2.5-7B Base + 2 Ví dụ mẫu In-Context',
         response: tier2Response,
         latencyMs: 540,
         baremAdherenceScore: 60,
@@ -100,7 +100,7 @@ export class BenchmarkService {
       {
         tierNumber: 3,
         tierName: 'Tier 3 - Hybrid RAG Cơ bản',
-        technology: 'Qwen2.5-3B Base + Hybrid Statutory & Textbook RAG',
+        technology: 'Qwen2.5-7B Base + Hybrid Statutory & Textbook RAG',
         response: tier3Response,
         latencyMs: 780,
         baremAdherenceScore: 80,
@@ -112,7 +112,7 @@ export class BenchmarkService {
       {
         tierNumber: 4,
         tierName: 'Tier 4 - Context-Aware QLoRA + Upgraded 5-Stage RAG',
-        technology: 'Qwen2.5-3B-Legal-VN + Context-Aware XML SFT + Reranker (<0.35 Guard) + Citation Verifier',
+        technology: 'Qwen2.5-7B-Legal-VN (Q4_K_M) + Context-Aware XML SFT + Reranker (<0.35 Guard) + Citation Verifier',
         response: tier4Response,
         latencyMs: Math.max(tier4Gen.latencyMs, 15),
         baremAdherenceScore: 98,

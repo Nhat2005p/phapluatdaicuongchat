@@ -11,9 +11,9 @@ if sys.stdout and getattr(sys.stdout, 'encoding', '') and getattr(sys.stdout, 'e
             pass
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-HF_MODEL_DIR = PROJECT_ROOT / "models" / "qwen2.5-3b-legal-vn"
-F16_GGUF = PROJECT_ROOT / "models" / "qwen2.5-3b-legal-vn-f16.gguf"
-FINAL_GGUF = PROJECT_ROOT / "models" / "qwen2.5-3b-legal-vn-Q4_K_M.gguf"
+HF_MODEL_DIR = PROJECT_ROOT / "models" / "qwen2.5-7b-legal-vn"
+F16_GGUF = PROJECT_ROOT / "models" / "qwen2.5-7b-legal-vn-f16.gguf"
+FINAL_GGUF = PROJECT_ROOT / "models" / "qwen2.5-7b-legal-vn-Q4_K_M.gguf"
 CONVERT_SCRIPT = PROJECT_ROOT / "tools" / "llama-src" / "convert_hf_to_gguf.py"
 QUANTIZE_EXE = PROJECT_ROOT / "tools" / "llama" / "llama-quantize.exe"
 PYTHON_EXE = PROJECT_ROOT / ".venv" / "Scripts" / "python.exe"

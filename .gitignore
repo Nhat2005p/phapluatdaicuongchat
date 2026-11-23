@@ -61,3 +61,7 @@ tools/llama-src/
 .cache/
 
 
+# User data - never commit
+data/persisted_users.json
+data/persisted_history.json
+data/*.backup.json

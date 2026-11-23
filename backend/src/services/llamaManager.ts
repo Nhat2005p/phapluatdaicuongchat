@@ -2,6 +2,7 @@ import { spawn, ChildProcess } from 'child_process';
 import path from 'path';
 import fs from 'fs';
 import os from 'os';
+import { config } from '../config/env.js';
 
 // Resolve project root whether CWD is backend/ or legal-chatbot-local/
 const PROJECT_ROOT = fs.existsSync(path.join(process.cwd(), 'tools'))
@@ -9,18 +10,27 @@ const PROJECT_ROOT = fs.existsSync(path.join(process.cwd(), 'tools'))
   : path.resolve(process.cwd(), '..');
 
 const LLAMA_EXE = path.join(PROJECT_ROOT, 'tools', 'llama', 'llama-server.exe');
-const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-3b-legal-vn-Q5_K_M.gguf');
-const LORA_GGUF = path.join(PROJECT_ROOT, 'models', 'vietlaw_lora_adapter.gguf');
+const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-7b-legal-vn-Q4_K_M.gguf');
 
 let llamaProcess: ChildProcess | null = null;
+
+function getLlamaHealthUrl(): string {
+  const base = (config.llamaServerUrl || 'http://127.0.0.1:8088/v1').replace(/\/+$/, '');
+  return base.endsWith('/v1') ? `${base.slice(0, -3)}/health` : `${base}/health`;
+}
+
+function isRemoteLlamaServer(): boolean {
+  const url = config.llamaServerUrl || '';
+  return !url.includes('127.0.0.1') && !url.includes('localhost');
+}
 
 export class LlamaManager {
   public static isFullGenerating = false;
 
   public static async isHealthy(): Promise<boolean> {
     try {
-      const res = await fetch('http://127.0.0.1:8088/health', {
-        signal: AbortSignal.timeout(1500)
+      const res = await fetch(getLlamaHealthUrl(), {
+        signal: AbortSignal.timeout(isRemoteLlamaServer() ? 5000 : 1500)
       });
       if (res.ok) {
         const data: any = await res.json();
@@ -35,8 +45,13 @@ export class LlamaManager {
   public static async ensureRunning(): Promise<boolean> {
     const healthy = await this.isHealthy();
     if (healthy) {
-      console.log('🤖 [Llama-Server] Mô hình Qwen2.5-3B GGUF đang hoạt động trên cổng 8088.');
+      console.log(`🤖 [Llama-Server] Mô hình Qwen2.5-7B GGUF đang hoạt động tại ${config.llamaServerUrl}.`);
       return true;
+    }
+
+    if (isRemoteLlamaServer()) {
+      console.warn(`⚠️ [Llama-Server] Remote server (${config.llamaServerUrl}) chưa sẵn sàng.`);
+      return false;
     }
 
     if (!fs.existsSync(LLAMA_EXE) || !fs.existsSync(MODEL_GGUF)) {
@@ -49,9 +64,10 @@ export class LlamaManager {
 
     const llamaArgs = [
       '-m', MODEL_GGUF,
+      '-ngl', '99',
       '--host', '127.0.0.1',
       '--port', '8088',
-      '-c', '2048',
+      '-c', '4096',
       '-np', '1',
       '-t', String(genThreads),
       '-tb', String(logicalThreads),
@@ -63,7 +79,7 @@ export class LlamaManager {
     ];
 
     console.log(
-      `🚀 [Llama-Server] Đang khởi động ${path.basename(MODEL_GGUF)} (t=${genThreads}, tb=${logicalThreads}, FlashAttention=ON)...`
+      `🚀 [Llama-Server] Đang khởi động ${path.basename(MODEL_GGUF)} (GPU ngl=99, t=${genThreads}, tb=${logicalThreads}, FlashAttention=ON)...`
     );
 
     try {
@@ -75,11 +91,11 @@ export class LlamaManager {
 
       llamaProcess.unref();
 
-      // Đợi nạp model vào RAM
-      for (let i = 0; i < 30; i++) {
+      // Đợi nạp model vào VRAM/RAM
+      for (let i = 0; i < 60; i++) {
         await new Promise((r) => setTimeout(r, 500));
         if (await this.isHealthy()) {
-          console.log('✅ [Llama-Server] Mô hình Qwen2.5-3B GGUF đã nạp xong và sẵn sàng trả lời câu hỏi!');
+          console.log('✅ [Llama-Server] Mô hình Qwen2.5-7B GGUF đã nạp xong và sẵn sàng trả lời câu hỏi!');
           return true;
         }
       }

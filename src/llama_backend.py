@@ -17,7 +17,7 @@ if sys.stdout and getattr(sys.stdout, 'encoding', '') and getattr(sys.stdout, 'e
             pass
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
-GGUF_MODEL_PATH = PROJECT_ROOT / "models" / "qwen2.5-3b-legal-vn-Q5_K_M.gguf"
+GGUF_MODEL_PATH = PROJECT_ROOT / "models" / "qwen2.5-7b-legal-vn-Q4_K_M.gguf"
 LLAMA_SERVER_EXE = PROJECT_ROOT / "tools" / "llama" / "llama-server.exe"
 
 SERVER_HOST = "127.0.0.1"
@@ -54,6 +54,7 @@ def start_llama_server():
     cmd = [
         str(LLAMA_SERVER_EXE),
         "-m", str(GGUF_MODEL_PATH),
+        "-ngl", "99",
         "--host", SERVER_HOST,
         "--port", str(SERVER_PORT),
         "-c", "4096",

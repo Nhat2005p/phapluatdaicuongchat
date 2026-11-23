@@ -276,6 +276,33 @@ export class LlmService {
       }
     }
 
+    // Nạp bổ sung các mẫu canonical (ví dụ SFT_LLM_CIVIL_RELATION_3_ELEMENTS) từ data/rag/llm_service_canonical_extracted.json
+    const canonicalPaths = [
+      path.resolve(process.cwd(), 'data/rag/llm_service_canonical_extracted.json'),
+      path.resolve(process.cwd(), '../data/rag/llm_service_canonical_extracted.json'),
+      path.resolve(__dirname, '../../../data/rag/llm_service_canonical_extracted.json')
+    ];
+    for (const cp of canonicalPaths) {
+      if (fs.existsSync(cp)) {
+        try {
+          const canonicalParsed = JSON.parse(fs.readFileSync(cp, 'utf-8')) as SftSample[];
+          let added = 0;
+          for (const item of canonicalParsed) {
+            if (item.sample_id && item.output && !this.masterById.has(item.sample_id)) {
+              this.masterById.set(item.sample_id, item);
+              added++;
+            }
+          }
+          if (added > 0) {
+            console.log(`📚 [SFT Cache] Đã nạp bổ sung ${added} mẫu canonical từ ${path.basename(cp)}`);
+          }
+          break;
+        } catch (err) {
+          console.warn('⚠️ [SFT Cache] Lỗi đọc canonical dataset:', err);
+        }
+      }
+    }
+
     this.isInitialized = true;
   }
 
@@ -2433,8 +2460,10 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
     }
 
     // BƯỚC 0.2: Khớp trực tiếp với 1 mẫu định sẵn trong SFT Dataset / Solver chuyên sâu
-    const sftMatch = this.matchSftSample(query, effectiveIntent);
-    if (sftMatch) {
+    // Khi LLM_FIRST=1 và llama-server (Qwen2.5-7B) đang hoạt động, ưu tiên chuyển thẳng xuống RAG + LLM thực tế
+    const useLiveLlmFirst = config.llmFirst && (await LlamaManager.isHealthy());
+    const sftMatch = !useLiveLlmFirst ? this.matchSftSample(query, effectiveIntent) : null;
+    if (sftMatch && sftMatch.output && sftMatch.output.trim().length > 20) {
       const { bodyWithoutCitation, existingCitation } = this.splitEmbeddedCitation(this.cleanRubricText(sftMatch.output));
       const enrichedBody = this.enrichCompoundSingleAnswer(query, bodyWithoutCitation, retrievedArticles);
 
@@ -2539,8 +2568,10 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
     }
 
     const isGenericFallbackOnly =
-      generatedRaw.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG') &&
-      (!topTextbooks.length || topTextbooks[0].score < 12);
+      !generatedRaw ||
+      generatedRaw.trim().length < 40 ||
+      (generatedRaw.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG') &&
+        (!topTextbooks.length || topTextbooks[0].score < 12));
 
     const llmFirstActive = config.llmFirst && (await LlamaManager.isHealthy());
     if (!isGenericFallbackOnly && !llmFirstActive) {
@@ -2631,7 +2662,7 @@ ${query}
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'qwen2.5-3b-legal-vn',
+          model: 'qwen2.5-7b-legal-vn',
           cache_prompt: true,
           messages: [
             {
@@ -2670,7 +2701,7 @@ ${query}
               ? `${bodyWithoutCitation}\n\n${fallbackBody}`
               : bodyWithoutCitation;
 
-          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-3B sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
+          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-7B sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
           const enrichedText = this.enrichCompoundSingleAnswer(query, finalBody, retrievedArticles);
           const extraCitation =
             topTextbooks.length > 0 && topTextbooks[0].score >= 8
@@ -5468,6 +5499,14 @@ Hãy tưởng tượng **Pháp luật** giống như **"Nội quy chung của m�
 
     if (qLower.includes('thực hiện pháp luật') || qLower.includes('tuân thủ') || qLower.includes('thi hành')) {
       return this.solveDynamicFourFormsOfLawImplementation(query);
+    }
+
+    // Nếu câu hỏi về Chức năng của Nhà nước (Chương 1 - Mục 1.1.5)
+    if (qLower.includes('nhà nước') && qLower.includes('chức năng')) {
+      const topTb = TextbookKnowledgeService.searchTopChunks(query, 1);
+      if (topTb.length > 0 && topTb[0].chunk.sectionCode === '1.1.5') {
+        return TextbookKnowledgeService.buildTextbookResponse(query, topTb[0]);
+      }
     }
 
     // Kiểm tra kho tri thức Giáo trình RAG (ĐH Thương Mại 2021 - Chủ biên TS. Trần Thành Thọ, kết hợp Đa Chunk)
