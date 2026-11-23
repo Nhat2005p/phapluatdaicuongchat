@@ -16,7 +16,7 @@ import {
 } from '../types';
 
 const API_BASE =
-  import.meta.env.VITE_API_BASE_URL ||
+  (import.meta as any).env?.VITE_API_BASE_URL ||
   (typeof window !== 'undefined' && window.location.hostname.endsWith('.vercel.app')
     ? 'https://vietlaw-if59.onrender.com/api/v1'
     : '/api/v1');
