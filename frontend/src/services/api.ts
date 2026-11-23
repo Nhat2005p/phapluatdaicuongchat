@@ -15,7 +15,11 @@ import {
   PartnerApiKeyItem
 } from '../types';
 
-const API_BASE = '/api/v1';
+const API_BASE =
+  import.meta.env.VITE_API_BASE_URL ||
+  (typeof window !== 'undefined' && window.location.hostname.endsWith('.vercel.app')
+    ? 'https://vietlaw-if59.onrender.com/api/v1'
+    : '/api/v1');
 
 function getAuthHeaders(): HeadersInit {
   const token = localStorage.getItem('vietlaw_token');

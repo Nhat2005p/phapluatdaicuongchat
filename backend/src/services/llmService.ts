@@ -2610,7 +2610,7 @@ Dựa trên cơ sở dữ liệu pháp luật hiện tại, tôi không tìm th�
     }
 
     // BƯỚC 4: GỌI FINE-TUNED LLM (Qwen2.5-3B-Legal-VN) VỚI CẤU TRÚC XML TAGGING, OUTLINE-FIRST PROMPTING & FOCUSED CONTEXT COMPRESSION
-    const adaptiveMaxTokens = 768; // Tối ưu cho CPU 6 nhân 12 luồng kèm Flash Attention + KV Cache Reuse
+    const adaptiveMaxTokens = parseInt(process.env.LLM_MAX_TOKENS || '450', 10); // Tối ưu tốc độ phản hồi tránh timeout proxy cloud
     const adaptiveTimeoutMs = config.llmFirst ? Math.max(config.llmTimeoutMs, 240000) : config.llmTimeoutMs;
 
     let compactLlmContext = '';
