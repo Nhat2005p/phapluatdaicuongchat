@@ -1,9 +1,9 @@
 import os
-import glob
 import time
 import tarfile
 import subprocess
 import urllib.request
+from contextlib import asynccontextmanager
 from pathlib import Path
 import httpx
 import gradio as gr
@@ -13,12 +13,19 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from huggingface_hub import hf_hub_download
 
+os.environ.setdefault("HF_HUB_ENABLE_HF_TRANSFER", "1")
+
 REPO_ID = os.getenv("HF_MODEL_REPO", "pthanh635/qwen2.5-7b-legal-vn-gguf")
 FILENAME = os.getenv("HF_MODEL_FILE", "qwen2.5-7b-legal-vn-Q4_K_M.gguf")
 LLAMA_TGZ_URL = "https://github.com/ggml-org/llama.cpp/releases/download/b12627/llama-b12627-bin-ubuntu-x64.tar.gz"
 LLAMA_DIR = Path("/tmp/llama_bin")
 LLAMA_PORT = 8088
 LLAMA_URL = f"http://127.0.0.1:{LLAMA_PORT}"
+
+# Tối ưu luồng & context trên HF Space ZeroGPU CPU (có thể override qua Space Variables)
+LLAMA_THREADS = os.getenv("LLAMA_THREADS", "8")
+LLAMA_THREADS_BATCH = os.getenv("LLAMA_THREADS_BATCH", "16")
+LLAMA_CTX = os.getenv("LLAMA_CTX", "2048")
 
 
 def setup_llama_server() -> tuple[str, str]:
@@ -29,7 +36,7 @@ def setup_llama_server() -> tuple[str, str]:
         print(f"Downloading prebuilt llama-server from {LLAMA_TGZ_URL}...")
         urllib.request.urlretrieve(LLAMA_TGZ_URL, tgz_path)
         with tarfile.open(tgz_path, "r:gz") as tar:
-            tar.extractall(LLAMA_DIR)
+            tar.extractall(LLAMA_DIR, filter="data")
         tgz_path.unlink(missing_ok=True)
         found = list(LLAMA_DIR.rglob("llama-server"))
     server_bin = str(found[0])
@@ -45,15 +52,21 @@ server_bin, lib_dir = setup_llama_server()
 env = os.environ.copy()
 env["LD_LIBRARY_PATH"] = f"{lib_dir}:{env.get('LD_LIBRARY_PATH', '')}"
 
-print(f"Starting llama-server ({server_bin}) with {model_path}...")
+print(f"Starting optimized llama-server ({server_bin}) t={LLAMA_THREADS}, tb={LLAMA_THREADS_BATCH}, c={LLAMA_CTX}...")
 llama_proc = subprocess.Popen(
     [
         server_bin,
         "-m", model_path,
         "--host", "127.0.0.1",
         "--port", str(LLAMA_PORT),
-        "-c", "4096",
-        "-t", "4",
+        "-c", LLAMA_CTX,
+        "-t", LLAMA_THREADS,
+        "-tb", LLAMA_THREADS_BATCH,
+        "-b", "1024",
+        "-ub", "512",
+        "-fa", "on",
+        "-ctk", "q8_0",
+        "-ctv", "q8_0",
         "-np", "1",
         "--cache-reuse", "64",
     ],
@@ -70,15 +83,31 @@ for _ in range(60):
         pass
     time.sleep(1)
 
-app = FastAPI(title="Qwen2.5-7B-Legal-VN OpenAI-Compatible API")
+http_client: httpx.AsyncClient | None = None
+
+
+@asynccontextmanager
+async def lifespan(_app: FastAPI):
+    global http_client
+    http_client = httpx.AsyncClient(
+        base_url=LLAMA_URL,
+        timeout=httpx.Timeout(180.0, connect=5.0),
+        limits=httpx.Limits(max_connections=16, max_keepalive_connections=8),
+    )
+    try:
+        yield
+    finally:
+        await http_client.aclose()
+
+
+app = FastAPI(title="Qwen2.5-7B-Legal-VN OpenAI-Compatible API", lifespan=lifespan)
 
 
 @app.get("/health")
 async def health():
     try:
-        async with httpx.AsyncClient(timeout=3.0) as client:
-            r = await client.get(f"{LLAMA_URL}/health")
-            return JSONResponse(status_code=r.status_code, content=r.json())
+        r = await http_client.get("/health", timeout=3.0)
+        return JSONResponse(status_code=r.status_code, content=r.json())
     except Exception:
         return JSONResponse(status_code=503, content={"status": "loading"})
 
@@ -86,9 +115,8 @@ async def health():
 @app.post("/v1/chat/completions")
 async def chat_completions(request: Request):
     body = await request.json()
-    async with httpx.AsyncClient(timeout=180.0) as client:
-        r = await client.post(f"{LLAMA_URL}/v1/chat/completions", json=body)
-        return JSONResponse(status_code=r.status_code, content=r.json())
+    r = await http_client.post("/v1/chat/completions", json=body)
+    return JSONResponse(status_code=r.status_code, content=r.json())
 
 
 @spaces.GPU
@@ -104,7 +132,7 @@ def chat_ui(message, history):
             {"role": "user", "content": message},
         ],
         "temperature": 0.2,
-        "max_tokens": 512,
+        "max_tokens": 450,
     }
     r = httpx.post(f"{LLAMA_URL}/v1/chat/completions", json=payload, timeout=180.0)
     return r.json()["choices"][0]["message"]["content"]
