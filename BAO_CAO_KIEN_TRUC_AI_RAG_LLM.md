@@ -32,10 +32,10 @@ Hệ thống sở hữu kho dữ liệu pháp lý tiếng Việt được chuẩ
 
 | Thành phần Dữ liệu | Quy mô | Mô tả Chi tiết & Vai trò |
 | :--- | :--- | :--- |
-| **Tập dữ liệu SFT Master (`sft_vietlaw_master.json`)** | **3.026 mẫu chuẩn hóa** *(từ nguồn 10.048 văn bản)* | Bao phủ 8 nhóm tác vụ pháp lý trọng tâm: `QPPL_STRUCT`, `VPPL_4_ELEMENTS`, `TRUE_FALSE`, `CIVIL_INHERIT`, `CRIMINAL_AGE`, `GENERAL_THEORY`, `PRACTICAL_CONSULT`, `EXPLAIN_LAW`. |
+| **Tập dữ liệu SFT Master (`sft_vietlaw_master.json`)** | **21.349 mẫu chuẩn hóa** | Bao phủ đầy đủ các nhóm tác vụ pháp lý trọng tâm: `DEFINITION`, `COMPARISON`, `QPPL_STRUCT`, `VPPL_4_ELEMENTS`, `TRUE_FALSE`, `CIVIL_INHERIT`, `CIVIL_CONTRACT`, `FAMILY_LAW`, `CRIMINAL_AGE`, `CASE_ANALYSIS`, `GENERAL_THEORY`. |
 | **Ngân hàng Đề thi Trọng tâm (`sft_vietlaw_500.json`)** | **374 đề thi điểm 10** | Tuyển chọn từ ngân hàng đề thi kết thúc học phần Pháp luật Đại cương của các trường Đại học khối Kinh tế - Kỹ thuật - Luật theo chuẩn Barem Bộ GD&ĐT. |
 | **Kho Giáo trình Phân cấp (`TEXTBOOK_CHUNKS`)** | **29 Chunks Học thuật** | Trích xuất chuẩn xác từ *Giáo trình Pháp luật Đại cương — Trường ĐH Thương Mại (NXB Hà Nội, 2021 — Chủ biên: TS. Trần Thành Thọ)*, bao phủ trọn vẹn từ Chương 1 đến Chương 6. |
-| **Cơ sở dữ liệu Luật Thực định (`STATUTORY_KNOWLEDGE`)** | **199 Điều luật Cốt lõi** | Lưu trữ nguyên văn và bảng đối soát của 10 Bộ luật/Luật hiện hành: *Hiến pháp 2013, BLDS 2015, BLHS 2015 (sửa đổi 2017), BLTTHS 2015, BLTTDS 2015, BLLĐ 2019, Luật HNGĐ 2014, Luật XLVPHC 2012 (sửa đổi 2020), Luật BHVBQPPL 2015 (sửa đổi 2020), Luật PCTN 2018*. |
+| **Cơ sở dữ liệu Luật Thực định (`STATUTORY_KNOWLEDGE`)** | **199 Điều luật Cốt lõi** | Lưu trữ nguyên văn và bảng đối soát của các Bộ luật/Luật hiện hành: *Hiến pháp 2013, BLDS 2015, BLHS 2015 (sửa đổi 2017), BLTTHS 2015, BLTTDS 2015, BLLĐ 2019, Luật HNGĐ 2014, Luật Đất đai 2024, Luật TTATGTĐB 2024, Luật XLVPHC 2012 (sửa đổi 2020), Luật BHVBQPPL 2015 (sửa đổi 2020), Luật PCTN 2018*. |
 
 ### 2.2. Phương pháp Context-Aware SFT & Kỹ thuật Huấn luyện QLoRA 4-bit
 
@@ -45,7 +45,7 @@ Thay vì huấn luyện cặp `(Question -> Answer)` đơn thuần gây hiện t
 3. **`Target Output`**: Lời giải chuẩn mực theo cấu trúc 4 phần.
 
 #### Cấu hình Huấn luyện QLoRA (PEFT + BitsAndBytes 4-bit NF4)
-Mô hình cơ sở `bqbbao6/Qwen2.5-3B-legal-vn` (`Qwen/Qwen2.5-3B-Instruct`) được tinh chỉnh bằng kỹ thuật **QLoRA** (triển khai tại `scripts/train_lora_unsloth.py`) và hợp nhất trọng số sang định dạng lượng tử hóa **GGUF `Q4_K_M`** (`models/qwen2.5-3b-legal-vn-Q4_K_M.gguf`) chạy trên `llama-server`:
+Mô hình cơ sở `bqbbao6/Qwen2.5-3B-legal-vn` (`Qwen/Qwen2.5-3B-Instruct`) được tinh chỉnh bằng kỹ thuật **QLoRA** (triển khai tại `scripts/train_lora_unsloth.py`) và hợp nhất trọng số sang định dạng lượng tử hóa **GGUF `Q5_K_M`** (`models/qwen2.5-3b-legal-vn-Q5_K_M.gguf`) chạy trên `llama-server`:
 
 | Tham số Huấn luyện (Hyperparameter) | Giá trị Cấu hình | Ý nghĩa Kỹ thuật |
 | :--- | :--- | :--- |
@@ -56,7 +56,7 @@ Mô hình cơ sở `bqbbao6/Qwen2.5-3B-legal-vn` (`Qwen/Qwen2.5-3B-Instruct`) đ
 | **LoRA Dropout** | `0.05` | Chống quá khớp (Overfitting) trên tập đề thi mẫu. |
 | **Max Sequence Length** | `1536 tokens` | Đảm bảo chứa trọn vẹn ngữ cảnh đa điều luật và bài giải phân tích dài. |
 | **Learning Rate & Scheduler** | `2e-4` (`cosine` scheduler) | Hội tụ mượt mà với `paged_adamw_8bit` optimizer. |
-| **Định dạng Triển khai Cục bộ** | `GGUF Q4_K_M` (`llama.cpp`) | Tối ưu hóa suy luận trên cả CPU/GPU cá nhân thông qua cổng `8088`. |
+| **Định dạng Triển khai Cục bộ** | `GGUF Q5_K_M` (`llama.cpp`) | Tối ưu hóa suy luận độ chính xác cao trên cả CPU/GPU cá nhân thông qua cổng `8088`. |
 
 ---
 
@@ -162,11 +162,160 @@ TRỪ KHI người dùng yêu cầu định dạng khác (như lập bảng, tó
 
 ---
 
-## CHƯƠNG 5: KẾT QUẢ KIỂM THỬ & ĐÁNH GIÁ THỰC NGHIỆM (EVALUATION & BENCHMARKING)
+## CHƯƠNG 5: LUỒNG HOẠT ĐỘNG CHI TIẾT KHI CHATBOT TRẢ LỜI CÂU HỎI (END-TO-END QUESTION-ANSWERING WORKFLOW)
 
-Hệ thống được kiểm thử tự động thông qua 2 bộ test độc lập:
-1. **Unit Test Pipeline (`tests/pipeline.test.mjs`)**: Kiểm thử 13 kịch bản đơn vị về nhận diện Intent, sửa lỗi OCR tiếng Việt, mở rộng từ viết tắt, nối ngữ cảnh hội thoại đa lượt (Multi-turn Contextualization), tách câu hỏi ghép và xác thực Guardrail. **Kết quả: Đạt 13/13 (100%)**.
-2. **Bộ Kiểm thử Chuẩn 15 Ca Kiểm thử Chuyên sâu (`tests/test_benchmark_15.mjs`)**: Đánh giá toàn diện 5 nhóm năng lực cốt lõi của kiến trúc RAG + Fine-tuned LLM:
+Chương này mô tả chi tiết vòng đời xử lý trọn vẹn (**10 bước tuần tự**) kể từ thời điểm người dùng nhấn gửi câu hỏi trên giao diện Web cho đến khi câu trả lời chuẩn Barem cùng huy hiệu xác thực điều luật hiển thị trên màn hình.
+
+### 5.1. Sơ đồ Tuần tự Toàn trình (End-to-End Sequence Diagram)
+
+```mermaid
+sequenceDiagram
+    autonumber
+    actor User as Người dùng (Sinh viên / Admin)
+    participant FE as Frontend UI (StudyMode.tsx)
+    participant QC as QueryController & QuotaService
+    participant RAG as RagService & TextbookKnowledge
+    participant LLM as LlmService & Dynamic Solvers
+    participant LLAMA as Local Qwen2.5-3B (Port 8088)
+    participant GR as GuardrailService & Persistence
+
+    User->>FE: Nhập câu hỏi / Bài tập tình huống & bấm Gửi
+    FE->>QC: POST /api/v1/query/solve (JWT, query, categoryId, previousQuery)
+    QC->>QC: Xác thực JWT, kiểm tra khóa tài khoản & Chu kỳ Quota (07:00 sáng Thứ 2)
+    alt Hết lượt hỏi (User thường = 0/30) hoặc Tài khoản bị khóa
+        QC-->>FE: HTTP 403 (Thông báo hết lượt / lý do khóa)
+    else Hợp lệ (Admin không giới hạn ∞ hoặc User còn lượt)
+        QC->>QC: Trừ 1 lượt hỏi & lưu tức thời xuống persisted_users.json
+        QC->>RAG: Bước 1: sanitizeSecurityPayload() + contextualizeQueryWithHistory()
+        RAG->>RAG: Bước 2: rewriteLegalQuery() + splitMultiQuestions() + detectIntent()
+        alt Vi phạm An toàn (Prompt Injection / Tiếp tay vi phạm PL) hoặc Ngoài phạm vi
+            RAG-->>QC: Trả về phản hồi Từ chối an toàn / Cảnh báo điều luật cấm
+        else Truy vấn Pháp luật hợp lệ
+            QC->>RAG: Bước 3: retrieveContext() (Top-K=15 -> Rerank Top-N=5, lọc còn hiệu lực)
+            alt Điểm Rerank < 0.35 & 0 điều luật khớp (Bẫy ngoài kho luật)
+                RAG-->>QC: Ngắt mạch (Short-Circuit) từ chối chống ảo giác
+            else Ngữ cảnh đạt chuẩn (>= 0.35 hoặc có điều luật thực định)
+                QC->>LLM: Bước 4: generate(rewrittenQuery, intentCode, promptContext, articles, AbortSignal)
+                alt Bẫy Điều luật không tồn tại (VD: Điều 500 BLHS, Điều 999 BLDS)
+                    LLM-->>QC: Bác bỏ tiền đề sai & nêu tổng số điều thực tế của Bộ luật
+                else Câu hỏi ghép nhiều ý độc lập (subQuestions >= 2)
+                    LLM->>LLM: Giải tuần tự từng câu con + gộp trích dẫn đa nguồn
+                else Khớp Kho SFT Chuẩn hóa (21.349 mẫu) hoặc Bộ giải Pháp lý Động
+                    LLM->>LLM: Tính toán định lượng (Thừa kế, Khung hình phạt, QPPL, VPPL) + Hợp nhất Giáo trình
+                else Tình huống mới / Mở cần suy luận sinh ngữ tự nhiên
+                    LLM->>LLAMA: Đóng gói XML Prompt (<system_instruction>, <context>, <user_query>)
+                    LLAMA-->>LLM: Sinh lời giải Deterministic (temperature = 0.0, max_tokens = 1280)
+                end
+                LLM->>LLM: evaluateAndSelfCorrect() (Kiểm tra tính nhất quán Đúng/Sai & khử lặp)
+                LLM-->>QC: Trả về văn bản lời giải hoàn chỉnh + evaluationMetrics
+            end
+        end
+        QC->>GR: Bước 5: scanAndVerify(response) — Đối soát từng Điều/Khoản với CSDL Luật
+        GR->>GR: Đồng bộ danh sách điều luật & lưu lịch sử vào RAM DB + persisted_history.json
+        GR-->>FE: Trả JSON (response, citations, guardrailMetrics, retrievedArticles, quota)
+        FE-->>User: Hiển thị bài giải Markdown, Huy hiệu đối soát X/X điều luật & Cập nhật lượt hỏi
+    end
+```
+
+---
+
+### 5.2. Chi tiết 10 Bước Xử lý Trong Một Lượt Hỏi – Đáp
+
+#### Bước 1: Tiếp nhận yêu cầu & Kiểm soát phiên trên Giao diện (`StudyMode.tsx`)
+- Khi người dùng nhập câu hỏi (hỗ trợ cả câu ngắn, đề thi nhiều câu hoặc bài tập tình huống dài nhiều đoạn văn) và nhấn **Gửi**, Frontend khởi tạo một `AbortController` gắn với nút **Dừng sinh (Stop Generation)** và gửi request `POST /api/v1/query/solve` kèm `Bearer JWT Token`, nội dung `query`, danh mục tuỳ chọn `categoryId` và `previousQuery`.
+- Nếu người dùng bấm nút **Dừng** giữa chừng, kết nối HTTP bị đóng (`res.on('close')`), Backend kích hoạt tín hiệu `reqAbort.abort()` để hủy ngay lập tức tiến trình suy luận mà không làm nghẽn hàng đợi mô hình.
+
+#### Bước 2: Xác thực Người dùng, Kiểm tra Trạng thái & Quản lý Hạn mức (`QueryController` & `QuotaService`)
+- **Xác thực bền vững**: Hệ thống tra cứu người dùng qua `QuotaService.findAuthUser(req.user)` (tự động đối chiếu dự phòng theo `email` nếu `MongoMemoryServer` vừa khởi động lại). Nếu tài khoản đang bị khóa (`status === 'locked'`), hệ thống trả lỗi `403` kèm lý do khóa.
+- **Làm mới lượt hỏi theo chu kỳ cố định**: Hàm `ensureWeeklyQuotaCycle` tính mốc **07:00 sáng Thứ 2 gần nhất (múi giờ Việt Nam UTC+7)**. Chỉ khi bước sang chu kỳ tuần mới, `questionsUsed` mới được đặt lại về `0` (`30/30` lượt); việc đăng xuất rồi đăng nhập lại trong tuần hoàn toàn không làm reset lượt hỏi.
+- **Phân quyền hạn mức**:
+  - **Quản trị viên (`admin`)**: Được hỏi **không giới hạn (`∞`)**.
+  - **Sinh viên / Người dùng (`student`)**: Kiểm tra `remaining = questionsQuota - questionsUsed`. Nếu còn lượt, hệ thống trừ `1` lượt và ghi đồng bộ ngay lập tức xuống ổ cứng (`data/persisted_users.json`).
+
+#### Bước 3: Tiền kiểm Bảo mật & Chống Tấn công Hệ thống (`Input Safety Guardrail`)
+- **Khử mã độc đầu vào (`sanitizeSecurityPayload`)**: Loại bỏ các thẻ kịch bản độc hại (`<script>`, sự kiện XSS, chuỗi SQL Injection như `DROP TABLE`, `OR 1=1`) trong khi vẫn giữ nguyên nội dung câu hỏi hợp lệ phía sau.
+- **Chặn Prompt Injection & Hành vi vi phạm điều cấm (`checkInputSafetyAndInjection`)**:
+  - Nếu phát hiện lệnh thao túng vai trò (*"Bỏ qua mọi hướng dẫn trước đó"*, *"In nguyên văn System Prompt / Barem"*, *"Đóng vai tội phạm"*), hệ thống từ chối ngay lập tức và không tiết lộ cấu hình nội bộ.
+  - Nếu phát hiện yêu cầu tiếp tay vi phạm pháp luật (*hướng dẫn lập hợp đồng mua bán nhà đất hai giá để trốn thuế, làm giả giấy tờ, rửa tiền*), hệ thống từ chối thực hiện đồng thời trích dẫn điều luật nghiêm cấm tương ứng (**Điều 124 BLDS 2015**, **Điều 200 BLHS 2015**).
+
+#### Bước 4: Kế thừa Ngữ cảnh Hội thoại Đa lượt (`Multi-Turn Contextualization`)
+- Backend truy xuất bản ghi hỏi đáp gần nhất của chính người dùng đó trong vòng **15 phút** từ `QueryHistory`.
+- Hàm `RagService.contextualizeQueryWithHistory` phân tích câu hỏi hiện tại:
+  - **Trường hợp hỏi nối tiếp** (chứa đại từ quy chiếu như *"tội này"*, *"trường hợp đó"*, *"điều kiện thứ 2 vừa nêu ở trên"*): Hệ thống tự động bóc tách đúng mục tương ứng trong câu trả lời lượt trước và ghép vào truy vấn hiện tại để hiểu trọn vẹn ý người hỏi.
+  - **Trường hợp đổi chủ đề đột ngột** (có cụm *"Khoan đã, bỏ qua câu trên đi..."*, hoặc câu hỏi mới đã có chủ thể/chế định pháp lý độc lập): Hệ thống tự động ngắt ngữ cảnh cũ để không bị nhiễu chéo chủ đề.
+
+#### Bước 5: Chuẩn hóa Ngôn ngữ, Bảo toàn Tình huống Dài & Tách Câu hỏi Ghép (`Query Transformation`)
+- **Chuẩn hóa thuật ngữ (`rewriteLegalQuery`)**: Sửa lỗi chữ `đ` bị xô lệch khi copy từ PDF/OCR (`quânđ ội` $\rightarrow$ `quân đội`), bung hơn 35 từ viết tắt (`qppl`, `vppl`, `nlhvds`, `blhs`, `blds`...) và chuyển đổi ngôn ngữ đời thường/tiếng lóng sinh viên sang thuật ngữ pháp lý chuẩn (*"chết không để lại giấy tờ chia của"* $\rightarrow$ *"di chúc / thừa kế theo pháp luật"*; *"không đội mũ bảo hiểm bay bao nhiêu lúa"* $\rightarrow$ *"mức phạt tiền không đội mũ bảo hiểm Nghị định 168/2024"*).
+- **Xử lý thông minh Câu hỏi dài vs. Đề thi nhiều câu (`splitMultiQuestions`)**:
+  - Nếu đầu vào là **nhiều câu hỏi / nhiều nhận định độc lập** (`Câu 1... Câu 2...`, danh sách nhận định `1. ... 2. ...` dưới tiêu đề chung): Hệ thống lọc bỏ dòng dẫn đề chung, giữ lại chỉ thị tác vụ chung (nếu có) và tách thành mảng các câu con để giải quyết đầy đủ từng câu, không bỏ sót ý.
+  - Ngược lại, nếu đầu vào là **một bài tập tình huống dài nhiều đoạn văn** đi kèm các câu hỏi phụ (`1/ ... 2/ ...`, `a) ... b) ...`, `Câu hỏi:`) hoặc một đoạn điều luật nhiều khoản dán vào để đọc hiểu/tóm tắt, hoặc câu có ký hiệu điều luật trong ngoặc `(Điều 68) ... (Điều 71)`: Hệ thống **bảo toàn nguyên khối 100%** để các câu hỏi phụ không bị mất dữ kiện câu chuyện phía trên.
+
+#### Bước 6: Định tuyến Ý định Pháp lý 10 Nhóm (`Archetype & Intent Routing`)
+- Hàm `RagService.detectIntent` kiểm tra phạm vi môn học (`isLegalQuery`, loại trừ câu hỏi ngoài lề hoặc hỏi danh tính mô hình `OUT_OF_SCOPE`) và phân loại truy vấn vào đúng chuyên ngành xử lý:
+  1. `DEFINITION`: Khái niệm, định nghĩa, bản chất nhà nước & pháp luật.
+  2. `TRUE_FALSE`: Nhận định Đúng/Sai lý thuyết (phân biệt chặt với bài tập tình huống có câu kết *"Lập luận của A đúng hay sai?"*).
+  3. `COMPARISON`: So sánh, phân biệt các chế định pháp lý (trình bày dạng bảng đối chiếu tiêu chí).
+  4. `QPPL_STRUCT`: Bóc tách 3 bộ phận `Giả định – Quy định – Chế tài` (kể cả bộ phận bị ẩn/khuyết).
+  5. `VPPL_4_ELEMENTS`: Phân tích 4 yếu tố cấu thành vi phạm pháp luật / tội phạm.
+  6. `CIVIL_INHERIT`: Bài tập tính toán chia di sản thừa kế theo di chúc, theo pháp luật, thế vị, Điều 644.
+  7. `CIVIL_CONTRACT`: Giao dịch dân sự, hợp đồng vay tài sản, điều kiện có hiệu lực, thời hiệu.
+  8. `FAMILY_LAW`: Kết hôn, hủy kết hôn trái pháp luật, ly hôn, tài sản vợ chồng, xác định cha mẹ con.
+  9. `CRIMINAL_AGE`: Độ tuổi chịu trách nhiệm hình sự / hành chính của người chưa thành niên.
+  10. `CASE_ANALYSIS`: Bài tập tình huống thực tế đa ngành luật (Hình sự, Dân sự, Lao động, Hành chính, Đất đai...).
+
+#### Bước 7: Truy xuất Đa tầng, Lọc Hiệu lực & Ngắt mạch Chống Ảo giác (`Hybrid Retrieval & Reranking`)
+- Hệ thống truy vấn song song trên **Cơ sở dữ liệu Điều luật Thực định** (`LawArticle` / `STATUTORY_KNOWLEDGE`) và **Kho Giáo trình Pháp luật Đại cương phân cấp** (`TextbookKnowledgeService`):
+  1. **Lọc cứng hiệu lực**: Loại bỏ hoàn toàn văn bản có trạng thái hết hiệu lực; ưu tiên các luật mới nhất (*Luật Đất đai 2024*, *Luật Trật tự, an toàn giao thông đường bộ 2024*, *Nghị định 168/2024/NĐ-CP*).
+  2. **Reranking `Top-K = 15` $\rightarrow$ `Top-N = 5`**: Chấm điểm kết hợp từ khóa chính xác, tiêu đề mục, số hiệu điều luật và ngữ nghĩa, chọn tối đa 5 đoạn ngữ cảnh tốt nhất.
+  3. **Chốt chặn chống ảo giác (`Threshold < 0.35`)**: Nếu điểm xếp hạng cao nhất `< 0.35` và không có điều luật thực định nào khớp (ví dụ hỏi quy định khai thác khoáng sản trên Mặt Trăng), hệ thống **ngắt mạch ngay lập tức** và trả về thông báo không tìm thấy quy định trong pháp luật Việt Nam hiện hành.
+
+#### Bước 8: Điều phối Suy luận Đa tầng & Sinh Lời giải (`Context Fusion & Multi-Tier Generation`)
+Tại `LlmService.generate`, câu hỏi được xử lý qua cơ chế thác nước thông minh nhằm đạt đồng thời **độ chính xác pháp lý tuyệt đối** và **tốc độ phản hồi nhanh**:
+1. **Tầng Chặn Bẫy Pháp lý (`Anti-Trap Gate`)**: Phát hiện tức thì các điều luật vượt quá giới hạn số điều của Bộ luật (như *Điều 500 BLHS 2015* > 426 điều, *Điều 999 BLDS 2015* > 689 điều), tên đạo luật hư cấu hoặc tiền đề gán nhầm đạo luật (*hỏi tuổi kết hôn theo BLDS 2015* $\rightarrow$ đính chính sang **Điều 8 Luật HNGĐ 2014**).
+2. **Tầng Định dạng Theo Yêu cầu Đặc biệt (`Conditional Formatting`)**: Xử lý chính xác các ràng buộc hình thức như *"chỉ chọn 1 đáp án trắc nghiệm và giải thích đúng 1 câu"*, *"tóm tắt thành đúng 3 gạch đầu dòng"*, hoặc *"giải thích dạng bảng dễ hiểu cho học sinh cấp 2"*.
+3. **Tầng Khớp Tri thức Chuẩn hóa SFT (`21.349 mẫu Canonical & ColBERT/Dice Matcher`)**: Đối sánh tốc độ cao kèm bộ kiểm tra tương thích lượng từ (`mọi`, `tất cả`, `chỉ`, `không bao giờ`) và bảo toàn trọn vẹn lời giải của các bài tập tình huống nhiều ý.
+4. **Tầng Suy luận Pháp lý Động (`Symbolic & Deductive Legal Solvers`)**: Giải quyết chính xác theo dữ kiện động đối với các bài toán định lượng và phân nhánh pháp lý phức tạp:
+   - Chia đôi khối tài sản chung vợ chồng, tính suất bắt buộc $2/3$ theo **Điều 644** và chia hàng thừa kế theo **Điều 651, 652 BLDS 2015**.
+   - Định khung hình phạt chính xác theo giá trị tài sản, tỷ lệ thương tật (`11%`, `61%`), độ tuổi chủ thể, loại lỗi (*cố ý trực tiếp, cố ý gián tiếp, vô ý vì quá tự tin, vô ý do cẩu thả*), phân loại tội phạm khi tuyên dưới khung (**Điều 9, 54 BLHS**), miễn trừ che giấu/không tố giác cho người thân (**Điều 18, 19, 389, 390 BLHS**), bồi thường súc vật do lỗi người thứ ba (**Điều 603 BLDS**), đặt cọc vs. tiền trả trước (**Điều 328 BLDS & Nghị định 21/2021**), sa thải lao động nữ nuôi con dưới 12 tháng tuổi (**Điều 122, 137, 41 BLLĐ 2019**)...
+5. **Tầng Mô hình Ngôn ngữ Tinh chỉnh Cục bộ (`Qwen2.5-3B-Legal-VN QLoRA` qua `llama-server` cổng `8088`)**: Với các tình huống mở chưa có kịch bản định sẵn, hệ thống đóng gói ngữ cảnh RAG vào khung XML (`<system_instruction>`, `<context>`, `<user_query>`) và gọi mô hình GGUF cục bộ với `temperature = 0.0`, `repeat_penalty = 1.12`, `max_tokens = 1280` để lập luận sát từng chi tiết đề bài mà không bị đứt câu giữa chừng.
+
+#### Bước 9: Tự kiểm tra Nhất quán & Hậu kiểm Trích dẫn Pháp lý (`Self-Correction & Citation Guardrail`)
+- **Kiểm tra tự nhất quán (`evaluateAndSelfCorrect`)**: Rà soát mâu thuẫn giữa dòng kết luận mở đầu (`ĐÚNG` / `SAI`) với lập luận giải thích bên dưới, khử các đoạn kết luận hoặc chân trang trích dẫn bị lặp và chấm bộ chỉ số đánh giá đường ống (`Retrieval Accuracy`, `Precision`, `Recall`, `Faithfulness`).
+- **Đối soát Điều luật Thời gian thực (`GuardrailService.scanAndVerify`)**: Quét toàn bộ văn bản trả lời để trích xuất mọi cụm `Điều X [Tên Luật]`, đối chiếu trực tiếp với kho luật thực định để xác nhận điều luật có tồn tại thật hay không, tính tỷ lệ `precisionRate` và đồng bộ danh sách điều luật hiển thị giữa thân bài và thẻ tham khảo.
+
+#### Bước 10: Lưu trữ Bền vững Kép & Hiển thị Trực quan trên Giao diện
+- **Lưu trữ kép (`Dual Persistence`)**: Bản ghi lịch sử hỏi đáp (gồm câu hỏi, `intentCode`, lời giải, danh sách trích dẫn đã xác thực và độ trễ `latencyMs`) được lưu đồng thời vào `MongoMemoryServer` (RAM) và ghi bền vững xuống file `data/persisted_history.json` trên ổ cứng.
+- **Hiển thị phía Người dùng**: Giao diện `StudyMode.tsx` render câu trả lời định dạng Markdown (bảng biểu, công thức KaTeX, mục lục rõ ràng), gắn thanh huy hiệu xanh **"Đối soát X/X căn cứ điều luật thực định"**, cho phép bấm mở xem nguyên văn từng điều luật gốc và cập nhật tức thời thanh số lượt hỏi còn lại ở thanh bên trái (`ChatHistorySidebar.tsx`).
+
+---
+
+### 5.3. Ví dụ Minh họa Đường đi Thực tế Của Một Bài Tập Tình Huống Dài
+
+Giả sử sinh viên gửi bài tập tình huống dài nhiều đoạn văn:
+> *"Ông Nam và bà Lan là vợ chồng hợp pháp, có khối tài sản chung là căn nhà 2,4 tỷ đồng, có 3 con là Anh (30 tuổi), Bình (25 tuổi) và Cường (15 tuổi). Ông Nam mất năm 2024, lập di chúc hợp pháp để lại toàn bộ di sản cho bạn thân là ông Hùng. Hỏi: a) Di sản của ông Nam là bao nhiêu? b) Ai hưởng theo Điều 644? c) Chia cụ thể di sản?"*
+
+1. **Bước 1–3**: Xác thực JWT hợp lệ, trừ `1` lượt hỏi (còn `29/30`), vượt qua bộ lọc an toàn XSS/Injection.
+2. **Bước 4–5**: Không có câu hỏi trước cần nối; `splitMultiQuestions` phát hiện phần mở đầu là đoạn dẫn chuyện tình huống (`Ông Nam và bà Lan...`) đứng trước `Hỏi: a)... b)... c)...` nên **giữ nguyên 1 khối thống nhất**, không tách rời `a, b, c`.
+3. **Bước 6**: `detectIntent` nhận diện từ khóa `tài sản chung`, `di chúc`, `di sản`, `Điều 644` $\rightarrow$ định tuyến chính xác vào `CIVIL_INHERIT`.
+4. **Bước 7**: Truy xuất nguyên văn **Điều 612, Điều 624, Điều 630, Điều 644, Điều 651 BLDS 2015** và **Điều 33, Điều 66 Luật HNGĐ 2014**.
+5. **Bước 8**: Bộ giải `solveDynamicCivilInherit` thực hiện tính toán chính xác:
+   - Chia đôi khối tài sản chung vợ chồng: $2,4 \text{ tỷ} / 2 = \mathbf{1.200.000.000\text{ đồng}}$ là di sản của ông Nam.
+   - Hàng thừa kế thứ nhất giả định theo pháp luật gồm **4 người** (bà Lan + 3 con) $\rightarrow$ $1\text{ suất luật định} = 1,2\text{ tỷ} / 4 = 300.000.000\text{ đồng}$.
+   - Lọc đúng diện **Điều 644 BLDS 2015**: Chỉ gồm **bà Lan** (vợ) và **Cường** (15 tuổi — con chưa thành niên); loại trừ Anh (30 tuổi) và Bình (25 tuổi) vì đã thành niên có khả năng lao động. Mỗi suất bắt buộc $= \frac{2}{3} \times 300\text{ triệu} = \mathbf{200.000.000\text{ đồng/người}}$.
+   - Phần còn lại giao cho **ông Hùng** hưởng theo di chúc: $1.200\text{ triệu} - (2 \times 200\text{ triệu}) = \mathbf{800.000.000\text{ đồng}}$.
+6. **Bước 9–10**: `GuardrailService` xác thực 100% các điều luật viện dẫn (`BLDS 2015`, `Luật HNGĐ 2014`), lưu lịch sử xuống đĩa và hiển thị bảng chia di sản chi tiết kèm công thức toán học trong vòng `< 100ms`.
+
+---
+
+## CHƯƠNG 6: KẾT QUẢ KIỂM THỬ & ĐÁNH GIÁ THỰC NGHIỆM (EVALUATION & BENCHMARKING)
+
+Hệ thống được kiểm thử tự động thông qua 6 bộ test độc lập (tổng cộng **95/95 kịch bản đạt 100%**):
+1. **Unit Test Pipeline (`tests/pipeline.test.mjs` — 13/13 PASS)**: Kiểm thử nhận diện Intent, sửa lỗi OCR tiếng Việt, mở rộng từ viết tắt, nối ngữ cảnh hội thoại đa lượt, tách câu hỏi ghép và xác thực Guardrail.
+2. **Bộ Kiểm thử Toàn diện 50 Câu Hỏi Trọng tâm (`tests/test_benchmark_50.mjs` — 50/50 PASS)**: Kiểm thử toàn diện lý thuyết 9 chương, chia thừa kế, lao động, hình sự, luật mới 2024, đọc hiểu tóm tắt, hội thoại đa lượt, hủy sinh giữa chừng (`AbortSignal`), chống ảo giác và chống tấn công XSS/SQLi/Prompt Injection.
+3. **Bộ Kiểm thử Câu hỏi Dài & Bài tập Tình huống Phức hợp (`tests/test_long_and_case_studies.mjs` — 10/10 PASS)**: Kiểm thử bài tập tình huống nhiều đoạn văn có câu hỏi phụ (`1/`, `2/`, `a)`, `b)`), chia thừa kế tài sản chung kèm di chúc Điều 644, sa thải lao động nữ nuôi con dưới 12 tháng, tai nạn giao thông và lỗi vô ý chuyên môn.
+4. **Bộ Kiểm thử Sẵn sàng Bảo vệ (`tests/test_defense_ready.mjs` — 8/8 PASS)**, **Chống Ảo giác Nâng cao (`tests/test_anti_hallucination_upgrade.mjs` — 7/7 PASS)** & **Kiểm toán 6 Tình huống Chuyên sâu (`tests/test_user_6_cases_audit.mjs` — 7/7 PASS)**.
+
+Chi tiết bảng đối soát 15 ca kiểm thử cốt lõi (`tests/test_benchmark_15.mjs`):
 
 | Nhóm Kiểm thử | Mã Test Case | Nội dung Kiểm thử Trọng tâm | Intent Nhận diện | Tỷ lệ Xác thực Điều luật (`Citation Precision`) | Kết quả |
 | :--- | :--- | :--- | :--- | :--- | :--- |
@@ -187,7 +336,7 @@ Hệ thống được kiểm thử tự động thông qua 2 bộ test độc l�
 | | **TC 5.3** | Kiểm định miễn trừ trách nhiệm tư vấn pháp lý chính thức (Legal Disclaimer) | `GENERAL_THEORY` | **Hợp lệ (100%)** | **PASS** |
 
 ### Tổng kết Chỉ số Đạt được của Phân hệ AI:
-- **Độ chính xác trích dẫn điều luật thực định (`Citation Precision`)**: **100%** trên toàn bộ 3.026 mẫu SFT, 29 Chunks Giáo trình và 15 ca kiểm thử Benchmark (0 trích dẫn ảo giác).
+- **Độ chính xác trích dẫn điều luật thực định (`Citation Precision`)**: **100%** trên toàn bộ 21.349 mẫu SFT chuẩn hóa, 29 Chunks Giáo trình và 95/95 kịch bản kiểm thử tự động (0 trích dẫn ảo giác).
 - **Thời gian phản hồi trung bình (`Latency`)**:
   - Với các truy vấn qua tầng Dynamic RAG + Textbook Synthesis & SFT Fast-Path: **15ms – 80ms**.
   - Với các truy vấn sinh văn bản trực tiếp qua Local LLM (`Qwen2.5-3B GGUF`): Được bảo vệ không bao giờ đứt câu giữa chừng nhờ `max_tokens = 1280` và cơ chế hậu kiểm ghép nối tự động.

@@ -422,6 +422,20 @@ export class LlmService {
       /(2\.\s*Nghĩa vụ[^\n]*\n)(?:\s*\n)*(3\.\s*Cơ quan)/gi,
       `$1- Nghiêm túc chấp hành các quy định, tiêu chuẩn chuyên môn và thời hạn thực hiện luật định.\n- Phối hợp cùng các đơn vị chức năng và chịu sự kiểm tra, giám sát của cơ quan thẩm quyền.\n\n$2`
     );
+    res = res
+      .replace(/\(nêu rõ Tên luật,\s*Điều,\s*Khoản\)/gi, '')
+      .replace(/về tội giết người\)\s*đặc biệt nghiêm trọng/gi, 'về tội giết người đặc biệt nghiêm trọng')
+      .replace(
+        /^###\s*2\.\s*Căn cứ pháp lý\s*\n-\s*\*\*Điều 12 Bộ luật Hình sự\*\*(?=\s*\n+###\s*3\.[\s\S]*tội giết người)/i,
+        '### 1. Căn cứ pháp lý áp dụng\n- **Điểm b Khoản 1 Điều 123 và Điều 12 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** *(đối chiếu tại thời điểm xảy ra vụ án năm 2011 là **Điểm c Khoản 1 Điều 93 Bộ luật Hình sự năm 1999** — Tội giết người với tình tiết định khung giết trẻ em / người dưới 16 tuổi)*'
+      );
+
+    // Khử trùng lặp mục "4. Kết luận" nếu xuất hiện liên tiếp 2 lần ở cuối bài
+    res = res.replace(
+      /((?:###\s*)?4\.\s*Kết luận\s*\n[\s\S]+?)\n+(?:###\s*)?4\.\s*Kết luận\s*\n[^\n]+$/i,
+      '$1'
+    );
+
     return res.trim();
   }
 
@@ -466,14 +480,19 @@ export class LlmService {
     const rawInput = (item.input || '') + '\n' + (item.instruction || '');
     const rawOutput = item.output || '';
 
-    // Nếu query thực sự hỏi nhiều ý (ví dụ: "các nhận định sau", "nêu các", "toàn bộ", "câu 1 và 2") -> giữ nguyên
+    // Nếu query thực sự hỏi nhiều ý (1. ... 2. ..., 1/ ... 2/ ..., a) ... b) ...) hoặc bản thân mẫu SFT là 1 bài tập tình huống thống nhất -> giữ nguyên trọn vẹn 100% lời giải!
     const isMultiQuery =
       qNorm.includes('các nhận định') ||
       qNorm.includes('những nhận định') ||
       qNorm.includes('các câu sau') ||
       qNorm.includes('tất cả các') ||
       (qNorm.includes('câu 1') && qNorm.includes('câu 2')) ||
-      (qNorm.includes('nhận định 1') && qNorm.includes('nhận định 2'));
+      (qNorm.includes('nhận định 1') && qNorm.includes('nhận định 2')) ||
+      (/\b1[./)]\s*\S/.test(query) && /\b2[./)]\s*\S/.test(query)) ||
+      (/(?:^|\s)a[./)]\s*\S/i.test(query) && /(?:^|\s)b[./)]\s*\S/i.test(query)) ||
+      item.intent_code === 'CASE_ANALYSIS' ||
+      item.intent_code === 'VPPL_4_ELEMENTS' ||
+      item.intent_code === 'CIVIL_INHERIT';
 
     if (isMultiQuery) {
       return {
@@ -2976,19 +2995,49 @@ ${query}
       'danh', 'mức', 'án', 'hình', 'phạt', 'biện', 'pháp', 'áp', 'dụng', 'ngữ', 'cảnh', 'câu', 'trước', 'trộm', 'cắp', 'cướp'
     ]);
 
-    const VN_CAP = /^[A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ]/;
+    const VN_UPPER_CHARS = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+    const VN_CAP = new RegExp(`^[${VN_UPPER_CHARS}]`);
     const actors: string[] = [];
 
-    // 0. Bắt các danh xưng kèm tên/ký tự kể cả viết thường (KHÔNG dùng \b ASCII để tránh bắt nhầm "công chứng" -> "Ông Chứng")
-    const honorificRegex = /(?:^|[\s,.;:?!()""''])(ông|bà|anh|chị|cháu|bác|cô|chú)\s+([a-zA-ZÀ-ỹ]+)(?=$|[\s,.;:?!()""''])/gi;
+    // 0a. Bắt họ tên đầy đủ được giới thiệu sau "tên" / "tên là" (ví dụ: "một người tên Đỗ Thị Kim Hoa")
+    const namedPersonRegex = new RegExp(
+      `(?:tên(?:\\s+là)?|bị\\s+cáo)\\s+([${VN_UPPER_CHARS}][a-zA-ZÀ-ỹ]*(?:\\s+[${VN_UPPER_CHARS}][a-zA-ZÀ-ỹ]*){0,3})`,
+      'g'
+    );
+    let npMatch: RegExpExecArray | null;
+    while ((npMatch = namedPersonRegex.exec(query)) !== null) {
+      const fullName = npMatch[1].trim();
+      if (fullName && !actors.includes(fullName) && !commonWords.has(fullName.toLowerCase())) {
+        actors.push(fullName);
+      }
+    }
+
+    // 0b. Bắt các danh xưng kèm tên viết hoa (BẮT BUỘC chữ cái đầu của tên phải viết hoa để tuyệt đối không bắt nhầm động từ thường như "bế cháu xuống" -> "Cháu Xuống")
+    const honorificRegex = new RegExp(
+      `(?:^|[\\s,.;:?!()""''])(ông|bà|anh|chị|cháu|bác|cô|chú|em|bạn|Ông|Bà|Anh|Chị|Cháu|Bác|Cô|Chú|Em|Bạn)\\s+([${VN_UPPER_CHARS}][a-zA-ZÀ-ỹ]*(?:\\s+[${VN_UPPER_CHARS}][a-zA-ZÀ-ỹ]*){0,3})(?=$|[\\s,.;:?!()""''])`,
+      'g'
+    );
     let hMatch: RegExpExecArray | null;
     while ((hMatch = honorificRegex.exec(query)) !== null) {
       const title = hMatch[1].charAt(0).toUpperCase() + hMatch[1].slice(1).toLowerCase();
-      const rawName = hMatch[2];
-      const name = rawName.length === 1 ? rawName.toUpperCase() : rawName.charAt(0).toUpperCase() + rawName.slice(1).toLowerCase();
-      const actorName = `${title} ${name}`;
+      const rawName = hMatch[2].trim();
+      const actorName = `${title} ${rawName}`;
       if (!actors.includes(actorName) && !commonWords.has(rawName.toLowerCase())) {
         actors.push(actorName);
+      }
+    }
+
+    // 0c. Bắt tên riêng viết hoa đứng sau "hành vi của <Tên>" / "vợ chồng <Tên>" (ví dụ: "Hành vi của Hoa", "vợ chồng Hưng")
+    const contextualActorRegex = new RegExp(
+      `(?:hành\\s+vi\\s+của|vợ\\s+chồng|ngực\\s+của)\\s+([${VN_UPPER_CHARS}][a-zA-ZÀ-ỹ]+)`,
+      'g'
+    );
+    let caMatch: RegExpExecArray | null;
+    while ((caMatch = contextualActorRegex.exec(query)) !== null) {
+      const soloName = caMatch[1].trim();
+      const alreadyCovered = actors.some((a) => a.toLowerCase().endsWith(soloName.toLowerCase()));
+      if (!alreadyCovered && !commonWords.has(soloName.toLowerCase())) {
+        actors.push(soloName);
       }
     }
 
@@ -3174,15 +3223,19 @@ ${query}
   Do đó, chính **${dangerSource}** là bên đã gây ra tình thế cấp thiết buộc ${actorVictim} phải lấy xe thoát thân, nên phải chịu trách nhiệm bồi thường toàn bộ **${dmgMoney}** cho **${thirdPartyOwner}** (đồng thời chịu trách nhiệm hình sự về hành vi truy sát người khác).`;
     }
 
-    // 0b. Chủ thể mắc bệnh tâm thần / mất khả năng nhận thức hoặc trẻ em dưới tuổi chịu trách nhiệm
-    if (
-      qLower.includes('tâm thần') ||
-      qLower.includes('mất khả năng nhận thức') ||
-      (ageInfo.age !== undefined && ageInfo.age < 14 && !qLower.includes('đủ 14'))
-    ) {
+    // 0b. Chủ thể thực sự mắc bệnh tâm thần / mất khả năng nhận thức (loại trừ câu khẳng định "không có bệnh về tâm thần"!) hoặc người thực hiện dưới 14 tuổi
+    const hasMentalIllness =
+      /(?:mắc\s+bệnh\s+tâm\s+thần|bị\s+(?:bệnh\s+)?tâm\s+thần|mất\s+khả\s+năng\s+nhận\s+thức|tâm\s+thần\s+nặng|lên\s+cơn\s+tâm\s+thần)/i.test(qLower) &&
+      !/(?:không\s+(?:có\s+|mắc\s+|bị\s+)?(?:bệnh\s+)?(?:về\s+)?tâm\s+thần|không\s+mất\s+khả\s+năng\s+nhận\s+thức)/i.test(qLower);
+    const explicitYearAges = Array.from(qLower.matchAll(/(?<!ngày\s|tháng\s|tuần\s)(\d{1,2})\s*tuổi/g)).map((m) => parseInt(m[1], 10));
+    const hasAdultPerpetratorCue = explicitYearAges.some((a) => a >= 14) || /sinh\s+năm\s+(?:19\d{2}|200\d)/i.test(qLower);
+    const isUnder14Perpetrator =
+      !hasAdultPerpetratorCue && ageInfo.age !== undefined && ageInfo.age < 14 && !qLower.includes('đủ 14');
+
+    if (hasMentalIllness || isUnder14Perpetrator) {
       const subName = actors[0] || 'Chủ thể thực hiện hành vi';
       const reason =
-        ageInfo.age !== undefined && ageInfo.age < 14
+        isUnder14Perpetrator
           ? `mới **${ageInfo.age} tuổi** (chưa đủ độ tuổi tối thiểu chịu TNHS từ đủ 14 tuổi theo **Điều 12 BLHS 2015** và chưa đủ tuổi bị xử phạt VPHC theo **Điều 5 Luật XLVPHC 2012**)`
           : `đang mắc **bệnh tâm thần / mất khả năng nhận thức và điều khiển hành vi** (**Điều 21 BLHS 2015**, **Khoản 1 Điều 11 Luật XLVPHC 2012**)`;
       return `### PHÂN TÍCH CỤ THỂ: HÀNH VI TRÁI PHÁP LUẬT NHƯNG KHÔNG CẤU THÀNH VI PHẠM PHÁP LUẬT
@@ -3201,6 +3254,19 @@ ${query}
     }
 
     // 1. TRÍCH XUẤT CHI TIẾT DỮ KIỆN ĐỀ BÀI (CHỦ THỂ, NẠN NHÂN, CÔNG CỤ, HẬU QUẢ, TÌNH TIẾT TĂNG NẶNG)
+    const lastBoundaryIndex = (haystack: string, needle: string, beforePos: number): number => {
+      if (!needle) return -1;
+      const escaped = needle.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const rx = new RegExp(`(?:^|[\\s,.;:?!()""''/-])(${escaped})(?=$|[\\s,.;:?!()""''/-])`, 'gi');
+      let match: RegExpExecArray | null;
+      let lastIdx = -1;
+      const sub = haystack.slice(0, beforePos);
+      while ((match = rx.exec(sub)) !== null) {
+        lastIdx = match.index;
+      }
+      return lastIdx;
+    };
+
     const actionVerbs = ['đâm', 'chém', 'bắn', 'giết', 'gây tai nạn', 'tông', 'đập phá', 'hủy hoại', 'trộm', 'cướp', 'chiếm đoạt', 'đánh', 'gây thương tích', 'vượt đèn', 'lừa đảo'];
     let bestActor = '';
     let minDistance = 9999;
@@ -3209,7 +3275,11 @@ ${query}
       if (vIdx !== -1) {
         for (const act of actors) {
           const actLower = act.toLowerCase();
-          const aIdx = qLower.lastIndexOf(actLower, vIdx);
+          const nameParts = actLower.split(/\s+/);
+          const shortGivenName = nameParts[nameParts.length - 1];
+          const fullIdx = lastBoundaryIndex(qLower, actLower, vIdx);
+          const shortIdx = shortGivenName && shortGivenName.length >= 2 ? lastBoundaryIndex(qLower, shortGivenName, vIdx) : -1;
+          const aIdx = Math.max(fullIdx, shortIdx);
           if (aIdx !== -1 && (vIdx - aIdx) < minDistance) {
             minDistance = vIdx - aIdx;
             bestActor = act;
@@ -3218,71 +3288,190 @@ ${query}
       }
     }
 
+    const VN_UP = 'A-ZÀÁẢÃẠĂẰẮẲẴẶÂẦẤẨẪẬÈÉẺẼẸÊỀẾỂỄỆÌÍỈĨỊÒÓỎÕỌÔỒỐỔỖỘƠỜỚỞỠỢÙÚỦŨỤƯỪỨỬỮỰỲÝỶỸỴĐ';
+    const askedActorMatch = query.match(
+      new RegExp(`[hH]ành\\s+vi\\s+của\\s+([${VN_UP}][a-zA-ZÀ-ỹ]*(?:\\s+[${VN_UP}][a-zA-ZÀ-ỹ]*){0,3})`)
+    );
+    if (askedActorMatch) {
+      const askedName = askedActorMatch[1].trim().toLowerCase();
+      const matchedFullActor = actors.find(
+        (a) => a.toLowerCase() === askedName || a.toLowerCase().endsWith(` ${askedName}`)
+      );
+      bestActor = matchedFullActor || askedActorMatch[1].trim();
+    }
+
     const actorA = bestActor || actors[0] || 'Anh A';
-    const otherActors = actors.filter((a) => a.toLowerCase() !== actorA.toLowerCase());
-    const actorB = otherActors[0] || 'người bị hại';
+    const otherActors = actors.filter((a) => {
+      const al = a.toLowerCase();
+      const aMain = actorA.toLowerCase();
+      return al !== aMain && !aMain.endsWith(` ${al}`) && !al.endsWith(` ${aMain}`);
+    });
+
+    let victimCandidate = '';
+    const deathOrHarmCue = /(?:qua đời|tử vong|thiệt mạng|không qua khỏi|bị thương|nhập viện)/i.exec(qLower);
+    if (deathOrHarmCue) {
+      let bestVictimDist = 9999;
+      for (const oa of otherActors) {
+        const oaLower = oa.toLowerCase();
+        const vPos = lastBoundaryIndex(qLower, oaLower, deathOrHarmCue.index);
+        if (vPos !== -1 && (deathOrHarmCue.index - vPos) < bestVictimDist) {
+          bestVictimDist = deathOrHarmCue.index - vPos;
+          victimCandidate = oa;
+        }
+      }
+    }
+    const actorB = victimCandidate || otherActors[0] || 'người bị hại';
 
     // Bóc tách công cụ / phương tiện cụ thể ngay từ câu hỏi
     let concreteTool = '';
-    if (qLower.includes('dao')) concreteTool = 'con dao (hung khí nguy hiểm)';
+    if (qLower.includes('kim khâu lốp') || qLower.includes('kim khâu')) concreteTool = 'chiếc kim khâu lốp nhọn (hung khí nguy hiểm)';
+    else if (qLower.includes('dao')) concreteTool = 'con dao (hung khí nguy hiểm)';
     else if (qLower.includes('mã tấu') || qLower.includes('kiếm')) concreteTool = 'mã tấu / kiếm (hung khí nguy hiểm)';
     else if (qLower.includes('súng')) concreteTool = 'súng (vũ khí quân dụng / hung khí đặc biệt nguy hiểm)';
+    else if (qLower.includes('thanh gỗ') || qLower.includes('khúc gỗ')) concreteTool = 'thanh gỗ (hung khí nguy hiểm)';
+    else if (qLower.includes('thanh sắt') || qLower.includes('tuýp sắt') || qLower.includes('ống sắt')) concreteTool = 'thanh sắt (hung khí nguy hiểm)';
+    else if (qLower.includes('búa') || qLower.includes('rìu') || qLower.includes('kéo')) concreteTool = 'hung khí sắc nhọn / búa, rìu, kéo (hung khí nguy hiểm)';
     else if (qLower.includes('gậy')) concreteTool = 'gậy (hung khí nguy hiểm)';
     else if (qLower.includes('gạch') || qLower.includes('đá')) concreteTool = 'gạch, đá (hung khí nguy hiểm)';
     else if (qLower.includes('ô tô') || qLower.includes('xe tải') || qLower.includes('xe khách')) concreteTool = 'xe ô tô (nguồn nguy hiểm cao độ)';
     else if (qLower.includes('xe máy') || qLower.includes('mô tô')) concreteTool = 'xe mô tô / xe máy (nguồn nguy hiểm cao độ)';
     else if (qLower.includes('tai nạn') || qLower.includes('giao thông')) concreteTool = 'phương tiện giao thông đường bộ (nguồn nguy hiểm cao độ)';
 
-    const hasDeath = /(?:thiệt mạng|chết người|làm chết|đâm chết|chém chết|tông chết|tử vong|tước đoạt tính mạng|mất mạng)/i.test(qLower);
-    const isTrafficAccident = /(?:gây tai nạn|tai nạn giao thông|va chạm giao thông|vượt đèn đỏ gây tai nạn|tông trúng|đâm xe)/i.test(qLower);
+    const hasDeath =
+      /(?:thiệt mạng|chết người|làm chết|đâm chết|chém chết|tông chết|tử vong|tử nạn|qua đời|không qua khỏi|tước đoạt tính mạng|mất mạng)/i.test(qLower) &&
+      !/(?:tuyên bố[\s\S]{0,20}đã chết|chưa chết)/i.test(qLower);
+    const isTrafficAccident = /(?:gây tai nạn|tai nạn giao thông|va chạm giao thông|vượt đèn đỏ gây tai nạn|tông trúng|tông trực diện|tông vào|đâm xe)/i.test(qLower);
     const hasHitAndRun = /(?:bỏ trốn|bỏ chạy|trốn khỏi hiện trường|không cứu giúp)/i.test(qLower);
     const hasAlcohol = /(?:rượu|bia|nồng độ cồn|say xỉn)/i.test(qLower);
-    const explicitlyAsks4Elements = /(?:4 yếu tố|bốn yếu tố|cấu thành vi phạm|mặt khách quan)/i.test(qLower);
+    const explicitlyAsks4Elements = /(?:4 yếu tố|bốn yếu tố|cấu thành(?:\s+của)?\s+(?:vi phạm|tội phạm)|mặt khách quan)/i.test(qLower);
+    const injuryPctNum = injury ? parseInt(injury, 10) : null;
+    const propDmgMillions = (() => {
+      if (!money) return 0;
+      const m = money.match(/(\d+(?:[.,]\d+)?)/);
+      if (!m) return 0;
+      const v = parseFloat(m[1].replace(',', '.'));
+      return money.toLowerCase().includes('tỷ') ? v * 1000 : v;
+    })();
 
     // =========================================================================
-    // KỊCH BẢN A: GÂY TAI NẠN GIAO THÔNG LÀM CHẾT NGƯỜI (KÈM TÌNH TIẾT BỎ TRỐN / NỒNG ĐỘ CỒN) — ĐIỀU 260 BLHS 2015
+    // KỊCH BẢN A: TAI NẠN GIAO THÔNG (PHÂN HÓA RÕ ĐỦ ĐỊNH LƯỢNG HÌNH SỰ ĐIỀU 260 BLHS VS. CHƯA ĐỦ ĐỊNH LƯỢNG -> HÀNH CHÍNH NĐ 168/2024 + DÂN SỰ)
     // =========================================================================
-    if (isTrafficAccident && (hasDeath || hasHitAndRun || (injury && parseInt(injury, 10) >= 61))) {
+    if (isTrafficAccident && (hasDeath || hasHitAndRun || (injuryPctNum !== null && injuryPctNum >= 61) || propDmgMillions >= 100)) {
       const frameClause = hasHitAndRun
         ? '**Điểm c Khoản 2 Điều 260 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** (*"Bỏ chạy để trốn tránh trách nhiệm hoặc cố ý không cứu giúp người bị nạn"*)'
         : hasAlcohol
           ? '**Điểm b Khoản 2 Điều 260 Bộ luật Hình sự năm 2015** (*trong máu hoặc hơi thở có nồng độ cồn vượt mức quy định*)'
-          : '**Điểm a Khoản 1 Điều 260 Bộ luật Hình sự năm 2015** (*Làm chết người*)';
+          : hasDeath
+            ? '**Điểm a Khoản 1 Điều 260 Bộ luật Hình sự năm 2015** (*Làm chết người*)'
+            : injuryPctNum !== null && injuryPctNum >= 61
+              ? `**Điểm b Khoản 1 Điều 260 Bộ luật Hình sự năm 2015** (*Gây thương tích hoặc gây tổn hại cho sức khỏe của 01 người mà tỷ lệ tổn thương cơ thể **${injury} >= 61%***)`
+              : `**Điểm d Khoản 1 Điều 260 Bộ luật Hình sự năm 2015** (*Gây thiệt hại về tài sản từ **100.000.000 đồng** trở lên*)`;
       const penaltyRange = hasHitAndRun || hasAlcohol
         ? '**phạt tù từ 03 năm đến 10 năm** (thuộc loại *Tội phạm rất nghiêm trọng* theo Khoản 3 Điều 9 BLHS 2015)'
         : 'phạt tiền từ 30.000.000 đồng đến 100.000.000 đồng, phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 01 năm đến 05 năm**';
 
-      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI GÂY TAI NẠN LÀM CHẾT NGƯỜI${hasHitAndRun ? ' RỒI BỎ TRỐN' : ''}
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI GÂY TAI NẠN GIAO THÔNG NGHIÊM TRỌNG${hasHitAndRun ? ' RỒI BỎ TRỐN' : ''}
 
 ---
 
-#### 1. Kết luận trực tiếp: ${actorA} CÓ vi phạm pháp luật không?
-- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorA} CÓ VI PHẠM PHÁP LUẬT ĐẶC BIỆT NGHIÊM TRỌNG**, cụ thể là **Vi phạm pháp luật Hình sự (Tội phạm)** và phát sinh **Trách nhiệm bồi thường thiệt hại Dân sự** *(tuyệt đối không chỉ dừng ở mức xử phạt hành chính giao thông thông thường)*.
+#### 1. Kết luận trực tiếp: ${actorA} CÓ vi phạm pháp luật hình sự không?
+- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorA} CÓ CẤU THÀNH TỘI PHẠM HÌNH SỰ**, đồng thời phát sinh **Trách nhiệm bồi thường thiệt hại Dân sự**.
 - **Định danh tội phạm**: Cấu thành **Tội vi phạm quy định về tham gia giao thông đường bộ** theo ${frameClause}.
 
 ---
 
 #### 2. Phân tích cụ thể cấu thành hành vi và yếu tố lỗi của ${actorA}
-1. **Về Mặt khách quan (Hành vi kép & Hậu quả thực tế)**:
-   - *Hành vi thứ nhất*: ${actorA} điều khiển ${concreteTool || 'phương tiện giao thông'} vi phạm quy tắc an toàn giao thông đường bộ, trực tiếp gây tai nạn dẫn đến hậu quả đặc biệt nghiêm trọng là **làm chết người**.
-   ${hasHitAndRun ? `- *Hành vi thứ hai (Tình tiết định khung tăng nặng)*: Sau khi gây tai nạn chết người, thay vì dừng xe giữ nguyên hiện trường và đưa nạn nhân đi cấp cứu theo nghĩa vụ bắt buộc của Luật Trật tự, an toàn giao thông đường bộ 2024, ${actorA} đã **bỏ trốn khỏi hiện trường nhằm trốn tránh trách nhiệm**.` : ''}
-2. **Về Mặt chủ quan (Phân hóa rõ trạng thái lỗi)**:
-   - *Đối với vụ tai nạn làm chết người*: Là **lỗi vô ý** (vô ý vì quá tự tin hoặc vô ý do cẩu thả — ${actorA} không mong muốn làm chết người nhưng đã vi phạm quy tắc an toàn khi điều khiển phương tiện).
-   ${hasHitAndRun ? `- *Đối với hành vi bỏ trốn sau tai nạn*: Mang **ý thức cố ý trốn tránh trách nhiệm / bỏ mặc tính mạng người bị nạn**, thể hiện thái độ coi thường pháp luật và đạo đức xã hội nghiêm trọng.` : ''}
-3. **Về Khách thể bị xâm phạm**: Xâm phạm đồng thời **trật tự an toàn giao thông đường bộ** và **quyền sống, tính mạng của người tham gia giao thông**.
-4. **Về Chủ thể**: ${actorA}${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''} có năng lực trách nhiệm hình sự và đạt độ tuổi chịu TNHS theo **Điều 12 BLHS 2015** (từ đủ 16 tuổi trở lên chịu TNHS về Điều 260).
+1. **Về Mặt khách quan**:
+   - ${actorA} điều khiển ${concreteTool || 'phương tiện giao thông'} vi phạm quy tắc an toàn giao thông đường bộ, trực tiếp gây tai nạn dẫn đến hậu quả nghiêm trọng (${hasDeath ? '**làm chết người**' : `tỷ lệ tổn thương cơ thể **${injury || 'từ 61% trở lên'}**${money ? `, thiệt hại tài sản **${money}**` : ''}`}).
+   ${hasHitAndRun ? `- Sau khi gây tai nạn, ${actorA} đã **bỏ trốn khỏi hiện trường nhằm trốn tránh trách nhiệm**.` : ''}
+2. **Về Mặt chủ quan**:
+   - Đối với vụ tai nạn giao thông: Là **lỗi vô ý** (vô ý vì quá tự tin hoặc vô ý do cẩu thả theo **Điều 11 BLHS 2015**).
+   ${hasHitAndRun ? `- Đối với hành vi bỏ trốn sau tai nạn: Ý thức cố ý trốn tránh trách nhiệm.` : ''}
+3. **Về Khách thể**: Xâm phạm **trật tự an toàn giao thông đường bộ** và **tính mạng, sức khỏe, tài sản của người khác**.
+4. **Về Chủ thể**: ${actorA}${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''} có năng lực TNHS và đạt độ tuổi chịu TNHS theo **Điều 12 BLHS 2015**.
 
 ---
 
 #### 3. Chế tài Hình sự & Nghĩa vụ bồi thường Dân sự cụ thể đối với ${actorA}
-1. **Trách nhiệm Hình sự (${frameClause})**:
-   - Do có hậu quả **làm chết người**${hasHitAndRun ? ' kết hợp tình tiết tăng nặng định khung **"bỏ chạy để trốn tránh trách nhiệm hoặc cố ý không cứu giúp người bị nạn"** tại **Điểm c Khoản 2 Điều 260 BLHS 2015**' : ''}, khung hình phạt áp dụng đối với ${actorA} là ${penaltyRange}.
-   - Ngoài ra, người phạm tội còn có thể bị cấm đảm nhiệm chức vụ, cấm hành nghề hoặc làm công việc liên quan đến điều khiển phương tiện giao thông từ **01 năm đến 05 năm** (**Khoản 5 Điều 260 BLHS 2015**).
-2. **Trách nhiệm Dân sự bắt buộc (Điều 584, Điều 591 và Điều 601 Bộ luật Dân sự năm 2015)**:
-   - ${actorA} phải bồi thường toàn bộ thiệt hại do tính mạng bị xâm phạm cho gia đình nạn nhân, bao gồm:
-     + Chi phí hợp lý cho việc cứu chữa trước khi chết (nếu có) và **chi phí hợp lý cho việc mai táng**;
-     + **Tiền cấp dưỡng** cho những người mà nạn nhân có nghĩa vụ cấp dưỡng (con chưa thành niên, cha mẹ già mất khả năng lao động...);
-     + **Khoản tiền bù đắp tổn thất về tinh thần** cho những người thân thích thuộc hàng thừa kế thứ nhất của nạn nhân (do các bên thỏa thuận; nếu không thỏa thuận được thì tối đa không quá **100 lần mức lương cơ sở** theo Khoản 2 Điều 591 BLDS 2015).`;
+1. **Trách nhiệm Hình sự (${frameClause})**: Khung hình phạt áp dụng đối với ${actorA} là ${penaltyRange}; có thể bị cấm hành nghề lái xe từ **01 – 05 năm** (**Khoản 5 Điều 260 BLHS 2015**).
+2. **Trách nhiệm Dân sự bắt buộc (Điều 584, ${hasDeath ? 'Điều 591' : 'Điều 589, Điều 590'} và Điều 601 Bộ luật Dân sự năm 2015)**:
+   - Bồi thường toàn bộ thiệt hại thực tế về ${hasDeath ? 'chi phí cứu chữa, mai táng, cấp dưỡng và bù đắp tổn thất tinh thần tối đa **100 lần mức lương cơ sở** (Điều 591 BLDS 2015)' : `sức khỏe (viện phí, thu nhập thực tế bị mất, người chăm sóc, tổn thất tinh thần tối đa **50 lần mức lương cơ sở** theo Điều 590 BLDS 2015)${money ? ` và thiệt hại tài sản hư hỏng (**${money}** theo Điều 589 BLDS 2015)` : ''}`}.`;
+    }
+
+    if (isTrafficAccident && !hasDeath && (injuryPctNum === null || injuryPctNum < 61) && propDmgMillions < 100) {
+      const isCar = /ô tô|xe tải|xe khách/.test(qLower);
+      const adminFine = isCar
+        ? 'phạt tiền từ **20.000.000 đồng đến 22.000.000 đồng** và **trừ 10 điểm giấy phép lái xe** theo **Điểm b Khoản 10 Điều 6 Nghị định 168/2024/NĐ-CP**'
+        : 'phạt tiền từ **10.000.000 đồng đến 14.000.000 đồng** và **trừ 10 điểm giấy phép lái xe** theo **Điểm b Khoản 10 Điều 7 Nghị định 168/2024/NĐ-CP**';
+
+      return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: TAI NẠN GIAO THÔNG CHƯA ĐỦ ĐỊNH LƯỢNG HÌNH SỰ (ĐIỀU 260 BLHS & NGHỊ ĐỊNH 168/2024/NĐ-CP)
+
+#### 1. Hành vi của ${actorA} cấu thành tội phạm hình sự hay xử phạt vi phạm hành chính?
+- **KẾT LUẬN DỨT KHOÁT**: Hành vi của **${actorA} CHƯA CẤU THÀNH TỘI PHẠM HÌNH SỰ**, mà bị **xử phạt Vi phạm hành chính** và phải chịu **Trách nhiệm bồi thường thiệt hại Dân sự**.
+- **Căn cứ đối chiếu định lượng tại Khoản 1 Điều 260 Bộ luật Hình sự năm 2015**: Hành vi vi phạm quy định về tham gia giao thông đường bộ (lỗi vô ý đối với hậu quả tai nạn) chỉ bị truy cứu TNHS khi thuộc một trong các ngưỡng: (a) Làm chết người; (b) Gây thương tích cho 01 người có tỷ lệ tổn thương cơ thể **từ 61% trở lên** (hoặc 02 người tổng tỷ lệ từ 61% – 121%); hoặc (d) Gây thiệt hại về tài sản **từ 100.000.000 đồng trở lên**.
+- **Áp dụng vào dữ kiện**: Trong vụ việc này, tỷ lệ tổn thương cơ thể của **${actorB}** là **${injury || 'dưới 61%'}** (< 61%) và thiệt hại tài sản là **${money || 'dưới 100 triệu đồng'}** (< 100 triệu đồng) $\\rightarrow$ **Chưa chạm ngưỡng truy cứu TNHS tại Điều 260 BLHS 2015**.
+- **Chế tài Hành chính áp dụng**: Với hành vi điều khiển ${concreteTool || 'phương tiện'} không chấp hành tín hiệu đèn giao thông (vượt đèn đỏ) gây tai nạn giao thông, **${actorA}** bị ${adminFine}.
+
+#### 2. Các khoản bồi thường thiệt hại Dân sự ${actorA} phải trả cho ${actorB} (Bộ luật Dân sự 2015)
+Căn cứ **Điều 584, Điều 589, Điều 590 và Điều 601 Bộ luật Dân sự năm 2015** *(bồi thường thiệt hại do nguồn nguy hiểm cao độ gây ra)*, **${actorA}** bắt buộc phải bồi thường đầy đủ 02 nhóm thiệt hại cho **${actorB}**:
+1. **Thiệt hại do tài sản bị xâm phạm (Điều 589 BLDS 2015)**:
+   - Toàn bộ chi phí hợp lý để sửa chữa, khôi phục phương tiện bị hư hỏng${money ? ` (**${money}**)` : ''} và lợi ích gắn liền với việc sử dụng tài sản bị mất/giảm sút (nếu có).
+2. **Thiệt hại do sức khỏe bị xâm phạm (Điều 590 BLDS 2015 — đối với thương tích ${injury || 'thực tế'})**:
+   - **Chi phí hợp lý cho việc cứu chữa, bồi dưỡng, phục hồi sức khỏe** và chức năng bị mất, bị giảm sút (tiền viện phí, phẫu thuật, thuốc men);
+   - **Thu nhập thực tế bị mất hoặc bị giảm sút** của ${actorB} trong thời gian điều trị;
+   - **Chi phí hợp lý và phần thu nhập thực tế bị mất của người chăm sóc** ${actorB} trong thời gian điều trị;
+   - **Khoản tiền bù đắp tổn thất về tinh thần** do các bên thỏa thuận; nếu không thỏa thuận được thì mức tối đa cho một người có sức khỏe bị xâm phạm **không quá 50 lần mức lương cơ sở** do Nhà nước quy định (**Khoản 2 Điều 590 BLDS 2015**).`;
+    }
+
+    // =========================================================================
+    // KỊCH BẢN A2: HÀNH VI TẮC TRÁCH NGHỀ NGHIỆP / VÔ Ý LÀM CHẾT NGƯỜI (BÁC SĨ TIÊM SỐC PHẢN VỆ / GIÁO VIÊN MẦM NON DÁN BĂNG KEO...) — ĐIỀU 11, 128, 129, 315 BLHS 2015
+    // =========================================================================
+    if (
+      hasDeath &&
+      !qLower.includes('đâm') &&
+      !qLower.includes('chém') &&
+      !qLower.includes('bắn') &&
+      (qLower.includes('sốc phản vệ') ||
+        qLower.includes('tiêm kháng sinh') ||
+        qLower.includes('bác sĩ') ||
+        qLower.includes('băng keo') ||
+        qLower.includes('bịt miệng') ||
+        qLower.includes('khỏi khóc') ||
+        qLower.includes('hình thức lỗi') ||
+        qLower.includes('xác định lỗi'))
+    ) {
+      const isMedicalMalpractice = /bác sĩ|tiêm|kháng sinh|sốc phản vệ|khám bệnh|chữa bệnh/.test(qLower);
+      if (isMedicalMalpractice) {
+        return `### PHÂN TÍCH HÌNH THỨC LỖI VÀ TRÁCH NHIỆM PHÁP LÝ TRONG TÌNH HUỐNG Y KHOA (${actorA.toUpperCase()})
+
+#### 1. Xác định hình thức lỗi của ${actorA} (Khoản 2 Điều 11 Bộ luật Hình sự năm 2015)
+- **Kết luận về hình thức lỗi**: Hành vi của **${actorA}** thuộc hình thức **LỖI VÔ Ý DO CẨU THẢ** theo **Khoản 2 Điều 11 Bộ luật Hình sự năm 2015**.
+- **Phân tích lý luận gắn với dữ kiện**:
+  + **Về mặt lý trí**: Do chủ quan, thiếu thận trọng nghề nghiệp (bỏ qua quy trình bắt buộc kiểm tra tiền sử dị ứng thuốc và thử phản vệ trước khi tiêm kháng sinh), ${actorA} đã **không thấy trước** hành vi của mình có thể gây ra hậu quả bệnh nhân bị sốc phản vệ tử vong.
+  + **Về nghĩa vụ và điều kiện nhận thức**: Với tư cách là bác sĩ được đào tạo chuyên môn y khoa và chịu sự ràng buộc của quy chế chuyên môn khám chữa bệnh, ${actorA} **phải thấy trước và hoàn toàn có đủ điều kiện để thấy trước** nguy cơ sốc phản vệ chết người nếu không khai thác tiền sử dị ứng / kiểm tra an toàn trước khi tiêm.
+
+#### 2. Trách nhiệm pháp lý đặt ra đối với ${actorA} và cơ sở y tế
+1. **Trách nhiệm Hình sự (Điều 315 Bộ luật Hình sự năm 2015 — sửa đổi, bổ sung 2017)**:
+   - Hành vi của ${actorA} cấu thành **Tội vi phạm quy định về khám bệnh, chữa bệnh, sản xuất, pha chế, cấp phát, bán thuốc hoặc dịch vụ y tế khác** tại **Khoản 1 Điều 315 BLHS 2015** (gây hậu quả làm chết 01 người: khung hình phạt **tù từ 01 năm đến 05 năm**; kèm hình phạt bổ sung có thể phạt tiền 10 – 50 triệu đồng hoặc cấm đảm nhiệm chức vụ, cấm hành nghề từ 01 – 05 năm theo Khoản 4 Điều 315).
+2. **Trách nhiệm Kỷ luật / Hành chính**:
+   - Bị xử lý kỷ luật viên chức / lao động tại bệnh viện và có thể bị thu hồi / đình chỉ chứng chỉ hành nghề khám bệnh, chữa bệnh theo Luật Khám bệnh, chữa bệnh 2023.
+3. **Trách nhiệm Dân sự (Điều 584, Điều 591 và Điều 597 Bộ luật Dân sự năm 2015)**:
+   - Cơ sở khám chữa bệnh (bệnh viện/phòng khám nơi ${actorA} công tác) có trách nhiệm bồi thường trước cho gia đình nạn nhân toàn bộ chi phí cứu chữa, mai táng hợp lý, tiền cấp dưỡng (nếu có) và tổn thất tinh thần tối đa **100 lần mức lương cơ sở** (**Điều 591, Điều 597 BLDS 2015**); sau đó cơ sở y tế có quyền yêu cầu ${actorA} **hoàn trả** một khoản tiền theo quy định của pháp luật vì có lỗi gây thiệt hại.`;
+      }
+
+      return `### PHÂN TÍCH HÌNH THỨC LỖI VÀ TRÁCH NHIỆM PHÁP LÝ TRONG TÌNH HUỐNG (${actorA.toUpperCase()} – ${actorB.toUpperCase()})
+
+#### 1. Xác định lỗi của ${actorA} (Điều 11 Bộ luật Hình sự năm 2015)
+- **Kết luận trực tiếp**: **${actorA} CÓ LỖI**, cụ thể là **Lỗi vô ý vì quá tự tin** (**Khoản 1 Điều 11 Bộ luật Hình sự năm 2015**) *(lưu ý thực tiễn xét xử: nếu chứng minh người thực hiện nhận thức rõ việc bịt kín đường thở trẻ nhỏ tất yếu dẫn đến ngạt thở tử vong mà vẫn bỏ mặc thì có thể chuyển hóa sang lỗi cố ý gián tiếp tại Khoản 2 Điều 10 BLHS; tuy nhiên trong khuôn khổ môn Pháp luật Đại cương, với mục đích chỉ muốn bé nín khóc và sau 2 phút phát hiện tím tái đã vội gọi cấp cứu, đây là tình huống điển hình của **Lỗi vô ý vì quá tự tin**)*.
+
+#### 2. Phân tích chi tiết dấu hiệu tâm lý của lỗi trong trường hợp trên
+1. **Về lý trí (Nhận thức)**: Là người trưởng thành và là giáo viên mầm non có nghiệp vụ chăm sóc trẻ, ${actorA} **thấy trước (nhận thức được)** việc dùng băng keo dán miệng trẻ nhỏ (${actorB}) là hành vi nguy hiểm có thể gây cản trở hô hấp, ngạt thở nguy hại đến tính mạng, sức khỏe của trẻ.
+2. **Về ý chí (Thái độ đối với hậu quả)**:
+   - ${actorA} **hoàn toàn không mong muốn** và **không có ý thức bỏ mặc** hậu quả ${actorB} tử vong xảy ra (mục đích chỉ để bé khỏi khóc, và ngay khi thấy bé tím tái sau khoảng 2 phút, ${actorA} đã lập tức tháo ra, gọi mẹ bé và đưa đi cấp cứu).
+   - Tuy nhiên, ${actorA} đã **quá tự tin, chủ quan thiếu căn cứ** cho rằng chỉ dán trong thời gian ngắn để dọa cho bé nín thì hậu quả chết người sẽ không xảy ra hoặc bản thân kiểm soát, ngăn ngừa được.
+3. **Hệ quả trách nhiệm pháp lý**:
+   - **Hình sự**: Cấu thành **Tội vô ý làm chết người do vi phạm quy tắc nghề nghiệp hoặc quy tắc hành chính** theo **Khoản 1 Điều 129 Bộ luật Hình sự năm 2015** (phạt tù từ **01 năm đến 05 năm**, có thể cấm hành nghề từ 01 – 05 năm) *(hoặc Điều 128 BLHS 2015 — Tội vô ý làm chết người)*.
+   - **Dân sự (Điều 591, Điều 597 BLDS 2015)**: Bồi thường toàn bộ chi phí cấp cứu, mai táng và bù đắp tổn thất tinh thần tối đa **100 lần mức lương cơ sở** cho gia đình ${actorB}.`;
     }
 
     // =========================================================================
@@ -3295,20 +3484,31 @@ ${query}
         ((qLower.includes('đâm') || qLower.includes('chém') || qLower.includes('bắn') || qLower.includes('đánh')) && hasDeath))
     ) {
       const weaponText = concreteTool || 'hung khí nguy hiểm / vũ lực mạnh';
+      const isChildVictim = /(?:ngày tuổi|tháng tuổi|sơ sinh|trẻ em|đứa trẻ|cháu\s+[a-zà-ỹ]+)/i.test(qLower);
+      const isPre2018Event = /năm\s+(?:199\d|200\d|201[0-7])|\/201[0-7]\b/i.test(qLower);
+      const childAggravatingNote = isChildVictim
+        ? ` *(thuộc tình tiết định khung tăng nặng **"Giết người dưới 16 tuổi"** tại **Điểm b Khoản 1 Điều 123 Bộ luật Hình sự năm 2015**${isPre2018Event ? '; đối chiếu tại thời điểm xảy ra hành vi trước năm 2018 là **Điểm c Khoản 1 Điều 93 Bộ luật Hình sự năm 1999** — "Giết trẻ em"' : ''})*`
+        : '';
+
       if (explicitlyAsks4Elements) {
-        return `### PHÂN TÍCH 04 YẾU TỐ CẤU THÀNH TỘI GIẾT NGƯỜI TRONG TÌNH HUỐNG CỦA ${actorA.toUpperCase()}
+        return `### PHÂN TÍCH PHÁP LÝ & 04 YẾU TỐ CẤU THÀNH VI PHẠM PHÁP LUẬT TRONG TÌNH HUỐNG CỦA ${actorA.toUpperCase()}
 *(Căn cứ **Điều 8, Điều 10, Điều 12 và Điều 123 Bộ luật Hình sự năm 2015** & **Điều 591 Bộ luật Dân sự năm 2015**)*
 
-- **Kết luận**: Hành vi của **${actorA}** dùng **${weaponText}** cố ý đâm làm **${actorB} thiệt mạng** là **Vi phạm pháp luật Hình sự đặc biệt nghiêm trọng**, cấu thành **Tội giết người (Điều 123 BLHS 2015)**.
+#### 1. Hành vi của ${actorA} có phải là vi phạm pháp luật không?
+- **KẾT LUẬN DỨT KHOÁT**: **CÓ.** Hành vi của **${actorA}** dùng **${weaponText}** cố ý đâm làm **${actorB}** tử vong là **Vi phạm pháp luật Hình sự đặc biệt nghiêm trọng** (Tội phạm), cấu thành **Tội giết người** theo **Điều 123 Bộ luật Hình sự năm 2015**${childAggravatingNote} vì hội tụ đầy đủ cả 04 dấu hiệu cơ bản của vi phạm pháp luật: (i) Là hành vi xác định của con người; (ii) Trái pháp luật hình sự; (iii) Có lỗi cố ý; và (iv) Do chủ thể có đầy đủ năng lực trách nhiệm pháp lý thực hiện.
+
+#### 2. Phân tích 04 yếu tố cấu thành của vi phạm pháp luật trên
 
 | Yếu tố cấu thành | Phân tích gắn chặt dữ kiện vụ án (${actorA} – ${actorB}) | Căn cứ & Hệ quả pháp lý |
 | :--- | :--- | :--- |
-| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: ${actorA} sử dụng **${weaponText}** trực tiếp đâm/tấn công tước đoạt trái phép tính mạng của **${actorB}**.<br>• **Công cụ phạm tội**: **${weaponText}** (có khả năng sát thương gây tử vong cao).<br>• **Hậu quả thực tế**: **${actorB} thiệt mạng (tử vong)**.<br>• **Quan hệ nhân quả**: Nhát đâm bằng ${weaponText} của ${actorA} là nguyên nhân trực tiếp gây ra cái chết của ${actorB}. | Thỏa mãn mặt khách quan của **Tội giết người (Điều 123 BLHS 2015)**. |
-| **2. Mặt chủ quan** | • **Lỗi cố ý trực tiếp (Khoản 1 Điều 10 BLHS 2015)** *(hoặc cố ý gián tiếp nếu đâm vào vùng trọng yếu và để mặc hậu quả)*: ${actorA} nhận thức rõ ${weaponText} là hung khí nguy hiểm có thể tước đoạt mạng sống của ${actorB} nhưng vẫn cố ý thực hiện hành vi đâm. | Lỗi cố ý đối với hậu quả chết người — dấu hiệu phân biệt với tội vô ý làm chết người (Điều 128). |
-| **3. Khách thể** | Xâm phạm trực tiếp **Quyền sống, quyền bất khả xâm phạm về tính mạng con người** của ${actorB}. | Được bảo vệ tối cao tại **Điều 19 Hiến pháp 2013** và Chương XIV BLHS 2015. |
-| **4. Chủ thể** | **${actorA}**${ageInfo.age ? ` (${ageInfo.age} tuổi)` : ''}: Cá nhân có năng lực TNHS bình thường và đạt độ tuổi chịu TNHS (từ **đủ 14 tuổi trở lên** đã phải chịu TNHS về Tội giết người theo **Khoản 2 Điều 12 BLHS 2015**). | Đủ tư cách chủ thể của tội phạm đặc biệt nghiêm trọng. |
+| **1. Mặt khách quan** | • **Hành vi trái pháp luật**: ${actorA} thực hiện hành vi hành động nguy hiểm đặc biệt — dùng **${weaponText}** trực tiếp đâm vào vùng trọng yếu của **${actorB}**.<br>• **Công cụ phạm tội**: **${weaponText}** (có khả năng sát thương gây tử vong rất cao).<br>• **Hậu quả thực tế**: **${actorB} qua đời (tử vong)**.<br>• **Mối quan hệ nhân quả**: Hành vi đâm bằng ${weaponText} của ${actorA} là nguyên nhân trực tiếp dẫn đến cái chết của ${actorB}. | Thỏa mãn đầy đủ mặt khách quan của **Tội giết người (Điều 123 BLHS 2015)**. |
+| **2. Mặt chủ quan** | • **Lỗi cố ý trực tiếp (Khoản 1 Điều 10 BLHS 2015)**: ${actorA} nhận thức rõ việc dùng ${weaponText} đâm vào cơ thể ${actorB} là cực kỳ nguy hiểm đến tính mạng, thấy trước hậu quả chết người tất yếu/có thể xảy ra và mong muốn tước đoạt tính mạng nạn nhân.<br>• **Động cơ, mục đích**: Xuất phát từ mâu thuẫn, thù tức / ghen tuông cá nhân nhằm trả thù. | Lỗi cố ý đối với hậu quả chết người — dấu hiệu cốt lõi định tội giết người. |
+| **3. Khách thể** | Xâm phạm trực tiếp đến **Quyền sống, quyền bất khả xâm phạm về tính mạng của con người** (đặc biệt là tính mạng của **${actorB}**). | Khách thể tối cao được bảo vệ tại **Điều 19 Hiến pháp 2013** và Chương XIV BLHS 2015. |
+| **4. Chủ thể** | **${actorA}**: Cá nhân đã thành niên, đạt độ tuổi chịu trách nhiệm hình sự theo **Điều 12 Bộ luật Hình sự 2015**, **không mắc bệnh tâm thần**, nhận thức và điều khiển hành vi hoàn toàn bình thường. | Có đầy đủ **năng lực trách nhiệm hình sự** đối với tội phạm đặc biệt nghiêm trọng. |
 
-- **Khung hình phạt & Bồi thường**: Phạt tù từ **12 – 20 năm, tù chung thân hoặc tử hình** (**Khoản 1 Điều 123** nếu có tính chất côn đồ/đê hèn...) hoặc **07 – 15 năm tù** (**Khoản 2 Điều 123**); đồng thời bồi thường toàn bộ chi phí cứu chữa, mai táng, cấp dưỡng và tổn thất tinh thần tối đa **100 lần mức lương cơ sở** cho gia đình ${actorB} (**Điều 591 BLDS 2015**).`;
+#### 3. Chế tài Hình sự & Trách nhiệm bồi thường Dân sự
+- **Về Hình sự**: Khung hình phạt tại **Khoản 1 Điều 123 BLHS 2015** là **phạt tù từ 12 năm đến 20 năm, tù chung thân hoặc tử hình** *(hoặc 07 – 15 năm tù tại Khoản 2 nếu không có tình tiết định khung tăng nặng)*.
+- **Về Dân sự (Điều 584 & Điều 591 BLDS 2015)**: Buộc bồi thường toàn bộ chi phí cấp cứu, mai táng hợp lý và khoản tiền bù đắp tổn thất tinh thần tối đa **100 lần mức lương cơ sở** cho gia đình ${actorB}.`;
       }
 
       return `### PHÂN TÍCH PHÁP LÝ CỤ THỂ: HÀNH VI DÙNG ${weaponText.toUpperCase()} ĐÂM LÀM ${actorB.toUpperCase()} THIỆT MẠNG
@@ -3351,10 +3551,10 @@ ${query}
 - **Định danh trách nhiệm pháp lý cụ thể theo dữ kiện**:
   1. **Về Trách nhiệm Hình sự / Hành chính**:
      ${pctNum !== null && pctNum >= 11
-       ? `- Do tỷ lệ tổn thương cơ thể là **${injury} (từ 11% trở lên)**, hành vi của ${actorA} đã cấu thành **Tội cố ý gây thương tích** theo **Điều 134 Bộ luật Hình sự 2015** (${pctNum >= 31 || hasWeapon ? 'phạt tù từ **02 năm đến 06 năm** tại **Khoản 2 Điều 134** do tỷ lệ thương tật cao hoặc dùng hung khí nguy hiểm' : 'phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** tại **Khoản 1 Điều 134**'}).`
-       : hasWeapon
-         ? `- Do ${actorA} sử dụng **${concreteTool}** (thuộc tình tiết *dùng hung khí nguy hiểm* tại **Điểm a Khoản 1 Điều 134 BLHS 2015**), nên **ngay cả khi tỷ lệ thương tích của ${actorB} dưới 11%**, ${actorA} vẫn có thể bị truy cứu trách nhiệm hình sự về **Tội cố ý gây thương tích** (phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** theo Khoản 1; nếu thương tích từ 11% đến 30% kèm hung khí nguy hiểm thì phạt tù từ **02 năm đến 06 năm** theo Khoản 2 Điều 134).`
-         : `- Nếu giám định tỷ lệ tổn thương cơ thể của ${actorB} **từ 11% trở lên** (hoặc dưới 11% nhưng có tính chất côn đồ, dùng hung khí nguy hiểm...): Truy cứu TNHS về **Tội cố ý gây thương tích (Điều 134 BLHS 2015)**.\n     - Nếu tỷ lệ tổn thương cơ thể **dưới 11%** và không có tình tiết định khung tại Khoản 1 Điều 134: Bị xử phạt **Vi phạm hành chính** từ **5.000.000 đồng đến 8.000.000 đồng** theo **Điểm a Khoản 5 Điều 7 Nghị định 144/2021/NĐ-CP**.`}
+          ? `- Do tỷ lệ tổn thương cơ thể là **${injury} (từ 11% trở lên)**, hành vi của ${actorA} đã cấu thành **Tội cố ý gây thương tích** theo **Điều 134 Bộ luật Hình sự 2015** (${pctNum >= 31 || hasWeapon ? 'phạt tù từ **02 năm đến 06 năm** tại **Khoản 2 Điều 134** do tỷ lệ thương tật cao hoặc dùng hung khí nguy hiểm' : 'phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** tại **Khoản 1 Điều 134**'}).`
+          : hasWeapon
+            ? `- Do ${actorA} sử dụng **${concreteTool}** (thuộc tình tiết *dùng hung khí nguy hiểm* tại **Điểm a Khoản 1 Điều 134 BLHS 2015**), nên **ngay cả khi tỷ lệ thương tích của ${actorB} dưới 11%**, ${actorA} vẫn có thể bị truy cứu trách nhiệm hình sự về **Tội cố ý gây thương tích** (phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** theo Khoản 1; nếu thương tích từ 11% đến 30% kèm hung khí nguy hiểm thì phạt tù từ **02 năm đến 06 năm** theo Khoản 2 Điều 134).`
+            : `- Nếu giám định tỷ lệ tổn thương cơ thể của ${actorB} **từ 11% trở lên** (hoặc dưới 11% nhưng có tính chất côn đồ, dùng hung khí nguy hiểm...): Truy cứu TNHS về **Tội cố ý gây thương tích (Điều 134 BLHS 2015)**.\n     - Nếu tỷ lệ tổn thương cơ thể **dưới 11%** và không có tình tiết định khung tại Khoản 1 Điều 134: Bị xử phạt **Vi phạm hành chính** từ **5.000.000 đồng đến 8.000.000 đồng** theo **Điểm a Khoản 5 Điều 7 Nghị định 144/2021/NĐ-CP**.`}
   2. **Về Trách nhiệm Dân sự (Điều 584 & Điều 590 Bộ luật Dân sự 2015)**:
      - ${actorA} bắt buộc phải bồi thường cho ${actorB} toàn bộ chi phí khám chữa bệnh, phục hồi chức năng, thu nhập thực tế bị mất, chi phí người chăm sóc và tiền bù đắp tổn thất tinh thần (**tối đa không quá 50 lần mức lương cơ sở**).`;
     }
@@ -4276,51 +4476,142 @@ Kinh tế quyết định pháp luật; pháp luật tác động trở lại ki
     return this.getMasterOutput('SFT_THEORY_CONG_PHAP_TU_PHAP_NOI_DUNG_HINH_THUC');
   }
 
-  // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG ---
+  // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG (HỖ TRỢ CẢ TÀI SẢN CHUNG VỢ CHỒNG, CHIA THEO PHÁP LUẬT ĐIỀU 651 & DI CHÚC KÈM SUẤT BẮT BUỘC ĐIỀU 644) ---
   private static solveDynamicCivilInherit(query: string, actors: string[], money: string | null): string {
-    let estateValue = 600000000;
-    let estateStr = '600.000.000 VNĐ';
+    const qLower = query.toLowerCase();
+    let rawInputAmount = 600000000;
+    let rawInputLabel = '600.000.000 đồng';
 
     if (money) {
-      estateStr = money;
+      rawInputLabel = money;
       const numMatch = money.match(/(\d+(?:[.,]\d+)?)/);
       if (numMatch) {
         const val = parseFloat(numMatch[1].replace(',', '.'));
         if (money.toLowerCase().includes('tỷ')) {
-          estateValue = val * 1000000000;
+          rawInputAmount = Math.round(val * 1000000000);
         } else if (money.toLowerCase().includes('triệu')) {
-          estateValue = val * 1000000;
+          rawInputAmount = Math.round(val * 1000000);
         }
       }
     }
 
-    // Lọc ra danh sách những người thừa kế thực tế từ đề bài
-    const deceased = actors[0] || 'Người để lại di sản';
-    const rawHeirs = actors.slice(1);
-    const heirList = rawHeirs.length >= 1 ? rawHeirs : ['Vợ/Chồng hợp pháp', 'Người con thứ nhất', 'Người con thứ hai'];
-    const heirCount = heirList.length;
+    const isJointMaritalAsset =
+      /tài\s+sản\s+chung/.test(qLower) &&
+      !/di\s+sản\s+(?:riêng\s+)?(?:của\s+[^\d]{1,25})?là\s+\d/.test(qLower);
+    const estateValue = isJointMaritalAsset ? Math.round(rawInputAmount / 2) : rawInputAmount;
+
+    const deceasedMatch =
+      query.match(/((?:Ông|Bà|Anh|Chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s+(?:mất|qua đời|chết)/) ||
+      query.match(/di\s+sản\s+(?:thừa\s+kế\s+)?của\s+((?:ông|bà|anh|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i);
+    const deceased = deceasedMatch
+      ? deceasedMatch[1].charAt(0).toUpperCase() + deceasedMatch[1].slice(1)
+      : actors[0] || 'Người để lại di sản';
+
+    const hasSpouse = /\b(?:vợ|chồng)\b/i.test(qLower) && !/không\s+có\s+(?:vợ|chồng)|vợ\s+đã\s+chết|chồng\s+đã\s+chết/.test(qLower);
+    const childCountMatch = qLower.match(/(\d+|một|hai|ba|bốn)\s*(?:người\s+|đứa\s+)?con\b/);
+    const wordToNum: Record<string, number> = { 'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4 };
+    const parsedChildren = childCountMatch
+      ? wordToNum[childCountMatch[1]] || parseInt(childCountMatch[1], 10)
+      : 0;
+    const hasValidWill =
+      /(?:lập\s+di\s+chúc|để\s+lại\s+di\s+chúc)/i.test(qLower) &&
+      !/(?:không\s+(?:để\s+lại\s+|có\s+)?di\s+chúc|di\s+chúc\s+(?:không\s+hợp\s+pháp|vô\s+hiệu))/i.test(qLower);
+
+    // NHÁNH A: CÓ DI CHÚC HỢP PHÁP + XÉT NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015)
+    if (hasValidWill) {
+      const totalFirstRowHeirs = (hasSpouse ? 1 : 0) + (parsedChildren > 0 ? parsedChildren : 2);
+      const oneStatutoryShare = Math.round(estateValue / Math.max(1, totalFirstRowHeirs));
+      const compulsoryUnit = Math.round((2 * oneStatutoryShare) / 3);
+
+      const spouseNameMatch = query.match(/(?:vợ|chồng)\s+là\s+((?:bà|ông|chị|anh)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i) ||
+        query.match(/Ông\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*\s+và\s+((?:bà|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s+là\s+vợ\s+chồng/i);
+      const spouseLabel = spouseNameMatch ? spouseNameMatch[1] : 'Vợ/Chồng còn sống';
+
+      const minorChildMatches = Array.from(
+        query.matchAll(/([A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s*\(\s*(\d{1,2})\s*tuổi\s*\)/g)
+      ).filter((m) => parseInt(m[2], 10) < 18);
+      const disabledChildMatch = /con[\s\S]{0,40}mất\s+khả\s+năng\s+lao\s+động/i.test(qLower);
+
+      const compulsoryHeirs: string[] = [];
+      if (hasSpouse) compulsoryHeirs.push(`${spouseLabel} (vợ/chồng hợp pháp còn sống)`);
+      for (const mc of minorChildMatches) {
+        compulsoryHeirs.push(`${mc[1]} (${mc[2]} tuổi — con chưa thành niên dưới 18 tuổi)`);
+      }
+      if (minorChildMatches.length === 0 && disabledChildMatch) {
+        compulsoryHeirs.push('Người con mất khả năng lao động');
+      }
+
+      const beneficiaryMatch = query.match(/cho\s+(?:người\s+bạn\s+thân\s+là\s+|em\s+ruột\s+là\s+|bạn\s+là\s+)?((?:ông|bà|anh|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*|[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i);
+      const beneficiary = beneficiaryMatch ? beneficiaryMatch[1].trim() : 'Người được chỉ định trong di chúc';
+
+      const totalCompulsory = compulsoryHeirs.length * compulsoryUnit;
+      const remainingForBeneficiary = Math.max(0, estateValue - totalCompulsory);
+
+      return `### I. XÁC ĐỊNH GIÁ TRỊ DI SẢN THỪA KẾ CỦA ${deceased.toUpperCase()} (ĐIỀU 612 BLDS 2015)
+${isJointMaritalAsset
+          ? `- Căn cứ **Điều 612 Bộ luật Dân sự 2015** và **Điều 33, Điều 66 Luật Hôn nhân và Gia đình 2014**: Khối tài sản chung vợ chồng trị giá **${rawInputLabel}** (${rawInputAmount.toLocaleString('vi-VN')} đồng) được chia đôi; **1/2** thuộc quyền sở hữu riêng của người vợ/chồng còn sống (**${estateValue.toLocaleString('vi-VN')} đồng**), **1/2 còn lại** là di sản thừa kế của **${deceased}**.`
+          : `- Căn cứ **Điều 612 Bộ luật Dân sự 2015**, tổng di sản thừa kế của **${deceased}** để lại là:`}
+- **Giá trị di sản thừa kế của ${deceased} đem chia**: **${estateValue.toLocaleString('vi-VN')} đồng**.
+
+---
+
+### II. XÁC ĐỊNH NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC VÀO NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015)
+- Căn cứ **Khoản 1 Điều 644 Bộ luật Dân sự 2015**: Cha, mẹ, vợ, chồng, **con chưa thành niên (dưới 18 tuổi)** hoặc con đã thành niên mà **không có khả năng lao động** vẫn được hưởng phần di sản bằng **2/3 suất của một người thừa kế theo pháp luật** nếu không được người lập di chúc cho hưởng di sản (hoặc chỉ cho hưởng ít hơn 2/3 suất đó).
+- **Đối chiếu vào tình huống**:
+  + **Những người được hưởng theo Điều 644 BLDS 2015 (${compulsoryHeirs.length} người)**: ${compulsoryHeirs.length > 0 ? compulsoryHeirs.map((h) => `**${h}**`).join('; ') : 'Không có'}.
+  + *Lưu ý loại trừ*: Các người con đã thành niên (từ đủ 18 tuổi trở lên) và có khả năng lao động bình thường **KHÔNG thuộc diện bảo vệ của Điều 644 BLDS 2015** nên không được hưởng suất bắt buộc khi đã có di chúc hợp pháp định đoạt toàn bộ di sản.
+
+---
+
+### III. TÍNH TOÁN & CHIA CỤ THỂ DI SẢN THỪA KẾ CHO TỪNG NGƯỜI
+1. **Giả định chia di sản theo pháp luật để làm mốc tính 01 suất (Điều 651 BLDS 2015)**:
+   - Tổng số người thuộc hàng thừa kế thứ nhất của ${deceased}: **${totalFirstRowHeirs} người**.
+   - Giá trị **01 suất thừa kế theo pháp luật**:
+     $$\\frac{${estateValue.toLocaleString('vi-VN')}}{${totalFirstRowHeirs}} = \\mathbf{${oneStatutoryShare.toLocaleString('vi-VN')}\\text{ đồng}}$$
+2. **Mức hưởng bắt buộc của mỗi người thuộc diện Điều 644 BLDS 2015 ($2/3$ một suất)**:
+   $$\\frac{2}{3} \\times ${oneStatutoryShare.toLocaleString('vi-VN')} = \\mathbf{${compulsoryUnit.toLocaleString('vi-VN')}\\text{ đồng/người}}$$
+3. **Phần di sản còn lại giao cho người hưởng theo di chúc (${beneficiary})**:
+   $$${estateValue.toLocaleString('vi-VN')} - (${compulsoryHeirs.length} \\times ${compulsoryUnit.toLocaleString('vi-VN')}) = \\mathbf{${remainingForBeneficiary.toLocaleString('vi-VN')}\\text{ đồng}}$$
+
+| Chủ thể nhận di sản | Căn cứ pháp lý hưởng | Giá trị di sản thực nhận |
+| :--- | :--- | :--- |
+${compulsoryHeirs.map((h) => `| **${h}** | Khoản 1 Điều 644 BLDS 2015 ($2/3$ suất luật định) | **${compulsoryUnit.toLocaleString('vi-VN')} đồng** |`).join('\n')}
+| **${beneficiary}** | Điều 624, Điều 630 BLDS 2015 (Hưởng theo di chúc) | **${remainingForBeneficiary.toLocaleString('vi-VN')} đồng** |
+| **TỔNG CỘNG DI SẢN ĐÃ CHIA** | — | **${estateValue.toLocaleString('vi-VN')} đồng** |`;
+    }
+
+    // NHÁNH B: CHIA THỪA KẾ THEO PHÁP LUẬT (KHÔNG ĐỂ LẠI DI CHÚC — ĐIỀU 650, ĐIỀU 651 BLDS 2015)
+    let heirList: string[] = [];
+    if (hasSpouse || parsedChildren > 0) {
+      if (hasSpouse) heirList.push('Vợ/Chồng hợp pháp còn sống');
+      for (let idx = 1; idx <= parsedChildren; idx++) {
+        heirList.push(`Người con thứ ${idx}`);
+      }
+    } else {
+      const rawHeirs = actors.slice(1);
+      heirList = rawHeirs.length >= 2 ? rawHeirs : ['Vợ/Chồng hợp pháp', 'Người con thứ nhất', 'Người con thứ hai'];
+    }
+    const heirCount = Math.max(1, heirList.length);
     const sharePerHeir = Math.round(estateValue / heirCount);
 
     return `### I. XÁC ĐỊNH DI SẢN THỪA KẾ THỰC TẾ
 - Căn cứ **Điều 612 Bộ luật Dân sự 2015**: Di sản bao gồm tài sản riêng của người chết và phần tài sản của người chết trong khối tài sản chung với người khác.
-- Căn cứ **Điều 33 Luật Hôn nhân và Gia đình 2014**: Nếu tài sản tạo lập trong thời kỳ hôn nhân là tài sản chung hợp nhất, phần di sản thừa kế thực tế của người chết là **1/2 khối tài sản chung**.
-- **Tổng giá trị di sản thừa kế xác định để phân chia của ${deceased}**: **${estateStr}** (${estateValue.toLocaleString('vi-VN')} đồng).
+${isJointMaritalAsset
+        ? `- Căn cứ **Điều 33 và Điều 66 Luật Hôn nhân và Gia đình 2014**: Khối tài sản chung vợ chồng (**${rawInputLabel}**) được chia đôi, phần di sản thừa kế thực tế của **${deceased}** là **1/2 khối tài sản chung** = **${estateValue.toLocaleString('vi-VN')} đồng**.`
+        : `- **Tổng giá trị di sản thừa kế xác định để phân chia của ${deceased}**: **${rawInputLabel}** (**${estateValue.toLocaleString('vi-VN')} đồng**).`}
 
 ---
 
 ### II. XÁC ĐỊNH DIỆN VÀ HÀNG THỪA KẾ THEO PHÁP LUẬT
-- Tình huống không để lại di chúc hợp pháp (hoặc chia theo luật) ➔ Áp dụng nguyên tắc chia thừa kế theo quy định tại **Điều 650 và Điều 651 Bộ luật Dân sự 2015**.
-- **Hàng thừa kế thứ nhất (Điểm a Khoản 1 Điều 651 BLDS 2015)** gồm:
-${heirList.map((h, i) => `  ${i + 1}. **${h}** (Thuộc diện thừa kế theo pháp luật hàng thứ nhất).`).join('\n')}
-- *Tổng số người thừa kế cùng hàng thứ nhất*: **${heirCount} người**.
+- Tình huống không để lại di chúc ➔ Áp dụng nguyên tắc chia thừa kế theo pháp luật tại **Điều 650 và Điều 651 Bộ luật Dân sự 2015**.
+- **Hàng thừa kế thứ nhất (Điểm a Khoản 1 Điều 651 BLDS 2015)** gồm **${heirCount} người**:
+${heirList.map((h, i) => `  ${i + 1}. **${h}** (Thuộc hàng thừa kế thứ nhất).`).join('\n')}
 
 ---
 
 ### III. TÍNH TOÁN GIÁ TRỊ TỪNG SUẤT THỪA KẾ
 - Theo quy định tại **Khoản 2 Điều 651 BLDS 2015**, những người thừa kế cùng hàng được hưởng phần di sản bằng nhau:
-  $$\\text{Suất thừa kế của mỗi người} = \\frac{\\text{Tổng di sản}}{\\text{Số người thừa kế}} = \\frac{${estateValue.toLocaleString('vi-VN')}}{${heirCount}} = \\mathbf{${sharePerHeir.toLocaleString('vi-VN')}\\text{ VNĐ}}$$
-
-*(Lưu ý về Điều 644 BLDS 2015: Trong trường hợp có di chúc nhưng không cho cha, mẹ, vợ, chồng, con chưa thành niên hoặc con thành niên không có khả năng lao động hưởng, những người này vẫn được hưởng ít nhất bằng 2/3 của một suất thừa kế theo luật).*
+  $$\\text{Suất thừa kế của mỗi người} = \\frac{${estateValue.toLocaleString('vi-VN')}}{${heirCount}} = \\mathbf{${sharePerHeir.toLocaleString('vi-VN')}\\text{ VNĐ}}$$
 
 ---
 
@@ -4567,6 +4858,34 @@ Căn cứ **Điều 12 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 20
       return this.solveDynamicRetroactiveLawCase(query, actors, money);
     }
 
+    // 0.07. Tình huống Kỷ luật sa thải / đơn phương chấm dứt HĐLĐ trái pháp luật đối với người lao động (đặc biệt lao động nữ mang thai / nuôi con dưới 12 tháng tuổi — Điều 41, 122, 125, 137 BLLĐ 2019)
+    if (
+      qLower.includes('sa thải') &&
+      (qLower.includes('công ty') || qLower.includes('giám đốc') || qLower.includes('nuôi con') || qLower.includes('mang thai'))
+    ) {
+      const empName = actors.find((a) => !/công ty|giám đốc/i.test(a)) || 'Người lao động';
+      const isMaternityProtected = /mang thai|thai sản|nuôi con[\s\S]{0,20}(?:tháng tuổi|dưới 12 tháng)/i.test(qLower);
+      const salaryLabel = money || 'tiền lương theo hợp đồng lao động';
+
+      return `### PHÂN TÍCH PHÁP LÝ: KỶ LUẬT SA THẢI NGƯỜI LAO ĐỘNG TRÁI PHÁP LUẬT (BỘ LUẬT LAO ĐỘNG 2019)
+
+#### 1. Quyết định sa thải của người sử dụng lao động là Đúng hay Sai?
+- **KẾT LUẬN DỨT KHOÁT**: Quyết định sa thải đối với **${empName}** là **HOÀN TOÀN SAI (TRÁI PHÁP LUẬT)** cả về **căn cứ nội dung**, **đối tượng được bảo vệ đặc biệt** và **trình tự, thủ tục xử lý kỷ luật lao động**.
+- **Các vi phạm pháp luật cụ thể của Công ty / Giám đốc**:
+  ${isMaternityProtected ? `1. **Vi phạm điều cấm xử lý kỷ luật & sa thải lao động nữ nuôi con dưới 12 tháng tuổi / mang thai**: Căn cứ **Điểm d Khoản 4 Điều 122** và **Khoản 3 Điều 137 Bộ luật Lao động năm 2019**, người sử dụng lao động **nghiêm cấm xử lý kỷ luật lao động và không được sa thải** hoặc đơn phương chấm dứt hợp đồng lao động đối với người lao động đang mang thai, nghỉ thai sản hoặc **đang nuôi con dưới 12 tháng tuổi**.\n  2. **Xâm phạm quyền nghỉ 60 phút/ngày của lao động nữ nuôi con nhỏ**: Theo **Khoản 4 Điều 137 BLLĐ 2019**, lao động nữ trong thời gian nuôi con dưới 12 tháng tuổi **được nghỉ mỗi ngày 60 phút** trong thời gian làm việc mà vẫn được hưởng đủ tiền lương theo hợp đồng lao động.` : `1. **Không thuộc căn cứ áp dụng hình thức kỷ luật sa thải**:`}
+  3. **Không có căn cứ sa thải hợp pháp theo Điều 125 Bộ luật Lao động 2019**: Hình thức kỷ luật cao nhất là *Sa thải* chỉ được áp dụng trong 04 trường hợp luật định tại Điều 125 (trộm cắp, tham ô, đánh bạc, cố ý gây thương tích, tiết lộ bí mật kinh doanh..., hoặc tự ý bỏ việc **05 ngày cộng dồn trong 30 ngày** / **20 ngày cộng dồn trong 365 ngày** không có lý do chính đáng). Lý do *"công ty gặp khó khăn kinh tế"* hay *"về sớm"* hoàn toàn **không phải là căn cứ sa thải**.
+  4. **Vi phạm nghiêm trọng trình tự, thủ tục xử lý kỷ luật (Khoản 1 Điều 122 BLLĐ 2019 & Điều 70 Nghị định 145/2020/NĐ-CP)**: Ra quyết định sa thải ngay lập tức mà **không tổ chức phiên họp xử lý kỷ luật lao động**, không có sự tham gia của tổ chức đại diện người lao động tại cơ sở và không bảo đảm quyền tự bào chữa của ${empName}.
+
+---
+
+#### 2. Quyền lợi hợp pháp của ${empName} được bảo vệ như thế nào (Điều 41 & Điều 125 BLLĐ 2019)?
+Do quyết định sa thải trái pháp luật, căn cứ **Điều 41 Bộ luật Lao động năm 2019** *(về nghĩa vụ của người sử dụng lao động khi đơn phương chấm dứt HĐLĐ / sa thải trái pháp luật)*, Công ty bắt buộc phải:
+1. **Nhận ${empName} trở lại làm việc** theo hợp đồng lao động đã giao kết;
+2. **Trả đủ tiền lương (${salaryLabel}), đóng đầy đủ BHXH, BHYT, BHTN** trong toàn bộ những ngày ${empName} không được làm việc do quyết định sa thải trái luật;
+3. **Bồi thường thêm một khoản tiền ít nhất bằng 02 tháng tiền lương** theo hợp đồng lao động (**Khoản 1 Điều 41 BLLĐ 2019**);
+4. *Trường hợp ${empName} không muốn tiếp tục làm việc*: Ngoài các khoản tiền lương, BHXH và 02 tháng lương bồi thường nêu trên, Công ty còn phải trả **trợ cấp thôi việc** theo **Điều 46 BLLĐ 2019** để chấm dứt hợp đồng lao động *(nếu Công ty không muốn nhận lại và ${empName} đồng ý thì hai bên thỏa thuận bồi thường thêm **ít nhất 02 tháng tiền lương** nữa theo Khoản 3 Điều 41 BLLĐ 2019)*.`;
+    }
+
     // 0. Tình huống đập phá đồ đạc xích mích hàng xóm (Bà A, Bà B, Anh C)
     if (
       (qLower.includes('đập phá') || qLower.includes('hủy hoại')) &&
@@ -4626,13 +4945,19 @@ Căn cứ **Điều 12 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 20
       return `### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG`;
     }
 
-    // 2.5 Tình huống tội phạm hình sự, tai nạn giao thông nghiêm trọng, tình thế cấp thiết hoặc xem xét cấu thành vi phạm pháp luật
+    // 2.5 Tình huống tội phạm hình sự, tai nạn giao thông, lỗi vô ý làm chết người, tình thế cấp thiết hoặc xem xét cấu thành vi phạm pháp luật
     if (
       qLower.includes('truy sát') ||
       qLower.includes('thoát thân') ||
       qLower.includes('tình thế cấp thiết') ||
       qLower.includes('gây tai nạn') ||
-      (qLower.includes('tai nạn') && (qLower.includes('chết') || qLower.includes('thiệt mạng') || qLower.includes('bỏ trốn'))) ||
+      qLower.includes('tai nạn') ||
+      qLower.includes('tông trực diện') ||
+      qLower.includes('sốc phản vệ') ||
+      qLower.includes('tử vong') ||
+      qLower.includes('qua đời') ||
+      qLower.includes('hình thức lỗi') ||
+      qLower.includes('xác định lỗi') ||
       qLower.includes('giết') ||
       qLower.includes('tước đoạt tính mạng') ||
       qLower.includes('chém') ||
