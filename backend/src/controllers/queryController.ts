@@ -3,8 +3,9 @@ import { RagService } from '../services/ragService.js';
 import { LlmService } from '../services/llmService.js';
 import { GuardrailService } from '../services/guardrailService.js';
 import { QueryHistory } from '../models/QueryHistory.js';
-import { User } from '../models/User.js';
 import { PersistenceService } from '../services/persistenceService.js';
+import { QuotaService } from '../services/quotaService.js';
+import { getDefaultNewUserQuota, isWeeklyAutoResetEnabled } from './adminController.js';
 
 export class QueryController {
   /**
@@ -24,28 +25,50 @@ export class QueryController {
         return;
       }
 
-      // Kiểm tra và trừ 1 câu hỏi từ hạn mức câu hỏi
-      const user = await User.findById(req.user.id);
-      if (user) {
-        if (user.status === 'locked') {
-          res.status(403).json({
-            success: false,
-            message: `Tài khoản của bạn đã bị tạm khóa (${user.lockReason || 'Vi phạm điều khoản'}). Vui lòng liên hệ Hotline 0366 015 348 để được hỗ trợ mở khóa.`
-          });
-          return;
-        }
-        const remaining = Math.max(0, (user.questionsQuota ?? 30) - (user.questionsUsed ?? 0));
+      // Tra cứu tài khoản an toàn (fallback theo email nếu MongoMemoryServer vừa đổi _id)
+      const user = await QuotaService.findAuthUser(req.user);
+      if (!user) {
+        res.status(401).json({
+          success: false,
+          message: 'Không tìm thấy phiên tài khoản hợp lệ. Vui lòng đăng nhập lại.'
+        });
+        return;
+      }
+
+      if (user.status === 'locked') {
+        res.status(403).json({
+          success: false,
+          message: `Tài khoản của bạn đã bị tạm khóa (${user.lockReason || 'Vi phạm điều khoản'}). Vui lòng liên hệ Hotline 0366 015 348 để được hỗ trợ mở khóa.`
+        });
+        return;
+      }
+
+      // Kiểm tra chu kỳ làm mới đúng 07:00 sáng Thứ 2 hàng tuần
+      await QuotaService.ensureWeeklyQuotaCycle(
+        user,
+        isWeeklyAutoResetEnabled(),
+        getDefaultNewUserQuota()
+      );
+
+      // Admin được hỏi KHÔNG GIỚI HẠN; các vai trò khác kiểm tra và trừ 1 lượt hỏi
+      if (user.role !== 'admin') {
+        const remaining = Math.max(
+          0,
+          (user.questionsQuota ?? getDefaultNewUserQuota()) - (user.questionsUsed ?? 0)
+        );
         if (remaining <= 0) {
           res.status(403).json({
             success: false,
-            message: 'Bạn đã sử dụng hết lượt hỏi trong tháng. Vui lòng nâng cấp gói hoặc liên hệ quản trị viên để cấp thêm quota.'
+            message:
+              'Bạn đã sử dụng hết lượt hỏi trong tuần này. Số lượt hỏi sẽ tự động làm mới về 30/30 vào 07:00 sáng Thứ 2 hàng tuần, hoặc liên hệ Quản trị viên để được cấp thêm.'
           });
           return;
         }
-        user.questionsUsed = (user.questionsUsed ?? 0) + 1;
-        await user.save();
-        PersistenceService.saveUser(user);
       }
+
+      user.questionsUsed = (user.questionsUsed ?? 0) + 1;
+      await user.save();
+      PersistenceService.saveUser(user);
 
       const sanitizedQuery = RagService.sanitizeSecurityPayload(query);
       if (!sanitizedQuery) {
@@ -133,6 +156,8 @@ export class QueryController {
         PersistenceService.saveHistory(historyItem);
       }
 
+      const quotaInfo = QuotaService.computeQuotaPayload(user, getDefaultNewUserQuota());
+
       // Trả kết quả kèm văn bản luật thực định và chỉ số đánh giá 5 bước RAG
       res.json({
         success: true,
@@ -161,7 +186,11 @@ export class QueryController {
         textbookFramework: ragContext.principle?.frameworkTitle,
         theoryContent: ragContext.principle?.theoryContent,
         latencyMs: totalLatency,
-        remainingQuestions: user ? Math.max(0, (user.questionsQuota ?? 30) - user.questionsUsed) : 29
+        isUnlimited: quotaInfo.isUnlimited,
+        questionsQuota: quotaInfo.questionsQuota,
+        questionsUsed: quotaInfo.questionsUsed,
+        remainingQuestions: quotaInfo.remainingQuestions,
+        quotaResetDate: quotaInfo.quotaResetDate
       });
     } catch (err: any) {
       res.status(500).json({ success: false, message: err.message || 'Lỗi khi xử lý bài tập.' });

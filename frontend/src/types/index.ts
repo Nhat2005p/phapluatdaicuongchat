@@ -12,6 +12,7 @@ export interface User {
   status?: 'active' | 'locked';
   lockReason?: string;
   lockedAt?: string;
+  isUnlimited?: boolean;
   questionsQuota?: number;
   questionsUsed?: number;
   remainingQuestions?: number;
@@ -55,7 +56,11 @@ export interface QueryResponse {
   textbookFramework?: string;
   theoryContent?: string;
   latencyMs: number;
+  isUnlimited?: boolean;
+  questionsQuota?: number;
+  questionsUsed?: number;
   remainingQuestions?: number;
+  quotaResetDate?: string;
   message?: string;
 }
 

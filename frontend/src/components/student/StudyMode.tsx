@@ -254,7 +254,7 @@ interface StudyModeProps {
 }
 
 export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearInitialQuery, onOpenAuth, isDarkMode }) => {
-  const { user, isAuthenticated, remainingQuestions, decrementQuota } = useAuth();
+  const { user, isAuthenticated, isUnlimited, remainingQuestions, totalQuestions, decrementQuota } = useAuth();
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [query, setQuery] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -610,8 +610,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
       return;
     }
 
-    if (remainingQuestions <= 0) {
-      setErrorMessage('Bạn đã sử dụng hết hạn mức câu hỏi miễn phí trong tháng. Vui lòng nâng cấp gói để tiếp tục.');
+    if (!isUnlimited && remainingQuestions <= 0) {
+      setErrorMessage('Bạn đã sử dụng hết hạn mức câu hỏi trong tuần này. Lượt hỏi sẽ tự động làm mới vào 07:00 sáng Thứ 2 hàng tuần, hoặc liên hệ Quản trị viên để được cấp thêm.');
       return;
     }
 
@@ -661,6 +661,9 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
       }
       if (res.success) {
         setIsLoading(false);
+        // Cập nhật số lượt câu hỏi ngay lập tức từ dữ liệu đã lưu trên Server
+        decrementQuota(res.remainingQuestions, res.questionsQuota);
+
         const fullContent = res.response || '';
         const botMsgId = 'bot-' + Date.now();
 
@@ -738,7 +741,6 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
               updateSessionWithFinal(completed);
               return completed;
             });
-            decrementQuota(res.remainingQuestions);
             loadHistory();
           } else {
             const nextSlice = fullContent.slice(0, charIndex);
@@ -1235,6 +1237,8 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
         onClearAllSessions={handleClearAllSessions}
         isAuthenticated={isAuthenticated}
         remainingQuestions={remainingQuestions}
+        totalQuestions={totalQuestions}
+        isUnlimited={isUnlimited}
         userName={user?.fullName || user?.username || 'Sinh viên'}
         userRole={user?.role || 'student'}
       />
@@ -1288,10 +1292,18 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
               {isAuthenticated && (
                 <div className="flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 dark:bg-indigo-950/40 border border-indigo-200 dark:border-indigo-800/60 text-xs">
                   <span className="text-[#72706b] dark:text-[#94a3b8] hidden sm:inline">Hạn mức:</span>
-                  <span className="font-semibold text-indigo-600 dark:text-indigo-400">
-                    {remainingQuestions}
-                  </span>
-                  <span className="text-[#92918b] dark:text-[#64748b]">/30 câu</span>
+                  {isUnlimited ? (
+                    <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                      ∞ Không giới hạn
+                    </span>
+                  ) : (
+                    <>
+                      <span className="font-semibold text-indigo-600 dark:text-indigo-400">
+                        {remainingQuestions}
+                      </span>
+                      <span className="text-[#92918b] dark:text-[#64748b]">/{totalQuestions} câu</span>
+                    </>
+                  )}
                 </div>
               )}
             </div>
@@ -1916,7 +1928,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                 value={query}
                 onChange={handleTextareaChange}
                 onKeyDown={handleKeyDown}
-                disabled={!isAuthenticated || remainingQuestions <= 0}
+                disabled={!isAuthenticated || (!isUnlimited && remainingQuestions <= 0)}
                 rows={1}
                 placeholder={
                   !isAuthenticated

@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Transaction } from '../models/Transaction.js';
-import { User } from '../models/User.js';
 import { PersistenceService } from '../services/persistenceService.js';
+import { QuotaService } from '../services/quotaService.js';
 
 export class TransactionController {
   /**
@@ -86,7 +86,7 @@ export class TransactionController {
       });
 
       // Cập nhật hạn mức câu hỏi cho người dùng
-      const user = await User.findById(req.user.id);
+      const user = await QuotaService.findAuthUser(req.user);
       if (user) {
         user.questionsQuota = (user.questionsQuota ?? 30) + questionsToAdd;
         await user.save();

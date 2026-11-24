@@ -436,16 +436,32 @@ export const Header: React.FC<HeaderProps> = ({
                 </QuickTooltip>
               )}
 
-              {/* Pill "X câu hỏi còn lại" (30 câu/tháng) */}
-              <QuickTooltip content={`Hạn mức còn lại: ${remainingQuestions}/${totalQuestions} câu trong chu kỳ`}>
+              {/* Pill "X câu hỏi còn lại" hoặc Không giới hạn (Admin) */}
+              <QuickTooltip
+                content={
+                  role === 'admin'
+                    ? 'Tài khoản Quản trị viên: Hỏi không giới hạn'
+                    : `Hạn mức còn lại: ${remainingQuestions}/${totalQuestions} câu (Làm mới 07:00 sáng Thứ 2)`
+                }
+              >
                 <button
                   type="button"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
                   className="whitespace-nowrap px-2.5 sm:px-3 py-1.5 rounded-full bg-[#e0f2fe] hover:bg-[#bae6fd] text-[#0369a1] border border-[#bae6fd] text-xs font-semibold transition-all select-none hidden xl:flex items-center gap-1 cursor-pointer shrink-0"
                 >
-                  <span className="font-extrabold text-[#0284c7]">{remainingQuestions}</span>
-                  <span className="hidden 2xl:inline"> câu hỏi</span>
-                  <span> còn lại</span>
+                  {role === 'admin' ? (
+                    <>
+                      <span className="font-extrabold text-[#0284c7]">∞</span>
+                      <span> Không giới hạn</span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="font-extrabold text-[#0284c7]">{remainingQuestions}</span>
+                      <span className="text-sky-700/70">/{totalQuestions}</span>
+                      <span className="hidden 2xl:inline"> câu</span>
+                      <span> còn lại</span>
+                    </>
+                  )}
                 </button>
               </QuickTooltip>
 
@@ -458,13 +474,22 @@ export const Header: React.FC<HeaderProps> = ({
                   className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#70ad47] hover:ring-2 hover:ring-emerald-400 p-0.5 border-2 border-white shadow-xs flex items-center justify-center transition-all cursor-pointer overflow-hidden shrink-0"
                   title="Tài khoản cá nhân"
                 >
-                  <svg className="w-full h-full" viewBox="0 0 40 40">
-                    <circle cx="20" cy="20" r="20" fill="#70ad47" />
-                    <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
-                    <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
-                    <circle cx="20" cy="18" r="7" fill="#fde3c8" />
-                    <path d="M13 18 C13 11 17 9.5 20 9.5 C23 9.5 27 11 27 18 C26 13.5 24 12.5 20 12.5 C16 12.5 14 13.5 13 18 Z" fill="#2d241e" />
-                  </svg>
+                  {user.avatarUrl ? (
+                    <img
+                      src={user.avatarUrl}
+                      alt={currentFullName}
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full rounded-full object-cover"
+                    />
+                  ) : (
+                    <svg className="w-full h-full" viewBox="0 0 40 40">
+                      <circle cx="20" cy="20" r="20" fill="#70ad47" />
+                      <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
+                      <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
+                      <circle cx="20" cy="18" r="7" fill="#fde3c8" />
+                      <path d="M13 18 C13 11 17 9.5 20 9.5 C23 9.5 27 11 27 18 C26 13.5 24 12.5 20 12.5 C16 12.5 14 13.5 13 18 Z" fill="#2d241e" />
+                    </svg>
+                  )}
                 </button>
 
                 {/* =========================================================================
@@ -475,13 +500,22 @@ export const Header: React.FC<HeaderProps> = ({
                     {/* 1. Header: Avatar + Tên tài khoản / Email */}
                     <div className="flex items-center gap-3">
                       <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-emerald-300">
-                        <svg className="w-full h-full" viewBox="0 0 40 40">
-                          <circle cx="20" cy="20" r="20" fill="#70ad47" />
-                          <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
-                          <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
-                          <circle cx="20" cy="18" r="7" fill="#fde3c8" />
-                          <path d="M13 18 C13 11 17 9.5 20 9.5 C23 9.5 27 11 27 18 C26 13.5 24 12.5 20 12.5 C16 12.5 14 13.5 13 18 Z" fill="#2d241e" />
-                        </svg>
+                        {user.avatarUrl ? (
+                          <img
+                            src={user.avatarUrl}
+                            alt={currentFullName}
+                            referrerPolicy="no-referrer"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <svg className="w-full h-full" viewBox="0 0 40 40">
+                            <circle cx="20" cy="20" r="20" fill="#70ad47" />
+                            <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
+                            <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
+                            <circle cx="20" cy="18" r="7" fill="#fde3c8" />
+                            <path d="M13 18 C13 11 17 9.5 20 9.5 C23 9.5 27 11 27 18 C26 13.5 24 12.5 20 12.5 C16 12.5 14 13.5 13 18 Z" fill="#2d241e" />
+                          </svg>
+                        )}
                       </div>
                       <div className="min-w-0 flex-1">
                         <div className="text-sm font-bold text-slate-900 truncate">
@@ -493,35 +527,49 @@ export const Header: React.FC<HeaderProps> = ({
                       </div>
                     </div>
 
-                    {/* 2. Quota Box: "Số câu hỏi còn lại" (Miễn phí 30 câu/tháng) */}
+                    {/* 2. Quota Box: "Số câu hỏi còn lại" (Làm mới 07:00 sáng Thứ 2) */}
                     <div className="my-4 p-4 rounded-2xl bg-[#edf7ff] border border-[#d6ebff] space-y-2">
                       <div className="text-xs font-bold text-slate-800 flex items-center justify-between">
                         <span>Số câu hỏi còn lại</span>
-                        <span className="text-[10px] text-blue-600 bg-blue-100 px-1.5 py-0.2 rounded-full">30 câu/tháng</span>
-                      </div>
-                      <div className="text-sm font-semibold text-slate-700">
-                        <span className={`font-extrabold text-base ${remainingQuestions <= 5 ? 'text-red-500' : 'text-[#ec2227]'}`}>
-                          {remainingQuestions}
+                        <span className="text-[10px] text-blue-600 bg-blue-100 px-1.5 py-0.5 rounded-full">
+                          {role === 'admin' ? 'Đặc quyền Admin' : 'Reset 07:00 Thứ 2'}
                         </span>
-                        <span className="text-slate-500">/{totalQuestions}</span>
                       </div>
-                      {/* Dynamic Blue Progress Bar */}
-                      <div className="w-full h-1.5 bg-blue-100 rounded-full overflow-hidden my-2">
-                        <div
-                          className={`h-full rounded-full transition-all duration-300 ${
-                            remainingQuestions <= 5 ? 'bg-red-500' : 'bg-[#0055ff]'
-                          }`}
-                          style={{ width: `${progressPercent}%` }}
-                        />
-                      </div>
-                      {/* Expiration date row */}
-                      <div className="flex items-center justify-between text-xs text-slate-500 pt-0.5">
-                        <span className="flex items-center gap-1">
-                          <Clock className="w-3.5 h-3.5 text-slate-500" />
-                          <span>Hết hạn:</span>
-                        </span>
-                        <span className="font-bold text-slate-800">12/11/2026 19:54</span>
-                      </div>
+                      {role === 'admin' ? (
+                        <div className="text-sm font-extrabold text-[#0284c7] py-1">
+                          ∞ Không giới hạn lượt hỏi
+                        </div>
+                      ) : (
+                        <>
+                          <div className="text-sm font-semibold text-slate-700">
+                            <span className={`font-extrabold text-base ${remainingQuestions <= 5 ? 'text-red-500' : 'text-[#ec2227]'}`}>
+                              {remainingQuestions}
+                            </span>
+                            <span className="text-slate-500">/{totalQuestions}</span>
+                          </div>
+                          {/* Dynamic Blue Progress Bar */}
+                          <div className="w-full h-1.5 bg-blue-100 rounded-full overflow-hidden my-2">
+                            <div
+                              className={`h-full rounded-full transition-all duration-300 ${
+                                remainingQuestions <= 5 ? 'bg-red-500' : 'bg-[#0055ff]'
+                              }`}
+                              style={{ width: `${progressPercent}%` }}
+                            />
+                          </div>
+                          {/* Weekly Monday 7AM reset date row */}
+                          <div className="flex items-center justify-between text-xs text-slate-500 pt-0.5">
+                            <span className="flex items-center gap-1">
+                              <Clock className="w-3.5 h-3.5 text-slate-500" />
+                              <span>Làm mới:</span>
+                            </span>
+                            <span className="font-bold text-slate-800">
+                              {user?.quotaResetDate
+                                ? `07:00 T2 (${new Date(user.quotaResetDate).toLocaleDateString('vi-VN')})`
+                                : '07:00 sáng Thứ 2'}
+                            </span>
+                          </div>
+                        </>
+                      )}
                     </div>
 
                     {/* 3. Navigation List Items */}

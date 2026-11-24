@@ -15,7 +15,13 @@ export const apiRouter = Router();
 // --- Auth Routes ---
 apiRouter.post('/auth/register', AuthController.register);
 apiRouter.post('/auth/login', AuthController.login);
+apiRouter.get('/auth/oauth/providers', AuthController.getOAuthProviders);
+apiRouter.get('/auth/oauth/google', AuthController.startGoogleOAuth);
+apiRouter.get('/auth/oauth/google/callback', AuthController.handleGoogleOAuthCallback);
+apiRouter.get('/auth/oauth/facebook', AuthController.startFacebookOAuth);
+apiRouter.get('/auth/oauth/facebook/callback', AuthController.handleFacebookOAuthCallback);
 apiRouter.post('/auth/google', AuthController.googleLogin);
+apiRouter.post('/auth/facebook', AuthController.facebookLogin);
 apiRouter.get('/auth/me', authenticate, AuthController.getMe);
 apiRouter.post('/auth/forgot-password/send-otp', AuthController.sendForgotOtp);
 apiRouter.post('/auth/forgot-password/verify-reset', AuthController.verifyOtpAndReset);

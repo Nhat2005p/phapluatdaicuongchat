@@ -5,6 +5,8 @@ import { connectDB } from './config/db.js';
 import { apiRouter } from './routes/apiRouter.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { runSeed } from './scripts/seed.js';
+import { QuotaService } from './services/quotaService.js';
+import { getDefaultNewUserQuota, isWeeklyAutoResetEnabled } from './controllers/adminController.js';
 
 import { LlamaManager } from './services/llamaManager.js';
 
@@ -30,6 +32,11 @@ async function startServer() {
   try {
     await connectDB();
     await runSeed();
+
+    QuotaService.startWeeklyQuotaScheduler(() => ({
+      autoReset: isWeeklyAutoResetEnabled(),
+      defaultQuota: getDefaultNewUserQuota()
+    }));
 
     const server = app.listen(config.port, () => {
       console.log(`=======================================================`);

@@ -50,8 +50,37 @@ export const api = {
     return parseJsonSafe(res);
   },
 
-  async googleLogin(data: { email: string; fullName?: string; googleId?: string; avatarUrl?: string }) {
+  async getOAuthProviders(origin?: string): Promise<{
+    success: boolean;
+    google?: {
+      configured: boolean;
+      mode: 'code' | 'token' | 'unconfigured';
+      clientId?: string;
+      redirectUri: string;
+    };
+    facebook?: {
+      configured: boolean;
+      mode: 'code' | 'token' | 'unconfigured';
+      appId?: string;
+      redirectUri: string;
+    };
+  }> {
+    const q = origin ? `?origin=${encodeURIComponent(origin)}` : '';
+    const res = await fetch(`${API_BASE}/auth/oauth/providers${q}`);
+    return parseJsonSafe(res);
+  },
+
+  async googleTokenLogin(data: { idToken?: string; accessToken?: string }) {
     const res = await fetch(`${API_BASE}/auth/google`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    });
+    return parseJsonSafe(res);
+  },
+
+  async facebookTokenLogin(data: { accessToken: string }) {
+    const res = await fetch(`${API_BASE}/auth/facebook`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data)
@@ -247,7 +276,7 @@ export const api = {
 
   async updateUserQuota(
     userId: string,
-    payload: { action: 'set' | 'add' | 'reset'; amount?: number; quota?: number }
+    payload: { action: 'set_remaining' | 'set' | 'add' | 'reset'; amount?: number; quota?: number }
   ): Promise<{ success: boolean; message: string; user?: any }> {
     const res = await fetch(`${API_BASE}/admin/users/${userId}/quota`, {
       method: 'PATCH',
