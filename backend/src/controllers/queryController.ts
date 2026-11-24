@@ -6,14 +6,37 @@ import { QueryHistory } from '../models/QueryHistory.js';
 import { PersistenceService } from '../services/persistenceService.js';
 import { QuotaService } from '../services/quotaService.js';
 import { getDefaultNewUserQuota, isWeeklyAutoResetEnabled } from './adminController.js';
+import { LlamaManager } from '../services/llamaManager.js';
+import { DEFAULT_MODEL_ID, listModels, resolveModel } from '../services/modelRegistry.js';
 
 export class QueryController {
+  /**
+   * Danh sách model người dùng có thể chọn + trạng thái sẵn sàng (cache ngắn hạn)
+   */
+  public static async getModels(_req: Request, res: Response): Promise<void> {
+    try {
+      const models = await Promise.all(
+        listModels().map(async (m) => ({
+          id: m.id,
+          label: m.label,
+          description: m.description,
+          badge: m.badge,
+          speedHint: m.speedHint,
+          available: await LlamaManager.isHealthy(m.baseUrl)
+        }))
+      );
+      res.json({ success: true, defaultModelId: DEFAULT_MODEL_ID, models });
+    } catch (err: any) {
+      res.status(500).json({ success: false, message: err.message || 'Không thể lấy danh sách model.' });
+    }
+  }
+
   /**
    * Chức năng U-02: Tiếp nhận đề thi thô và sinh lời giải chuẩn Barem
    */
   public static async solveQuery(req: Request, res: Response): Promise<void> {
     try {
-      const { query, categoryId, previousQuery } = req.body;
+      const { query, categoryId, previousQuery, modelId } = req.body;
       if (!query || typeof query !== 'string' || !query.trim()) {
         res.status(400).json({ success: false, message: 'Nội dung câu hỏi không được để trống.' });
         return;
@@ -118,7 +141,8 @@ export class QueryController {
         ragContext.promptContext,
         ragContext.articles,
         categoryId,
-        reqAbort.signal
+        reqAbort.signal,
+        typeof modelId === 'string' ? modelId : null
       );
 
       if (reqAbort.signal.aborted || res.writableEnded) {
@@ -186,6 +210,10 @@ export class QueryController {
         textbookFramework: ragContext.principle?.frameworkTitle,
         theoryContent: ragContext.principle?.theoryContent,
         latencyMs: totalLatency,
+        // Model thực sự đã sinh câu trả lời (null nếu dùng bộ giải RAG dự phòng)
+        modelId: llmResult.modelId || null,
+        modelLabel: llmResult.modelId ? resolveModel(llmResult.modelId).label : null,
+        requestedModelId: resolveModel(typeof modelId === 'string' ? modelId : null).id,
         isUnlimited: quotaInfo.isUnlimited,
         questionsQuota: quotaInfo.questionsQuota,
         questionsUsed: quotaInfo.questionsUsed,

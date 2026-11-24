@@ -54,6 +54,9 @@ export const config = {
   jwtSecret: process.env.JWT_SECRET || 'vietlaw_secret_key_pbl6_2026_dut',
   jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
   llamaServerUrl: process.env.LLAMA_SERVER_URL || 'http://127.0.0.1:8088/v1',
+  // Server model Qwen2.5-3B (Hugging Face Space riêng) cho chế độ "Nhanh"
+  llamaServerUrl3b:
+    process.env.LLAMA_SERVER_URL_3B || 'https://pthanh635-qwen2-5-3b-legal-vn-server.hf.space/v1',
   // LLM_FIRST=1: ưu tiên gọi Fine-tuned LLM (khi llama-server sẵn sàng) thay vì để Bộ giải Động rule-based trả lời sớm
   llmFirst: process.env.LLM_FIRST === '1',
   llmTimeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '90000', 10),

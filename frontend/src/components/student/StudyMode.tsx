@@ -32,11 +32,13 @@ import {
   ArrowUp,
   PanelLeft,
   PanelLeftClose,
-  PanelLeftOpen
+  PanelLeftOpen,
+  Cpu,
+  Zap
 } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { api } from '../../services/api';
-import { QueryResponse, QueryHistoryItem } from '../../types';
+import { ModelOption, QueryResponse, QueryHistoryItem } from '../../types';
 import { Button } from '../ui/Button';
 import { HistoryDrawer } from './HistoryDrawer';
 import { CitationGuardrailBadge } from './CitationGuardrailBadge';
@@ -270,6 +272,60 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
   const [selectedCategoryId, setSelectedCategoryId] = useState<string | null>(null);
   const [activeCategoryId, setActiveCategoryId] = useState<string>('NHAN_DINH');
 
+  // Chọn mô hình AI (Qwen2.5-7B Chuyên sâu / Qwen2.5-3B Nhanh)
+  const [availableModels, setAvailableModels] = useState<ModelOption[]>([
+    {
+      id: 'qwen2.5-7b',
+      label: 'Qwen2.5-7B',
+      description: 'Chuyên sâu — lập luận kỹ, chính xác hơn',
+      badge: 'Chuyên sâu',
+      speedHint: '~25–40 giây/câu',
+      available: true
+    },
+    {
+      id: 'qwen2.5-3b',
+      label: 'Qwen2.5-3B',
+      description: 'Nhanh — phản hồi gọn, tốc độ cao',
+      badge: 'Nhanh',
+      speedHint: '~10–20 giây/câu',
+      available: true
+    }
+  ]);
+  const [selectedModelId, setSelectedModelId] = useState<'qwen2.5-7b' | 'qwen2.5-3b'>(() => {
+    try {
+      const saved = localStorage.getItem('vietlaw_selected_model');
+      if (saved === 'qwen2.5-3b' || saved === 'qwen2.5-7b') return saved;
+    } catch {}
+    return 'qwen2.5-7b';
+  });
+  const [isModelMenuOpen, setIsModelMenuOpen] = useState(false);
+  const modelDropdownRef = useRef<HTMLDivElement>(null);
+
+  const selectedModel = availableModels.find((m) => m.id === selectedModelId) || availableModels[0];
+
+  const handleSelectModel = (id: 'qwen2.5-7b' | 'qwen2.5-3b') => {
+    setSelectedModelId(id);
+    setIsModelMenuOpen(false);
+    try {
+      localStorage.setItem('vietlaw_selected_model', id);
+    } catch {}
+  };
+
+  useEffect(() => {
+    let active = true;
+    api
+      .getModels()
+      .then((res) => {
+        if (active && res.success && Array.isArray(res.models) && res.models.length > 0) {
+          setAvailableModels(res.models);
+        }
+      })
+      .catch(() => {});
+    return () => {
+      active = false;
+    };
+  }, []);
+
   // Quản lý các đoạn chat trong phiên đăng nhập (Chat Sessions on Sidebar)
   const [sessions, setSessions] = useState<ChatSession[]>([]);
   const [activeSessionId, setActiveSessionId] = useState<string | null>(null);
@@ -494,10 +550,14 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
+      if (modelDropdownRef.current && !modelDropdownRef.current.contains(event.target as Node)) {
+        setIsModelMenuOpen(false);
+      }
     };
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
         setIsDropdownOpen(false);
+        setIsModelMenuOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -655,7 +715,7 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
     abortControllerRef.current = controller;
 
     try {
-      const res = await api.solveQuery(textToSend, selectedCategoryId, previousQueryText, controller.signal);
+      const res = await api.solveQuery(textToSend, selectedCategoryId, previousQueryText, controller.signal, selectedModelId);
       if (currentReqId !== requestIdRef.current || controller.signal.aborted) {
         return;
       }
@@ -1917,6 +1977,131 @@ export const StudyMode: React.FC<StudyModeProps> = ({ initialQuery, onClearIniti
                           </div>
                         </div>
                       </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+              {/* AI Model Selector Pill & Dropdown */}
+              <div className="relative shrink-0 mb-0.5" ref={modelDropdownRef}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    setIsModelMenuOpen((prev) => !prev);
+                  }}
+                  className={`flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-full text-xs font-semibold transition-all duration-200 cursor-pointer select-none border active:scale-95 ${
+                    isModelMenuOpen
+                      ? 'bg-[#27251e] text-[#faf8f5] border-[#27251e] shadow-md dark:bg-white dark:text-[#121319]'
+                      : selectedModel.id === 'qwen2.5-3b'
+                      ? 'bg-emerald-500/10 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 border-emerald-500/25 hover:bg-emerald-500/15'
+                      : 'bg-indigo-500/10 dark:bg-indigo-500/15 text-indigo-700 dark:text-indigo-300 border-indigo-500/25 hover:bg-indigo-500/15'
+                  }`}
+                  title={`Đang dùng mô hình: ${selectedModel.label} (${selectedModel.badge})`}
+                >
+                  {selectedModel.id === 'qwen2.5-3b' ? (
+                    <Zap className="w-3.5 h-3.5 shrink-0" />
+                  ) : (
+                    <Cpu className="w-3.5 h-3.5 shrink-0" />
+                  )}
+                  <span className="max-w-[82px] sm:max-w-[120px] truncate">
+                    {selectedModel.label}
+                  </span>
+                  <span
+                    className={`w-1.5 h-1.5 rounded-full shrink-0 ${
+                      selectedModel.available === false ? 'bg-amber-400' : 'bg-emerald-500'
+                    }`}
+                  />
+                  {isModelMenuOpen ? (
+                    <ChevronUp className="w-3 h-3 opacity-80" />
+                  ) : (
+                    <ChevronDown className="w-3 h-3 opacity-60" />
+                  )}
+                </button>
+
+                {isModelMenuOpen && (
+                  <div
+                    className="absolute bottom-full mb-3 left-0 w-[280px] sm:w-[320px] z-50 animate-fadeIn rounded-2xl bg-white/98 dark:bg-[#14161f]/98 backdrop-blur-2xl border border-black/[0.08] dark:border-white/10 shadow-[0_18px_45px_rgba(0,0,0,0.16)] dark:shadow-[0_20px_50px_rgba(0,0,0,0.5)] overflow-hidden"
+                  >
+                    <div className="px-3.5 py-2.5 border-b border-black/[0.06] dark:border-white/10 bg-[#faf8f5]/90 dark:bg-white/[0.03] flex items-center justify-between">
+                      <span className="text-[11px] font-bold uppercase tracking-wider text-[#5b5954] dark:text-[#94a3b8]">
+                        Chọn mô hình AI
+                      </span>
+                      <span className="text-[10px] text-[#8a8882] dark:text-[#64748b]">
+                        {availableModels.length} mô hình
+                      </span>
+                    </div>
+
+                    <div className="p-2 space-y-1.5">
+                      {availableModels.map((model) => {
+                        const isSelected = model.id === selectedModel.id;
+                        const isFast = model.id === 'qwen2.5-3b';
+                        return (
+                          <button
+                            key={model.id}
+                            type="button"
+                            onClick={() => handleSelectModel(model.id)}
+                            className={`w-full text-left p-2.5 rounded-xl transition-all duration-200 cursor-pointer flex items-start gap-2.5 border ${
+                              isSelected
+                                ? 'bg-indigo-50/90 dark:bg-indigo-500/15 border-indigo-400/50 dark:border-indigo-400/40 shadow-xs'
+                                : 'bg-transparent hover:bg-black/[0.03] dark:hover:bg-white/[0.05] border-transparent'
+                            }`}
+                          >
+                            <div
+                              className={`w-8 h-8 rounded-xl flex items-center justify-center shrink-0 mt-0.5 ${
+                                isFast
+                                  ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400'
+                                  : 'bg-indigo-500/15 text-indigo-600 dark:text-indigo-400'
+                              }`}
+                            >
+                              {isFast ? <Zap className="w-4 h-4" /> : <Cpu className="w-4 h-4" />}
+                            </div>
+                            <div className="flex-1 min-w-0">
+                              <div className="flex items-center justify-between gap-2">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <span className="text-xs font-bold text-[#1e2029] dark:text-white truncate">
+                                    {model.label}
+                                  </span>
+                                  <span
+                                    className={`text-[10px] px-1.5 py-0.5 rounded-full font-semibold shrink-0 ${
+                                      isFast
+                                        ? 'bg-emerald-500/15 text-emerald-700 dark:text-emerald-300'
+                                        : 'bg-indigo-500/15 text-indigo-700 dark:text-indigo-300'
+                                    }`}
+                                  >
+                                    {model.badge}
+                                  </span>
+                                </div>
+                                {isSelected && (
+                                  <Check className="w-3.5 h-3.5 text-indigo-600 dark:text-indigo-400 shrink-0" />
+                                )}
+                              </div>
+                              <p className="text-[11px] text-[#6b7280] dark:text-[#94a3b8] mt-0.5 leading-snug">
+                                {model.description}
+                              </p>
+                              <div className="mt-1.5 flex items-center justify-between text-[10px]">
+                                <span className="text-[#8a8882] dark:text-[#64748b] font-mono">
+                                  {model.speedHint}
+                                </span>
+                                <span
+                                  className={`flex items-center gap-1 font-medium ${
+                                    model.available === false
+                                      ? 'text-amber-600 dark:text-amber-400'
+                                      : 'text-emerald-600 dark:text-emerald-400'
+                                  }`}
+                                >
+                                  <span
+                                    className={`w-1.5 h-1.5 rounded-full ${
+                                      model.available === false ? 'bg-amber-400' : 'bg-emerald-500'
+                                    }`}
+                                  />
+                                  {model.available === false ? 'Đang khởi động' : 'Sẵn sàng'}
+                                </span>
+                              </div>
+                            </div>
+                          </button>
+                        );
+                      })}
                     </div>
                   </div>
                 )}

@@ -7,6 +7,7 @@ import { ExamArchetype, RagService } from './ragService.js';
 import { ILawArticle } from '../models/LawArticle.js';
 import { TextbookKnowledgeService, TextbookChunk } from './textbookKnowledgeService.js';
 import { LlamaManager } from './llamaManager.js';
+import { resolveModel } from './modelRegistry.js';
 
 interface SftSample {
   sample_id: string;
@@ -2237,9 +2238,12 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     promptContext: string = '',
     retrievedArticles: ILawArticle[] = [],
     forcedCategory?: string | null,
-    signal?: AbortSignal
-  ): Promise<{ text: string; latencyMs: number; evaluationMetrics?: RagEvaluationMetrics }> {
+    signal?: AbortSignal,
+    modelId?: string | null
+  ): Promise<{ text: string; latencyMs: number; evaluationMetrics?: RagEvaluationMetrics; modelId?: string }> {
     const startTime = Date.now();
+    // Model do người dùng chọn (Qwen2.5-7B / Qwen2.5-3B) — id lạ sẽ rơi về model mặc định
+    const selectedModel = resolveModel(modelId);
     if (signal?.aborted) {
       return {
         text: '### ⏹️ ĐÃ DỪNG SINH CÂU TRẢ LỜI THEO YÊU CẦU NGƯỜI DÙNG',
@@ -2255,7 +2259,7 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
     // Kích hoạt lượt suy luận trực tiếp trên cổng 8088 sau 15ms (nếu BƯỚC 4 chạy full generation hoặc signal bị abort thì tự hủy)
     setTimeout(() => {
       if (!signal?.aborted) {
-        void LlamaManager.triggerLiveModelPass(query, effectiveIntent);
+        void LlamaManager.triggerLiveModelPass(query, effectiveIntent, selectedModel.baseUrl);
       }
     }, 15);
 
@@ -2477,7 +2481,7 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
 
     // BƯỚC 0.2: Khớp trực tiếp với 1 mẫu định sẵn trong SFT Dataset / Solver chuyên sâu
     // Khi LLM_FIRST=1 và llama-server (Qwen2.5-7B) đang hoạt động, ưu tiên chuyển thẳng xuống RAG + LLM thực tế
-    const llmFirstActive = config.llmFirst && (await LlamaManager.isHealthy());
+    const llmFirstActive = config.llmFirst && (await LlamaManager.isHealthy(selectedModel.baseUrl));
     const sftMatch = !llmFirstActive ? this.matchSftSample(query, effectiveIntent) : null;
     if (sftMatch && sftMatch.output && sftMatch.output.trim().length > 20) {
       const { bodyWithoutCitation, existingCitation } = this.splitEmbeddedCitation(this.cleanRubricText(sftMatch.output));
@@ -2601,7 +2605,7 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
       (questionMarkCount >= 2 && generatedRaw.includes('KHÁI NIỆM SỰ KIỆN PHÁP LÝ')) ||
       (qLowerCheck.includes('tai nạn') && generatedRaw.includes('PHÂN BIỆT QUY PHẠM PHÁP LUẬT VỚI QUY PHẠM ĐẠO ĐỨC'));
 
-    const localModelAvailable = await LlamaManager.isHealthy();
+    const localModelAvailable = await LlamaManager.isHealthy(selectedModel.baseUrl);
     const shouldRouteScenarioToLlm = isNovelScenarioQuery && rawWasGenericOrTextbookOnly && localModelAvailable;
 
     if (
@@ -2715,15 +2719,15 @@ ${query}
 
     LlamaManager.isFullGenerating = true;
     try {
-      if (!(await LlamaManager.isHealthy())) {
-        await LlamaManager.ensureRunning();
+      if (!(await LlamaManager.isHealthy(selectedModel.baseUrl))) {
+        await LlamaManager.ensureRunning(selectedModel.baseUrl);
       }
 
-      const response = await fetch(`${config.llamaServerUrl}/chat/completions`, {
+      const response = await fetch(`${selectedModel.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
-          model: 'qwen2.5-7b-legal-vn',
+          model: selectedModel.servedName,
           cache_prompt: true,
           messages: [
             {
@@ -2769,7 +2773,7 @@ ${query}
               ? `${bodyWithoutCitation}\n\n${fallbackBody}`
               : bodyWithoutCitation;
 
-          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình Qwen2.5-7B sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
+          console.log(`✅ [RAG + Fine-tuned LLM] Mô hình ${selectedModel.label} sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
           const enrichedText = this.enrichCompoundSingleAnswer(query, finalBody, retrievedArticles);
           const extraCitation =
             topTextbooks.length > 0 && topTextbooks[0].score >= 8
@@ -2785,12 +2789,13 @@ ${query}
           return {
             text: evalRes.correctedText,
             latencyMs: Date.now() - startTime,
-            evaluationMetrics: evalRes.metrics
+            evaluationMetrics: evalRes.metrics,
+            modelId: selectedModel.id
           };
         }
       }
     } catch (err: any) {
-      console.warn(`⚠️ [RAG Pipeline] Llama-Server không khả dụng hoặc timeout (${err.message}). Sử dụng Bộ giải Động RAG.`);
+      console.warn(`⚠️ [RAG Pipeline] Llama-Server (${selectedModel.label}) không khả dụng hoặc timeout (${err.message}). Sử dụng Bộ giải Động RAG.`);
     } finally {
       LlamaManager.isFullGenerating = false;
     }

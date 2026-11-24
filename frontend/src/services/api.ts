@@ -1,4 +1,5 @@
 import {
+  ModelOption,
   QueryResponse,
   QueryHistoryItem,
   BenchmarkResult,
@@ -145,11 +146,21 @@ export const api = {
   },
 
   // --- Student Query & History ---
+  async getModels(): Promise<{
+    success: boolean;
+    defaultModelId?: 'qwen2.5-7b' | 'qwen2.5-3b';
+    models?: ModelOption[];
+  }> {
+    const res = await fetch(`${API_BASE}/models`);
+    return parseJsonSafe(res);
+  },
+
   async solveQuery(
     query: string,
     categoryId?: string | null,
     previousQuery?: string | null,
-    signal?: AbortSignal
+    signal?: AbortSignal,
+    modelId?: string | null
   ): Promise<QueryResponse> {
     const res = await fetch(`${API_BASE}/query/solve`, {
       method: 'POST',
@@ -157,7 +168,8 @@ export const api = {
       body: JSON.stringify({
         query,
         categoryId: categoryId || null,
-        previousQuery: previousQuery || null
+        previousQuery: previousQuery || null,
+        modelId: modelId || null
       }),
       signal
     });

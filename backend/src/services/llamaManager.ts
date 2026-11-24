@@ -14,43 +14,86 @@ const MODEL_GGUF = path.join(PROJECT_ROOT, 'models', 'qwen2.5-7b-legal-vn-Q4_K_M
 
 let llamaProcess: ChildProcess | null = null;
 
-function getLlamaHealthUrl(): string {
-  const base = (config.llamaServerUrl || 'http://127.0.0.1:8088/v1').replace(/\/+$/, '');
+const DEFAULT_BASE_URL = 'http://127.0.0.1:8088/v1';
+
+// Cache kết quả health theo URL để tránh gọi lặp lại nhiều lần trong 1 request
+// (mỗi lần gọi tới HF Space có thể mất tới vài giây).
+const HEALTH_TTL_OK_MS = 15_000;
+const HEALTH_TTL_FAIL_MS = 3_000;
+const healthCache = new Map<string, { ok: boolean; at: number }>();
+const healthInflight = new Map<string, Promise<boolean>>();
+
+function normalizeBase(baseUrl?: string): string {
+  return (baseUrl || config.llamaServerUrl || DEFAULT_BASE_URL).replace(/\/+$/, '');
+}
+
+function getLlamaHealthUrl(baseUrl?: string): string {
+  const base = normalizeBase(baseUrl);
   return base.endsWith('/v1') ? `${base.slice(0, -3)}/health` : `${base}/health`;
 }
 
-function isRemoteLlamaServer(): boolean {
-  const url = config.llamaServerUrl || '';
+function isRemoteUrl(baseUrl?: string): boolean {
+  const url = normalizeBase(baseUrl);
   return !url.includes('127.0.0.1') && !url.includes('localhost');
 }
 
 export class LlamaManager {
   public static isFullGenerating = false;
 
-  public static async isHealthy(): Promise<boolean> {
-    try {
-      const res = await fetch(getLlamaHealthUrl(), {
-        signal: AbortSignal.timeout(isRemoteLlamaServer() ? 5000 : 1500)
-      });
-      if (res.ok) {
-        const data: any = await res.json();
-        return data.status === 'ok';
-      }
-      return false;
-    } catch {
-      return false;
+  /**
+   * Kiểm tra sức khỏe của 1 llama-server. Mặc định kiểm tra server chính (LLAMA_SERVER_URL).
+   * Có cache ngắn hạn theo URL và gộp các request đồng thời.
+   */
+  public static async isHealthy(baseUrl?: string): Promise<boolean> {
+    const key = normalizeBase(baseUrl);
+    const cached = healthCache.get(key);
+    if (cached) {
+      const ttl = cached.ok ? HEALTH_TTL_OK_MS : HEALTH_TTL_FAIL_MS;
+      if (Date.now() - cached.at < ttl) return cached.ok;
     }
+
+    const inflight = healthInflight.get(key);
+    if (inflight) return inflight;
+
+    const probe = (async () => {
+      let ok = false;
+      try {
+        const res = await fetch(getLlamaHealthUrl(key), {
+          signal: AbortSignal.timeout(isRemoteUrl(key) ? 8000 : 1500)
+        });
+        if (res.ok) {
+          const data: any = await res.json();
+          ok = data.status === 'ok';
+        }
+      } catch {
+        ok = false;
+      }
+      healthCache.set(key, { ok, at: Date.now() });
+      return ok;
+    })().finally(() => {
+      healthInflight.delete(key);
+    });
+
+    healthInflight.set(key, probe);
+    return probe;
   }
 
-  public static async ensureRunning(): Promise<boolean> {
-    const healthy = await this.isHealthy();
+  /** Xóa cache health (dùng khi vừa khởi động/dừng server cục bộ). */
+  public static invalidateHealth(baseUrl?: string): void {
+    healthCache.delete(normalizeBase(baseUrl));
+  }
+
+  public static async ensureRunning(baseUrl?: string): Promise<boolean> {
+    const target = normalizeBase(baseUrl);
+    const healthy = await this.isHealthy(target);
     if (healthy) {
-      console.log(`🤖 [Llama-Server] Mô hình Qwen2.5-7B GGUF đang hoạt động tại ${config.llamaServerUrl}.`);
+      console.log(`🤖 [Llama-Server] Model đang hoạt động tại ${target}.`);
       return true;
     }
 
-    if (isRemoteLlamaServer()) {
-      console.warn(`⚠️ [Llama-Server] Remote server (${config.llamaServerUrl}) chưa sẵn sàng.`);
+    // Server remote (Hugging Face Space...) không thể tự bật từ backend
+    if (isRemoteUrl(target)) {
+      console.warn(`⚠️ [Llama-Server] Remote server (${target}) chưa sẵn sàng.`);
       return false;
     }
 
@@ -94,8 +137,9 @@ export class LlamaManager {
       // Đợi nạp model vào VRAM/RAM
       for (let i = 0; i < 60; i++) {
         await new Promise((r) => setTimeout(r, 500));
-        if (await this.isHealthy()) {
-          console.log('✅ [Llama-Server] Mô hình Qwen2.5-7B GGUF đã nạp xong và sẵn sàng trả lời câu hỏi!');
+        this.invalidateHealth(target);
+        if (await this.isHealthy(target)) {
+          console.log('✅ [Llama-Server] Model đã nạp xong và sẵn sàng trả lời câu hỏi!');
           return true;
         }
       }
@@ -107,10 +151,14 @@ export class LlamaManager {
   }
 
   /**
-   * Kiểm tra sẵn sàng nhẹ trên cổng 8088 (TUYỆT ĐỐI KHÔNG gửi dummy /chat/completions gây nghẽn slot suy luận chính của BƯỚC 4).
+   * Kiểm tra sẵn sàng nhẹ (TUYỆT ĐỐI KHÔNG gửi dummy /chat/completions gây nghẽn slot suy luận chính).
    */
-  public static async triggerLiveModelPass(_query: string, _intentCode: string = 'GENERAL_THEORY'): Promise<void> {
+  public static async triggerLiveModelPass(
+    _query: string,
+    _intentCode: string = 'GENERAL_THEORY',
+    baseUrl?: string
+  ): Promise<void> {
     if (this.isFullGenerating) return;
-    void this.isHealthy();
+    void this.isHealthy(baseUrl);
   }
 }

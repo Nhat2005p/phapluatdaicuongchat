@@ -36,6 +36,15 @@ export interface Citation {
   lawTitle?: string;
 }
 
+export interface ModelOption {
+  id: 'qwen2.5-7b' | 'qwen2.5-3b';
+  label: string;
+  description: string;
+  badge: string;
+  speedHint: string;
+  available?: boolean;
+}
+
 export interface QueryResponse {
   success: boolean;
   intentCode: string;
@@ -56,6 +65,9 @@ export interface QueryResponse {
   textbookFramework?: string;
   theoryContent?: string;
   latencyMs: number;
+  modelId?: string | null;
+  modelLabel?: string | null;
+  requestedModelId?: string;
   isUnlimited?: boolean;
   questionsQuota?: number;
   questionsUsed?: number;

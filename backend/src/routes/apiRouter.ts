@@ -30,6 +30,7 @@ apiRouter.post('/auth/change-password', authenticate, AuthController.changePassw
 
 // --- User / Student Problem Solver Routes ---
 apiRouter.post('/query/solve', authenticate, QueryController.solveQuery);
+apiRouter.get('/models', QueryController.getModels);
 apiRouter.post('/query/review', authenticate, QueryController.reviewDocument);
 apiRouter.get('/query/history', authenticate, QueryController.getHistory);
 apiRouter.delete('/query/history', authenticate, QueryController.clearHistory);
