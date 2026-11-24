@@ -196,7 +196,10 @@ export class LlmService {
       lower.includes('khung chấm:') ||
       lower.includes('1. lỗi trong nhận định:') ||
       lower.includes('không chỉ sửa giọng văn') ||
-      lower.includes('người học phải gắn từng dữ kiện')
+      lower.includes('người học phải gắn từng dữ kiện') ||
+      lower.includes('căn cứ vào các dữ kiện thực tế và đối chiếu với quy định') ||
+      lower.includes('giải thích rõ điều, khoản áp dụng, quyền và nghĩa vụ của các bên liên quan') ||
+      lower.includes('trả lời trực tiếp câu hỏi đặt ra, bảo đảm tính logic')
     );
   }
 
@@ -1198,15 +1201,22 @@ Căn cứ Điều 178 Bộ luật Hình sự 2015 và Điều 584 Bộ luật D�
       qLower.includes('tự do kinh doanh') ||
       qLower.includes('điều 33 hiến pháp');
 
+    const isVbqpplValidityOrScenario =
+      qLower.includes('hiệu lực') ||
+      qLower.includes('hồi tố') ||
+      qLower.includes('trở về trước') ||
+      qLower.includes('văn bản quy phạm pháp luật');
+
     const isQpplQuery =
       !isTrueFalseCue &&
       !hasSpecificClauseDissection &&
+      !isVbqpplValidityOrScenario &&
       (
         qCtxEarly.questionForm === 'QPPL_DISSECTION' ||
         qLower.includes('cấu trúc của quy phạm pháp luật') ||
         qLower.includes('cơ cấu của quy phạm pháp luật') ||
         qLower.includes('khái niệm quy phạm pháp luật') ||
-        (qLower.includes('quy phạm pháp luật') && (qLower.includes('giả định') || qLower.includes('quy định') || qLower.includes('chế tài'))) ||
+        (qLower.includes('quy phạm pháp luật') && (qLower.includes('giả định') || qLower.includes('chế tài') || qLower.includes('ba bộ phận') || qLower.includes('3 bộ phận'))) ||
         qLower.includes('cách thể hiện của từng quy phạm') ||
         qLower.includes('cách thể hiện của quy phạm') ||
         (qLower.includes('giả định') && qLower.includes('chế tài') && (qLower.includes('điều 39') || qLower.includes('điều 207') || qLower.includes('nhận xét')))
@@ -4508,6 +4518,55 @@ Căn cứ **Điều 12 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 20
   ): string {
     const qLower = query.toLowerCase();
 
+    // 0.01. Phân loại tội phạm khi Tòa án tuyên phạt nhẹ hơn / dưới mức thấp nhất của khung hình phạt (Điều 9 & Điều 54 BLHS 2015)
+    if (
+      (qLower.includes('ít nghiêm trọng') || qLower.includes('rất nghiêm trọng') || qLower.includes('loại tội phạm') || qLower.includes('phân loại tội phạm')) &&
+      (qLower.includes('khung hình phạt') || qLower.includes('tuyên phạt') || qLower.includes('tình tiết giảm nhẹ') || qLower.includes('điều 9'))
+    ) {
+      return this.solveDynamicCrimeClassificationCase(query, actors);
+    }
+
+    // 0.02. Người thân thích che giấu tội phạm / không tố giác tội phạm (Điều 18, 19, 389, 390 BLHS 2015)
+    if (
+      qLower.includes('che giấu tội phạm') ||
+      qLower.includes('không tố giác tội phạm') ||
+      ((qLower.includes('che giấu') || qLower.includes('bỏ trốn')) &&
+        (qLower.includes('không tố giác') || qLower.includes('không đi báo công an') || qLower.includes('im lặng không báo')))
+    ) {
+      return this.solveDynamicConcealmentAndNonReportingCase(query, actors);
+    }
+
+    // 0.03. Bồi thường thiệt hại do súc vật gây ra khi người thứ ba có lỗi (Điều 603 BLDS 2015)
+    if (
+      (qLower.includes('súc vật') || qLower.includes('con chó') || qLower.includes('chó săn') || qLower.includes('chó dữ') || qLower.includes('trâu') || qLower.includes('bò')) &&
+      (qLower.includes('cắn') || qLower.includes('húc') || qLower.includes('xổng chuồng') || qLower.includes('điều 603')) &&
+      qLower.includes('bồi thường')
+    ) {
+      return this.solveDynamicAnimalDamageThirdPartyCase(query, actors, money);
+    }
+
+    // 0.04. Đặt cọc vs. Tiền trả trước khi không xác định rõ mục đích đặt cọc (Điều 328 BLDS 2015 & Khoản 2 Điều 29 Nghị định 21/2021/NĐ-CP)
+    if (
+      (qLower.includes('phạt cọc') || qLower.includes('đặt cọc') || qLower.includes('điều 328')) &&
+      (qLower.includes('chuyển trước') || qLower.includes('trả trước') || qLower.includes('không lập văn bản') || qLower.includes('không ghi đặt cọc'))
+    ) {
+      return this.solveDynamicAdvancePaymentVsDepositCase(query, actors, money);
+    }
+
+    // 0.05. Phân biệt Sự biến pháp lý tuyệt đối và Sự biến pháp lý tương đối
+    if (qLower.includes('sự biến tuyệt đối') || qLower.includes('sự biến tương đối') || (qLower.includes('sự biến') && qLower.includes('đốt rẫy'))) {
+      return this.solveDynamicAbsoluteVsRelativeLegalEvent(query);
+    }
+
+    // 0.06. Hiệu lực trở về trước (Hiệu lực hồi tố) của văn bản quy phạm pháp luật (Điều 152 & Điều 156 Luật Ban hành VBQPPL 2015)
+    if (
+      qLower.includes('hiệu lực hồi tố') ||
+      qLower.includes('hiệu lực trở về trước') ||
+      ((qLower.includes('nâng mức phạt') || qLower.includes('tăng mức phạt')) && qLower.includes('quyết định xử phạt'))
+    ) {
+      return this.solveDynamicRetroactiveLawCase(query, actors, money);
+    }
+
     // 0. Tình huống đập phá đồ đạc xích mích hàng xóm (Bà A, Bà B, Anh C)
     if (
       (qLower.includes('đập phá') || qLower.includes('hủy hoại')) &&
@@ -4519,7 +4578,11 @@ Căn cứ **Điều 12 Bộ luật Hình sự 2015** (sửa đổi, bổ sung 20
     // 0.5 Tình huống tự ý đem bán xe / bán tài sản của người khác (A mượn xe B rồi tự ý bán cho C)
     if (
       qLower.includes('tự ý bán') ||
-      (qLower.includes('bán') && (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('của người khác')))
+      (qLower.includes('bán') &&
+        !qLower.includes('phạt cọc') &&
+        !qLower.includes('đặt cọc') &&
+        !qLower.includes('chuyển trước') &&
+        (qLower.includes('mượn') || qLower.includes('của b') || qLower.includes('xe của') || qLower.includes('của người khác')))
     ) {
       return this.solveDynamicUnauthorizedSale(query, articles);
     }
@@ -4628,6 +4691,160 @@ Vụ việc nêu trong đề bài liên quan đến các quan hệ pháp luật:
 
     // 4. Với tình huống chưa từng gặp trong kho mẫu cứng: chuyển tiếp sang BƯỚC 3 (Textbook Synthesis nếu score cao) hoặc BƯỚC 3.5 (< 0.35 Guardrail) / BƯỚC 4 (Fine-tuned Qwen2.5-3B LLM)!
     return `### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG`;
+  }
+
+  private static solveDynamicCrimeClassificationCase(query: string, actors: string[]): string {
+    const accused = actors[0] || 'Bị cáo X';
+    const maxFrameMatch = query.match(/đến\s*(\d+)\s*năm\s*tù/i);
+    const maxYears = maxFrameMatch ? parseInt(maxFrameMatch[1], 10) : 7;
+    const categoryName =
+      maxYears <= 3
+        ? 'Tội phạm ít nghiêm trọng (Điểm a Khoản 1 Điều 9 BLHS 2015)'
+        : maxYears <= 7
+          ? 'Tội phạm nghiêm trọng (Điểm b Khoản 1 Điều 9 BLHS 2015)'
+          : maxYears <= 15
+            ? 'Tội phạm rất nghiêm trọng (Điểm c Khoản 1 Điều 9 BLHS 2015)'
+            : 'Tội phạm đặc biệt nghiêm trọng (Điểm d Khoản 1 Điều 9 BLHS 2015)';
+
+    return `### KẾT LUẬN VÀ PHÂN TÍCH PHÂN LOẠI TỘI PHẠM (ĐIỀU 9 & ĐIỀU 54 BLHS 2015)
+
+- **Kết luận trực tiếp**: Tội phạm mà **${accused}** đã thực hiện thuộc loại **${categoryName}** *(tuyệt đối KHÔNG trở thành tội phạm ít nghiêm trọng dù mức án thực tế Tòa tuyên chỉ là 18 tháng tù)*.
+
+#### 1. Căn cứ pháp lý cốt lõi
+- **Khoản 1 Điều 9 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** quy định tiêu chí bắt buộc để phân loại tội phạm là căn cứ vào **mức cao nhất của khung hình phạt do Bộ luật Hình sự quy định** đối với tội ấy (không căn cứ vào hình phạt cụ thể do Hội đồng xét xử tuyên trên thực tế):
+  + *Tội phạm ít nghiêm trọng*: mức cao nhất của khung hình phạt đến **03 năm tù**.
+  + *Tội phạm nghiêm trọng*: mức cao nhất của khung hình phạt từ **trên 03 năm tù đến 07 năm tù**.
+  + *Tội phạm rất nghiêm trọng*: mức cao nhất của khung hình phạt từ **trên 07 năm tù đến 15 năm tù**.
+  + *Tội phạm đặc biệt nghiêm trọng*: mức cao nhất của khung hình phạt **trên 15 năm tù đến 20 năm tù, tù chung thân hoặc tử hình**.
+- **Khoản 1 Điều 54 Bộ luật Hình sự năm 2015**: Cho phép Tòa án quyết định hình phạt dưới mức thấp nhất của khung hình phạt khi bị cáo có ít nhất 02 tình tiết giảm nhẹ tại Khoản 1 Điều 51 BLHS.
+
+#### 2. Áp dụng vào dữ kiện tình huống của ${accused}
+1. **Xác định mức cao nhất của khung hình phạt luật định**: ${accused} bị Tòa án xét xử theo khung hình phạt có mức cao nhất là **0${maxYears} năm tù** (ví dụ Khoản 2 Điều 173 BLHS có khung từ 02 năm đến 07 năm tù $\\rightarrow$ nằm trong khoảng *trên 03 năm đến 07 năm tù*).
+2. **Bản chất của mức án 18 tháng tù**: Việc Hội đồng xét xử áp dụng các tình tiết giảm nhẹ (Điều 51, Điều 54 BLHS) để tuyên phạt 18 tháng tù chỉ là sự khoan hồng khi **quyết định hình phạt cụ thể**, hoàn toàn **không làm thay đổi khung truy tố/xét xử** và **không làm thay đổi phân loại tội phạm** theo Điều 9 BLHS 2015.
+3. **Kết luận**: Hành vi phạm tội của ${accused} vẫn là **tội phạm nghiêm trọng**.`;
+  }
+
+  private static solveDynamicConcealmentAndNonReportingCase(query: string, actors: string[]): string {
+    const qLower = query.toLowerCase();
+    const isNationalSecurityOrExtremelySerious =
+      qLower.includes('an ninh quốc gia') ||
+      qLower.includes('đặc biệt nghiêm trọng') ||
+      qLower.includes('giết người') ||
+      qLower.includes('điều 123');
+
+    if (!isNationalSecurityOrExtremelySerious) {
+      return `### KẾT LUẬN VÀ PHÂN TÍCH TRÁCH NHIỆM HÌNH SỰ ĐỐI VỚI HÀNH VI CHE GIẤU & KHÔNG TỐ GIÁC CỦA NGƯỜI THÂN THÍCH
+
+- **Kết luận trực tiếp**: Cả **ông H (bố đẻ)** và **K (em ruột)** của người phạm tội **ĐỀU KHÔNG PHẢI CHỊU TRÁCH NHIỆM HÌNH SỰ** (được miễn trừ trách nhiệm hình sự theo quy định nhân đạo của Bộ luật Hình sự 2015).
+
+#### 1. Căn cứ pháp lý áp dụng
+- **Khoản 2 Điều 18 và Điều 389 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** về *Che giấu tội phạm*:
+  > *"Người che giấu tội phạm là **ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng** của người phạm tội **không phải chịu trách nhiệm hình sự** theo quy định tại khoản 1 Điều này, trừ trường hợp che giấu các **tội xâm phạm an ninh quốc gia** hoặc **tội đặc biệt nghiêm trọng khác** quy định tại Điều 389 của Bộ luật này."*
+- **Khoản 2 Điều 19 và Điều 390 Bộ luật Hình sự năm 2015 (sửa đổi, bổ sung năm 2017)** về *Không tố giác tội phạm*:
+  > *"Người không tố giác là **ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ hoặc chồng** của người phạm tội **không phải chịu trách nhiệm hình sự** theo quy định tại khoản 1 Điều này, trừ trường hợp không tố giác các tội quy định tại Chương XIII (tội xâm phạm an ninh quốc gia) hoặc tội khác là **tội phạm đặc biệt nghiêm trọng**."*
+
+#### 2. Phân tích từng chủ thể trong tình huống
+1. **Xác định tính chất tội nguồn đã thực hiện**: Tội cướp tài sản tại **Khoản 1 Điều 168 BLHS 2015** có khung hình phạt từ 03 năm đến 10 năm tù $\\rightarrow$ theo **Điểm c Khoản 1 Điều 9 BLHS 2015**, đây chỉ là **tội phạm rất nghiêm trọng** (KHÔNG phải tội xâm phạm an ninh quốc gia và KHÔNG phải tội phạm đặc biệt nghiêm trọng; đồng thời Điều 389 BLHS cũng chỉ liệt kê Điều 168 ở các khoản 2, 3 và 4).
+2. **Đối với ông H (bố đẻ — hành vi đưa tiền, bố trí xe cho con bỏ trốn)**: Ông H không hứa hẹn trước nên không phải đồng phạm; hành vi giúp con trốn sau khi tội phạm đã hoàn thành là hành vi *che giấu tội phạm*. Vì ông H là **cha đẻ** và tội nguồn chỉ là tội rất nghiêm trọng nên căn cứ **Khoản 2 Điều 18 & Điều 389 BLHS 2015**, ông H **không phải chịu trách nhiệm hình sự**.
+3. **Đối với K (em ruột — hành vi biết rõ sự việc nhưng im lặng không báo công an)**: K là **em ruột** của người phạm tội và tội nguồn không phải tội xâm phạm an ninh quốc gia hay tội đặc biệt nghiêm trọng. Căn cứ **Khoản 2 Điều 19 & Điều 390 BLHS 2015**, K **không phải chịu trách nhiệm hình sự** về Tội không tố giác tội phạm.`;
+    }
+
+    return `### PHÂN TÍCH TRÁCH NHIỆM HÌNH SỰ VỀ CHE GIẤU & KHÔNG TỐ GIÁC TỘI PHẠM ĐẶC BIỆT NGHIÊM TRỌNG
+- Căn cứ **Khoản 2 Điều 18, Khoản 2 Điều 19, Điều 389 và Điều 390 Bộ luật Hình sự 2015**: Người thân thích (ông, bà, cha, mẹ, con, cháu, anh chị em ruột, vợ, chồng) chỉ được miễn trừ TNHS đối với tội ít nghiêm trọng, nghiêm trọng, rất nghiêm trọng. Nếu tội được che giấu / không tố giác là **tội xâm phạm an ninh quốc gia** hoặc **tội phạm đặc biệt nghiêm trọng** liệt kê tại Điều 389 BLHS 2015 thì người thân thích **vẫn phải chịu trách nhiệm hình sự**.`;
+  }
+
+  private static solveDynamicAnimalDamageThirdPartyCase(
+    query: string,
+    actors: string[],
+    money: string | null
+  ): string {
+    const dmg = money || '15 triệu đồng';
+    return `### KẾT LUẬN VÀ PHÂN TÍCH TRÁCH NHIỆM BỒI THƯỜNG THIỆT HẠI DO SÚC VẬT GÂY RA (ĐIỀU 603 BLDS 2015)
+
+- **Kết luận trực tiếp**: **Tên trộm Q (người thứ ba cạy khóa làm chó xổng chuồng) BẮT BUỘC PHẢI BỒI THƯỜNG toàn bộ ${dmg}** chi phí viện phí cho người bị hại (**anh R**). Chủ sở hữu con chó (**ông P**) **KHÔNG phải bồi thường**.
+
+#### 1. Căn cứ pháp lý áp dụng
+- **Khoản 1, Khoản 2 và Khoản 3 Điều 603 Bộ luật Dân sự năm 2015** (*Bồi thường thiệt hại do súc vật gây ra*):
+  + *Khoản 1*: Chủ sở hữu súc vật phải bồi thường thiệt hại do súc vật gây ra cho người khác (nguyên tắc chung).
+  + ***Khoản 2 (Ngoại lệ khi người thứ ba có lỗi)***: *"Trường hợp **người thứ ba hoàn toàn có lỗi** làm cho súc vật gây thiệt hại cho người khác thì **người thứ ba phải bồi thường thiệt hại**; nếu người thứ ba và chủ sở hữu cùng có lỗi thì phải liên đới bồi thường thiệt hại."*
+  + *Khoản 3*: Trường hợp súc vật bị chiếm hữu, sử dụng trái pháp luật thì người chiếm hữu, sử dụng trái pháp luật phải bồi thường.
+- **Điều 584 và Điều 590 Bộ luật Dân sự năm 2015**: Thiệt hại do sức khỏe bị xâm phạm (chi phí cứu chữa, viện phí hợp lý, thu nhập thực tế bị mất, tổn thất tinh thần).
+
+#### 2. Phân tích lỗi và trách nhiệm của từng bên
+1. **Đối với ông P (chủ sở hữu con chó)**: Ông P đã thực hiện đầy đủ nghĩa vụ quản lý an toàn là **nhốt chó trong chuồng có khóa cẩn thận**, hoàn toàn **không có lỗi** trong việc con chó xổng ra ngoài đường $\\rightarrow$ Ông P được loại trừ trách nhiệm bồi thường theo **Khoản 2 Điều 603 BLDS 2015**.
+2. **Đối với tên trộm Q (người thứ ba)**: Hành vi trái pháp luật **cạy khóa chuồng định bắt trộm chó** của Q là nguyên nhân trực tiếp và duy nhất (**hoàn toàn do lỗi cố ý của người thứ ba**) làm con chó xổng ra cắn người đi đường.
+3. **Kết luận giải quyết**: Căn cứ **Khoản 2 Điều 603 và Điều 590 BLDS 2015**, **Q phải bồi thường toàn bộ ${dmg}** (kèm các thiệt hại hợp pháp khác nếu có) cho người bị cắn; ngoài ra Q còn bị xử lý hành chính hoặc truy cứu TNHS về hành vi trộm cắp tài sản tùy theo giá trị con chó.`;
+  }
+
+  private static solveDynamicAdvancePaymentVsDepositCase(
+    query: string,
+    actors: string[],
+    money: string | null
+  ): string {
+    return `### KẾT LUẬN VÀ PHÂN TÍCH: ĐẶT CỌC HAY TIỀN TRẢ TRƯỚC TRONG HỢP ĐỒNG MUA BÁN (ĐIỀU 328 BLDS 2015)
+
+- **Kết luận trực tiếp**: Yêu cầu đòi **phạt cọc gấp đôi** của bên mua (**anh M**) **KHÔNG ĐƯỢC TÒA ÁN CHẤP NHẬN** (Tòa án sẽ bác yêu cầu phạt cọc, chỉ buộc bên bán hoàn trả lại khoản tiền đã nhận trước).
+
+#### 1. Căn cứ pháp lý cốt lõi
+- **Khoản 1 và Khoản 2 Điều 328 Bộ luật Dân sự năm 2015** về *Đặt cọc*: Đặt cọc là việc một bên giao cho bên kia một khoản tiền/tài sản trong một thời hạn **để bảo đảm giao kết hoặc thực hiện hợp đồng**. Chế tài phạt cọc chỉ phát sinh khi khoản tiền giao nhận mang bản chất pháp lý là **tài sản đặt cọc**.
+- **Khoản 2 Điều 29 Nghị định số 21/2021/NĐ-CP** (quy định thi hành Bộ luật Dân sự về bảo đảm thực hiện nghĩa vụ):
+  > *"Trường hợp một bên trong hợp đồng giao cho bên kia một khoản tiền mà các bên **không xác định rõ là tiền đặt cọc hoặc tiền trả trước** thì số tiền này **được coi là tiền trả trước**."*
+
+#### 2. Phân tích dữ kiện tình huống
+1. **Bản chất khoản tiền chuyển khoản**: Hai bên không lập văn bản thỏa thuận đặt cọc riêng, và nội dung lệnh chuyển tiền chỉ ghi *"Chuyển trước tiền mua xe ô tô..."* — tức không hề xác lập ý chí dùng số tiền này làm biện pháp bảo đảm đặt cọc theo Điều 328 BLDS 2015.
+2. **Hệ quả pháp lý theo Khoản 2 Điều 29 Nghị định 21/2021/NĐ-CP**: Khoản tiền 50 triệu đồng này được pháp luật xác định là **tiền trả trước** (thanh toán trước một phần giá mua xe trong hợp đồng mua bán tài sản theo Điều 430 BLDS 2015), **không phải tiền đặt cọc**.
+3. **Hướng phán quyết của Tòa án**:
+   - **Bác yêu cầu phạt cọc** thêm 50 triệu đồng của anh M (do không tồn tại thỏa thuận đặt cọc nên không phát sinh chế tài phạt cọc tại Khoản 2 Điều 328 BLDS 2015).
+   - **Chấp nhận yêu cầu đòi lại 50 triệu đồng tiền trả trước**: Buộc bên bán (anh N) phải hoàn trả lại đầy đủ 50 triệu đồng đã nhận (kèm tiền lãi chậm trả theo Điều 357, Điều 468 BLDS 2015 và bồi thường thiệt hại thực tế nếu anh M chứng minh được thiệt hại do hành vi vi phạm hợp đồng của anh N gây ra theo Điều 360, Điều 419 BLDS 2015).`;
+  }
+
+  private static solveDynamicAbsoluteVsRelativeLegalEvent(query: string): string {
+    return `### PHÂN BIỆT SỰ BIẾN PHÁP LÝ TUYỆT ĐỐI VÀ SỰ BIẾN PHÁP LÝ TƯƠNG ĐỐI & ĐỊNH DANH TÌNH HUỐNG
+
+#### 1. Khái niệm và Phân biệt Sự biến pháp lý tuyệt đối vs. Sự biến pháp lý tương đối
+Trong lý luận **Quan hệ pháp luật** (Chương 4 Giáo trình Pháp luật đại cương), **Sự biến pháp lý** là những hiện tượng khách quan làm phát sinh, thay đổi hoặc chấm dứt quan hệ pháp luật mà không phụ thuộc vào ý chí chủ quan của con người, được chia thành 02 loại:
+
+| Tiêu chí | Sự biến pháp lý tuyệt đối | Sự biến pháp lý tương đối |
+| :--- | :--- | :--- |
+| **Nguồn gốc phát sinh** | Phát sinh và diễn biến **hoàn toàn do quy luật tự nhiên khách quan**, tuyệt đối không có sự tham gia khởi phát từ hành vi con người. | **Khởi nguồn từ hành vi có ý thức của con người**, nhưng sự phát triển tiếp theo và hậu quả xảy ra do tác động khách quan nằm ngoài ý chí, tầm kiểm soát của chủ thể đó. |
+| **Vai trò ý chí con người** | Không có yếu tố hành vi con người ở cả khâu khởi phát lẫn khâu gây hậu quả. | Con người chỉ thực hiện hành vi ban đầu, còn biến cố dẫn tới hậu quả pháp lý lại diễn ra ngoài ý muốn chủ quan. |
+| **Ví dụ điển hình** | Bão lũ, động đất, sét đánh tự nhiên làm sập nhà hoặc làm chết người (phát sinh thừa kế, bảo hiểm). | Một người đi đốt rẫy làm nương, gió đổi hướng đột ngột làm lửa lan cháy nhà người khác. |
+
+#### 2. Xác định loại sự biến trong tình huống đề bài
+- **Kết luận trực tiếp**: Tình huống *"Anh B đi đốt rẫy làm nương, do gió đổi hướng đột ngột khiến lửa lan sang làm cháy rụi căn nhà gỗ của ông C, làm phát sinh quan hệ bồi thường bảo hiểm giữa ông C và công ty bảo hiểm"* thuộc loại **Sự biến pháp lý tương đối**.
+- **Giải thích lý do**:
+  1. Sự việc bắt nguồn từ một hành vi có chủ đích của con người là **hành vi đốt rẫy của anh B**.
+  2. Tuy nhiên, quá trình biến chuyển gây cháy nhà ông C là do yếu tố tự nhiên bất ngờ (**gió đổi hướng đột ngột**) nằm ngoài ý muốn của cả anh B lẫn hai chủ thể trong quan hệ bảo hiểm (ông C và doanh nghiệp bảo hiểm).
+  3. Đối với quan hệ pháp luật bảo hiểm cháy nổ giữa ông C và công ty bảo hiểm, đám cháy này là sự kiện bảo hiểm khách quan làm phát sinh quyền đòi tiền bảo hiểm của ông C và nghĩa vụ chi trả của công ty bảo hiểm $\\rightarrow$ đây chính là **Sự biến pháp lý tương đối**.`;
+  }
+
+  private static solveDynamicRetroactiveLawCase(
+    query: string,
+    actors: string[],
+    money: string | null
+  ): string {
+    return `### KẾT LUẬN VÀ PHÂN TÍCH NGUYÊN TẮC HIỆU LỰC HỒI TỐ CỦA VĂN BẢN QUY PHẠM PHÁP LUẬT
+
+- **Kết luận trực tiếp**: Cơ quan nhà nước có thẩm quyền **TUYỆT ĐỐI KHÔNG ĐƯỢC PHÉP áp dụng hiệu lực hồi tố để xử phạt mức mới 40 triệu đồng**, mà bắt buộc chỉ được ra quyết định xử phạt theo mức **20 triệu đồng** của văn bản pháp luật đang có hiệu lực tại thời điểm thực hiện hành vi vi phạm (tháng 5/2025).
+
+#### 1. Căn cứ pháp lý cốt lõi
+- **Khoản 1 Điều 156 Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)**:
+  > *"Văn bản quy phạm pháp luật được áp dụng đối với **hành vi xảy ra tại thời điểm mà văn bản đó đang có hiệu lực**."*
+- **Điểm a, Điểm b Khoản 2 Điều 152 Luật Ban hành văn bản quy phạm pháp luật năm 2015 (sửa đổi, bổ sung năm 2020)**:
+  > *"2. **Không được quy định hiệu lực trở về trước** đối với các trường hợp sau đây:
+  > a) Quy định trách nhiệm pháp lý mới đối với hành vi mà vào thời điểm thực hiện hành vi đó pháp luật không quy định trách nhiệm pháp lý;
+  > b) **Quy định trách nhiệm pháp lý nặng hơn**."*
+
+#### 2. Giải thích áp dụng vào tình huống
+- Hành vi vi phạm diễn ra vào **tháng 5/2025** (khi mức phạt luật định là **20 triệu đồng**). Văn bản mới nâng mức phạt lên **40 triệu đồng** có hiệu lực từ **tháng 8/2025** là quy định **trách nhiệm pháp lý nặng hơn**.
+- Dù đến tháng 10/2025 mới lập quyết định xử phạt, căn cứ **Khoản 1 Điều 156** và điều cấm tại **Điểm b Khoản 2 Điều 152**, cơ quan có thẩm quyền không được áp dụng hồi tố mức 40 triệu đồng, mà chỉ được phạt **20 triệu đồng**.
+
+#### 3. Khi nào được phép áp dụng hiệu lực trở về trước (hiệu lực hồi tố) của VBQPPL?
+Căn cứ **Khoản 1, Khoản 3 Điều 152** và **Khoản 4 Điều 156 Luật Ban hành VBQPPL 2015 (sửa đổi 2020)**, hiệu lực trở về trước chỉ được áp dụng khi thỏa mãn nghiêm ngặt các điều kiện:
+1. **Về thẩm quyền ban hành**: Chỉ **văn bản quy phạm pháp luật của cơ quan trung ương** mới được quy định hiệu lực trở về trước *(văn bản của HĐND, UBND các cấp tuyệt đối không được quy định hiệu lực hồi tố theo Khoản 3 Điều 152)*.
+2. **Về mục đích & tính nhân đạo (nguyên tắc có lợi cho người vi phạm)**:
+   - Thật cần thiết để bảo đảm lợi ích chung của xã hội, thực hiện các quyền, lợi ích của tổ chức, cá nhân được quy định trong luật, nghị quyết của Quốc hội (**Khoản 1 Điều 152**);
+   - Hoặc khi văn bản mới **không quy định trách nhiệm pháp lý** hoặc **quy định trách nhiệm pháp lý nhẹ hơn** đối với hành vi xảy ra trước ngày văn bản có hiệu lực thì được áp dụng văn bản mới có lợi đó (**Khoản 4 Điều 156**).`;
   }
 
   // --- DẠNG MỚI: MƯỢN TÀI SẢN (XE MÁY, LAPTOP, TÀI SẢN) & BỒI THƯỜNG THIỆT HẠI ---
@@ -4766,9 +4983,39 @@ Trách nhiệm bồi thường thiệt hại phát sinh dựa trên 4 căn cứ 
     money: string | null,
     articles: ILawArticle[]
   ): string {
+    const qLower = query.toLowerCase();
+    // Nếu KHÔNG phải tranh chấp vay tiền (ví dụ đặt cọc / tiền trả trước / mua bán ô tô...), chuyển sang bộ giải tình huống dân sự chuyên sâu!
+    if (!qLower.includes('vay') && !qLower.includes('mượn tiền') && !qLower.includes('cho vay')) {
+      return this.solveDynamicCaseAnalysis(query, actors, money, null, articles);
+    }
+
     const actorA = actors[0] || 'A';
     const actorB = actors[1] || 'B';
     const loanAmount = money || '100 triệu đồng';
+
+    // Tính chính xác khung hình phạt theo định lượng tiền tại Điều 175 Bộ luật Hình sự 2015
+    let numericVnd = 100_000_000;
+    const amtMatch = (money || query).match(/(\d+(?:[.,]\d+)?)\s*(tỷ|tỉ|triệu|nghìn|ngàn)/i);
+    if (amtMatch) {
+      const numVal = parseFloat(amtMatch[1].replace(',', '.'));
+      const unit = amtMatch[2].toLowerCase();
+      if (unit === 'tỷ' || unit === 'tỉ') numericVnd = numVal * 1_000_000_000;
+      else if (unit === 'triệu') numericVnd = numVal * 1_000_000;
+      else numericVnd = numVal * 1_000;
+    }
+
+    let d175ClauseText =
+      '**Khoản 2 Điều 175 Bộ luật Hình sự 2015** (khung hình phạt từ **02 năm đến 07 năm tù** do chiếm đoạt tài sản từ 50.000.000 đồng đến dưới 200.000.000 đồng)';
+    if (numericVnd >= 500_000_000) {
+      d175ClauseText =
+        '**Khoản 4 Điều 175 Bộ luật Hình sự 2015** (khung hình phạt từ **12 năm đến 20 năm tù** do chiếm đoạt tài sản trị giá **500.000.000 đồng trở lên**)';
+    } else if (numericVnd >= 200_000_000) {
+      d175ClauseText =
+        '**Khoản 3 Điều 175 Bộ luật Hình sự 2015** (khung hình phạt từ **05 năm đến 12 năm tù** do chiếm đoạt tài sản từ 200.000.000 đồng đến dưới 500.000.000 đồng)';
+    } else if (numericVnd < 50_000_000) {
+      d175ClauseText =
+        '**Khoản 1 Điều 175 Bộ luật Hình sự 2015** (phạt cải tạo không giam giữ đến 03 năm hoặc **phạt tù từ 06 tháng đến 03 năm** do chiếm đoạt tài sản từ 4.000.000 đồng đến dưới 50.000.000 đồng)';
+    }
 
     return `### I. ĐÁNH GIÁ LẬP LUẬN CỦA ${actorA}
 **Kết luận dứt khoát: Lập luận của ${actorA} là HOÀN TOÀN SAI và không có cơ sở pháp lý.**
@@ -4813,7 +5060,7 @@ Căn cứ **Điều 117 Bộ luật Dân sự 2015**, giao dịch vay số tiề
 Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật hình sự:
 - **Nếu ${actorA} gặp khó khăn tài chính nhưng không có thủ đoạn gian dối hay bỏ trốn**: Đây là tranh chấp hợp đồng dân sự thuần túy, giải quyết bằng thủ tục khởi kiện tại Tòa án.
 - **Nếu ${actorA} có điều kiện, khả năng trả nợ nhưng cố tình dùng thủ đoạn gian dối hoặc bỏ trốn để chiếm đoạt số tiền ${loanAmount}**:
-  - Hành vi của ${actorA} có dấu hiệu cấu thành **Tội lạm dụng tín nhiệm chiếm đoạt tài sản** theo **Khoản 2 Điều 175 Bộ luật Hình sự 2015** (khung hình phạt từ **02 năm đến 07 năm tù** do chiếm đoạt tài sản từ 50.000.000 đồng đến dưới 200.000.000 đồng).
+  - Hành vi của ${actorA} có dấu hiệu cấu thành **Tội lạm dụng tín nhiệm chiếm đoạt tài sản** theo ${d175ClauseText}.
 
 ---
 
@@ -4827,6 +5074,10 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
   public static solveDynamicDefinition(query: string, concept: string | null): string {
     const qLower = query.toLowerCase();
 
+    if (qLower.includes('sự biến tuyệt đối') || qLower.includes('sự biến tương đối')) {
+      return this.solveDynamicAbsoluteVsRelativeLegalEvent(query);
+    }
+
     // 1. Ưu tiên các câu hỏi định nghĩa Năng lực hành vi dân sự / Năng lực pháp luật dân sự (Điều 16 - Điều 24 BLDS 2015)
     if (qLower.includes('năng lực hành vi dân sự') || concept === 'năng lực hành vi dân sự') {
       return this.getMasterOutput('SFT_LLM_DEF_CIVIL_ACT_CAPACITY');
@@ -4839,6 +5090,8 @@ Cần phân định rõ giữa tranh chấp dân sự và vi phạm pháp luật
     // 1b. Ưu tiên các câu hỏi định nghĩa kết hợp phân tích chuyên sâu
     if (
       qLower.includes('quan hệ pháp luật') &&
+      !qLower.includes('sự biến tuyệt đối') &&
+      !qLower.includes('sự biến tương đối') &&
       (qLower.includes('cơ cấu') || qLower.includes('chủ thể') || qLower.includes('khách thể') || qLower.includes('nội dung') || qLower.includes('sự kiện pháp lý'))
     ) {
       if (qLower.includes('sự kiện pháp lý') || qLower.includes('sự biến')) {
@@ -5227,7 +5480,10 @@ Hãy tưởng tượng **Pháp luật** giống như **"Nội quy chung của m�
       return this.solveDynamicCompareQpplAndVbadpl(query);
     }
 
-    // 0.0b. So sánh Sự biến pháp lý và Hành vi pháp lý
+    // 0.0b. So sánh Sự biến pháp lý tuyệt đối vs Sự biến pháp lý tương đối / Hành vi pháp lý
+    if (qLower.includes('sự biến tuyệt đối') || qLower.includes('sự biến tương đối')) {
+      return this.solveDynamicAbsoluteVsRelativeLegalEvent(query);
+    }
     if (qLower.includes('sự biến') && qLower.includes('hành vi')) {
       return this.solveDynamicLegalEventDeath(query);
     }

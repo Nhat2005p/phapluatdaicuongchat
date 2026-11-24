@@ -30,7 +30,7 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
   isOpen,
   onClose
 }) => {
-  const { user, remainingQuestions, totalQuestions, updateUser } = useAuth();
+  const { user, isUnlimited, remainingQuestions, totalQuestions, updateUser } = useAuth();
   const [transactions, setTransactions] = useState<TransactionItem[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedInvoice, setSelectedInvoice] = useState<TransactionItem | null>(null);
@@ -178,7 +178,11 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
                 </span>
               </div>
               <h3 className="text-base font-extrabold text-white">
-                {totalQuestions > 30 ? 'Gói Nâng cấp Cử nhân VIP' : 'Gói Sinh viên Cơ bản (Miễn phí 30 câu/tháng)'}
+                {isUnlimited
+                  ? 'Tài khoản Quản trị viên (Không giới hạn lượt hỏi)'
+                  : totalQuestions > 30
+                    ? 'Gói Nâng cấp Cử nhân VIP'
+                    : 'Gói Sinh viên Cơ bản (Làm mới 07:00 sáng Thứ 2)'}
               </h3>
             </div>
           </div>
@@ -187,7 +191,7 @@ export const TransactionHistoryModal: React.FC<TransactionHistoryModalProps> = (
             <div className="text-left sm:text-right">
               <span className="text-slate-400 block text-[11px]">Hạn mức câu hỏi còn lại:</span>
               <span className="font-extrabold text-lg text-amber-300">
-                {remainingQuestions} / {totalQuestions} câu
+                {isUnlimited ? '∞ Không giới hạn' : `${remainingQuestions} / ${totalQuestions} câu`}
               </span>
             </div>
           </div>

@@ -126,26 +126,23 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
               <div
                 key={session.id}
                 onClick={() => onSelectSession(session.id)}
-                className={`group relative flex items-center justify-between p-2.5 rounded-xl text-xs transition-all cursor-pointer border ${
-                  isActive
-                    ? 'border-l-3 border-l-indigo-600 border-t-indigo-500/10 border-r-indigo-500/10 border-b-indigo-500/10 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold shadow-xs'
-                    : 'border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-[#181818] hover:text-slate-900 dark:hover:text-white'
-                }`}
+                className={`group relative flex items-center justify-between p-2.5 rounded-xl text-xs transition-all cursor-pointer border ${isActive
+                  ? 'border-l-3 border-l-indigo-600 border-t-indigo-500/10 border-r-indigo-500/10 border-b-indigo-500/10 bg-indigo-50/70 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold shadow-xs'
+                  : 'border-transparent text-slate-600 dark:text-slate-400 hover:bg-slate-100/80 dark:hover:bg-[#181818] hover:text-slate-900 dark:hover:text-white'
+                  }`}
               >
                 <div className="flex items-center gap-2.5 min-w-0 pr-6">
                   <MessageSquare
-                    className={`w-3.5 h-3.5 shrink-0 transition-colors ${
-                      isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200'
-                    }`}
+                    className={`w-3.5 h-3.5 shrink-0 transition-colors ${isActive ? 'text-indigo-600 dark:text-indigo-400' : 'text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-200'
+                      }`}
                   />
                   <div className="min-w-0">
                     <span className="block truncate text-xs leading-tight" title={session.title}>
                       {session.title || 'Đoạn chat chưa đặt tên'}
                     </span>
                     <span
-                      className={`text-[10px] flex items-center gap-1 mt-0.5 ${
-                        isActive ? 'text-indigo-600/80 dark:text-indigo-400/80' : 'text-slate-400'
-                      }`}
+                      className={`text-[10px] flex items-center gap-1 mt-0.5 ${isActive ? 'text-indigo-600/80 dark:text-indigo-400/80' : 'text-slate-400'
+                        }`}
                     >
                       <Clock className="w-2.5 h-2.5" />
                       {formatTime(session.updatedAt || session.createdAt)}
@@ -161,11 +158,10 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
                     e.stopPropagation();
                     onDeleteSession(session.id);
                   }}
-                  className={`opacity-0 group-hover:opacity-100 p-1 rounded-md transition-all cursor-pointer shrink-0 absolute right-2 ${
-                    isActive
-                      ? 'text-indigo-600 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40'
-                      : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40'
-                  }`}
+                  className={`opacity-0 group-hover:opacity-100 p-1 rounded-md transition-all cursor-pointer shrink-0 absolute right-2 ${isActive
+                    ? 'text-indigo-600 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+                    : 'text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40'
+                    }`}
                 >
                   <Trash2 className="w-3.5 h-3.5" />
                 </button>
@@ -188,9 +184,8 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
                 </span>
               ) : (
                 <span
-                  className={`font-bold ${
-                    remainingQuestions <= 5 ? 'text-rose-600' : 'text-indigo-600 dark:text-indigo-400'
-                  }`}
+                  className={`font-bold ${remainingQuestions <= 5 ? 'text-rose-600' : 'text-indigo-600 dark:text-indigo-400'
+                    }`}
                 >
                   {remainingQuestions}/{totalQuestions} câu
                 </span>
@@ -198,9 +193,9 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
             </div>
             {!(isUnlimited || userRole === 'admin') && (
               <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-                <div 
-                  className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500" 
-                  style={{ width: `${Math.min(100, Math.max(0, (remainingQuestions / Math.max(1, totalQuestions)) * 100))}%` }} 
+                <div
+                  className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500"
+                  style={{ width: `${Math.min(100, Math.max(0, (remainingQuestions / Math.max(1, totalQuestions)) * 100))}%` }}
                 />
               </div>
             )}
@@ -260,11 +255,10 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
 
       {/* Mobile Offcanvas / Desktop Column */}
       <aside
-        className={`fixed top-[65px] bottom-0 left-0 z-40 w-72 lg:static lg:z-10 transition-all duration-300 ease-in-out shrink-0 ${
-          isOpen
-            ? 'translate-x-0'
-            : '-translate-x-full lg:translate-x-0 lg:w-0 lg:overflow-hidden lg:border-r-0'
-        }`}
+        className={`fixed top-[65px] bottom-0 left-0 z-40 w-72 lg:static lg:z-10 transition-all duration-300 ease-in-out shrink-0 ${isOpen
+          ? 'translate-x-0'
+          : '-translate-x-full lg:translate-x-0 lg:w-0 lg:overflow-hidden lg:border-r-0'
+          }`}
       >
         <div className="w-72 h-full">{sidebarContent}</div>
       </aside>
