@@ -533,51 +533,66 @@ export class RagService {
     }
 
     // 2. Dạng Câu hỏi Nhận định Đúng / Sai (TRUE_FALSE)
-    // Tránh bắt nhầm câu hỏi tình huống kể chuyện có từ "chỉ có", "khẳng định", "đều là"...
+    // Tránh bắt nhầm câu hỏi tình huống kể chuyện có từ "chỉ có", "khẳng định", "đều là", hoặc bài tập tình huống hỏi "Lập luận của anh A đúng hay sai? Giải quyết theo pháp luật?"
     const qMarkCount = (q.match(/\?/g) || []).length;
-    const isNarrativeScenario =
-      !q.includes('đúng hay sai') &&
-      !q.includes('đúng/sai') &&
+    const isCaseDisputeQuestion =
       !q.includes('nhận định') &&
+      !q.includes('nhận địn') &&
       (
-        qMarkCount >= 2 ||
-        (q.length > 90 && (
-          /(?:^|[\s.,;:?!()])(?:anh|chị|ông|bà|em|sinh viên|chủ nhà|chủ trọ|chủ quán|shipper|người bán|một người|một cơ quan|một quy định|một thông tư|giám đốc|nhân viên|hàng xóm)\b/i.test(q) ||
-          /(?:^|[\s.,;:?!()])(?:a\s+bán|a\s+và\s+b|a\s+bị\s+b|a\s+có\s+ý\s+định|a,\s*b\s+và\s+c)/i.test(q)
-        ))
+        /(?:lập luận|ý kiến|quan điểm|yêu cầu|lý lẽ)\s+của\s+(?:anh|chị|ông|bà|bạn|em|bên|công ty)\b/i.test(q) ||
+        q.includes('giải quyết theo pháp luật') ||
+        q.includes('giải quyết tranh chấp') ||
+        q.includes('giải quyết tình huống')
+      );
+    const isNarrativeScenario =
+      isCaseDisputeQuestion ||
+      (
+        !q.includes('đúng hay sai') &&
+        !q.includes('đúng/sai') &&
+        !q.includes('nhận định') &&
+        (
+          qMarkCount >= 2 ||
+          (q.length > 90 && (
+            /(?:^|[\s.,;:?!()])(?:anh|chị|ông|bà|em|sinh viên|chủ nhà|chủ trọ|chủ quán|shipper|người bán|một người|một cơ quan|một quy định|một thông tư|giám đốc|nhân viên|hàng xóm)\b/i.test(q) ||
+            /(?:^|[\s.,;:?!()])(?:a\s+bán|a\s+và\s+b|a\s+bị\s+b|a\s+có\s+ý\s+định|a,\s*b\s+và\s+c)/i.test(q)
+          ))
+        )
       );
 
     if (
-      q.includes('đúng hay sai') ||
-      q.includes('đúng/sai') ||
-      q.includes('nhận định') ||
-      q.includes('nhận địn') ||
-      q.includes('cho biết đúng hay sai') ||
-      q.includes('là dấu hiệu bắt buộc') ||
-      q.includes('dấu hiệu bắt buộc') ||
-      q.includes('là giống nhau') ||
-      q.includes('giống nhau hay khác nhau') ||
-      q.includes('chỉ ra đời trong') ||
-      q.includes('chỉ ra đời khi') ||
-      q.includes('chỉ xuất hiện') ||
-      q.startsWith('mọi ') ||
-      q.startsWith('tất cả ') ||
-      q.startsWith('không chỉ ') ||
-      (!isNarrativeScenario && (
-        q.includes('khẳng định') ||
-        q.includes('đều là') ||
-        q.includes('đều được') ||
-        q.includes('đều phải') ||
-        q.includes('luôn luôn') ||
-        q.includes('luôn là') ||
-        q.includes('không bao giờ') ||
-        q.includes('chỉ có')
-      )) ||
-      (q.includes('tuân thủ') && q.includes('thi hành')) ||
-      (q.includes('thực hiện pháp luật') && (q.includes('hành động') || q.includes('không hành động'))) ||
-      q.includes('chỉ thuộc về một giai cấp') ||
-      q.includes('là một bộ máy cưỡng chế đặc biệt') ||
-      q.includes('gắn liền với xã hội có giai cấp')
+      !isCaseDisputeQuestion &&
+      (
+        q.includes('đúng hay sai') ||
+        q.includes('đúng/sai') ||
+        q.includes('nhận định') ||
+        q.includes('nhận địn') ||
+        q.includes('cho biết đúng hay sai') ||
+        q.includes('là dấu hiệu bắt buộc') ||
+        q.includes('dấu hiệu bắt buộc') ||
+        q.includes('là giống nhau') ||
+        q.includes('giống nhau hay khác nhau') ||
+        q.includes('chỉ ra đời trong') ||
+        q.includes('chỉ ra đời khi') ||
+        q.includes('chỉ xuất hiện') ||
+        q.startsWith('mọi ') ||
+        q.startsWith('tất cả ') ||
+        q.startsWith('không chỉ ') ||
+        (!isNarrativeScenario && (
+          q.includes('khẳng định') ||
+          q.includes('đều là') ||
+          q.includes('đều được') ||
+          q.includes('đều phải') ||
+          q.includes('luôn luôn') ||
+          q.includes('luôn là') ||
+          q.includes('không bao giờ') ||
+          q.includes('chỉ có')
+        )) ||
+        (q.includes('tuân thủ') && q.includes('thi hành')) ||
+        (q.includes('thực hiện pháp luật') && (q.includes('hành động') || q.includes('không hành động'))) ||
+        q.includes('chỉ thuộc về một giai cấp') ||
+        q.includes('là một bộ máy cưỡng chế đặc biệt') ||
+        q.includes('gắn liền với xã hội có giai cấp')
+      )
     ) {
       return 'TRUE_FALSE';
     }

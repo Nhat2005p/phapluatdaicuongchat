@@ -14,7 +14,13 @@ export class TransactionController {
         return;
       }
 
-      let transactions = await Transaction.find({ userId: req.user.id }).sort({ createdAt: -1 });
+      const userEmail = req.user.email?.toLowerCase();
+      let transactions = await Transaction.find({
+        $or: [
+          { userId: req.user.id },
+          ...(userEmail ? [{ userEmail }] : [])
+        ]
+      }).sort({ createdAt: -1 });
 
       // Nếu người dùng chưa có giao dịch nào, tự động tạo hóa đơn chào mừng miễn phí
       if (transactions.length === 0) {

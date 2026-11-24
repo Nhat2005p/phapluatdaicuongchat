@@ -245,7 +245,22 @@ export const Header: React.FC<HeaderProps> = ({
 
   const currentEmail = user?.email || 'longvu24112005@gmail.com';
   const currentFullName = user?.fullName || currentEmail;
-  const progressPercent = Math.max(0, Math.min(100, (remainingQuestions / totalQuestions) * 100));
+  const progressPercent = Math.max(0, Math.min(100, (remainingQuestions / Math.max(1, totalQuestions)) * 100));
+  const [avatarLoadError, setAvatarLoadError] = useState(false);
+
+  useEffect(() => {
+    setAvatarLoadError(false);
+  }, [user?.avatarUrl]);
+
+  const presetAvatarBgMap: Record<string, string> = {
+    default_green: '#70ad47',
+    blue_suit: '#2563eb',
+    purple_scholar: '#7c3aed',
+    amber_law: '#d97706'
+  };
+  const rawAvatar = (user?.avatarUrl || '').trim();
+  const isImageAvatar = !avatarLoadError && /^(https?:\/\/|data:|\/)/i.test(rawAvatar);
+  const avatarBgColor = presetAvatarBgMap[rawAvatar] || '#70ad47';
 
   const isDarkTheme = isDarkMode;
 
@@ -466,24 +481,26 @@ export const Header: React.FC<HeaderProps> = ({
               </QuickTooltip>
 
 
-              {/* Avatar Icon (Hình người vòng tròn xanh lá) */}
+              {/* Avatar Icon (Hình người vòng tròn hoặc ảnh OAuth thật) */}
               <div className="relative shrink-0">
                 <button
                   type="button"
                   onClick={() => setIsProfileOpen(!isProfileOpen)}
-                  className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full bg-[#70ad47] hover:ring-2 hover:ring-emerald-400 p-0.5 border-2 border-white shadow-xs flex items-center justify-center transition-all cursor-pointer overflow-hidden shrink-0"
+                  style={{ backgroundColor: avatarBgColor }}
+                  className="relative w-8 h-8 sm:w-9 sm:h-9 rounded-full hover:ring-2 hover:ring-emerald-400 p-0.5 border-2 border-white shadow-xs flex items-center justify-center transition-all cursor-pointer overflow-hidden shrink-0"
                   title="Tài khoản cá nhân"
                 >
-                  {user.avatarUrl ? (
+                  {isImageAvatar ? (
                     <img
-                      src={user.avatarUrl}
+                      src={rawAvatar}
                       alt={currentFullName}
                       referrerPolicy="no-referrer"
+                      onError={() => setAvatarLoadError(true)}
                       className="w-full h-full rounded-full object-cover"
                     />
                   ) : (
                     <svg className="w-full h-full" viewBox="0 0 40 40">
-                      <circle cx="20" cy="20" r="20" fill="#70ad47" />
+                      <circle cx="20" cy="20" r="20" fill={avatarBgColor} />
                       <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
                       <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
                       <circle cx="20" cy="18" r="7" fill="#fde3c8" />
@@ -499,17 +516,21 @@ export const Header: React.FC<HeaderProps> = ({
                   <div className="absolute right-0 top-12 w-[295px] sm:w-[315px] bg-white rounded-3xl shadow-2xl border border-slate-100 p-5 z-50 animate-modal-in text-slate-800">
                     {/* 1. Header: Avatar + Tên tài khoản / Email */}
                     <div className="flex items-center gap-3">
-                      <div className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-emerald-300">
-                        {user.avatarUrl ? (
+                      <div
+                        className="w-12 h-12 rounded-full overflow-hidden shrink-0 border-2 border-emerald-300"
+                        style={{ backgroundColor: avatarBgColor }}
+                      >
+                        {isImageAvatar ? (
                           <img
-                            src={user.avatarUrl}
+                            src={rawAvatar}
                             alt={currentFullName}
                             referrerPolicy="no-referrer"
+                            onError={() => setAvatarLoadError(true)}
                             className="w-full h-full object-cover"
                           />
                         ) : (
                           <svg className="w-full h-full" viewBox="0 0 40 40">
-                            <circle cx="20" cy="20" r="20" fill="#70ad47" />
+                            <circle cx="20" cy="20" r="20" fill={avatarBgColor} />
                             <path d="M10 40 C10 31 15 27 20 27 C25 27 30 31 30 40 Z" fill="#ffffff" />
                             <polygon points="18.5,27 21.5,27 20.5,35 19.5,35" fill="#c00000" />
                             <circle cx="20" cy="18" r="7" fill="#fde3c8" />

@@ -29,7 +29,7 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
   onClose,
   onSuccessUpgrade
 }) => {
-  const { user, remainingQuestions, totalQuestions, updateUser } = useAuth();
+  const { user, isUnlimited, remainingQuestions, totalQuestions, updateUser } = useAuth();
   const [tabType, setTabType] = useState<'per_query' | 'recurring'>('per_query');
   const [isProcessing, setIsProcessing] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
@@ -124,11 +124,15 @@ export const PricingPackagesModal: React.FC<PricingPackagesModalProps> = ({
 
         {/* Current status bar */}
         <div className="mx-6 mt-4 p-3 rounded-2xl bg-slate-50 border border-slate-200 flex items-center justify-between text-xs">
-          <div className="flex items-center gap-2 text-slate-600">
+          <div className="flex items-center gap-2 text-slate-600 flex-wrap">
             <span>Hạn mức hiện tại:</span>
-            <strong className="text-slate-900 font-bold">{remainingQuestions} / {totalQuestions} câu hỏi</strong>
+            <strong className="text-slate-900 font-bold">
+              {isUnlimited ? '∞ Không giới hạn (Quản trị viên)' : `${remainingQuestions} / ${totalQuestions} câu hỏi`}
+            </strong>
             <span className="text-slate-400">•</span>
-            <span className="text-emerald-600 font-semibold">Tự động làm mới 30 câu miễn phí mỗi tháng</span>
+            <span className="text-emerald-600 font-semibold">
+              {isUnlimited ? 'Đặc quyền hỏi đáp toàn hệ thống' : 'Tự động làm mới 30/30 vào 07:00 sáng Thứ 2 hàng tuần'}
+            </span>
           </div>
         </div>
 
