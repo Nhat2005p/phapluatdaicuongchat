@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 
 // Load .env from root or cwd
@@ -7,10 +8,45 @@ const envCandidates = [
   path.resolve(process.cwd(), '.env'),
   path.resolve(__dirname, '../../../.env')
 ];
-for (const envPath of envCandidates) {
-  dotenv.config({ path: envPath });
+
+function loadEnvFiles(overrideNonEmpty = false): void {
+  for (const envPath of envCandidates) {
+    if (!fs.existsSync(envPath)) continue;
+    if (!overrideNonEmpty) {
+      dotenv.config({ path: envPath, override: false });
+    } else {
+      try {
+        const parsed = dotenv.parse(fs.readFileSync(envPath));
+        for (const [k, v] of Object.entries(parsed)) {
+          if (v && v.trim() !== '') {
+            process.env[k] = v.trim();
+          }
+        }
+      } catch {
+        // ignore read error
+      }
+    }
+  }
 }
-dotenv.config();
+
+loadEnvFiles(false);
+
+function cleanEnvVal(val?: string): string {
+  const trimmed = (val || '').trim();
+  if (
+    !trimmed ||
+    trimmed.startsWith('your_') ||
+    trimmed === 'CHANGE_ME' ||
+    trimmed === 'xxx'
+  ) {
+    return '';
+  }
+  return trimmed;
+}
+
+export function reloadEnvConfig(): void {
+  loadEnvFiles(true);
+}
 
 export const config = {
   port: parseInt(process.env.PORT || '8000', 10),
@@ -28,6 +64,17 @@ export const config = {
       pass: process.env.SMTP_PASS || '',
       host: process.env.SMTP_HOST || 'smtp.gmail.com',
       port: parseInt(process.env.SMTP_PORT || '587', 10)
+    };
+  },
+  get oauth() {
+    return {
+      frontendUrl: cleanEnvVal(process.env.FRONTEND_URL) || 'http://localhost:3000',
+      googleClientId: cleanEnvVal(process.env.GOOGLE_CLIENT_ID),
+      googleClientSecret: cleanEnvVal(process.env.GOOGLE_CLIENT_SECRET),
+      googleRedirectUri: cleanEnvVal(process.env.GOOGLE_REDIRECT_URI),
+      facebookAppId: cleanEnvVal(process.env.FACEBOOK_APP_ID),
+      facebookAppSecret: cleanEnvVal(process.env.FACEBOOK_APP_SECRET),
+      facebookRedirectUri: cleanEnvVal(process.env.FACEBOOK_REDIRECT_URI)
     };
   }
 };

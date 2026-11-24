@@ -282,9 +282,9 @@ export class RagService {
     }
 
     const illegalAssistPatterns = [
-      /(?:hướng dẫn|bày cách|chỉ cách|chỉ cho tôi cách|làm sao để)\s+(?:làm giả giấy tờ|làm giả con dấu|rửa tiền|trốn thuế|lách thuế|tẩu tán tài sản)/i,
-      /(?:soạn|lập|làm)\s+hợp\s+đồng[^.?]{0,50}(?:hai\s+giá|2\s+giá)/i,
-      /(?:hai\s+giá|2\s+giá)[^.?]{0,120}(?:khai\s+thuế|cơ\s+quan\s+thuế|không\s+thể\s+phát\s+hiện|không\s+bị\s+phát\s+hiện)/i
+      /(?:hướng dẫn|bày cách|chỉ cách|chỉ cho tôi cách|làm sao để)[^.?]{0,45}(?:làm giả giấy tờ|làm giả con dấu|rửa tiền|trốn thuế|lách thuế|né thuế|tẩu tán tài sản)/i,
+      /(?:soạn\s+thảo|soạn|lập|làm|viết|ký)\s+hợp\s+đồng[^.?]{0,50}(?:hai\s+giá|2\s+giá)/i,
+      /(?:hai\s+giá|2\s+giá)[^.?]{0,120}(?:trốn\s+thuế|né\s+thuế|khai\s+thuế|cơ\s+quan\s+thuế|không\s+thể\s+phát\s+hiện|không\s+bị\s+phát\s+hiện)/i
     ];
     for (const rx of illegalAssistPatterns) {
       if (rx.test(q)) {
@@ -362,6 +362,8 @@ export class RagService {
       q === 'bạn hoạt động như thế nào' ||
       q === 'mô hình nào' ||
       q === 'mô hình' ||
+      q.includes('mô hình của bạn') ||
+      (q.includes('giới thiệu') && (q.includes('mô hình') || q.includes('bản thân') || q.includes('về bạn') || q.includes('hệ thống'))) ||
       (q.includes('bạn là') && (q.includes('mô hình') || q.includes('ai') || q.includes('gì'))) ||
       (q.includes('mô hình') && (q.includes('gì') || q.includes('nào') || q.includes('hoạt động') || q.includes('kiến trúc')))
     );
@@ -531,12 +533,25 @@ export class RagService {
     }
 
     // 2. Dạng Câu hỏi Nhận định Đúng / Sai (TRUE_FALSE)
+    // Tránh bắt nhầm câu hỏi tình huống kể chuyện có từ "chỉ có", "khẳng định", "đều là"...
+    const qMarkCount = (q.match(/\?/g) || []).length;
+    const isNarrativeScenario =
+      !q.includes('đúng hay sai') &&
+      !q.includes('đúng/sai') &&
+      !q.includes('nhận định') &&
+      (
+        qMarkCount >= 2 ||
+        (q.length > 90 && (
+          /(?:^|[\s.,;:?!()])(?:anh|chị|ông|bà|em|sinh viên|chủ nhà|chủ trọ|chủ quán|shipper|người bán|một người|một cơ quan|một quy định|một thông tư|giám đốc|nhân viên|hàng xóm)\b/i.test(q) ||
+          /(?:^|[\s.,;:?!()])(?:a\s+bán|a\s+và\s+b|a\s+bị\s+b|a\s+có\s+ý\s+định|a,\s*b\s+và\s+c)/i.test(q)
+        ))
+      );
+
     if (
       q.includes('đúng hay sai') ||
       q.includes('đúng/sai') ||
       q.includes('nhận định') ||
       q.includes('nhận địn') ||
-      q.includes('khẳng định') ||
       q.includes('cho biết đúng hay sai') ||
       q.includes('là dấu hiệu bắt buộc') ||
       q.includes('dấu hiệu bắt buộc') ||
@@ -548,13 +563,16 @@ export class RagService {
       q.startsWith('mọi ') ||
       q.startsWith('tất cả ') ||
       q.startsWith('không chỉ ') ||
-      q.includes('đều là') ||
-      q.includes('đều được') ||
-      q.includes('đều phải') ||
-      q.includes('luôn luôn') ||
-      q.includes('luôn là') ||
-      q.includes('không bao giờ') ||
-      q.includes('chỉ có') ||
+      (!isNarrativeScenario && (
+        q.includes('khẳng định') ||
+        q.includes('đều là') ||
+        q.includes('đều được') ||
+        q.includes('đều phải') ||
+        q.includes('luôn luôn') ||
+        q.includes('luôn là') ||
+        q.includes('không bao giờ') ||
+        q.includes('chỉ có')
+      )) ||
       (q.includes('tuân thủ') && q.includes('thi hành')) ||
       (q.includes('thực hiện pháp luật') && (q.includes('hành động') || q.includes('không hành động'))) ||
       q.includes('chỉ thuộc về một giai cấp') ||
@@ -711,15 +729,29 @@ export class RagService {
     }
 
     // 7. Dạng Xác định Năng lực TNHS theo Độ tuổi (CRIMINAL_AGE)
+    const isNonCriminalAgeTopic =
+      q.includes('thử việc') ||
+      q.includes('lao động') ||
+      q.includes('kết hôn') ||
+      q.includes('hôn nhân') ||
+      q.includes('giao dịch') ||
+      q.includes('mua bán') ||
+      q.includes('mua xe') ||
+      q.includes('hợp đồng') ||
+      q.includes('năng lực hành vi dân sự');
+
     if (
-      q.includes('độ tuổi') ||
-      q.includes('chưa thành niên') ||
-      q.includes('13 tuổi') ||
-      q.includes('14 tuổi') ||
-      q.includes('15 tuổi') ||
-      q.includes('16 tuổi') ||
-      q.includes('17 tuổi') ||
-      (q.includes('tuổi') && (q.includes('chịu trách nhiệm') || q.includes('phạm tội') || q.includes('tội này')))
+      !isNonCriminalAgeTopic &&
+      (
+        q.includes('độ tuổi') ||
+        q.includes('chưa thành niên') ||
+        q.includes('13 tuổi') ||
+        q.includes('14 tuổi') ||
+        q.includes('15 tuổi') ||
+        q.includes('16 tuổi') ||
+        q.includes('17 tuổi') ||
+        (q.includes('tuổi') && (q.includes('chịu trách nhiệm') || q.includes('phạm tội') || q.includes('tội này')))
+      )
     ) {
       return 'CRIMINAL_AGE';
     }

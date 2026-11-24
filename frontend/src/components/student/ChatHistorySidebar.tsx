@@ -34,6 +34,8 @@ interface ChatHistorySidebarProps {
   onClearAllSessions: () => void;
   isAuthenticated: boolean;
   remainingQuestions: number;
+  totalQuestions?: number;
+  isUnlimited?: boolean;
   userName?: string;
   userRole?: string;
 }
@@ -49,6 +51,8 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
   onClearAllSessions,
   isAuthenticated,
   remainingQuestions,
+  totalQuestions = 30,
+  isUnlimited = false,
   userName = 'Sinh viên',
   userRole = 'student'
 }) => {
@@ -177,21 +181,29 @@ export const ChatHistorySidebar: React.FC<ChatHistorySidebarProps> = ({
         {isAuthenticated && (
           <div className="space-y-1.5 px-0.5">
             <div className="flex items-center justify-between text-[11px]">
-              <span className="text-slate-500 dark:text-slate-400 font-medium">Hạn mức tháng này:</span>
-              <span
-                className={`font-bold ${
-                  remainingQuestions <= 5 ? 'text-rose-600' : 'text-indigo-600 dark:text-indigo-400'
-                }`}
-              >
-                {remainingQuestions}/30 câu
-              </span>
+              <span className="text-slate-500 dark:text-slate-400 font-medium">Hạn mức tuần này:</span>
+              {isUnlimited || userRole === 'admin' ? (
+                <span className="font-bold text-indigo-600 dark:text-indigo-400">
+                  ∞ Không giới hạn
+                </span>
+              ) : (
+                <span
+                  className={`font-bold ${
+                    remainingQuestions <= 5 ? 'text-rose-600' : 'text-indigo-600 dark:text-indigo-400'
+                  }`}
+                >
+                  {remainingQuestions}/{totalQuestions} câu
+                </span>
+              )}
             </div>
-            <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
-              <div 
-                className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500" 
-                style={{ width: `${Math.min(100, Math.max(0, (remainingQuestions / 30) * 100))}%` }} 
-              />
-            </div>
+            {!(isUnlimited || userRole === 'admin') && (
+              <div className="w-full bg-slate-200 dark:bg-slate-700 h-1.5 rounded-full overflow-hidden">
+                <div 
+                  className="bg-indigo-600 dark:bg-indigo-500 h-full rounded-full transition-all duration-500" 
+                  style={{ width: `${Math.min(100, Math.max(0, (remainingQuestions / Math.max(1, totalQuestions)) * 100))}%` }} 
+                />
+              </div>
+            )}
           </div>
         )}
 

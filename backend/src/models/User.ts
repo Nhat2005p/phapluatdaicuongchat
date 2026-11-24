@@ -1,4 +1,5 @@
 import mongoose, { Schema, Document } from 'mongoose';
+import { QuotaService } from '../services/quotaService.js';
 
 export type UserRole = 'student' | 'moderator' | 'admin';
 
@@ -11,6 +12,7 @@ export interface IUser extends Document {
   studentId?: string;
   avatarUrl?: string;
   googleId?: string;
+  facebookId?: string;
   authProvider?: 'local' | 'google' | 'facebook';
   status: 'active' | 'locked';
   lockReason?: string;
@@ -44,12 +46,13 @@ const UserSchema = new Schema<IUser>(
     studentId: { type: String, trim: true },
     avatarUrl: { type: String, default: '' },
     googleId: { type: String, default: '', index: true },
+    facebookId: { type: String, default: '', index: true },
     authProvider: { type: String, enum: ['local', 'google', 'facebook'], default: 'local' },
     questionsQuota: { type: Number, default: 30 },
     questionsUsed: { type: Number, default: 0 },
     quotaResetDate: {
       type: Date,
-      default: () => new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+      default: () => QuotaService.getNextMonday7AM()
     }
   },
   { timestamps: true }

@@ -11,6 +11,9 @@ export interface IPersistedUser {
   fullName: string;
   studentId?: string;
   avatarUrl?: string;
+  googleId?: string;
+  facebookId?: string;
+  authProvider?: 'local' | 'google' | 'facebook';
   status: 'active' | 'locked';
   questionsQuota?: number;
   questionsUsed?: number;
@@ -109,6 +112,9 @@ export class PersistenceService {
         fullName: user.fullName || email.split('@')[0],
         studentId: user.studentId || '',
         avatarUrl: user.avatarUrl || '',
+        googleId: user.googleId || '',
+        facebookId: user.facebookId || '',
+        authProvider: user.authProvider || 'local',
         status: user.status || 'active',
         questionsQuota: user.questionsQuota ?? 30,
         questionsUsed: user.questionsUsed ?? 0,
@@ -136,21 +142,24 @@ export class PersistenceService {
 
       let count = 0;
       for (const u of users) {
-        if (!u.email || !u.passwordHash) continue;
+        if (!u.email) continue;
         await User.findOneAndUpdate(
           { email: u.email.toLowerCase() },
           {
-            username: u.username,
+            username: u.username || u.email.split('@')[0],
             email: u.email.toLowerCase(),
-            passwordHash: u.passwordHash,
+            passwordHash: u.passwordHash || 'oauth_external_account',
             role: u.role || 'student',
-            fullName: u.fullName || u.username,
+            fullName: u.fullName || u.username || u.email.split('@')[0],
             studentId: u.studentId || '',
             avatarUrl: u.avatarUrl || '',
+            googleId: u.googleId || '',
+            facebookId: u.facebookId || '',
+            authProvider: u.authProvider || 'local',
             status: u.status || 'active',
             questionsQuota: u.questionsQuota ?? 30,
             questionsUsed: u.questionsUsed ?? 0,
-            quotaResetDate: u.quotaResetDate ? new Date(u.quotaResetDate) : new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+            ...(u.quotaResetDate ? { quotaResetDate: new Date(u.quotaResetDate) } : {})
           },
           { upsert: true, new: true }
         );

@@ -234,9 +234,11 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({ isOpen, onClose }) =
               <span className="font-bold text-slate-800 font-mono">@{user.username}</span>
             </div>
             <div>
-              <span className="text-slate-400 block mb-0.5">Hạn mức tháng này</span>
+              <span className="text-slate-400 block mb-0.5">Hạn mức tuần này</span>
               <span className="font-bold text-[#ec2227]">
-                {remainingQuestions} / {totalQuestions} câu hỏi
+                {user.role === 'admin'
+                  ? '∞ Không giới hạn (Admin)'
+                  : `${remainingQuestions} / ${totalQuestions} câu hỏi`}
               </span>
             </div>
           </div>

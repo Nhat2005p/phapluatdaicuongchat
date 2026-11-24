@@ -73,23 +73,30 @@ export function cleanBoilerplate(text, sampleId) {
     return GOLDEN_QHPL;
   }
 
-  // 2. Gỡ bỏ các mảnh trích dẫn prompt còn sót ở đầu
-  out = out.replace(/^[^\n#]*\.\.\."\s*\n*/g, '');
-  out = out.replace(/^[^\n#]*\bgiúp ph\.\.\."\s*\n*/g, '');
-  out = out.replace(/^[^\n#]*\bnhất hai luận điểm\b[^\n]*\n*/g, '');
-  out = out.replace(/^[^#\n]*?"\s*\n+(?=###\s*2\.)/g, '');
+  // Lặp tối đa 3 lần để bóc sạch cả các lớp bọc kép (nested ### 2. / ### 3. bọc bên ngoài ### 1. / ### 2. / ### 3.)
+  for (let pass = 0; pass < 3; pass++) {
+    // 2. Gỡ bỏ các mảnh trích dẫn prompt còn sót ở đầu
+    out = out.replace(/^[^\n#]*\.\.\."\s*\n*/g, '');
+    out = out.replace(/^[^\n#]*\bgiúp ph\.\.\."\s*\n*/g, '');
+    out = out.replace(/^[^\n#]*\bnhất hai luận điểm\b[^\n]*\n*/g, '');
+    out = out.replace(/^[^#\n]*?"\s*\n+(?=###\s*2\.)/g, '');
 
-  // 3. Gỡ bỏ khối mở đầu lặp lại máy móc
-  out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Vấn đề lý luận pháp lý cần làm rõ:[^\n]*\s*\n*/gi, '');
-  out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Yêu cầu đối chiếu, phân biệt giữa các đối tượng pháp lý:[^\n]*\s*\n*/gi, '');
-  out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Tình huống đặt ra yêu cầu giải quyết vấn đề pháp lý trọng tâm:[^\n]*\s*\n*/gi, '');
+    // 3. Gỡ bỏ khối mở đầu lặp lại máy móc
+    out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Vấn đề lý luận pháp lý cần làm rõ:[^\n]*\s*\n*/gi, '');
+    out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Yêu cầu đối chiếu, phân biệt giữa các đối tượng pháp lý:[^\n]*\s*\n*/gi, '');
+    out = out.replace(/^###\s*(?:1\.|I\.)\s*Tóm tắt vấn đề pháp lý(?:\s*&[^\n]*)?\s*\n+Tình huống đặt ra yêu cầu giải quyết vấn đề pháp lý trọng tâm:[^\n]*\s*\n*/gi, '');
 
-  // 4. Nếu mở đầu là Căn cứ chung chung (chỉ trích dẫn giáo trình chung mà không có số Điều luật cụ thể)
-  const genericCanCuOnly = /^###\s*(?:2\.|II\.)\s*Căn cứ pháp lý[^\n]*\s*\n+-\s*(?:\*\*Giáo trình Pháp luật đại cương \(Bộ GD&ĐT\)\*\*:[^\n]*|Quy định tại các văn bản quy phạm pháp luật thực định và Giáo trình[^\n]*)\s*\n+/i;
-  out = out.replace(genericCanCuOnly, '');
+    // 4. Nếu mở đầu là khối "### 2. Căn cứ pháp lý ... ### 3. Phân tích chi tiết từng ý" bọc ngoài một tiêu đề bài giải thực thụ (### ⚖️, ### ⚠️, ### 1., ### BẢNG, ### PHÂN TÍCH, ### I.)
+    out = out.replace(/^###\s*(?:2\.|II\.)\s*Căn cứ pháp lý[^\n]*\s*\n+(?:-\s*[^\n]+\n+)+###\s*(?:3\.|III\.)\s*Phân tích chi tiết từng ý(?:\s*\(Bảng so sánh đối chiếu\))?\s*\n+(?=###\s*(?:1\.|⚖️|⚠️|BẢNG|PHÂN TÍCH|I\.|KHÁI NIỆM|KẾT LUẬN|GIẢI ĐÁP))/gi, '');
 
-  // 5. Nếu mở đầu còn sót header "### 3. Phân tích chi tiết từng ý"
-  out = out.replace(/^###\s*(?:3\.|III\.)\s*Phân tích chi tiết từng ý(?:\s*\(Bảng so sánh đối chiếu\))?\s*\n*/gi, '');
+    // 4b. Nếu mở đầu là Căn cứ chung chung (chỉ trích dẫn giáo trình chung mà không có số Điều luật cụ thể)
+    const genericCanCuOnly = /^###\s*(?:2\.|II\.)\s*Căn cứ pháp lý[^\n]*\s*\n+-\s*(?:\*\*Giáo trình Pháp luật đại cương \(Bộ GD&ĐT\)\*\*:[^\n]*|Quy định tại các văn bản quy phạm pháp luật thực định và Giáo trình[^\n]*)\s*\n+/i;
+    out = out.replace(genericCanCuOnly, '');
+
+    // 5. Nếu mở đầu còn sót header "### 3. Phân tích chi tiết từng ý"
+    out = out.replace(/^###\s*(?:3\.|III\.)\s*Phân tích chi tiết từng ý(?:\s*\(Bảng so sánh đối chiếu\))?\s*\n*/gi, '');
+    out = out.trim();
+  }
 
   // 6. Gỡ bỏ kết luận sáo rỗng máy móc
   out = out.replace(/\n+###\s*(?:4\.|IV\.)\s*Kết luận\s*\n+Tóm lại\s*\(căn cứ Giáo trình[^)]*\)[^\n]*/gi, '');

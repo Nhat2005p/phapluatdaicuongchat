@@ -88,9 +88,10 @@ export const UserManagementView: React.FC = () => {
 
   // User Quota Edit Modal
   const [quotaModalUser, setQuotaModalUser] = useState<User | null>(null);
-  const [quotaAction, setQuotaAction] = useState<'add' | 'set' | 'reset'>('add');
+  const [quotaAction, setQuotaAction] = useState<'set_remaining' | 'add' | 'set' | 'reset'>('set_remaining');
   const [quotaAmount, setQuotaAmount] = useState<number>(10);
   const [quotaCustomValue, setQuotaCustomValue] = useState<number>(30);
+  const [quotaRemainingValue, setQuotaRemainingValue] = useState<number>(30);
 
   // User Lock Modal
   const [lockModalUser, setLockModalUser] = useState<User | null>(null);
@@ -178,7 +179,9 @@ export const UserManagementView: React.FC = () => {
     if (!quotaModalUser) return;
     try {
       const payload: any = { action: quotaAction };
-      if (quotaAction === 'add') {
+      if (quotaAction === 'set_remaining') {
+        payload.amount = quotaRemainingValue;
+      } else if (quotaAction === 'add') {
         payload.amount = quotaAmount;
       } else if (quotaAction === 'set') {
         payload.quota = quotaCustomValue;
@@ -630,53 +633,80 @@ export const UserManagementView: React.FC = () => {
                       </td>
 
                       {/* Quota Progress & Quick Action */}
-                      <td className="px-4 py-3.5 min-w-[200px]">
-                        <div className="space-y-1.5">
-                          <div className="flex justify-between text-[11px]">
-                            <span className="text-slate-400 font-medium">
-                              Đã dùng: <strong className="text-white">{quotaUsed}</strong> / {quotaTotal} câu
+                      <td className="px-4 py-3.5 min-w-[220px]">
+                        {u.role === 'admin' ? (
+                          <div className="space-y-1">
+                            <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-bold bg-purple-500/15 text-purple-300 border border-purple-500/30">
+                              <Shield className="w-3.5 h-3.5 text-purple-400" />
+                              <span>∞ Không giới hạn</span>
                             </span>
-                            <span className={remaining > 5 ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
-                              Còn {remaining}
-                            </span>
+                            <div className="text-[10px] text-slate-400">
+                              Đã hỏi: <strong className="text-white">{quotaUsed}</strong> câu (Đặc quyền Admin)
+                            </div>
                           </div>
-                          {/* Mini Progress Bar with animated transition */}
-                          <div className="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden shadow-inner">
-                            <div
-                              className={`h-full rounded-full transition-all duration-700 ease-out ${
-                                usagePercent > 90
-                                  ? 'bg-gradient-to-r from-amber-500 to-rose-500'
-                                  : usagePercent > 50
-                                  ? 'bg-gradient-to-r from-emerald-500 to-amber-400'
-                                  : 'bg-gradient-to-r from-emerald-500 to-teal-400'
-                              }`}
-                              style={{ width: `${usagePercent}%` }}
-                            />
+                        ) : (
+                          <div className="space-y-1.5">
+                            <div className="flex justify-between text-[11px]">
+                              <span className="text-slate-400 font-medium">
+                                Đã dùng: <strong className="text-white">{quotaUsed}</strong> / {quotaTotal} câu
+                              </span>
+                              <span className={remaining > 5 ? 'text-emerald-400 font-semibold' : 'text-rose-400 font-semibold'}>
+                                Còn {remaining}
+                              </span>
+                            </div>
+                            {/* Mini Progress Bar with animated transition */}
+                            <div className="w-full bg-slate-800/80 rounded-full h-2 overflow-hidden shadow-inner">
+                              <div
+                                className={`h-full rounded-full transition-all duration-700 ease-out ${
+                                  usagePercent > 90
+                                    ? 'bg-gradient-to-r from-amber-500 to-rose-500'
+                                    : usagePercent > 50
+                                    ? 'bg-gradient-to-r from-emerald-500 to-amber-400'
+                                    : 'bg-gradient-to-r from-emerald-500 to-teal-400'
+                                }`}
+                                style={{ width: `${usagePercent}%` }}
+                              />
+                            </div>
+                            <div className="flex flex-wrap items-center gap-1.5 pt-0.5">
+                              <button
+                                onClick={() => {
+                                  setQuotaModalUser(u);
+                                  setQuotaAction('set_remaining');
+                                  setQuotaRemainingValue(remaining);
+                                  setQuotaCustomValue(quotaTotal);
+                                  setQuotaAmount(10);
+                                }}
+                                className="text-[10px] text-amber-300 hover:text-amber-200 flex items-center gap-1 transition-colors px-2 py-0.5 rounded-md bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/25 cursor-pointer font-semibold"
+                                title="Chỉnh sửa trực tiếp số lượt hỏi của người dùng này"
+                              >
+                                <Sliders className="w-2.5 h-2.5" />
+                                <span>Sửa lượt hỏi</span>
+                              </button>
+                              <button
+                                onClick={() => {
+                                  setQuotaModalUser(u);
+                                  setQuotaAction('add');
+                                  setQuotaAmount(10);
+                                  setQuotaRemainingValue(remaining);
+                                  setQuotaCustomValue(quotaTotal);
+                                }}
+                                className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded-md hover:bg-sky-500/10 cursor-pointer font-medium"
+                                title="Cộng thêm hạn mức câu hỏi cho người dùng này"
+                              >
+                                <PlusCircle className="w-2.5 h-2.5" />
+                                <span>+10</span>
+                              </button>
+                              <button
+                                onClick={() => handleQuickResetUsed(u)}
+                                className="text-[10px] text-slate-400 hover:text-emerald-400 flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded-md hover:bg-emerald-500/10 cursor-pointer"
+                                title="Làm mới về 30/30 câu"
+                              >
+                                <RotateCcw className="w-2.5 h-2.5" />
+                                <span>Reset</span>
+                              </button>
+                            </div>
                           </div>
-                          <div className="flex items-center gap-2 pt-0.5">
-                            <button
-                              onClick={() => handleQuickResetUsed(u)}
-                              className="text-[10px] text-slate-400 hover:text-emerald-400 flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded-md hover:bg-emerald-500/10 cursor-pointer"
-                              title="Reset số câu đã hỏi về 0 (trả lại 100% quota)"
-                            >
-                              <RotateCcw className="w-2.5 h-2.5" />
-                              <span>Reset về 0</span>
-                            </button>
-                            <span className="text-slate-700">•</span>
-                            <button
-                              onClick={() => {
-                                setQuotaModalUser(u);
-                                setQuotaAction('add');
-                                setQuotaAmount(10);
-                              }}
-                              className="text-[10px] text-sky-400 hover:text-sky-300 flex items-center gap-1 transition-colors px-1.5 py-0.5 rounded-md hover:bg-sky-500/10 cursor-pointer font-medium"
-                              title="Cộng thêm hạn mức câu hỏi cho người dùng này"
-                            >
-                              <PlusCircle className="w-2.5 h-2.5" />
-                              <span>+ Thêm 10 câu</span>
-                            </button>
-                          </div>
-                        </div>
+                        )}
                       </td>
 
                       {/* Actions */}
@@ -742,12 +772,12 @@ export const UserManagementView: React.FC = () => {
       >
         <div className="space-y-4 text-xs text-slate-300">
           <p className="text-slate-400">
-            Thiết lập này áp dụng cho toàn bộ người dùng mới đăng ký vào hệ thống và quy tắc gia hạn câu hỏi định kỳ.
+            Thiết lập này áp dụng cho người dùng mới đăng ký và quy tắc làm mới lượt hỏi vào đúng 07:00 sáng Thứ 2 hàng tuần.
           </p>
 
           <div className="space-y-2 p-3.5 rounded-xl bg-slate-900 border border-slate-800">
             <label className="block text-xs font-semibold text-white">
-              Số câu hỏi miễn phí mặc định cho người dùng mới (câu/tháng):
+              Số câu hỏi miễn phí mặc định mỗi tuần cho người dùng (câu/tuần):
             </label>
             <div className="flex items-center gap-3">
               <Input
@@ -763,18 +793,18 @@ export const UserManagementView: React.FC = () => {
                 }
                 className="w-32 bg-slate-950 border-slate-700 text-sm font-bold text-emerald-400"
               />
-              <span className="text-slate-400">câu hỏi / tháng</span>
+              <span className="text-slate-400">câu hỏi / tuần</span>
             </div>
             <p className="text-[11px] text-slate-500">
-              * Khi đăng ký mới, mỗi tài khoản sinh viên sẽ tự động được cấp mức này.
+              * Tài khoản Quản trị viên (Admin) luôn được hỏi không giới hạn.
             </p>
           </div>
 
           <div className="space-y-3 p-3.5 rounded-xl bg-slate-900 border border-slate-800">
             <div className="flex items-center justify-between">
               <div>
-                <div className="font-semibold text-white">Tự động làm mới hạn mức hàng tháng</div>
-                <div className="text-[11px] text-slate-400">Reset số câu hỏi đã dùng về 0 sau mỗi chu kỳ 30 ngày</div>
+                <div className="font-semibold text-white">Tự động làm mới vào 07:00 sáng Thứ 2 hàng tuần</div>
+                <div className="text-[11px] text-slate-400">Đưa lượt hỏi của người dùng về 30/30 vào đúng 07:00 sáng Thứ 2 (giờ Việt Nam)</div>
               </div>
               <input
                 type="checkbox"
@@ -834,7 +864,7 @@ export const UserManagementView: React.FC = () => {
         <Modal
           isOpen={!!quotaModalUser}
           onClose={() => setQuotaModalUser(null)}
-          title={`Điều chỉnh Hạn mức Quota: ${quotaModalUser.fullName}`}
+          title={`Điều chỉnh Lượt hỏi: ${quotaModalUser.fullName}`}
         >
           <div className="space-y-4 text-xs text-slate-300">
             <div className="p-3 rounded-lg bg-slate-900 border border-slate-800 flex justify-between items-center">
@@ -843,81 +873,127 @@ export const UserManagementView: React.FC = () => {
                 <div className="text-[11px] text-slate-400">{quotaModalUser.email}</div>
               </div>
               <div className="text-right">
-                <div className="text-xs text-slate-400">Hiện tại:</div>
+                <div className="text-xs text-slate-400">Số lượt còn lại hiện tại:</div>
                 <div className="font-bold text-emerald-400 text-sm">
-                  {quotaModalUser.questionsUsed ?? 0} / {quotaModalUser.questionsQuota ?? 30} câu
+                  {Math.max(0, (quotaModalUser.questionsQuota ?? 30) - (quotaModalUser.questionsUsed ?? 0))} / {quotaModalUser.questionsQuota ?? 30} câu
                 </div>
               </div>
             </div>
 
             <div className="space-y-2">
-              <label className="font-semibold text-white block">Chọn hình thức điều chỉnh:</label>
-              <div className="grid grid-cols-3 gap-2">
+              <label className="font-semibold text-white block">Chọn hình thức thay đổi lượt hỏi:</label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button
+                  type="button"
+                  onClick={() => setQuotaAction('set_remaining')}
+                  className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
+                    quotaAction === 'set_remaining'
+                      ? 'bg-amber-950/60 border-amber-500/50 text-amber-300 font-semibold'
+                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-850'
+                  }`}
+                >
+                  <Zap className="w-4 h-4 mx-auto mb-1 text-amber-400" />
+                  <span>Đặt lượt còn lại</span>
+                </button>
+
                 <button
                   type="button"
                   onClick={() => setQuotaAction('add')}
-                  className={`p-2.5 rounded-lg border text-center transition-all ${
+                  className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                     quotaAction === 'add'
                       ? 'bg-emerald-950/60 border-emerald-500/50 text-emerald-300 font-semibold'
                       : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-850'
                   }`}
                 >
                   <PlusCircle className="w-4 h-4 mx-auto mb-1 text-emerald-400" />
-                  <span>Cộng thêm lượt</span>
+                  <span>Cộng / Trừ lượt</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setQuotaAction('set')}
-                  className={`p-2.5 rounded-lg border text-center transition-all ${
+                  className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                     quotaAction === 'set'
                       ? 'bg-blue-950/60 border-blue-500/50 text-blue-300 font-semibold'
                       : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-850'
                   }`}
                 >
                   <Sliders className="w-4 h-4 mx-auto mb-1 text-blue-400" />
-                  <span>Đặt tổng quota mới</span>
+                  <span>Đặt tổng hạn mức</span>
                 </button>
 
                 <button
                   type="button"
                   onClick={() => setQuotaAction('reset')}
-                  className={`p-2.5 rounded-lg border text-center transition-all ${
+                  className={`p-2.5 rounded-lg border text-center transition-all cursor-pointer ${
                     quotaAction === 'reset'
                       ? 'bg-purple-950/60 border-purple-500/50 text-purple-300 font-semibold'
                       : 'bg-slate-900 border-slate-800 text-slate-400 hover:bg-slate-850'
                   }`}
                 >
                   <RotateCcw className="w-4 h-4 mx-auto mb-1 text-purple-400" />
-                  <span>Reset về 0 đã dùng</span>
+                  <span>Reset 30/30</span>
                 </button>
               </div>
             </div>
 
-            {quotaAction === 'add' && (
+            {quotaAction === 'set_remaining' && (
               <div className="space-y-2 p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <label className="text-white font-medium block">Số lượt hỏi muốn cộng thêm:</label>
-                <div className="flex gap-2 mb-2">
-                  {[10, 20, 50, 100].map((amt) => (
+                <label className="text-white font-medium block">
+                  Nhập trực tiếp số câu hỏi còn lại cho người dùng:
+                </label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {[0, 10, 20, 30, 50, 100].map((val) => (
                     <button
-                      key={amt}
+                      key={val}
                       type="button"
-                      onClick={() => setQuotaAmount(amt)}
-                      className={`px-3 py-1.5 rounded-md text-xs font-semibold border ${
-                        quotaAmount === amt
-                          ? 'bg-emerald-500 text-slate-950 border-emerald-400'
+                      onClick={() => setQuotaRemainingValue(val)}
+                      className={`px-2.5 py-1 rounded-md text-xs font-semibold border cursor-pointer ${
+                        quotaRemainingValue === val
+                          ? 'bg-amber-500 text-slate-950 border-amber-400'
                           : 'bg-slate-950 text-slate-300 border-slate-700 hover:border-slate-500'
                       }`}
                     >
-                      +{amt}
+                      {val} câu
                     </button>
                   ))}
                 </div>
                 <Input
                   type="number"
-                  min={1}
+                  min={0}
+                  value={quotaRemainingValue}
+                  onChange={(e) => {
+                    const v = parseInt(e.target.value, 10);
+                    setQuotaRemainingValue(isNaN(v) ? 0 : Math.max(0, v));
+                  }}
+                  className="bg-slate-950 border-slate-700 text-xs font-bold text-amber-300"
+                />
+              </div>
+            )}
+
+            {quotaAction === 'add' && (
+              <div className="space-y-2 p-3 bg-slate-900 rounded-lg border border-slate-800">
+                <label className="text-white font-medium block">Số lượt hỏi muốn cộng thêm (hoặc số âm để trừ):</label>
+                <div className="flex flex-wrap gap-2 mb-2">
+                  {[-10, -5, 10, 20, 50, 100].map((amt) => (
+                    <button
+                      key={amt}
+                      type="button"
+                      onClick={() => setQuotaAmount(amt)}
+                      className={`px-3 py-1.5 rounded-md text-xs font-semibold border cursor-pointer ${
+                        quotaAmount === amt
+                          ? 'bg-emerald-500 text-slate-950 border-emerald-400'
+                          : 'bg-slate-950 text-slate-300 border-slate-700 hover:border-slate-500'
+                      }`}
+                    >
+                      {amt > 0 ? `+${amt}` : amt}
+                    </button>
+                  ))}
+                </div>
+                <Input
+                  type="number"
                   value={quotaAmount}
-                  onChange={(e) => setQuotaAmount(parseInt(e.target.value) || 1)}
+                  onChange={(e) => setQuotaAmount(parseInt(e.target.value, 10) || 0)}
                   className="bg-slate-950 border-slate-700 text-xs"
                 />
               </div>
@@ -925,12 +1001,15 @@ export const UserManagementView: React.FC = () => {
 
             {quotaAction === 'set' && (
               <div className="space-y-2 p-3 bg-slate-900 rounded-lg border border-slate-800">
-                <label className="text-white font-medium block">Tổng hạn mức mới (câu hỏi):</label>
+                <label className="text-white font-medium block">Tổng hạn mức câu hỏi mỗi tuần:</label>
                 <Input
                   type="number"
                   min={0}
                   value={quotaCustomValue}
-                  onChange={(e) => setQuotaCustomValue(parseInt(e.target.value) || 0)}
+                  onChange={(e) => {
+                    const v = parseInt(e.target.value, 10);
+                    setQuotaCustomValue(isNaN(v) ? 0 : Math.max(0, v));
+                  }}
                   className="bg-slate-950 border-slate-700 text-xs"
                 />
               </div>
@@ -938,8 +1017,8 @@ export const UserManagementView: React.FC = () => {
 
             {quotaAction === 'reset' && (
               <div className="p-3 bg-purple-950/20 border border-purple-500/30 rounded-lg text-purple-300 text-xs">
-                Hành động này sẽ đưa số lượt hỏi đã sử dụng về 0, giúp tài khoản có trọn vẹn{' '}
-                <strong>{quotaModalUser.questionsQuota ?? 30} câu hỏi</strong> như lúc đầu tháng.
+                Hành động này sẽ khôi phục ngay lượt hỏi của tài khoản về đầy đủ{' '}
+                <strong>{quotaConfig.defaultNewUserQuota}/{quotaConfig.defaultNewUserQuota} câu hỏi</strong>.
               </div>
             )}
 

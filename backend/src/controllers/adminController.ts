@@ -4,6 +4,7 @@ import { QueryHistory } from '../models/QueryHistory.js';
 import { LawArticle } from '../models/LawArticle.js';
 import { TextbookPrinciple } from '../models/TextbookPrinciple.js';
 import { PersistenceService } from '../services/persistenceService.js';
+import { QuotaService } from '../services/quotaService.js';
 
 let systemQuotaConfig = {
   defaultNewUserQuota: 30,
@@ -15,29 +16,43 @@ export function getDefaultNewUserQuota(): number {
   return systemQuotaConfig.defaultNewUserQuota;
 }
 
+export function isWeeklyAutoResetEnabled(): boolean {
+  return systemQuotaConfig.monthlyAutoReset;
+}
+
 export class AdminController {
   public static async getUsers(req: Request, res: Response): Promise<void> {
     try {
       const rawUsers = await User.find().select('-passwordHash').sort({ createdAt: -1 });
-      const users = rawUsers.map(u => ({
-        id: u._id.toString(),
-        _id: u._id.toString(),
-        username: u.username,
-        email: u.email,
-        fullName: u.fullName,
-        studentId: u.studentId || '',
-        avatarUrl: u.avatarUrl || '',
-        role: u.role,
-        status: u.status || 'active',
-        lockReason: u.lockReason || '',
-        lockedAt: u.lockedAt,
-        questionsQuota: u.questionsQuota ?? 30,
-        questionsUsed: u.questionsUsed ?? 0,
-        remainingQuestions: Math.max(0, (u.questionsQuota ?? 30) - (u.questionsUsed ?? 0)),
-        quotaResetDate: u.quotaResetDate,
-        createdAt: u.createdAt,
-        updatedAt: u.updatedAt
-      }));
+      const users = [];
+      for (const u of rawUsers) {
+        await QuotaService.ensureWeeklyQuotaCycle(
+          u,
+          systemQuotaConfig.monthlyAutoReset,
+          systemQuotaConfig.defaultNewUserQuota
+        );
+        const quotaInfo = QuotaService.computeQuotaPayload(u, systemQuotaConfig.defaultNewUserQuota);
+        users.push({
+          id: u._id.toString(),
+          _id: u._id.toString(),
+          username: u.username,
+          email: u.email,
+          fullName: u.fullName,
+          studentId: u.studentId || '',
+          avatarUrl: u.avatarUrl || '',
+          role: u.role,
+          status: u.status || 'active',
+          lockReason: u.lockReason || '',
+          lockedAt: u.lockedAt,
+          isUnlimited: quotaInfo.isUnlimited,
+          questionsQuota: quotaInfo.questionsQuota,
+          questionsUsed: quotaInfo.questionsUsed,
+          remainingQuestions: quotaInfo.remainingQuestions,
+          quotaResetDate: quotaInfo.quotaResetDate,
+          createdAt: u.createdAt,
+          updatedAt: u.updatedAt
+        });
+      }
       res.json({ success: true, users });
     } catch (err: any) {
       res.status(500).json({ success: false, message: err.message });
@@ -135,25 +150,55 @@ export class AdminController {
         return;
       }
 
+      const defaultQ = systemQuotaConfig.defaultNewUserQuota || 30;
+      const currentQuota = user.questionsQuota ?? defaultQ;
+      const currentUsed = user.questionsUsed ?? 0;
+
       let logMessage = '';
-      if (action === 'reset') {
+      if (action === 'set_remaining') {
+        const rawVal = amount !== undefined ? Number(amount) : Number(quota);
+        const desiredRemaining = Number.isFinite(rawVal) ? Math.max(0, Math.floor(rawVal)) : defaultQ;
+        if (desiredRemaining > currentQuota) {
+          user.questionsQuota = desiredRemaining;
+          user.questionsUsed = 0;
+        } else {
+          user.questionsQuota = currentQuota;
+          user.questionsUsed = Math.max(0, currentQuota - desiredRemaining);
+        }
+        logMessage = `Đã đặt số lượt câu hỏi còn lại của ${user.fullName} thành ${desiredRemaining}/${user.questionsQuota} câu.`;
+      } else if (action === 'reset') {
         user.questionsUsed = 0;
-        logMessage = `Đã reset số câu hỏi đã dùng của ${user.fullName} về 0.`;
+        user.questionsQuota = defaultQ;
+        logMessage = `Đã khôi phục lượt hỏi của ${user.fullName} về ${defaultQ}/${defaultQ} câu.`;
       } else if (action === 'add') {
-        const addAmount = Math.max(1, Number(amount) || 10);
-        user.questionsQuota = (user.questionsQuota ?? 30) + addAmount;
-        logMessage = `Đã cộng thêm ${addAmount} câu hỏi vào hạn mức của ${user.fullName}. Tổng: ${user.questionsQuota} câu.`;
+        const parsedAmt = Number(amount);
+        const delta = Number.isFinite(parsedAmt) && parsedAmt !== 0 ? Math.floor(parsedAmt) : 10;
+        user.questionsQuota = Math.max(currentUsed, currentQuota + delta);
+        logMessage =
+          delta >= 0
+            ? `Đã cộng thêm ${delta} lượt hỏi cho ${user.fullName}. Hạn mức hiện tại: ${Math.max(0, user.questionsQuota - currentUsed)}/${user.questionsQuota} câu.`
+            : `Đã giảm ${Math.abs(delta)} lượt hỏi của ${user.fullName}. Hạn mức hiện tại: ${Math.max(0, user.questionsQuota - currentUsed)}/${user.questionsQuota} câu.`;
       } else if (action === 'set') {
-        const newQuota = Math.max(0, Number(quota) || 30);
+        const parsedQuota = Number(quota);
+        const newQuota = Number.isFinite(parsedQuota) ? Math.max(0, Math.floor(parsedQuota)) : defaultQ;
         user.questionsQuota = newQuota;
-        logMessage = `Đã thiết lập hạn mức câu hỏi của ${user.fullName} thành ${newQuota} câu.`;
+        if (currentUsed > newQuota) {
+          user.questionsUsed = newQuota;
+        }
+        logMessage = `Đã thiết lập tổng hạn mức tuần của ${user.fullName} thành ${newQuota} câu (còn lại ${Math.max(0, newQuota - user.questionsUsed)}/${newQuota}).`;
       } else {
-        res.status(400).json({ success: false, message: 'Hành động không hợp lệ (reset, add, set).' });
+        res.status(400).json({ success: false, message: 'Hành động không hợp lệ (set_remaining, reset, add, set).' });
         return;
+      }
+
+      if (!user.quotaResetDate || new Date(user.quotaResetDate).getTime() <= Date.now()) {
+        user.quotaResetDate = QuotaService.getNextMonday7AM();
       }
 
       await user.save();
       PersistenceService.saveUser(user);
+
+      const quotaInfo = QuotaService.computeQuotaPayload(user, defaultQ);
 
       res.json({
         success: true,
@@ -162,9 +207,11 @@ export class AdminController {
           id: user._id.toString(),
           _id: user._id.toString(),
           fullName: user.fullName,
-          questionsQuota: user.questionsQuota,
-          questionsUsed: user.questionsUsed,
-          remainingQuestions: Math.max(0, user.questionsQuota - user.questionsUsed)
+          isUnlimited: quotaInfo.isUnlimited,
+          questionsQuota: quotaInfo.questionsQuota,
+          questionsUsed: quotaInfo.questionsUsed,
+          remainingQuestions: quotaInfo.remainingQuestions,
+          quotaResetDate: quotaInfo.quotaResetDate
         }
       });
     } catch (err: any) {
