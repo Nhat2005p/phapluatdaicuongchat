@@ -2663,16 +2663,30 @@ Dựa trên cơ sở dữ liệu pháp luật hiện tại, tôi không tìm th�
     if (topTextbooks.length > 0) {
       topTextbooks.slice(0, 2).forEach((t, idx) => {
         if (t.chunk && t.chunk.baremContent) {
-          const chunkSnippet = t.chunk.baremContent.slice(0, 280).trim();
+          const chunkSnippet = t.chunk.baremContent.slice(0, idx === 0 ? 900 : 400).trim();
           compactLlmContext += `[Chunk ${idx + 1} | Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle} | Trạng thái: con_hieu_luc | Rerank Score: ${t.rerankScoreNormalized}]\n${chunkSnippet}\n\n`;
         }
       });
     }
     if (!compactLlmContext) {
-      compactLlmContext = fullRagContext.slice(0, 500);
+      compactLlmContext = fullRagContext.slice(0, 700);
     }
 
-    const xmlSystemInstruction = `<system_instruction>
+    const isTheoryOrDefinitionQuery =
+      !isNovelScenarioQuery &&
+      (effectiveIntent === 'DEFINITION' ||
+        effectiveIntent === 'GENERAL_THEORY' ||
+        effectiveIntent === 'COMPARISON' ||
+        effectiveIntent === 'TRUE_FALSE');
+
+    const xmlSystemInstruction = isTheoryOrDefinitionQuery
+      ? `<system_instruction>
+Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy trả lời trực tiếp, đầy đủ và chuẩn xác câu hỏi lý thuyết/khái niệm trong <user_query> dựa trên <context> Giáo trình Pháp luật đại cương.
+Trình bày mạch lạc bằng Markdown (Khái niệm, Bản chất / Đặc trưng cơ bản, Ý nghĩa hoặc Ví dụ minh họa ngắn gọn).
+Đây là câu hỏi LÝ THUYẾT, KHÔNG phải bài tập tình huống — tuyệt đối KHÔNG hỏi ngược lại tình tiết vụ việc, KHÔNG viết "Chưa đủ cơ sở để kết luận một vụ việc cụ thể", và KHÔNG tự bịa số điều luật không có trong <context>.
+${modeRule ? modeRule : ''}
+</system_instruction>`
+      : `<system_instruction>
 Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy giải quyết trực tiếp tình huống trong <user_query> dựa trên <context> và pháp luật Việt Nam hiện hành (BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014). Tuyệt đối không bịa số điều luật.
 Trình bày ngắn gọn, rõ ràng theo đúng 3 mục:
 ### 1. Kết luận
@@ -2730,11 +2744,18 @@ ${query}
           const cleanedLlm = this.sanitizeTruncatedTail(this.cleanRubricText(text.trim()));
           const { bodyWithoutCitation } = this.splitEmbeddedCitation(cleanedLlm);
           const hasDanglingHeader = /(?:^|\n)\s*(?:\d+[.)]?|[IVX]+[.)]?|[a-z][.)]|[-•*])\s*[^\n.!?]{0,45}:?\s*$/i.test(bodyWithoutCitation);
+          const hasFalseCaseRefusal =
+            isTheoryOrDefinitionQuery && /chưa đủ cơ sở để kết luận một vụ việc cụ thể/i.test(bodyWithoutCitation);
           const isTruncated = finishReason === 'length' || hasDanglingHeader || bodyWithoutCitation.length < 220;
 
           const { bodyWithoutCitation: fallbackBody } = this.splitEmbeddedCitation(generatedRaw);
-          const finalBody =
-            isTruncated && !rawWasGenericOrTextbookOnly && !fallbackBody.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG')
+          const canUseFallback =
+            !rawWasGenericOrTextbookOnly &&
+            fallbackBody.trim().length > 40 &&
+            !fallbackBody.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG');
+          const finalBody = hasFalseCaseRefusal && canUseFallback
+            ? fallbackBody
+            : isTruncated && canUseFallback
               ? `${bodyWithoutCitation}\n\n${fallbackBody}`
               : bodyWithoutCitation;
 

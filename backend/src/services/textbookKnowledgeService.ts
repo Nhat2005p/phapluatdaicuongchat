@@ -214,7 +214,7 @@ II. BẢNG TIÊU CHÍ PHÂN BIỆT QUYỀN LỰC NHÀ NƯỚC VÀ QUYỀN LỰC 
       sectionCode: '2.1.1_2.1.4',
       sectionTitle: 'Khái niệm, Nguồn gốc, Bản chất và 4 Đặc trưng của Pháp luật',
       pageRange: 'tr. 33 - 39',
-      keywords: ['khái niệm pháp luật', 'nguồn gốc pháp luật', 'bản chất pháp luật', 'bản chất giai cấp', 'bản chất xã hội', 'tính giai cấp', 'tính xã hội', '4 đặc trưng pháp luật', 'tính quyền lực', 'tính ý chí', 'tính bắt buộc chung', 'tính quy phạm phổ biến'],
+      keywords: ['pháp luật là gì', 'định nghĩa pháp luật', 'khái niệm pháp luật', 'nguồn gốc pháp luật', 'bản chất pháp luật', 'bản chất giai cấp', 'bản chất xã hội', 'tính giai cấp', 'tính xã hội', '4 đặc trưng pháp luật', 'tính quyền lực', 'tính ý chí', 'tính bắt buộc chung', 'tính quy phạm phổ biến'],
       summary: 'Khái niệm pháp luật, bản chất giai cấp và xã hội, 4 đặc trưng cốt lõi theo giáo trình ĐH Thương Mại.',
       legalBasis: ['Hiến pháp năm 2013 (Điều 2, Điều 8)', 'Giáo trình Pháp luật đại cương (ĐH Thương mại 2021, tr. 34-38)'],
       baremContent: `I. KHÁI NIỆM VÀ BẢN CHẤT CỦA PHÁP LUẬT:
@@ -1658,6 +1658,26 @@ III. BỒI THƯỜNG THIỆT HẠI DO NGUỒN NGUY HIỂM CAO ĐỘ (ĐIỀU 601
       ) {
         if (c.chapterNumber === 1) finalScore -= 60;
         if (c.chapterNumber === 2 && (c.sectionCode.includes('2.3.1_2.3.3') || c.sectionCode.includes('2.1.1_2.1.4'))) finalScore += 75;
+      }
+
+      // F2. Nếu hỏi định nghĩa thuần túy "pháp luật là gì" / "khái niệm pháp luật" -> Ưu tiên tuyệt đối Chương 2 Mục 2.1.1_2.1.4
+      if (
+        rawQueryText.includes('pháp luật') &&
+        (rawQueryText.includes('là gì') || rawQueryText.includes('khái niệm') || rawQueryText.includes('định nghĩa') || rawQueryText.includes('thế nào là')) &&
+        !rawQueryText.includes('quy phạm') &&
+        !rawQueryText.includes('quan hệ') &&
+        !rawQueryText.includes('vi phạm') &&
+        !rawQueryText.includes('thực hiện') &&
+        !rawQueryText.includes('áp dụng') &&
+        !rawQueryText.includes('văn bản') &&
+        !rawQueryText.includes('hệ thống') &&
+        !rawQueryText.includes('hình sự') &&
+        !rawQueryText.includes('dân sự') &&
+        !rawQueryText.includes('hành chính') &&
+        !rawQueryText.includes('lao động')
+      ) {
+        if (c.sectionCode.includes('2.1.1_2.1.4')) finalScore += 95;
+        if (c.chapterNumber === 3 || c.chapterNumber === 9) finalScore -= 60;
       }
 
       // H. Nếu hỏi về Quan hệ pháp luật (Chủ thể, Khách thể, Nội dung, Sự kiện pháp lý) -> Ưu tiên tuyệt đối Chương 4 (Mục 4.1_4.2)
