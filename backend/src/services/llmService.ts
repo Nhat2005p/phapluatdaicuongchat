@@ -404,8 +404,6 @@ export class LlmService {
       .replace(/Thu\s*gọn/gi, '')
       .replace(/(?:^|\n)\s*Ý\s*chính\s*(?::|\n)/gi, '\n')
       .replace(/Luật\s+Ban\s+hành\s+văn\s+bản\s+quy\s+phạm\s+pháp\s+luật\s+2025/gi, 'Luật Ban hành văn bản quy phạm pháp luật 2015')
-      .replace(/\(\s*(?:Khoản\s*\d+\s*)?Điều\s*[\d,\s]+BLDS\s*2005\s*\)/gi, '')
-      .replace(/\s*\/\s*(?:Khoản\s*\d+\s*)?Điều\s*[\d,\s]+BLDS\s*2005/gi, '')
       .replace(/dưa lên thành luật/gi, 'đưa lên thành luật')
       .replace(/đạo đứa đó đó/gi, 'đạo đức đó')
       .replace(/\(Thang điểm:\s*[\d.]+\s*điểm\)/gi, '')
@@ -2720,7 +2718,7 @@ Trình bày mạch lạc bằng Markdown (Khái niệm, Bản chất / Đặc tr
 ${modeRule ? modeRule : ''}
 </system_instruction>`
       : `<system_instruction>
-Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy giải quyết trực tiếp tình huống trong <user_query> dựa trên <context> và pháp luật Việt Nam hiện hành (BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014). Tuyệt đối không bịa số điều luật.
+Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy giải quyết trực tiếp tình huống trong <user_query> dựa trên <context> và pháp luật Việt Nam có hiệu lực tại thời điểm xảy ra sự kiện pháp lý (lưu ý: nếu thời điểm mở thừa kế từ 01/01/2006 đến 31/12/2016 thì áp dụng BLDS 2005 & Luật HNGĐ 2000 và đối chiếu tương ứng BLDS 2015; từ 01/01/2017 trở đi áp dụng BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014). Tuyệt đối không bịa số điều luật.
 Trình bày ngắn gọn, rõ ràng theo đúng 3 mục:
 ### 1. Kết luận
 ### 2. Căn cứ pháp lý
@@ -4532,7 +4530,7 @@ Kinh tế quyết định pháp luật; pháp luật tác động trở lại ki
     return this.getMasterOutput('SFT_THEORY_CONG_PHAP_TU_PHAP_NOI_DUNG_HINH_THUC');
   }
 
-  // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG (HỖ TRỢ CẢ TÀI SẢN CHUNG VỢ CHỒNG, CHIA THEO PHÁP LUẬT ĐIỀU 651 & DI CHÚC KÈM SUẤT BẮT BUỘC ĐIỀU 644) ---
+  // --- DẠNG 3: BÀI TẬP CHIA THỪA KẾ ĐỘNG (HỖ TRỢ THỜI ĐIỂM MỞ THỪA KẾ BLDS 2005/2015, TÀI SẢN CHUNG, CON NUÔI, NĂM SINH & SUẤT BẮT BUỘC) ---
   private static solveDynamicCivilInherit(query: string, actors: string[], money: string | null): string {
     const qLower = query.toLowerCase();
     let rawInputAmount = 600000000;
@@ -4551,10 +4549,51 @@ Kinh tế quyết định pháp luật; pháp luật tác động trở lại ki
       }
     }
 
+    // 1. Xác định thời điểm mở thừa kế & phiên bản pháp luật áp dụng
+    const deathYearMatch =
+      query.match(/(?:mất|qua\s+đời|chết)[^\d]{0,20}(19\d{2}|20\d{2})/i) ||
+      query.match(/(19\d{2}|20\d{2})[^.]{0,30}(?:mất|qua\s+đời|chết)/i);
+    const deathYear = deathYearMatch ? parseInt(deathYearMatch[1], 10) : null;
+    const isBlds2005 = deathYear !== null && deathYear >= 2006 && deathYear <= 2016;
+
+    const law = isBlds2005
+      ? {
+          code: 'BLDS 2005',
+          codeFull: 'Bộ luật Dân sự 2005',
+          hngd: 'Luật Hôn nhân và Gia đình 2000 (Điều 27, Điều 31)',
+          openArt: 'Điều 633 BLDS 2005 (tương ứng Điều 611 BLDS 2015)',
+          estateArt: 'Điều 634 BLDS 2005 (tương ứng Điều 612 BLDS 2015)',
+          compulsoryArt: 'Điều 669 BLDS 2005 (tương ứng Điều 644 BLDS 2015)',
+          statutoryArt: 'Điều 675 và Điều 676 BLDS 2005 (tương ứng Điều 650, Điều 651 BLDS 2015)',
+          rank1Art: 'Điểm a Khoản 1 Điều 676 BLDS 2005 (tương ứng Điểm a Khoản 1 Điều 651 BLDS 2015)',
+          equalShareArt: 'Khoản 2 Điều 676 BLDS 2005 (tương ứng Khoản 2 Điều 651 BLDS 2015)',
+          adoptedArt: 'Điều 678 BLDS 2005 (tương ứng Điều 653 BLDS 2015)',
+          willArt: 'Điều 646, Điều 652 BLDS 2005 (tương ứng Điều 624, Điều 630 BLDS 2015)',
+          timeNote: `Thời điểm mở thừa kế là năm **${deathYear}** (trước ngày 01/01/2017 — ngày BLDS 2015 có hiệu lực) ➔ Áp dụng **Bộ luật Dân sự 2005** và **Luật Hôn nhân và Gia đình 2000** (nếu tranh chấp được giải quyết sau 01/01/2017 thì lưu ý quy định chuyển tiếp tại **Điều 688 BLDS 2015**).`
+        }
+      : {
+          code: 'BLDS 2015',
+          codeFull: 'Bộ luật Dân sự 2015',
+          hngd: 'Luật Hôn nhân và Gia đình 2014 (Điều 33, Điều 66)',
+          openArt: 'Điều 611 BLDS 2015',
+          estateArt: 'Điều 612 BLDS 2015',
+          compulsoryArt: 'Điều 644 BLDS 2015',
+          statutoryArt: 'Điều 650 và Điều 651 BLDS 2015',
+          rank1Art: 'Điểm a Khoản 1 Điều 651 BLDS 2015',
+          equalShareArt: 'Khoản 2 Điều 651 BLDS 2015',
+          adoptedArt: 'Điều 653 BLDS 2015',
+          willArt: 'Điều 624, Điều 630 BLDS 2015',
+          timeNote: deathYear
+            ? `Thời điểm mở thừa kế là năm **${deathYear}** (từ ngày 01/01/2017 trở đi) ➔ Áp dụng **Bộ luật Dân sự 2015** và **Luật Hôn nhân và Gia đình 2014**.`
+            : `Áp dụng **Bộ luật Dân sự 2015** và **Luật Hôn nhân và Gia đình 2014** hiện hành.`
+        };
+
+    // 2. Phân biệt tài sản chung vợ chồng và di sản
     const isJointMaritalAsset =
       /tài\s+sản\s+chung/.test(qLower) &&
       !/di\s+sản\s+(?:riêng\s+)?(?:của\s+[^\d]{1,25})?là\s+\d/.test(qLower);
-    const estateValue = isJointMaritalAsset ? Math.round(rawInputAmount / 2) : rawInputAmount;
+    const spouseMaritalShare = isJointMaritalAsset ? Math.round(rawInputAmount / 2) : 0;
+    const estateValue = isJointMaritalAsset ? rawInputAmount - spouseMaritalShare : rawInputAmount;
 
     const deceasedMatch =
       query.match(/((?:Ông|Bà|Anh|Chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s+(?:mất|qua đời|chết)/) ||
@@ -4563,120 +4602,251 @@ Kinh tế quyết định pháp luật; pháp luật tác động trở lại ki
       ? deceasedMatch[1].charAt(0).toUpperCase() + deceasedMatch[1].slice(1)
       : actors[0] || 'Người để lại di sản';
 
-    const hasSpouse = /\b(?:vợ|chồng)\b/i.test(qLower) && !/không\s+có\s+(?:vợ|chồng)|vợ\s+đã\s+chết|chồng\s+đã\s+chết/.test(qLower);
-    const childCountMatch = qLower.match(/(\d+|một|hai|ba|bốn)\s*(?:người\s+|đứa\s+)?con\b/);
-    const wordToNum: Record<string, number> = { 'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4 };
-    const parsedChildren = childCountMatch
+    // Xác định vợ/chồng còn sống
+    const hasSpouse =
+      /\b(?:vợ|chồng)\b/i.test(qLower) &&
+      !/không\s+có\s+(?:vợ|chồng)|vợ\s+đã\s+chết|chồng\s+đã\s+chết/.test(qLower);
+    let spouseLabel = 'Vợ/Chồng hợp pháp còn sống';
+    const coupleMatch = query.match(
+      /((?:Ông|Anh)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s+và\s+((?:bà|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i
+    );
+    if (coupleMatch) {
+      const p1 = coupleMatch[1].charAt(0).toUpperCase() + coupleMatch[1].slice(1);
+      const p2 = coupleMatch[2].charAt(0).toUpperCase() + coupleMatch[2].slice(1);
+      spouseLabel = deceased.toLowerCase() === p2.toLowerCase() ? p1 : p2;
+    } else {
+      const spouseNameMatch = query.match(/(?:vợ|chồng)\s+là\s+((?:bà|ông|chị|anh)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i);
+      if (spouseNameMatch) {
+        spouseLabel = spouseNameMatch[1].charAt(0).toUpperCase() + spouseNameMatch[1].slice(1);
+      }
+    }
+
+    // 3. Trích xuất con đẻ, con nuôi và tuổi/năm sinh
+    const wordToNum: Record<string, number> = {
+      'một': 1, 'hai': 2, 'ba': 3, 'bốn': 4, 'năm': 5, 'sáu': 6
+    };
+    const childCountMatch = qLower.match(/(\d+|một|hai|ba|bốn|năm|sáu)\s*(?:người\s+|đứa\s+)?con(?:\s+đẻ|\s+chung|\s+ruột)?\b(?!\s*nuôi)/);
+    const parsedBioChildrenCount = childCountMatch
       ? wordToNum[childCountMatch[1]] || parseInt(childCountMatch[1], 10)
       : 0;
+
+    // Bắt con nuôi (có tên hoặc có số lượng)
+    const adoptedEntries: Array<{ name: string; birthYear?: number; age?: number }> = [];
+    const adoptedNamedMatches = Array.from(
+      query.matchAll(/con\s+nuôi(?:\s+hợp\s+pháp)?(?:\s+là)?\s+([A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)(?:\s*\(\s*(?:sinh\s+năm\s+)?(19\d{2}|20\d{2})\s*\)|\s*\(\s*(\d{1,2})\s*tuổi\s*\))?/gi)
+    );
+    for (const am of adoptedNamedMatches) {
+      const name = am[1];
+      if (!/^(hợp|pháp|của|và|với|là|nên|được)$/i.test(name)) {
+        const birthYear = am[2] ? parseInt(am[2], 10) : undefined;
+        const explicitAge = am[3] ? parseInt(am[3], 10) : undefined;
+        const age = explicitAge ?? (birthYear && deathYear ? deathYear - birthYear : undefined);
+        adoptedEntries.push({ name, birthYear, age });
+      }
+    }
+    const adoptedCountMatch = qLower.match(/(\d+|một|hai|ba)\s*(?:người\s+|đứa\s+)?con\s+nuôi\b/);
+    const parsedAdoptedCount = adoptedEntries.length > 0
+      ? adoptedEntries.length
+      : adoptedCountMatch
+        ? wordToNum[adoptedCountMatch[1]] || parseInt(adoptedCountMatch[1], 10)
+        : /con\s+nuôi/.test(qLower)
+          ? 1
+          : 0;
+
+    // Bắt danh sách người có ghi năm sinh hoặc tuổi: VD "C (1994), D (1999), E (2001)" hoặc "C (15 tuổi)"
+    const namedWithBirthOrAge: Array<{ name: string; birthYear?: number; age?: number; isAdopted: boolean }> = [];
+    const adoptedNameSet = new Set(adoptedEntries.map((a) => a.name.toLowerCase()));
+    const personYearMatches = Array.from(
+      query.matchAll(/\b([A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]{0,12})\s*\(\s*(?:sinh\s+năm\s+)?(?:(19\d{2}|20\d{2})|(\d{1,2})\s*tuổi)\s*\)/g)
+    );
+    for (const pm of personYearMatches) {
+      const name = pm[1];
+      if (/^(Ông|Bà|Anh|Chị|Điều|Khoản|Năm|BLDS)$/i.test(name)) continue;
+      const birthYear = pm[2] ? parseInt(pm[2], 10) : undefined;
+      const explicitAge = pm[3] ? parseInt(pm[3], 10) : undefined;
+      const age = explicitAge ?? (birthYear && deathYear ? deathYear - birthYear : undefined);
+      namedWithBirthOrAge.push({
+        name,
+        birthYear,
+        age,
+        isAdopted: adoptedNameSet.has(name.toLowerCase())
+      });
+    }
+
+    const bioNamed = namedWithBirthOrAge.filter((p) => !p.isAdopted);
+    const bioChildrenList: Array<{ label: string; relation: string; isMinor: boolean; age?: number }> = [];
+    if (bioNamed.length > 0 && (parsedBioChildrenCount === 0 || bioNamed.length >= parsedBioChildrenCount)) {
+      for (const b of bioNamed) {
+        const ageDesc = b.birthYear
+          ? `sinh năm ${b.birthYear}${b.age !== undefined ? `, ${b.age} tuổi tại năm ${deathYear}` : ''}`
+          : b.age !== undefined
+            ? `${b.age} tuổi`
+            : '';
+        bioChildrenList.push({
+          label: ageDesc ? `${b.name} (${ageDesc})` : b.name,
+          relation: b.age !== undefined && b.age < 18 ? 'Con đẻ (chưa thành niên)' : 'Con đẻ',
+          isMinor: b.age !== undefined && b.age < 18,
+          age: b.age
+        });
+      }
+    } else {
+      for (let idx = 1; idx <= parsedBioChildrenCount; idx++) {
+        bioChildrenList.push({
+          label: `Người con đẻ thứ ${idx}`,
+          relation: 'Con đẻ',
+          isMinor: false
+        });
+      }
+    }
+
+    const adoptedChildrenList: Array<{ label: string; relation: string; isMinor: boolean; age?: number }> = [];
+    if (adoptedEntries.length > 0) {
+      for (const a of adoptedEntries) {
+        const ageDesc = a.birthYear
+          ? `sinh năm ${a.birthYear}${a.age !== undefined ? `, ${a.age} tuổi tại năm ${deathYear}` : ''}`
+          : a.age !== undefined
+            ? `${a.age} tuổi`
+            : '';
+        adoptedChildrenList.push({
+          label: ageDesc ? `${a.name} (${ageDesc})` : a.name,
+          relation: `Con nuôi hợp pháp (${law.adoptedArt})`,
+          isMinor: a.age !== undefined && a.age < 18,
+          age: a.age
+        });
+      }
+    } else {
+      for (let idx = 1; idx <= parsedAdoptedCount; idx++) {
+        adoptedChildrenList.push({
+          label: parsedAdoptedCount === 1 ? 'Con nuôi hợp pháp' : `Con nuôi hợp pháp thứ ${idx}`,
+          relation: `Con nuôi hợp pháp (${law.adoptedArt})`,
+          isMinor: false
+        });
+      }
+    }
+
     const hasValidWill =
       /(?:lập\s+di\s+chúc|để\s+lại\s+di\s+chúc)/i.test(qLower) &&
       !/(?:không\s+(?:để\s+lại\s+|có\s+)?di\s+chúc|di\s+chúc\s+(?:không\s+hợp\s+pháp|vô\s+hiệu))/i.test(qLower);
 
-    // NHÁNH A: CÓ DI CHÚC HỢP PHÁP + XÉT NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015)
+    const allChildren = [...bioChildrenList, ...adoptedChildrenList];
+    const minorChildren = allChildren.filter((c) => c.isMinor);
+
+    // NHÁNH A: CÓ DI CHÚC HỢP PHÁP + XÉT NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC NỘI DUNG DI CHÚC (ĐIỀU 669 BLDS 2005 / ĐIỀU 644 BLDS 2015)
     if (hasValidWill) {
-      const totalFirstRowHeirs = (hasSpouse ? 1 : 0) + (parsedChildren > 0 ? parsedChildren : 2);
+      const totalFirstRowHeirs = (hasSpouse ? 1 : 0) + (allChildren.length > 0 ? allChildren.length : 2);
       const oneStatutoryShare = Math.round(estateValue / Math.max(1, totalFirstRowHeirs));
       const compulsoryUnit = Math.round((2 * oneStatutoryShare) / 3);
-
-      const spouseNameMatch = query.match(/(?:vợ|chồng)\s+là\s+((?:bà|ông|chị|anh)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i) ||
-        query.match(/Ông\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*\s+và\s+((?:bà|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s+là\s+vợ\s+chồng/i);
-      const spouseLabel = spouseNameMatch ? spouseNameMatch[1] : 'Vợ/Chồng còn sống';
-
-      const minorChildMatches = Array.from(
-        query.matchAll(/([A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)\s*\(\s*(\d{1,2})\s*tuổi\s*\)/g)
-      ).filter((m) => parseInt(m[2], 10) < 18);
       const disabledChildMatch = /con[\s\S]{0,40}mất\s+khả\s+năng\s+lao\s+động/i.test(qLower);
 
-      const compulsoryHeirs: string[] = [];
-      if (hasSpouse) compulsoryHeirs.push(`${spouseLabel} (vợ/chồng hợp pháp còn sống)`);
-      for (const mc of minorChildMatches) {
-        compulsoryHeirs.push(`${mc[1]} (${mc[2]} tuổi — con chưa thành niên dưới 18 tuổi)`);
+      const compulsoryHeirs: Array<{ label: string; isSpouse: boolean }> = [];
+      if (hasSpouse) compulsoryHeirs.push({ label: `${spouseLabel} (vợ/chồng hợp pháp còn sống)`, isSpouse: true });
+      for (const mc of minorChildren) {
+        compulsoryHeirs.push({ label: `${mc.label} — con chưa thành niên dưới 18 tuổi`, isSpouse: false });
       }
-      if (minorChildMatches.length === 0 && disabledChildMatch) {
-        compulsoryHeirs.push('Người con mất khả năng lao động');
+      if (minorChildren.length === 0 && disabledChildMatch) {
+        compulsoryHeirs.push({ label: 'Người con mất khả năng lao động', isSpouse: false });
       }
 
-      const beneficiaryMatch = query.match(/cho\s+(?:người\s+bạn\s+thân\s+là\s+|em\s+ruột\s+là\s+|bạn\s+là\s+)?((?:ông|bà|anh|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*|[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i);
+      const beneficiaryMatch = query.match(
+        /cho\s+(?:người\s+bạn\s+thân\s+là\s+|em\s+ruột\s+là\s+|bạn\s+là\s+)?((?:ông|bà|anh|chị)\s+[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*|[A-ZÀ-Ỹ][a-zA-ZÀ-ỹ]*)/i
+      );
       const beneficiary = beneficiaryMatch ? beneficiaryMatch[1].trim() : 'Người được chỉ định trong di chúc';
 
       const totalCompulsory = compulsoryHeirs.length * compulsoryUnit;
       const remainingForBeneficiary = Math.max(0, estateValue - totalCompulsory);
 
-      return `### I. XÁC ĐỊNH GIÁ TRỊ DI SẢN THỪA KẾ CỦA ${deceased.toUpperCase()} (ĐIỀU 612 BLDS 2015)
+      return `### I. THỜI ĐIỂM MỞ THỪA KẾ, PHÁP LUẬT ÁP DỤNG & XÁC ĐỊNH DI SẢN (${law.openArt}, ${law.estateArt})
+- ${law.timeNote}
 ${isJointMaritalAsset
-          ? `- Căn cứ **Điều 612 Bộ luật Dân sự 2015** và **Điều 33, Điều 66 Luật Hôn nhân và Gia đình 2014**: Khối tài sản chung vợ chồng trị giá **${rawInputLabel}** (${rawInputAmount.toLocaleString('vi-VN')} đồng) được chia đôi; **1/2** thuộc quyền sở hữu riêng của người vợ/chồng còn sống (**${estateValue.toLocaleString('vi-VN')} đồng**), **1/2 còn lại** là di sản thừa kế của **${deceased}**.`
-          : `- Căn cứ **Điều 612 Bộ luật Dân sự 2015**, tổng di sản thừa kế của **${deceased}** để lại là:`}
+          ? `- Căn cứ **${law.estateArt}** và **${law.hngd}**: Khối tài sản chung vợ chồng trị giá **${rawInputLabel}** (${rawInputAmount.toLocaleString('vi-VN')} đồng) được chia đôi; **1/2** thuộc quyền sở hữu riêng của **${spouseLabel}** (**${spouseMaritalShare.toLocaleString('vi-VN')} đồng**), **1/2 còn lại** là di sản thừa kế của **${deceased}**.`
+          : `- Căn cứ **${law.estateArt}**, tổng di sản thừa kế của **${deceased}** để lại là:`}
 - **Giá trị di sản thừa kế của ${deceased} đem chia**: **${estateValue.toLocaleString('vi-VN')} đồng**.
 
 ---
 
-### II. XÁC ĐỊNH NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC VÀO NỘI DUNG DI CHÚC (ĐIỀU 644 BLDS 2015)
-- Căn cứ **Khoản 1 Điều 644 Bộ luật Dân sự 2015**: Cha, mẹ, vợ, chồng, **con chưa thành niên (dưới 18 tuổi)** hoặc con đã thành niên mà **không có khả năng lao động** vẫn được hưởng phần di sản bằng **2/3 suất của một người thừa kế theo pháp luật** nếu không được người lập di chúc cho hưởng di sản (hoặc chỉ cho hưởng ít hơn 2/3 suất đó).
+### II. XÁC ĐỊNH NGƯỜI THỪA KẾ KHÔNG PHỤ THUỘC VÀO NỘI DUNG DI CHÚC (${law.compulsoryArt})
+- Căn cứ **Khoản 1 ${law.compulsoryArt}**: Cha, mẹ, vợ, chồng, **con chưa thành niên (dưới 18 tuổi)** hoặc con đã thành niên mà **không có khả năng lao động** vẫn được hưởng phần di sản bằng **2/3 suất của một người thừa kế theo pháp luật** nếu không được người lập di chúc cho hưởng di sản (hoặc chỉ cho hưởng ít hơn 2/3 suất đó).
 - **Đối chiếu vào tình huống**:
-  + **Những người được hưởng theo Điều 644 BLDS 2015 (${compulsoryHeirs.length} người)**: ${compulsoryHeirs.length > 0 ? compulsoryHeirs.map((h) => `**${h}**`).join('; ') : 'Không có'}.
-  + *Lưu ý loại trừ*: Các người con đã thành niên (từ đủ 18 tuổi trở lên) và có khả năng lao động bình thường **KHÔNG thuộc diện bảo vệ của Điều 644 BLDS 2015** nên không được hưởng suất bắt buộc khi đã có di chúc hợp pháp định đoạt toàn bộ di sản.
+  + **Những người được hưởng theo ${law.compulsoryArt} (${compulsoryHeirs.length} người)**: ${compulsoryHeirs.length > 0 ? compulsoryHeirs.map((h) => `**${h.label}**`).join('; ') : 'Không có'}.
+  + *Lưu ý về cha, mẹ của ${deceased}*: Đề bài không đề cập cha đẻ, mẹ đẻ (hoặc cha nuôi, mẹ nuôi) của ${deceased}; giả định không còn sống tại thời điểm mở thừa kế (nếu còn sống thì cũng thuộc hàng thừa kế thứ nhất và diện bảo vệ tại ${law.compulsoryArt}).
+  + *Lưu ý loại trừ*: Các người con đã thành niên (từ đủ 18 tuổi trở lên) và có khả năng lao động bình thường **KHÔNG thuộc diện bảo vệ của ${law.compulsoryArt}**.
 
 ---
 
 ### III. TÍNH TOÁN & CHIA CỤ THỂ DI SẢN THỪA KẾ CHO TỪNG NGƯỜI
-1. **Giả định chia di sản theo pháp luật để làm mốc tính 01 suất (Điều 651 BLDS 2015)**:
-   - Tổng số người thuộc hàng thừa kế thứ nhất của ${deceased}: **${totalFirstRowHeirs} người**.
+1. **Giả định chia di sản theo pháp luật để làm mốc tính 01 suất (${law.rank1Art})**:
+   - Tổng số người thuộc hàng thừa kế thứ nhất của ${deceased}: **${totalFirstRowHeirs} người**${adoptedChildrenList.length > 0 ? ` (đã bao gồm ${adoptedChildrenList.length} con nuôi hợp pháp theo **${law.adoptedArt}**)` : ''}.
    - Giá trị **01 suất thừa kế theo pháp luật**:
      $$\\frac{${estateValue.toLocaleString('vi-VN')}}{${totalFirstRowHeirs}} = \\mathbf{${oneStatutoryShare.toLocaleString('vi-VN')}\\text{ đồng}}$$
-2. **Mức hưởng bắt buộc của mỗi người thuộc diện Điều 644 BLDS 2015 ($2/3$ một suất)**:
+2. **Mức hưởng bắt buộc của mỗi người thuộc diện ${law.compulsoryArt} ($2/3$ một suất)**:
    $$\\frac{2}{3} \\times ${oneStatutoryShare.toLocaleString('vi-VN')} = \\mathbf{${compulsoryUnit.toLocaleString('vi-VN')}\\text{ đồng/người}}$$
 3. **Phần di sản còn lại giao cho người hưởng theo di chúc (${beneficiary})**:
    $$${estateValue.toLocaleString('vi-VN')} - (${compulsoryHeirs.length} \\times ${compulsoryUnit.toLocaleString('vi-VN')}) = \\mathbf{${remainingForBeneficiary.toLocaleString('vi-VN')}\\text{ đồng}}$$
 
-| Chủ thể nhận di sản | Căn cứ pháp lý hưởng | Giá trị di sản thực nhận |
-| :--- | :--- | :--- |
-${compulsoryHeirs.map((h) => `| **${h}** | Khoản 1 Điều 644 BLDS 2015 ($2/3$ suất luật định) | **${compulsoryUnit.toLocaleString('vi-VN')} đồng** |`).join('\n')}
-| **${beneficiary}** | Điều 624, Điều 630 BLDS 2015 (Hưởng theo di chúc) | **${remainingForBeneficiary.toLocaleString('vi-VN')} đồng** |
-| **TỔNG CỘNG DI SẢN ĐÃ CHIA** | — | **${estateValue.toLocaleString('vi-VN')} đồng** |`;
+| Chủ thể | Tài sản riêng từ TS chung | Di sản thừa kế thực nhận | Tổng tài sản sau phân chia |
+| :--- | :---: | :---: | :---: |
+${compulsoryHeirs.map((h) => {
+  const ownPart = h.isSpouse ? spouseMaritalShare : 0;
+  const totalPart = ownPart + compulsoryUnit;
+  return `| **${h.label}** | ${ownPart > 0 ? `${ownPart.toLocaleString('vi-VN')} đồng` : '0 đồng'} | **${compulsoryUnit.toLocaleString('vi-VN')} đồng** | **${totalPart.toLocaleString('vi-VN')} đồng** |`;
+}).join('\n')}
+| **${beneficiary}** (${law.willArt}) | 0 đồng | **${remainingForBeneficiary.toLocaleString('vi-VN')} đồng** | **${remainingForBeneficiary.toLocaleString('vi-VN')} đồng** |
+| **TỔNG KIỂM CHỨNG** | **${spouseMaritalShare.toLocaleString('vi-VN')} đồng** | **${estateValue.toLocaleString('vi-VN')} đồng** | **${rawInputAmount.toLocaleString('vi-VN')} đồng** |`;
     }
 
-    // NHÁNH B: CHIA THỪA KẾ THEO PHÁP LUẬT (KHÔNG ĐỂ LẠI DI CHÚC — ĐIỀU 650, ĐIỀU 651 BLDS 2015)
-    let heirList: string[] = [];
-    if (hasSpouse || parsedChildren > 0) {
-      if (hasSpouse) heirList.push('Vợ/Chồng hợp pháp còn sống');
-      for (let idx = 1; idx <= parsedChildren; idx++) {
-        heirList.push(`Người con thứ ${idx}`);
+    // NHÁNH B: CHIA THỪA KẾ THEO PHÁP LUẬT (KHÔNG ĐỂ LẠI DI CHÚC)
+    const heirRows: Array<{ label: string; relation: string; isSpouse: boolean }> = [];
+    if (hasSpouse || allChildren.length > 0) {
+      if (hasSpouse) {
+        heirRows.push({ label: spouseLabel, relation: 'Vợ/Chồng hợp pháp', isSpouse: true });
+      }
+      for (const ch of allChildren) {
+        heirRows.push({ label: ch.label, relation: ch.relation, isSpouse: false });
       }
     } else {
       const rawHeirs = actors.slice(1);
-      heirList = rawHeirs.length >= 2 ? rawHeirs : ['Vợ/Chồng hợp pháp', 'Người con thứ nhất', 'Người con thứ hai'];
+      const fallback = rawHeirs.length >= 2 ? rawHeirs : ['Vợ/Chồng hợp pháp', 'Người con thứ nhất', 'Người con thứ hai'];
+      for (const h of fallback) {
+        heirRows.push({ label: h, relation: 'Thuộc hàng thừa kế thứ nhất', isSpouse: false });
+      }
     }
-    const heirCount = Math.max(1, heirList.length);
+
+    const heirCount = Math.max(1, heirRows.length);
     const sharePerHeir = Math.round(estateValue / heirCount);
 
-    return `### I. XÁC ĐỊNH DI SẢN THỪA KẾ THỰC TẾ
-- Căn cứ **Điều 612 Bộ luật Dân sự 2015**: Di sản bao gồm tài sản riêng của người chết và phần tài sản của người chết trong khối tài sản chung với người khác.
+    return `### I. THỜI ĐIỂM MỞ THỪA KẾ, PHÁP LUẬT ÁP DỤNG & XÁC ĐỊNH DI SẢN
+- **Thời điểm mở thừa kế & Luật áp dụng (${law.openArt})**: ${law.timeNote}
+- Căn cứ **${law.estateArt}**: Di sản bao gồm tài sản riêng của người chết và phần tài sản của người chết trong khối tài sản chung với người khác.
 ${isJointMaritalAsset
-        ? `- Căn cứ **Điều 33 và Điều 66 Luật Hôn nhân và Gia đình 2014**: Khối tài sản chung vợ chồng (**${rawInputLabel}**) được chia đôi, phần di sản thừa kế thực tế của **${deceased}** là **1/2 khối tài sản chung** = **${estateValue.toLocaleString('vi-VN')} đồng**.`
+        ? `- Căn cứ **${law.hngd}**: Khối tài sản chung vợ chồng (**${rawInputLabel}**) được chia đôi — **${spouseLabel}** sở hữu riêng **${spouseMaritalShare.toLocaleString('vi-VN')} đồng**; phần di sản thừa kế của **${deceased}** là **${estateValue.toLocaleString('vi-VN')} đồng**.`
         : `- **Tổng giá trị di sản thừa kế xác định để phân chia của ${deceased}**: **${rawInputLabel}** (**${estateValue.toLocaleString('vi-VN')} đồng**).`}
 
 ---
 
 ### II. XÁC ĐỊNH DIỆN VÀ HÀNG THỪA KẾ THEO PHÁP LUẬT
-- Tình huống không để lại di chúc ➔ Áp dụng nguyên tắc chia thừa kế theo pháp luật tại **Điều 650 và Điều 651 Bộ luật Dân sự 2015**.
-- **Hàng thừa kế thứ nhất (Điểm a Khoản 1 Điều 651 BLDS 2015)** gồm **${heirCount} người**:
-${heirList.map((h, i) => `  ${i + 1}. **${h}** (Thuộc hàng thừa kế thứ nhất).`).join('\n')}
+- Tình huống **không đề cập di chúc** ➔ Áp dụng chia thừa kế theo pháp luật theo **${law.statutoryArt}** *(Lưu ý: **${law.compulsoryArt}** về suất thừa kế bắt buộc chỉ áp dụng khi có di chúc; khi chia theo pháp luật, các con chưa thành niên vẫn được hưởng trọn vẹn 01 suất bằng các đồng thừa kế khác)*.
+${adoptedChildrenList.length > 0 ? `- Căn cứ **${law.adoptedArt}**: Con nuôi hợp pháp được hưởng thừa kế ở **hàng thừa kế thứ nhất** bình đẳng như con đẻ.` : ''}
+- *Lưu ý về cha, mẹ của ${deceased}*: Theo **${law.rank1Art}**, cha đẻ, mẹ đẻ, cha nuôi, mẹ nuôi của ${deceased} cũng thuộc hàng thừa kế thứ nhất. Do đề bài không nêu thông tin cha mẹ còn sống, bài giải tính trên **${heirCount} người thừa kế** đã xác định:
+${heirRows.map((h, i) => `  ${i + 1}. **${h.label}** — ${h.relation}.`).join('\n')}
 
 ---
 
 ### III. TÍNH TOÁN GIÁ TRỊ TỪNG SUẤT THỪA KẾ
-- Theo quy định tại **Khoản 2 Điều 651 BLDS 2015**, những người thừa kế cùng hàng được hưởng phần di sản bằng nhau:
-  $$\\text{Suất thừa kế của mỗi người} = \\frac{${estateValue.toLocaleString('vi-VN')}}{${heirCount}} = \\mathbf{${sharePerHeir.toLocaleString('vi-VN')}\\text{ VNĐ}}$$
+- Theo **${law.equalShareArt}**, những người thừa kế cùng hàng được hưởng phần di sản bằng nhau:
+  $$\\text{Suất thừa kế của mỗi người} = \\frac{${estateValue.toLocaleString('vi-VN')}}{${heirCount}} = \\mathbf{${sharePerHeir.toLocaleString('vi-VN')}\\text{ đồng}}$$
 
 ---
 
-### IV. BẢNG PHÂN CHIA DI SẢN CHI TIẾT
+### IV. BẢNG PHÂN CHIA DI SẢN & TỔNG TÀI SẢN SAU PHÂN CHIA
 
-| Người thừa kế | Quan hệ với người để lại di sản | Căn cứ pháp lý | Di sản thừa kế được nhận |
-| :--- | :--- | :--- | :--- |
-${heirList.map((h) => `| **${h}** | Thuộc hàng thừa kế thứ nhất | Điểm a Khoản 1 Điều 651 BLDS 2015 | **${sharePerHeir.toLocaleString('vi-VN')} VNĐ** |`).join('\n')}
-| **TỔNG CỘNG** | — | — | **${estateValue.toLocaleString('vi-VN')} VNĐ** (Hết di sản) |`;
+| Chủ thể | Quan hệ | Tài sản riêng từ TS chung | Di sản thừa kế nhận được | Tổng tài sản sau phân chia |
+| :--- | :--- | :---: | :---: | :---: |
+${heirRows.map((h) => {
+  const ownPart = h.isSpouse ? spouseMaritalShare : 0;
+  const totalPart = ownPart + sharePerHeir;
+  return `| **${h.label}** | ${h.relation} | ${ownPart > 0 ? `${ownPart.toLocaleString('vi-VN')} đồng` : '0 đồng'} | **${sharePerHeir.toLocaleString('vi-VN')} đồng** | **${totalPart.toLocaleString('vi-VN')} đồng** |`;
+}).join('\n')}
+| **TỔNG KIỂM CHỨNG** | — | **${spouseMaritalShare.toLocaleString('vi-VN')} đồng** | **${estateValue.toLocaleString('vi-VN')} đồng** | **${rawInputAmount.toLocaleString('vi-VN')} đồng** |`;
   }
 
   // --- DẠNG 4: NĂNG LỰC TRÁCH NHIỆM HÌNH SỰ THEO ĐỘ TUỔI ĐỘNG ---

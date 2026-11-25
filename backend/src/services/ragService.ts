@@ -1837,13 +1837,16 @@ export class RagService {
       case 'CIVIL_INHERIT':
         matchedArticles = await LawArticle.find({
           $or: [
+            { articleId: 'BLDS2015_D611' },
             { articleId: 'BLDS2015_D612' },
             { articleId: 'BLDS2015_D644' },
             { articleId: 'BLDS2015_D651' },
             { articleId: 'BLDS2015_D652' },
+            { articleId: 'BLDS2015_D653' },
+            { articleId: 'BLDS2015_D688' },
             { articleId: 'HNGD2014_D33' }
           ]
-        }).limit(5);
+        }).limit(8);
         break;
 
       case 'CIVIL_CONTRACT':
