@@ -2780,15 +2780,25 @@ ${query}
           const isTruncated = finishReason === 'length' || hasDanglingHeader || bodyWithoutCitation.length < 220;
 
           const { bodyWithoutCitation: fallbackBody } = this.splitEmbeddedCitation(generatedRaw);
+          const theorySftRef = isTheoryOrDefinitionQuery ? this.matchSftSample(query, effectiveIntent) : null;
+          const theorySftBody = theorySftRef?.output
+            ? this.splitEmbeddedCitation(this.cleanRubricText(theorySftRef.output)).bodyWithoutCitation.trim()
+            : '';
           const canUseFallback =
             !rawWasGenericOrTextbookOnly &&
             fallbackBody.trim().length > 40 &&
             !fallbackBody.includes('### I. TỔNG QUAN LÝ THUYẾT PHÁP LUẬT ĐẠI CƯƠNG');
-          const finalBody = hasFalseCaseRefusal && canUseFallback
-            ? fallbackBody
-            : isTruncated && canUseFallback
-              ? `${bodyWithoutCitation}\n\n${fallbackBody}`
-              : bodyWithoutCitation;
+          const isShortTheoryAnswer =
+            isTheoryOrDefinitionQuery &&
+            theorySftBody.length > 350 &&
+            (isTruncated || bodyWithoutCitation.length < 520);
+          const finalBody = hasFalseCaseRefusal && (theorySftBody.length > 100 || canUseFallback)
+            ? (theorySftBody || fallbackBody)
+            : isShortTheoryAnswer
+              ? `${bodyWithoutCitation}\n\n---\n\n### 📚 Bổ sung nội dung chuẩn Giáo trình\n${theorySftBody}`
+              : isTruncated && canUseFallback
+                ? `${bodyWithoutCitation}\n\n${fallbackBody}`
+                : bodyWithoutCitation;
 
           console.log(`✅ [RAG + Fine-tuned LLM] Mô hình ${selectedModel.label} sinh lời giải trong ${Date.now() - startTime}ms (Truncated=${isTruncated}).`);
           const enrichedText = this.enrichCompoundSingleAnswer(query, finalBody, retrievedArticles);
