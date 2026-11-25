@@ -57,6 +57,9 @@ export const config = {
   // Server model Qwen2.5-3B (Hugging Face Space riêng) cho chế độ "Nhanh"
   llamaServerUrl3b:
     process.env.LLAMA_SERVER_URL_3B || 'https://pthanh635-qwen2-5-3b-legal-vn-server.hf.space/v1',
+  // Google Gemini API (tùy chọn, dùng khi người dùng chọn model Gemini 2.5 Flash)
+  geminiApiKey: cleanEnvVal(process.env.GEMINI_API_KEY),
+  geminiModel: process.env.GEMINI_MODEL || 'gemini-2.5-flash',
   // LLM_FIRST=1: ưu tiên gọi Fine-tuned LLM (khi llama-server sẵn sàng) thay vì để Bộ giải Động rule-based trả lời sớm
   llmFirst: process.env.LLM_FIRST === '1',
   llmTimeoutMs: parseInt(process.env.LLM_TIMEOUT_MS || '90000', 10),

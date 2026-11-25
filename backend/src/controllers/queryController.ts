@@ -8,6 +8,7 @@ import { QuotaService } from '../services/quotaService.js';
 import { getDefaultNewUserQuota, isWeeklyAutoResetEnabled } from './adminController.js';
 import { LlamaManager } from '../services/llamaManager.js';
 import { DEFAULT_MODEL_ID, listModels, resolveModel } from '../services/modelRegistry.js';
+import { config } from '../config/env.js';
 
 export class QueryController {
   /**
@@ -22,7 +23,7 @@ export class QueryController {
           description: m.description,
           badge: m.badge,
           speedHint: m.speedHint,
-          available: await LlamaManager.isHealthy(m.baseUrl)
+          available: m.provider === 'gemini' ? Boolean(config.geminiApiKey) : await LlamaManager.isHealthy(m.baseUrl)
         }))
       );
       res.json({ success: true, defaultModelId: DEFAULT_MODEL_ID, models });
