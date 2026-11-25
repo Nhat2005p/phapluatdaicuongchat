@@ -2268,6 +2268,67 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
       };
     }
 
+    // CHẾ ĐỘ THUẦN GEMINI: Khi người dùng chọn Gemini, gọi trực tiếp Gemini API, không trích xuất từ SFT/Service cục bộ
+    if (selectedModel.provider === 'gemini') {
+      if (!config.geminiApiKey) {
+        return {
+          text: '⚠️ Chưa cấu hình `GEMINI_API_KEY` trên máy chủ Backend.',
+          latencyMs: Date.now() - startTime,
+          modelId: selectedModel.id
+        };
+      }
+      const geminiSystemPrompt =
+        'Bạn là giảng viên môn Pháp luật đại cương Việt Nam. Hãy trả lời trực tiếp, đầy đủ, mạch lạc và chuẩn xác bằng Markdown theo pháp luật Việt Nam có hiệu lực tại thời điểm xảy ra sự kiện pháp lý (lưu ý: nếu sự kiện/mở thừa kế từ 01/01/2006 đến 31/12/2016 thì áp dụng BLDS 2005 & Luật HNGĐ 2000 và đối chiếu BLDS 2015; từ 01/01/2017 trở đi áp dụng BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014). Tuyệt đối không bịa số điều luật.';
+      const geminiUrl = `${selectedModel.baseUrl}/models/${encodeURIComponent(selectedModel.servedName)}:generateContent?key=${encodeURIComponent(config.geminiApiKey)}`;
+      const timeoutMs = Math.max(config.llmTimeoutMs, 120000);
+      try {
+        const geminiRes = await fetch(geminiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            system_instruction: { parts: [{ text: geminiSystemPrompt }] },
+            contents: [{ role: 'user', parts: [{ text: rawQuery.trim() }] }],
+            generationConfig: {
+              temperature: 0.2,
+              topP: 0.9,
+              maxOutputTokens: 2048
+            }
+          }),
+          signal: signal
+            ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
+            : AbortSignal.timeout(timeoutMs)
+        });
+
+        if (!geminiRes.ok) {
+          const errText = await geminiRes.text().catch(() => '');
+          return {
+            text: `⚠️ Lỗi gọi Gemini API (HTTP ${geminiRes.status}): ${errText.slice(0, 300)}`,
+            latencyMs: Date.now() - startTime,
+            modelId: selectedModel.id
+          };
+        }
+
+        const geminiData: any = await geminiRes.json();
+        const parts = geminiData.candidates?.[0]?.content?.parts;
+        const geminiText = Array.isArray(parts)
+          ? parts.map((p: any) => p?.text || '').join('').trim()
+          : '';
+
+        console.log(`✅ [Direct Gemini API] ${selectedModel.servedName} trả lời trong ${Date.now() - startTime}ms.`);
+        return {
+          text: geminiText || '⚠️ Gemini không trả về nội dung.',
+          latencyMs: Date.now() - startTime,
+          modelId: selectedModel.id
+        };
+      } catch (err: any) {
+        return {
+          text: `⚠️ Không thể kết nối Gemini API: ${err?.message || 'Timeout'}`,
+          latencyMs: Date.now() - startTime,
+          modelId: selectedModel.id
+        };
+      }
+    }
+
     // STAGE 01: Security Sanitization + Query Rewriting (Chuẩn hóa viết tắt, khử nhiễu đề thi, sửa lỗi OCR)
     const sanitizedRaw = RagService.sanitizeSecurityPayload(rawQuery);
     const query = RagService.rewriteLegalQuery(sanitizedRaw);
@@ -2497,12 +2558,8 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
     }
 
     // BƯỚC 0.2: Khớp trực tiếp với 1 mẫu định sẵn trong SFT Dataset / Solver chuyên sâu
-    // Khi LLM_FIRST=1 và model sẵn sàng (hoặc người dùng chọn Gemini API), ưu tiên chuyển thẳng xuống RAG + LLM thực tế
-    const isModelReady =
-      selectedModel.provider === 'gemini'
-        ? Boolean(config.geminiApiKey)
-        : await LlamaManager.isHealthy(selectedModel.baseUrl);
-    const llmFirstActive = (config.llmFirst || selectedModel.provider === 'gemini') && isModelReady;
+    // Khi LLM_FIRST=1 và llama-server đang hoạt động, ưu tiên chuyển thẳng xuống RAG + LLM thực tế
+    const llmFirstActive = config.llmFirst && (await LlamaManager.isHealthy(selectedModel.baseUrl));
     const sftMatch = !llmFirstActive ? this.matchSftSample(query, effectiveIntent) : null;
     if (sftMatch && sftMatch.output && sftMatch.output.trim().length > 20) {
       const { bodyWithoutCitation, existingCitation } = this.splitEmbeddedCitation(this.cleanRubricText(sftMatch.output));
@@ -2626,10 +2683,7 @@ Tôi là Trợ lý AI học thuật môn **Pháp luật Đại cương (VietLawA
       (questionMarkCount >= 2 && generatedRaw.includes('KHÁI NIỆM SỰ KIỆN PHÁP LÝ')) ||
       (qLowerCheck.includes('tai nạn') && generatedRaw.includes('PHÂN BIỆT QUY PHẠM PHÁP LUẬT VỚI QUY PHẠM ĐẠO ĐỨC'));
 
-    const localModelAvailable =
-      selectedModel.provider === 'gemini'
-        ? Boolean(config.geminiApiKey)
-        : await LlamaManager.isHealthy(selectedModel.baseUrl);
+    const localModelAvailable = await LlamaManager.isHealthy(selectedModel.baseUrl);
     const shouldRouteScenarioToLlm = isNovelScenarioQuery && rawWasGenericOrTextbookOnly && localModelAvailable;
 
     if (
@@ -2746,82 +2800,41 @@ ${query}
       let text: string | undefined;
       let finishReason: string | undefined;
 
-      if (selectedModel.provider === 'gemini') {
-        if (!config.geminiApiKey) {
-          throw new Error('GEMINI_API_KEY chưa được cấu hình');
-        }
-        const geminiUrl = `${selectedModel.baseUrl}/models/${encodeURIComponent(selectedModel.servedName)}:generateContent?key=${encodeURIComponent(config.geminiApiKey)}`;
-        const geminiRes = await fetch(geminiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system_instruction: {
-              parts: [{ text: xmlSystemInstruction }]
+      if (!(await LlamaManager.isHealthy(selectedModel.baseUrl))) {
+        await LlamaManager.ensureRunning(selectedModel.baseUrl);
+      }
+
+      const response = await fetch(`${selectedModel.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: selectedModel.servedName,
+          cache_prompt: true,
+          messages: [
+            {
+              role: 'system',
+              content: xmlSystemInstruction
             },
-            contents: [
-              {
-                role: 'user',
-                parts: [{ text: xmlUserPrompt }]
-              }
-            ],
-            generationConfig: {
-              temperature: 0.1,
-              topP: 0.9,
-              maxOutputTokens: Math.max(adaptiveMaxTokens, 1500)
+            {
+              role: 'user',
+              content: xmlUserPrompt
             }
-          }),
-          signal: signal
-            ? AbortSignal.any([signal, AbortSignal.timeout(adaptiveTimeoutMs)])
-            : AbortSignal.timeout(adaptiveTimeoutMs)
-        });
-        if (!geminiRes.ok) {
-          const errText = await geminiRes.text().catch(() => '');
-          throw new Error(`Gemini HTTP ${geminiRes.status}: ${errText.slice(0, 200)}`);
-        }
-        const geminiData: any = await geminiRes.json();
-        const parts = geminiData.candidates?.[0]?.content?.parts;
-        if (Array.isArray(parts)) {
-          text = parts.map((p: any) => p?.text || '').join('');
-        }
-        const rawFinish = geminiData.candidates?.[0]?.finishReason;
-        finishReason = rawFinish === 'MAX_TOKENS' ? 'length' : 'stop';
-      } else {
-        if (!(await LlamaManager.isHealthy(selectedModel.baseUrl))) {
-          await LlamaManager.ensureRunning(selectedModel.baseUrl);
-        }
+          ],
+          temperature: 0.0,
+          top_p: 0.9,
+          repeat_penalty: 1.12,
+          frequency_penalty: 0.3,
+          max_tokens: adaptiveMaxTokens
+        }),
+        signal: signal
+          ? AbortSignal.any([signal, AbortSignal.timeout(adaptiveTimeoutMs)])
+          : AbortSignal.timeout(adaptiveTimeoutMs)
+      });
 
-        const response = await fetch(`${selectedModel.baseUrl.replace(/\/+$/, '')}/chat/completions`, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: selectedModel.servedName,
-            cache_prompt: true,
-            messages: [
-              {
-                role: 'system',
-                content: xmlSystemInstruction
-              },
-              {
-                role: 'user',
-                content: xmlUserPrompt
-              }
-            ],
-            temperature: 0.0,
-            top_p: 0.9,
-            repeat_penalty: 1.12,
-            frequency_penalty: 0.3,
-            max_tokens: adaptiveMaxTokens
-          }),
-          signal: signal
-            ? AbortSignal.any([signal, AbortSignal.timeout(adaptiveTimeoutMs)])
-            : AbortSignal.timeout(adaptiveTimeoutMs)
-        });
-
-        if (response.ok) {
-          const data: any = await response.json();
-          text = data.choices?.[0]?.message?.content;
-          finishReason = data.choices?.[0]?.finish_reason;
-        }
+      if (response.ok) {
+        const data: any = await response.json();
+        text = data.choices?.[0]?.message?.content;
+        finishReason = data.choices?.[0]?.finish_reason;
       }
 
       if (text && text.trim().length > 100) {
