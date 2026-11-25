@@ -2281,52 +2281,67 @@ Một quy phạm pháp luật hoàn chỉnh thường bao gồm **ba bộ phận
         'Bạn là giảng viên môn Pháp luật đại cương Việt Nam. Hãy trả lời trực tiếp, đầy đủ, mạch lạc và chuẩn xác bằng Markdown theo pháp luật Việt Nam có hiệu lực tại thời điểm xảy ra sự kiện pháp lý (lưu ý: nếu sự kiện/mở thừa kế từ 01/01/2006 đến 31/12/2016 thì áp dụng BLDS 2005 & Luật HNGĐ 2000 và đối chiếu BLDS 2015; từ 01/01/2017 trở đi áp dụng BLDS 2015, BLHS 2015, BLLĐ 2019, Luật HNGĐ 2014). Tuyệt đối không bịa số điều luật.';
       const geminiUrl = `${selectedModel.baseUrl}/models/${encodeURIComponent(selectedModel.servedName)}:generateContent?key=${encodeURIComponent(config.geminiApiKey)}`;
       const timeoutMs = Math.max(config.llmTimeoutMs, 120000);
-      try {
-        const geminiRes = await fetch(geminiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            system_instruction: { parts: [{ text: geminiSystemPrompt }] },
-            contents: [{ role: 'user', parts: [{ text: rawQuery.trim() }] }],
-            generationConfig: {
-              temperature: 0.2,
-              topP: 0.9,
-              maxOutputTokens: 2048
-            }
-          }),
-          signal: signal
-            ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
-            : AbortSignal.timeout(timeoutMs)
-        });
+      const maxAttempts = 3;
+      let lastErrMsg = '';
+      for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+        try {
+          const geminiRes = await fetch(geminiUrl, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              system_instruction: { parts: [{ text: geminiSystemPrompt }] },
+              contents: [{ role: 'user', parts: [{ text: rawQuery.trim() }] }],
+              generationConfig: {
+                temperature: 0.2,
+                topP: 0.9,
+                maxOutputTokens: 2048
+              }
+            }),
+            signal: signal
+              ? AbortSignal.any([signal, AbortSignal.timeout(timeoutMs)])
+              : AbortSignal.timeout(timeoutMs)
+          });
 
-        if (!geminiRes.ok) {
-          const errText = await geminiRes.text().catch(() => '');
+          if (!geminiRes.ok) {
+            const errText = await geminiRes.text().catch(() => '');
+            lastErrMsg = `HTTP ${geminiRes.status}: ${errText.slice(0, 300)}`;
+            // Tự động thử lại khi Google quá tải tạm thời (503/429)
+            if ((geminiRes.status === 503 || geminiRes.status === 429) && attempt < maxAttempts && !signal?.aborted) {
+              await new Promise((r) => setTimeout(r, attempt * 1500));
+              continue;
+            }
+            return {
+              text: `⚠️ Lỗi gọi Gemini API (${lastErrMsg})`,
+              latencyMs: Date.now() - startTime,
+              modelId: selectedModel.id
+            };
+          }
+
+          const geminiData: any = await geminiRes.json();
+          const parts = geminiData.candidates?.[0]?.content?.parts;
+          const geminiText = Array.isArray(parts)
+            ? parts.map((p: any) => p?.text || '').join('').trim()
+            : '';
+
+          console.log(`✅ [Direct Gemini API] ${selectedModel.servedName} trả lời trong ${Date.now() - startTime}ms (lần thử ${attempt}).`);
           return {
-            text: `⚠️ Lỗi gọi Gemini API (HTTP ${geminiRes.status}): ${errText.slice(0, 300)}`,
+            text: geminiText || '⚠️ Gemini không trả về nội dung.',
             latencyMs: Date.now() - startTime,
             modelId: selectedModel.id
           };
+        } catch (err: any) {
+          lastErrMsg = err?.message || 'Timeout';
+          if (attempt < maxAttempts && !signal?.aborted) {
+            await new Promise((r) => setTimeout(r, attempt * 1500));
+            continue;
+          }
         }
-
-        const geminiData: any = await geminiRes.json();
-        const parts = geminiData.candidates?.[0]?.content?.parts;
-        const geminiText = Array.isArray(parts)
-          ? parts.map((p: any) => p?.text || '').join('').trim()
-          : '';
-
-        console.log(`✅ [Direct Gemini API] ${selectedModel.servedName} trả lời trong ${Date.now() - startTime}ms.`);
-        return {
-          text: geminiText || '⚠️ Gemini không trả về nội dung.',
-          latencyMs: Date.now() - startTime,
-          modelId: selectedModel.id
-        };
-      } catch (err: any) {
-        return {
-          text: `⚠️ Không thể kết nối Gemini API: ${err?.message || 'Timeout'}`,
-          latencyMs: Date.now() - startTime,
-          modelId: selectedModel.id
-        };
       }
+      return {
+        text: `⚠️ Không thể kết nối Gemini API sau ${maxAttempts} lần thử: ${lastErrMsg}`,
+        latencyMs: Date.now() - startTime,
+        modelId: selectedModel.id
+      };
     }
 
     // STAGE 01: Security Sanitization + Query Rewriting (Chuẩn hóa viết tắt, khử nhiễu đề thi, sửa lỗi OCR)
