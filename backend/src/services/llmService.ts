@@ -2679,8 +2679,8 @@ Dựa trên cơ sở dữ liệu pháp luật hiện tại, tôi không tìm th�
       };
     }
 
-    // BƯỚC 4: GỌI FINE-TUNED LLM (Qwen2.5-7B-Legal-VN) VỚI CẤU TRÚC XML TAGGING, OUTLINE-FIRST PROMPTING & FOCUSED CONTEXT COMPRESSION
-    const adaptiveMaxTokens = parseInt(process.env.LLM_MAX_TOKENS || '450', 10); // Tối ưu tốc độ phản hồi tránh timeout proxy cloud
+    // BƯỚC 4: GỌI FINE-TUNED LLM (Qwen2.5-7B / Qwen2.5-3B) VỚI CẤU TRÚC XML TAGGING, OUTLINE-FIRST PROMPTING & FOCUSED CONTEXT COMPRESSION
+    const adaptiveMaxTokens = parseInt(process.env.LLM_MAX_TOKENS || '900', 10); // Đủ dài cho câu lý thuyết & tình huống đầy đủ, không bị cắt ngang
     const adaptiveTimeoutMs = (config.llmFirst || shouldRouteScenarioToLlm) ? Math.max(config.llmTimeoutMs, 240000) : config.llmTimeoutMs;
 
     let compactLlmContext = '';
@@ -2694,13 +2694,13 @@ Dựa trên cơ sở dữ liệu pháp luật hiện tại, tôi không tìm th�
     if (topTextbooks.length > 0) {
       topTextbooks.slice(0, 2).forEach((t, idx) => {
         if (t.chunk && t.chunk.baremContent) {
-          const chunkSnippet = t.chunk.baremContent.slice(0, idx === 0 ? 900 : 400).trim();
+          const chunkSnippet = t.chunk.baremContent.slice(0, idx === 0 ? 1600 : 600).trim();
           compactLlmContext += `[Chunk ${idx + 1} | Giáo trình: ${t.chunk.chapterTitle} - ${t.chunk.sectionTitle} | Trạng thái: con_hieu_luc | Rerank Score: ${t.rerankScoreNormalized}]\n${chunkSnippet}\n\n`;
         }
       });
     }
     if (!compactLlmContext) {
-      compactLlmContext = fullRagContext.slice(0, 700);
+      compactLlmContext = fullRagContext.slice(0, 1200);
     }
 
     const isTheoryOrDefinitionQuery =
@@ -2712,8 +2712,8 @@ Dựa trên cơ sở dữ liệu pháp luật hiện tại, tôi không tìm th�
 
     const xmlSystemInstruction = isTheoryOrDefinitionQuery
       ? `<system_instruction>
-Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy trả lời trực tiếp, đầy đủ và chuẩn xác câu hỏi lý thuyết/khái niệm trong <user_query> dựa trên <context> Giáo trình Pháp luật đại cương.
-Trình bày mạch lạc bằng Markdown (Khái niệm, Bản chất / Đặc trưng cơ bản, Ý nghĩa hoặc Ví dụ minh họa ngắn gọn).
+Bạn là giảng viên Pháp luật đại cương (Bộ GD&ĐT). Hãy trả lời trực tiếp, đầy đủ, chi tiết và chuẩn xác MỌI vế câu hỏi lý thuyết trong <user_query>, bám sát toàn bộ nội dung chuẩn trong <context> Giáo trình Pháp luật đại cương.
+Trình bày mạch lạc bằng Markdown theo đúng các ý chính của đề bài (Khái niệm, Bản chất, Đặc trưng/Nguyên nhân, Ý nghĩa hoặc Ví dụ minh họa); không bỏ sót ý và không dừng giữa chừng.
 Đây là câu hỏi LÝ THUYẾT, KHÔNG phải bài tập tình huống — tuyệt đối KHÔNG hỏi ngược lại tình tiết vụ việc, KHÔNG viết "Chưa đủ cơ sở để kết luận một vụ việc cụ thể", và KHÔNG tự bịa số điều luật không có trong <context>.
 ${modeRule ? modeRule : ''}
 </system_instruction>`
